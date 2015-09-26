@@ -1,0 +1,143 @@
+;-*- mode: Lisp eval: (elisp_install_buttons)-*-
+(in-package :stumpwm)
+
+(defun echo-format (fmt &rest args)
+  (let* ((msg (apply 'format nil (cons fmt args))))
+    (echo msg)
+    msg
+    )
+  )
+
+(defvar *init-errs-list* nil )
+(defun load-files-verbose (loader-fun &rest fns)
+  (loop for fn in fns
+	as str = (if (pathnamep fn) (namestring fn) fn)
+	
+	do
+	(echo-format "loading file: ~A..." str)
+	(handler-case
+	 (progn
+	   (funcall loader-fun fn)
+	   (echo-format "successful load of ~A" str))
+	 (error (err)
+		(setq *init-errs-list*
+		      (cons (echo-format "error loading: ~A~%: '~A'" fn err)
+			    *init-errs-list*))
+		)
+	 )
+	)
+  )
+  
+
+(defcommand load-cmd (fn)
+  ((:shell "Enter file to load: "))
+  (echo (format nil "loading ~A" fn))
+  (load fn)
+  )
+
+(setq HOME (concat (sb-posix:getenv "HOME") "/")
+      STUMPWM-TOP (merge-pathnames  "repos/stumpwm/" (user-homedir-pathname))
+      )
+
+(load-files-verbose
+ 'load
+ (merge-pathnames "util.lisp" STUMPWM-TOP)
+ (merge-pathnames ".sbclrc" HOME)
+ )
+
+(setq
+ *browser-classes*
+ (list "Iceweasel" "Firefox"  "Navigator"  wwww-browser "Chromium")
+ *browser-classes-hash* (hash-from-list *browser-classes*)
+ )
+
+(progn
+  (fset join-path (reverse-fun-args 'merge-pathnames))
+  (fset dir-merger (curry 'curry 'join-path))
+  (fset stumpwm-merger (dir-merger STUMPWM-TOP))
+  (fset stumpwm-loader (compose 'load 'stumpwm-merger))
+  )
+
+;;cleaner way to do this, via ~/.xinitrc
+(run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
+(run-shell-command (concat (namestring STUMPWM-TOP) ".my_startups.sh" " &" ))
+
+
+(load-files-verbose
+ 'stumpwm-loader
+ "sensitive/sensitive.el"
+ "window-utils.lisp"
+ "decorations.lisp"
+ "defcommands.lisp"
+ "per-window-bindings.lisp"
+ "url-launcher.lisp"
+ "per-window-bindings.lisp"
+ "run-raise-programs.lisp"
+ "per-keyboard-xmodmaps.lisp"
+ "swank-loader.lisp"
+ "top-map-bindings.lisp"
+ "commands-map.lisp"
+ )
+
+(fset id (lambda (x) x))
+(defun basename (fn)
+  (if (equal fn "/") fn
+  (multiple-value-bind (m res)
+      (ppcre::scan-to-strings ".*?/([^/]*)/?$" fn )
+    (and res (aref res (1- 1))))))
+
+;;(fset regular-file-p (compose 'not 'pathname-name))
+(fset regular-file-p 'pathname-name);; must have trailing slash
+
+(defun regular-file-lister (full-path dir )
+  (let* ((list (remove-if-not 'regular-file-p
+			      (list-directory dir))))
+    (mapcar (compose (if full-path 'id 'basename) 'namestring ) list)))
+
+
+(fset prepend-dir (lambda (dir) (curry 'join-path dir)))
+(defun flatten (l)
+  (apply 'append l)
+  )
+
+(setq *load-path-extra*
+      (flatten (list 
+       (mapcar (prepend-dir STUMPWM-TOP) (list "commands"))
+       ))
+       )
+
+(apply 'load-files-verbose 'stumpwm-loader
+       (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
+
+(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
+
+
+(defcommand asdfasdf () ()
+  (run-shell-command (format nil "sleep .5; xdotool type '~A'; xdotool key Return" cmu))
+  ;(run-shell-command "xdotool key Return")
+  ;(run-shell-command "sleep .5; xdotool key Return")
+  )
+
+;;(fset regular-file-lister (compose (compose (curry 'remove-if 'not) (curry 'mapcar 'pathname-name)) 'list-directory) )
+
+
+
+		 
+
+(defcommand load-some-file (&optional fn) ((:string nil ))
+  (in-package :stumpwm)
+  (let* (
+	 (fn (or fn (completing-read (current-screen)
+		   "enter stumpwm file to load (completing read): "
+		   ;;(regular-file-lister (namestring STUMPWM-TOP))
+		   (regular-file-lister nil STUMPWM-TOP) )))
+	 )
+    (if fn
+	(load-files-verbose 'stumpwm-loader fn)
+	(echo "nothing to load"))
+    )
+  )
+
+(echo "finished loading .stumpwmrc")
+  
+;;https://stumpwm.github.io/git/stumpwm-git_16.html

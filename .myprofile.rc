@@ -1,0 +1,30 @@
+TZ='America/Mexico_City'; export TZ
+TZ='America/New_York'; export TZ
+
+function startxprogram {
+    #set -x
+    base=$(basename $1)
+    echo "STARTING ${base}"
+    direc="${HOME}/logs/startx_logs/${base}"
+    if ! [ -d direc ]; then
+	mkdir -p ${direc}
+    fi
+    datefmt=$(date +%Y_%h_%d_%H:%M)
+    fn="${direc}/${datefmt}"
+    startx $1 2>&1 |& tee -a ${fn} 
+}
+
+if [ -z "$DISPLAY" ] ; then
+    tty=$(tty)
+    if [ ${tty} = /dev/tty1 ] ; then
+	startxprogram ${HOME}/programs/stumpwm/stumpwm
+	# startxprogram ${HOME}/programs/stumpwm-master/stumpwm
+    # elif [ ${tty} = /dev/tty4 ]; then
+    # 	startvirtualmachine
+    fi
+fi
+
+
+# Local Variables:
+# mode: shell-script
+# End:

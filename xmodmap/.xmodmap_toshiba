@@ -1,0 +1,4 @@
+#!/bin/bash -x
+toggle_laptop_keyboard.py -f e
+# xmodmap -e 'keycode 108 = dead_grave'
+# xmodmap -e 'keycode 135 = dead_acute'
