@@ -4,9 +4,7 @@
 (defun echo-format (fmt &rest args)
   (let* ((msg (apply 'format nil (cons fmt args))))
     (echo msg)
-    msg
-    )
-  )
+    msg))
 
 (defvar *init-errs-list* nil )
 (defun load-files-verbose (loader-fun &rest fns)
@@ -22,41 +20,30 @@
 	 (error (err)
 		(setq *init-errs-list*
 		      (cons (echo-format "error loading: ~A~%: '~A'" fn err)
-			    *init-errs-list*))
-		)
-	 )
-	)
-  )
+			    *init-errs-list*))))))
   
 
 (defcommand load-cmd (fn)
   ((:shell "Enter file to load: "))
   (echo (format nil "loading ~A" fn))
-  (load fn)
-  )
+  (load fn))
 
 (setq HOME (concat (sb-posix:getenv "HOME") "/")
-      STUMPWM-TOP (merge-pathnames  "repos/stumpwm/" (user-homedir-pathname))
-      )
+      STUMPWM-TOP (merge-pathnames  "repos/stumpwm/" (user-homedir-pathname)))
 
 (load-files-verbose
  'load
  (merge-pathnames "util.lisp" STUMPWM-TOP)
- (merge-pathnames ".sbclrc" HOME)
- )
+ (merge-pathnames ".sbclrc" HOME))
 
-(setq
- *browser-classes*
- (list "Iceweasel" "Firefox"  "Navigator"  wwww-browser "Chromium")
- *browser-classes-hash* (hash-from-list *browser-classes*)
- )
+
+
 
 (progn
   (fset join-path (reverse-fun-args 'merge-pathnames))
   (fset dir-merger (curry 'curry 'join-path))
   (fset stumpwm-merger (dir-merger STUMPWM-TOP))
-  (fset stumpwm-loader (compose 'load 'stumpwm-merger))
-  )
+  (fset stumpwm-loader (compose 'load 'stumpwm-merger)))
 
 ;;cleaner way to do this, via ~/.xinitrc
 (run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
