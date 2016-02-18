@@ -9,6 +9,7 @@
   (
    "keycode 166 ="
    "keycode 167 ="
+   "keycode 22 = slash"
    )
   )
  )
