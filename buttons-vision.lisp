@@ -6,16 +6,7 @@
                              :element-type (array-element-type in-array)
                              :displaced-to in-array)))
 
-(defun get-mouse-coords ()
-  (let* (
-	 (out (run-shell-command "xdotool getmouselocation" t))
-	 )
-    (multiple-value-bind (match regs)
-	  (cl-ppcre:scan-to-strings "x:([0-9]+) y:([0-9]+)" out)
-	  (mapcar 'parse-integer (coerce-array-to-list regs))
-	  )
-    )
-  )
+
 
 
 
@@ -44,7 +35,6 @@
 	)
       (car dirs))
   )
-(echo "tres cuartos")
 (defun ask-parents ()
   (let* (parents newparent done)
     (loop
@@ -57,7 +47,7 @@
     )
   )
 
-(defun sub-scrot (fn &optional eog)
+'(defun sub-scrot (fn &optional eog)
   (let* (
 	 (a (echo "place mouse in top left, then press enter"))
 	 (a (read-one-char (current-screen)))
@@ -66,7 +56,7 @@
 	 (a (echo "place mouse in bottom right, then press enter"))
 	 (a (read-one-char (current-screen)))
 	 ;(a (run-shell-command "xdotool mousemove 1279 799"))
-	 (mouseb (get-mouse-coords))
+	 (mouseb (get-mouse-coords)) 
 	 (x (nth 0 mousea))
 	 (y (nth 1 mousea))
 	 (w (- (nth 0 mouseb) (nth 0 mousea)))
@@ -80,9 +70,10 @@
     (when eog
       (run-shell-command (format nil  "eog '~A'" fn) nil ))
     )
-)
+  )
+
 (setq scrots_top (join-path HOME "pictures/scrots/")
-      sub_scrots_top (join-path scrots_top "subs"))
+      subscrots_top (join-path scrots_top "subs"))
 
 (defcommand take-scrot () ()
   (let* (
