@@ -1,5 +1,6 @@
 TZ='America/Mexico_City'; export TZ
 TZ='America/New_York'; export TZ
+TZ='America/Los_Angeles'; export TZ
 
 function startxprogram {
     #set -x
