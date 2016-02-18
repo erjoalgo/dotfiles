@@ -24,9 +24,9 @@ sbcl_lines = [
     '(quicklisp-quickstart:install)',
     # "(ql:update-client)",
     '(ql:quickload "clx")', 
-    '(ql:quickload "cl-ppcre")'
-    '(ql:quickload "swank")'
-    '(ql:quickload "quicklisp-slime-helper")'
+    '(ql:quickload "cl-ppcre")', 
+    '(ql:quickload "swank")', 
+    '(ql:quickload "quicklisp-slime-helper")', 
     "(ql:add-to-init-file)\r\n\n\r",
     "(quit)"
 ]
