@@ -111,7 +111,7 @@
   (let* (
 	 (name (gethash command annon-funs-hash))
 	 ;(namesmym nil )
-	 (form nil )
+	 ;;(form nil )
 	 )
 	
     ;(if (not name)
