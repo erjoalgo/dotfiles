@@ -33,7 +33,9 @@
 				    (,pull-or-raise-opt (car matching))
 				    (focus-all (car matching)))
 				(when 
-				    (not (and (current-window) (gethash (window-class (current-window)) ,classes-hash)))
+				    (not (and
+					  (current-window)
+					  (gethash (window-class (current-window)) ,classes-hash)))
 				  (run-shell-command ,cmd)
 				  )
 				)
@@ -62,10 +64,12 @@
 
 (setq run_raise_pull_list
       `(
-	("iceweasel" "H-f" :cmd "firefox --no-remote -P default"
-	 :classes ,*browser-classes* :all-screens t)
+	;;("iceweasel" "H-f" :cmd "firefox --no-remote -P default"
+	("firefox" "H-f"
+		   :cmd "/home/ealfonso/programs/firefox/firefox-bin --no-remote -P default"
+		   :classes ,*browser-classes* :all-screens t)
 	("x-terminal-emulator" "H-c" :cmd "roxterm" :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
-	("emacs" "H-e" :classes (list "emacs" "Emacs"))
+	;;("emacs" "H-e" :classes (list "emacs" "Emacs"))
 	;; ("skype" "H-s")
 	;; ("jin" "H-j" :classes '("free-jin-JinApplication"))
 	)
