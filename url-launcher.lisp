@@ -16,7 +16,8 @@
 
 (setq *url-command-rules* '(
     ("(^https?://.*|.*[.]html.*).*" . "firefox")
-    (".*[.]pdf" . "evince")
+    (".*[.]pdf" . "zathura")
+    ;;(".*[.]pdf" . "evince")
     ;(".*[.]pdf" . "gv")
     (".*[.](docx?|odt)" . "libreoffice")
     ("about:config" . "firefox")
@@ -33,32 +34,34 @@
 (defcommand launch-url () ()
   (maybe-update-launcher-alist)
   (let* ((key (completing-read  (current-screen)
-	 ;;"enter url key: " (mapcar 'car *launcher-alist*) :require-match t ))
-	 "enter url key: " (mapcar 'car *launcher-alist*) ))
+				;;"enter url key: " (mapcar 'car *launcher-alist*) :require-match t ))
+				"enter url key: " (mapcar 'car *launcher-alist*) ))
 	 (line (and key (assoc key *launcher-alist*  :test 'equal)))
 	 (url nil )
 	 (cmd nil )
-	 
 	 )
-    (setq key (trim-spaces key))
-    (echo (format nil "actual key was: '~a'" key))
-    (if (or (not key) (equal "" key))
-	(echo "key must be nonempty")
-	(if (not line)
-	    (progn 
-	      (print *launcher-alist*)
-	      (message "no such value for key: '~a'" key)
+    (echo (format nil  "key is ~A~%" key))
+    (when key
+      (setq key (trim-spaces key))
+      (echo (format nil "actual key was: '~a'" key))
+      (if (or (not key) (equal "" key))
+	  (echo "key must be nonempty")
+	  (if (not line)
+	      (progn 
+		(print *launcher-alist*)
+		(message "no such value for key: '~a'" key)
+		)
+	      (progn 
+					;(setq url (cdr line))
+		(setq url (expand-user (cadr line)))
+		
+		(setq cmd (format nil "~a '~a'&" (url-command url) url))
+		(print cmd)
+		(run-shell-command cmd)
+		)
 	      )
-	    (progn 
-	      ;(setq url (cdr line))
-	      (setq url (expand-user (cadr line)))
-	      
-	      (setq cmd (format nil "~a '~a'&" (url-command url) url))
-	      (print cmd)
-	      (run-shell-command cmd)
-	      )
-	    )
-	)
+	  )
+      )
     )
   )
 
@@ -117,9 +120,6 @@
 	(echo (format nil "added: ~A" url))
 	))
   )
-
-
-
 
 (defun read-launcher-alist ()
   (let* (
