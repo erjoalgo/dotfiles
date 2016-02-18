@@ -18,6 +18,7 @@
   '(
    ("g" "search-engine-search-clipboard")
    ("i" *snippets-map*)
+   ("y" "youtube-wget")
    )
   )
 
