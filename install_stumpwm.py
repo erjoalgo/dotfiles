@@ -33,14 +33,16 @@ sbcl_lines = [
 
 
 # p = pexpect.spawn("sbcl")
-if not exists(join(programs, "quicklisp")):
-    print ( "installing lisp packages via quicklisp" )
-    call(["sbcl", "--load", "quicklisp.lisp", "--eval", "(progn {})".format(" ".join(sbcl_lines))])
-    # p = pexpect.spawn("sbcl --load quicklisp.lisp")
-    # p.logfile = sys.stdout
-    # p.expect(".*")
-    # map(p.sendline, sbcl_lines)
-    call("rm quicklisp.lisp".split(" "))
+# if not exists(join(programs, "quicklisp")):
+# print ( "installing lisp packages via quicklisp" )
+# call(["sbcl", "--load", "quicklisp.lisp", "--eval", "(progn {})".format(" ".join(sbcl_lines))])
+call(["sbcl", "--load", "quicklisp.lisp"] + ["--eval" if i%2==0 else sbcl_lines[i/2]
+                                             for i in xrange(len(sbcl_lines)*2)])
+call("rm quicklisp.lisp".split(" "))
+# p = pexpect.spawn("sbcl --load quicklisp.lisp")
+# p.logfile = sys.stdout
+# p.expect(".*")
+# map(p.sendline, sbcl_lines)
 
 if not exists(programs):
     mkdir(programs)
