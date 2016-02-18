@@ -35,7 +35,7 @@
     ("s-p" "scroll-browser-other-frame Up")
     ("s-n" "scroll-browser-other-frame d")
     ("s-p" "scroll-browser-other-frame w")
-    ("s-F4" "scroll-browser-other-frame C-F4")
+    ;;("s-F4" "scroll-browser-other-frame C-F4")
 
     ("Hiragana_Katakana" "run-shell-command /home/ernesto/.xmodmap_jap")
     ("H-e" "my-emacs-cmd")
@@ -47,7 +47,6 @@
     ;;("H-v" "raise-vbox")
     ;;("H-E" "pull-emacs")
     ;;("H-F" "pull-iceweasel")
-    ;;("H-T" "pull-tor")
     ;;("H-C" "pull-x-terminal-emulator")
     ;;("H-V" "pull-vbox")
     ;;("H-p" "raise-pidgin")
@@ -70,6 +69,7 @@
     ("H-:" "eval")
     ("H-x" "exec")
     ("H-X" *commands-map*)
+    ("H-z" *commands-map*)
     ("H-u" *utils-map*)
 
     ("H-/" "pull-hidden-other")
@@ -84,8 +84,7 @@
     ;;("H-q" "vsplit")
     ("H-h" *help-map*)
 
-
-
+    ;;("H-G" "search-engine-search-none")
     ("H-G" "search-engine-search goog")
     ("H-d" "dict-lookup-command")
 
@@ -220,3 +219,6 @@
 
 (set-prefix-key (kbd "SunPrint_Screen"))
 
+'(loop for map in (all-top-maps)
+      do (define-key map (kbd "s-F4") nil ))
+	   
