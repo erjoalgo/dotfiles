@@ -70,20 +70,48 @@
 (defcommand search-engine-search (engine term)
     ((:string "enter search engine to use: ")
      (:string "enter search terms: "))
+  (when term
+    (let* (
+	   (escaped (escape-bash-single-quotes term))
+	   )
+      (run-shell-command (format nil "~a  '~a'&" engine escaped))
+      (log-search term)
+      )
+    )
+  )
+
+(defcommand search-engine-search-none (term)
+  (
+   ;;TODO get list of search kws from firefox
+   ;;(:string "enter search engine to use: ")
+   (:string "enter search terms: ")
+   )
   (let* (
 	 (escaped (escape-bash-single-quotes term))
 	 )
-    (and term
-	 (progn 
-	 ;(run-shell-command (format nil "~a  '~a'&" engine escaped))
-	 (run-shell-command (format nil "~a  '~a'&" engine escaped))
-	 (run-shell-command (format nil "echo '~a' >> ~~/search-history"
-				    (join (coerce '(#\Tab) 'string)
-					  engine term  (time-date-and-time))))
-	 )
-	 )
+    (when term
+      (run-shell-command (format nil "firefox --new-tab '~a'&" escaped))
+      (log-search term)
+      )
     )
   )
+
+(defvar *search-history-fn*
+  (concat (sb-posix:getenv "HOME") "/" "search-history"))
+(defun log-search (query)
+  (with-open-file (fh *search-history-fn*
+		      :if-does-not-exist :create
+		      :if-exists :append
+		      :direction :output
+		      )
+		  (format fh "~A~A~A~%"
+			  query
+			  (coerce '(#\Tab) 'string)
+			  (time-date-and-time)
+			  )
+		  )
+  )  
+
 
 (defcommand cat-message-command (fn)
   ((:string "file to cat: "))
@@ -205,10 +233,24 @@ be used to override the default window formatting."
 
     
 (defcommand my-emacs-cmd () ()
-  (let* (
-	 (group (group-name (current-group)))
-	 (cmd (format nil "emacs --stumpwm-group ~A" group))
-	 )
-    (run-or-raise cmd '(:class "Emacs"))
-    )
-  )
+  (let* ((group (group-name (current-group)))
+	 (cmd (format nil "emacs --stumpwm-group ~A" group)))
+    ;;(run-or-raise cmd '(:class "Emacs"))
+    (let ((matches (find-matching-windows '(:class "Emacs") nil t)))
+      (when matches (focus-all (car matches))))))
+
+(defcommand emacs-in-group () ()
+  (let* ((group (group-name (current-group)))
+	(cmd (format nil "emacs --stumpwm-group ~A" group)))
+    (run-shell-command cmd nil )))
+
+;;(emacs-in-group)
+
+  
+(defcommand youtube-wget () ()
+    (let* ((url (get-firefox-url-mozrepl))
+	   (cmd (format nil "youtube_wget.py '~A'" url)))
+      (echo cmd)
+      (run-shell-command cmd nil )))
+
+  
