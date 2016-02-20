@@ -1,8 +1,11 @@
 #!/bin/bash
-echo "running xmodmapstart"
+
+#save original mapping
 [ -e /tmp/xmodmap.pke ] || xmodmap -pke > /tmp/xmodmap.pke
-xmodmap ~/repos/stumpwm/xmodmap/.xmodmaprc
-xmodmap ~/repos/stumpwm/xmodmap/.xmodmaprc
+
+
+#kbd repeat rate, delay
 xset r rate 190 50
+
+#mouse accel, thresh
 xset m 10 1
-echo "ran xmodmapstart"

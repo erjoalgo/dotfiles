@@ -1,0 +1,8 @@
+!this is for macbook vm
+
+clear lock
+keycode 134 = Hyper_L
+keycode 65 = space underscore
+keycode 49 = BackSpace asciitilde 9 1 grave 3 4
+remove mod4 = Hyper_L
+add mod3 = Hyper_L
