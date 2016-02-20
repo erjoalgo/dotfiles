@@ -1,0 +1,8 @@
+[roxterm profile]
+scroll_on_keystroke=1
+init_tabs=2
+always_show_tabs=1
+hide_menubar=1
+scrollback_lines=100000
+colour_scheme=
+scrollbar_pos=0

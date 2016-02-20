@@ -1,0 +1,75 @@
+#https://pwmt.org/projects/zathura/documentation/#
+
+#http://bugs.pwmt.org
+
+#this file should be in ~/.config/zathura/zathurarc
+
+unmap n
+unmap p
+unmap a
+unmap s
+unmap d
+unmap w
+unmap ,
+unmap .
+unmap q
+
+map <F4> quit
+map n navigate next
+map p navigate previous
+
+map <F3> search forward
+map <A-F3> search backward
+map A adjust_window best-fit
+map S adjust_window width
+#map <A-F3> search previous
+
+map <Up> scroll up
+map <Down> scroll down
+
+# map w scroll full-up
+# map d scroll full-down
+map w scroll up
+map d scroll down
+map W scroll half-up
+map D scroll half-down
+
+map <C-d> scroll down
+map <C-w> scroll up
+
+map a scroll left
+map s scroll right
+
+map . goto bottom
+map , goto top
+map g goto
+
+map - zoom out
+map = zoom in
+
+map W scroll page-top
+map D scroll page-bottom
+map A scroll full-left
+map S scroll full-right
+
+
+
+set font "monospace normal 25"
+
+#set scroll-step 300
+set scroll-step 40
+
+set adjust-open width
+set scroll-wrap false
+#set search-wrap false
+set selection-clipboard clipboard
+#selection-clipboard clipboard
+# map <C-=> zoom in
+# map <C--> zoom in
+# map + zoom in
+# map + zoom in
+
+# Local Variables:
+# comment-start: "#"
+# End:
+

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+STUMPWM_TOP="${HOME}/repos/stumpwm/"
+INITS_TOP="${STUMPWM_TOP}/inits/"
