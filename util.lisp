@@ -127,3 +127,8 @@
 	 (start (funcall minus-convert start))
 	 (end (funcall minus-convert end)))
     (subseq seq start end)))
+
+;;silly
+(fset string-trim-whitespace (curry 'string-trim
+				    '(#\Space #\Newline #\Backspace #\Tab 
+				      #\Linefeed #\Page #\Return #\Rubout)))
