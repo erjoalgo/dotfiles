@@ -15,11 +15,11 @@
 
 
 (setq *url-command-rules* '(
-    ("(^https?://.*|.*[.]html.*).*" . "firefox")
-    (".*[.]pdf" . "zathura")
+    (".*[.]pdf$" . "zathura")
+    ("(^https?://.*|.*[.]html.*).*" . firefox-open-new-tab)
     ;;(".*[.]pdf" . "evince")
     ;(".*[.]pdf" . "gv")
-    (".*[.](docx?|odt)" . "libreoffice")
+    (".*[.](docx?|odt)$" . "libreoffice")
     ("about:config" . "firefox")
     ))
 
@@ -37,33 +37,23 @@
 				;;"enter url key: " (mapcar 'car *launcher-alist*) :require-match t ))
 				"enter url key: " (mapcar 'car *launcher-alist*) ))
 	 (line (and key (assoc key *launcher-alist*  :test 'equal)))
-	 (url nil )
-	 (cmd nil )
-	 )
-    (echo (format nil  "key is ~A~%" key))
-    (when key
-      (setq key (trim-spaces key))
-      (echo (format nil "actual key was: '~a'" key))
-      (if (or (not key) (equal "" key))
-	  (echo "key must be nonempty")
-	  (if (not line)
+	 url cmd)
+    (setq key (and key (trim-spaces key)))
+    (if (or (not key) (equal "" key))
+	(echo "key must be nonempty")
+      (if (not line)
+	  (progn 
+	    (print *launcher-alist*)
+	    (message "no such value for key: '~a'" key))
+	(progn 
+	  (setq url (expand-user (cadr line)))
+	  (let ((opener (url-command url)))
+	    (if (symbolp opener)
+		(progn (funcall opener url) nil )
 	      (progn 
-		(print *launcher-alist*)
-		(message "no such value for key: '~a'" key)
-		)
-	      (progn 
-					;(setq url (cdr line))
-		(setq url (expand-user (cadr line)))
-		
-		(setq cmd (format nil "~a '~a'&" (url-command url) url))
+		(setq cmd (format nil "~a '~a'&" opener url))
 		(print cmd)
-		(run-shell-command cmd)
-		)
-	      )
-	  )
-      )
-    )
-  )
+		(run-shell-command cmd)))))))))
 
 (defun get-firefox-url-clipboard ()
   (sleep .5)
