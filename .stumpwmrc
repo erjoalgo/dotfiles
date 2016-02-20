@@ -66,7 +66,6 @@
  "commands-map.lisp"
  )
 
-(fset id (lambda (x) x))
 (defun basename (fn)
   (if (equal fn "/") fn
   (multiple-value-bind (m res)
@@ -79,7 +78,7 @@
 (defun regular-file-lister (full-path dir )
   (let* ((list (remove-if-not 'regular-file-p
 			      (list-directory dir))))
-    (mapcar (compose (if full-path 'id 'basename) 'namestring ) list)))
+    (mapcar (compose (if full-path 'identity 'basename) 'namestring ) list)))
 
 
 (fset prepend-dir (lambda (dir) (curry 'join-path dir)))
@@ -96,7 +95,7 @@
 (apply 'load-files-verbose 'stumpwm-loader
        (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
 
-(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
+;;(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
 
 
 (defcommand asdfasdf () ()
