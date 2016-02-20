@@ -15,11 +15,11 @@
 
 
 (setq *url-command-rules* '(
-    ("(^https?://.*|.*[.]html.*).*" . "firefox")
-    (".*[.]pdf" . "zathura")
+    (".*[.]pdf$" . "zathura")
+    ("(^https?://.*|.*[.]html.*).*" . firefox-open-new-tab)
     ;;(".*[.]pdf" . "evince")
     ;(".*[.]pdf" . "gv")
-    (".*[.](docx?|odt)" . "libreoffice")
+    (".*[.](docx?|odt)$" . "libreoffice")
     ("about:config" . "firefox")
     ))
 
@@ -37,33 +37,23 @@
 				;;"enter url key: " (mapcar 'car *launcher-alist*) :require-match t ))
 				"enter url key: " (mapcar 'car *launcher-alist*) ))
 	 (line (and key (assoc key *launcher-alist*  :test 'equal)))
-	 (url nil )
-	 (cmd nil )
-	 )
-    (echo (format nil  "key is ~A~%" key))
-    (when key
-      (setq key (trim-spaces key))
-      (echo (format nil "actual key was: '~a'" key))
-      (if (or (not key) (equal "" key))
-	  (echo "key must be nonempty")
-	  (if (not line)
+	 url cmd)
+    (setq key (and key (trim-spaces key)))
+    (if (or (not key) (equal "" key))
+	(echo "key must be nonempty")
+      (if (not line)
+	  (progn 
+	    (print *launcher-alist*)
+	    (message "no such value for key: '~a'" key))
+	(progn 
+	  (setq url (expand-user (cadr line)))
+	  (let ((opener (url-command url)))
+	    (if (symbolp opener)
+		(progn (funcall opener url) nil )
 	      (progn 
-		(print *launcher-alist*)
-		(message "no such value for key: '~a'" key)
-		)
-	      (progn 
-					;(setq url (cdr line))
-		(setq url (expand-user (cadr line)))
-		
-		(setq cmd (format nil "~a '~a'&" (url-command url) url))
+		(setq cmd (format nil "~a '~a'&" opener url))
 		(print cmd)
-		(run-shell-command cmd)
-		)
-	      )
-	  )
-      )
-    )
-  )
+		(run-shell-command cmd)))))))))
 
 (defun get-firefox-url-clipboard ()
   (sleep .5)
@@ -75,15 +65,57 @@
   (get-x-selection )
   )
 
+(defun send-mozrepl-command (cmd)
+  ;;for now starting a new process for each cmd. better to keep a single pipe open
+  (let* ((out (run-shell-command (format nil "echo '~A' | nc localhost 4242 -q 1" cmd) t)))
+    (ppcre::register-groups-bind (resp) ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
+				 resp)))
+
 (defun get-firefox-url-mozrepl ()
-  (let* ((out (run-shell-command "echo 'content.document.location.href' | nc localhost 4242 -q 1" t)))
-    (ppcre::register-groups-bind (nil url) ("repl([0-9]+)?> \"([^\"]+)" out)
-      url))
-  )
+  (let ((out (send-mozrepl-command "content.document.location.href")))
+    (subseq-minus out 1 -1)))
+
+(defun send-mozrepl-commands-delay (cmds &key (delay .1))
+  (loop for cmd in cmds
+	do (sleep delay)
+	do (send-mozrepl-command cmd)))
+
+  
+(defun firefox-open-new-tab (url)
+  ;;stolen from:
+  ;;https://gist.github.com/jabbalaci/a1312d211c110ff3855d
+  ;;https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser
+  (send-mozrepl-command
+   (format nil "gBrowser.selectedTab = gBrowser.addTab(\"~A\");" url)))
+
+(defun uri-encode (search-terms)
+  (reduce
+   (lambda (string from-to)
+     (ppcre:regex-replace-all (car from-to) string (cdr from-to)))
+   '(("%" "%25")
+     (" " "%20")
+     ("[+]" "%2B"))
+   :initial-value search-terms))
+
+(defparameter search-engine-formats
+  ;;'((:ddg "https://duckduckgo.com/lite/?q=${@}")))
+  '((:ddg "https://duckduckgo.com/lite/?q=~A")))
+
+(defcommand search-engine-search (engine terms)
+  ((:string "enter search engine to use: ")
+   (:string "enter search terms: "))
+  (when terms
+    (let* ((args (escape-bash-single-quotes terms))
+	   (query (uri-encode args))
+	   (engine-fmt (cadr (assoc (intern (string-upcase engine) :KEYWORD) search-engine-formats )))
+	   (url (format nil engine-fmt query))
+	   )
+      (list args query engine-fmt url)
+      (firefox-open-new-tab url)
+      (log-search terms))))
 
 (defun trim-spaces (str)
-  (string-trim '(#\space #\tab #\newline) str)
-  )
+  (string-trim '(#\space #\tab #\newline) str))
 
 (defcommand launcher-append-url (key &optional url)
     (
