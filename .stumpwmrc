@@ -46,8 +46,8 @@
   (fset stumpwm-loader (compose 'load 'stumpwm-merger)))
 
 ;;cleaner way to do this, via ~/.xinitrc
-(run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
-(run-shell-command (concat (namestring STUMPWM-TOP) ".my_startups.sh" " &" ))
+;;(run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
+;;(run-shell-command (concat (namestring STUMPWM-TOP) ".my_startups.sh" " &" ))
 
 
 (load-files-verbose
@@ -60,7 +60,6 @@
  "url-launcher.lisp"
  "per-window-bindings.lisp"
  "run-raise-programs.lisp"
- "per-keyboard-xmodmaps.lisp"
  "swank-loader.lisp"
  "top-map-bindings.lisp"
  "commands-map.lisp"
