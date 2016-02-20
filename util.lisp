@@ -118,5 +118,12 @@
   (if (cdr strings)
       (reduce (lambda (cum new) (concat cum joiner new))
 	      strings)
-      (car strings))
-  )
+      (car strings)))
+
+(defun subseq-minus (seq start &optional end)
+  "allow negative indices"  
+  (let* ((len (length seq))
+	 (minus-convert (lambda (x) (if (< x 0) (+ len x) x)))
+	 (start (funcall minus-convert start))
+	 (end (funcall minus-convert end)))
+    (subseq seq start end)))

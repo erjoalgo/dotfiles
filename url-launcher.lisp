@@ -75,15 +75,57 @@
   (get-x-selection )
   )
 
+(defun send-mozrepl-command (cmd)
+  ;;for now starting a new process for each cmd. better to keep a single pipe open
+  (let* ((out (run-shell-command (format nil "echo '~A' | nc localhost 4242 -q 1" cmd) t)))
+    (ppcre::register-groups-bind (resp) ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
+				 resp)))
+
 (defun get-firefox-url-mozrepl ()
-  (let* ((out (run-shell-command "echo 'content.document.location.href' | nc localhost 4242 -q 1" t)))
-    (ppcre::register-groups-bind (nil url) ("repl([0-9]+)?> \"([^\"]+)" out)
-      url))
-  )
+  (let ((out (send-mozrepl-command "content.document.location.href")))
+    (subseq-minus out 1 -1)))
+
+(defun send-mozrepl-commands-delay (cmds &key (delay .1))
+  (loop for cmd in cmds
+	do (sleep delay)
+	do (send-mozrepl-command cmd)))
+
+  
+(defun firefox-open-new-tab (url)
+  ;;stolen from:
+  ;;https://gist.github.com/jabbalaci/a1312d211c110ff3855d
+  ;;https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser
+  (send-mozrepl-command
+   (format nil "gBrowser.selectedTab = gBrowser.addTab(\"~A\");" url)))
+
+(defun uri-encode (search-terms)
+  (reduce
+   (lambda (string from-to)
+     (ppcre:regex-replace-all (car from-to) string (cdr from-to)))
+   '(("%" "%25")
+     (" " "%20")
+     ("[+]" "%2B"))
+   :initial-value search-terms))
+
+(defparameter search-engine-formats
+  ;;'((:ddg "https://duckduckgo.com/lite/?q=${@}")))
+  '((:ddg "https://duckduckgo.com/lite/?q=~A")))
+
+(defcommand search-engine-search (engine terms)
+  ((:string "enter search engine to use: ")
+   (:string "enter search terms: "))
+  (when terms
+    (let* ((args (escape-bash-single-quotes terms))
+	   (query (uri-encode args))
+	   (engine-fmt (cadr (assoc (intern (string-upcase engine) :KEYWORD) search-engine-formats )))
+	   (url (format nil engine-fmt query))
+	   )
+      (list args query engine-fmt url)
+      (firefox-open-new-tab url)
+      (log-search terms))))
 
 (defun trim-spaces (str)
-  (string-trim '(#\space #\tab #\newline) str)
-  )
+  (string-trim '(#\space #\tab #\newline) str))
 
 (defcommand launcher-append-url (key &optional url)
     (

@@ -67,35 +67,6 @@
   (move-window  (if (neighbour :right (tile-group-current-frame (current-group)) (group-frames (current-group))) :right :left))
   )
 
-(defcommand search-engine-search (engine term)
-    ((:string "enter search engine to use: ")
-     (:string "enter search terms: "))
-  (when term
-    (let* (
-	   (escaped (escape-bash-single-quotes term))
-	   )
-      (run-shell-command (format nil "~a  '~a'&" engine escaped))
-      (log-search term)
-      )
-    )
-  )
-
-(defcommand search-engine-search-none (term)
-  (
-   ;;TODO get list of search kws from firefox
-   ;;(:string "enter search engine to use: ")
-   (:string "enter search terms: ")
-   )
-  (let* (
-	 (escaped (escape-bash-single-quotes term))
-	 )
-    (when term
-      (run-shell-command (format nil "firefox --new-tab '~a'&" escaped))
-      (log-search term)
-      )
-    )
-  )
-
 (defvar *search-history-fn*
   (concat (sb-posix:getenv "HOME") "/" "search-history"))
 (defun log-search (query)
