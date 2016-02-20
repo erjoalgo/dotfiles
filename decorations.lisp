@@ -1,3 +1,4 @@
+(setq *timeout-wait* 999)
 (set-font "-*-*-bold-r-*-*-25-240-*-*-*-*-*-*")
 (set-font "-adobe-helvetica-medium-r-normal--25-240-*-*-*-*-*-*")
 (setq *message-window-gravity* :center)
