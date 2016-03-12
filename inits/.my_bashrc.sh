@@ -42,7 +42,7 @@ export -f replace_when_differ
 PS1="\h$"
 
 #this is for cuddlefish
-FIREFOX_ADDON_SDK=${PROGRAMS}/addon-sdk-1.17/
+FIREFOX_ADDON_SDK=${PROGRAMS}/addon-sdk-1.17
 CUDDLEFISH_ROOT=${FIREFOX_ADDON_SDK}
 export CUDDLEFISH_ROOT
 
@@ -56,6 +56,8 @@ export PATH=${PATH}:${CUDDLEFISH_ROOT}/bin
 export GOROOT=${PROGRAMS}/go
 export GOPATH=${REPOS}/gopath
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+export PATH=$PATH:${PROGRAMS}/apache-maven-3.3.9/bin
+export JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-x64
 
 export PATH
 export GOPATH
