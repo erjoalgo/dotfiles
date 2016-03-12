@@ -33,4 +33,10 @@ fi
 # pidgin&
 rm "${HOME}/.my_startups.pid"
 #extkeyboard.xmodmap
+XSCRIPTS="${HOME}/x-scripts.sh"
+if test -e "${XSCRIPTS}"; then
+    echo "running x scripts at: ${XSCRIPTS}"
+    ${XSCRIPTS}
+fi
 notify-send "my_startups.sh done"
+
