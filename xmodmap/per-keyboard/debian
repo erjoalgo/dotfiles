@@ -6,3 +6,5 @@ clear mod4
 !remove mod4 = Hyper_L
 add mod3 = Hyper_L
 add mod4 = Super_L
+
+keycode 78 = Super_L
