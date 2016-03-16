@@ -1,11 +1,16 @@
 #!/usr/bin/python
-import sys, pexpect, subprocess, os
+# import sys, pexpect, subprocess, os
+import sys, subprocess, os
 from os.path import join, exists
 from os import chdir, mkdir
 
 call = subprocess.call
 # call(["sudo", "apt-get", "install", "-y", "sbcl", "cl-swank", "curl", "autoconf"])
-call(["sudo", "apt-get", "install", "-y", "sbcl", "curl", "autoconf", "make"])
+call(["sudo", "apt-get", "install", "-y", "sbcl", "curl", "autoconf", "make", "python-pexpect"])
+#not sure this will work
+import pexpect
+
+
 call("curl -O http://beta.quicklisp.org/quicklisp.lisp".split(" "))
 
 home = os.getenv("HOME")

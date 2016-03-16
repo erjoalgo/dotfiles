@@ -13,7 +13,8 @@ echo $$> "${HOME}/.my_startups.pid"
 }&
 ##/usr/bin/keynav &
 if ! ps ax|grep emacs|grep -v grep; then
-    emacs --real-session & &>"${HOME}/logs/my_startups/emacs"
+    #emacs --real-session & &>"${HOME}/logs/my_startups/emacs"
+    emacs
 fi
 x-terminal-emulator &
 /usr/lib/notify-osd/notify-osd &

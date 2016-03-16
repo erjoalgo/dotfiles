@@ -212,7 +212,8 @@ be used to override the default window formatting."
 
 (defcommand emacs-in-group () ()
   (let* ((group (group-name (current-group)))
-	(cmd (format nil "emacs --stumpwm-group ~A" group)))
+	 ;;(cmd (format nil "emacs --stumpwm-group ~A" group)))
+	 (cmd "emacs"))
     (run-shell-command cmd nil )))
 
 ;;(emacs-in-group)
