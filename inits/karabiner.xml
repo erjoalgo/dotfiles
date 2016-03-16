@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<root>
+  <item>
+    <name>Fn to F19</name>
+    <identifier>remap.fn2f19</identifier>
+    <autogen>__KeyToKey__ KeyCode::FN, KeyCode::F19</autogen>
+  </item>
+  
+  <item>
+    <name>Fn to F18</name>
+    <identifier>private.l_alt_to_f18</identifier>
+    <autogen>__KeyToKey__ KeyCode::OPTION_L, KeyCode::F18</autogen>
+  </item>
+</root>
