@@ -203,15 +203,14 @@
     *special-chars-map*
     `(
       ("DEL" "insert-key-with-delay grave")
-      ("3" "insert-key-with-delay grave 3")
+      ;;("3" "insert-key-with-delay grave 3")
       ("?" "insert-key-with-delay questiondown")
       ("u" "insert-key-with-delay udiaeresis")
       ("n" "insert-key-with-delay ntilde")
       ("!" "run-shell-command xdotool key exclamdown")
       ("~" "insert-key-with-delay degree")
       ("$" "insert-key-with-delay EuroSign")
-      )
-  )
+      ))
 
 
 (define-key *help-map* (kbd "g") "echo-current-group-name")
