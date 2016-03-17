@@ -10,26 +10,35 @@ echo $$> ${PID_FILE}
     done
 }&
 
+xbacklight -set 70
 /usr/lib/notify-osd/notify-osd &
 
-xbacklight -set 70
+emacs &
+firefox &
+x-terminal-emulator &
 sudo modprobe -r pcspkr
+##/usr/bin/keynav &
 
-# if ! ping 162.228.201.6 -c 3; then
-#why not just ping ?
-if ! wget -S -O - root.erjoalgo.com/test_online; then
+
+INTERNET_TEST="curl http://erjoalgo.com:7036"
+
+if ! ${INTERNET_TEST}; then
     sudo wifi -y -t ac
-fi
-if ! wget -S -O - root.erjoalgo.com/test_online; then
-    sudo dhclient -v eth2
+    
+    if ! ${INTERNET_TEST}; then
+	sudo dhclient -v eth2
+    fi
+    
 fi
 
 
 XSCRIPTS="${HOME}/x-scripts.sh"
+
 if test -e "${XSCRIPTS}"; then
     echo "running x scripts at: ${XSCRIPTS}"
     ${XSCRIPTS} &#these should not block
 fi
 
 rm ${PID_FILE}
+
 notify-send "my_startups.sh done"

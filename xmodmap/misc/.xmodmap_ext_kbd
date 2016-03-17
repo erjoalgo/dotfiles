@@ -1,4 +1,0 @@
-#xmodmap -e 'keycode 134 = Print'
-#xmodmap -e 'remove mod4 = Print'
-xmodmap -e 'keycode 134 = Hyper_L'
-~/.xmodmapstart

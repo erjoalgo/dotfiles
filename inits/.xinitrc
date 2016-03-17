@@ -8,4 +8,4 @@ x-terminal-emulator &
 firefox &
 
 ${HOME}/.my_startups.sh &
-${HOME}/programs/stumpwm/stumpwm
+exec ${HOME}/programs/stumpwm/stumpwm
