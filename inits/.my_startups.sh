@@ -11,12 +11,16 @@ echo $$> ${PID_FILE}
 }&
 
 xbacklight -set 70
+xset r rate 190 50 #kbd repeat rate, delay
+xset m 10 1 #mouse accel, thresh
+sudo modprobe -r pcspkr
+
+
 /usr/lib/notify-osd/notify-osd &
 
 emacs &
 firefox &
 x-terminal-emulator &
-sudo modprobe -r pcspkr
 ##/usr/bin/keynav &
 
 
