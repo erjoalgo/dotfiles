@@ -66,7 +66,7 @@
       `(
 	;;("iceweasel" "H-f" :cmd "firefox --no-remote -P default"
 	("firefox" "H-f"
-		   :cmd "/home/ealfonso/programs/firefox/firefox-bin --no-remote -P default"
+		   :cmd "firefox --no-remote -P default"
 		   :classes ,*browser-classes* :all-screens t)
 	("x-terminal-emulator" "H-c" :cmd "roxterm" :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
 	;;("emacs" "H-e" :classes (list "emacs" "Emacs"))
