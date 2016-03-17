@@ -70,3 +70,9 @@ alias gituncommit='git reset --soft HEAD~1'
 alias untar='tar axvf'
 alias ura='zathura'
 alias gitcheckout='git checkout'
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Local Variables:
+# mode: sh
+# End:
