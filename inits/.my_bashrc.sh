@@ -16,12 +16,6 @@ source .bash_aliases #should already be sourced by normal bashrc
 source .my_bash_funs.sh #lnabs, findiregex, etc
 
 
-
-# why do i need this?
-# export -f xargsn
-# export -f lnabs
-
-
 #unix utils
 export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${UNIX_UTILS}
 
@@ -44,6 +38,8 @@ export PATH
 export GOPATH
 
 
+#just source them all
+source ~/.my-bash-completions/sagiy
 
 #history control from multiple terminals. taken from internet. not really working
 # don't put duplicate lines or lines starting with space in the history.
@@ -56,5 +52,3 @@ export HISTSIZE=100000
 export HISTFILESIZE=100000000
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-

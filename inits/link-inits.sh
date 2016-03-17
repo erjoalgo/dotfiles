@@ -15,6 +15,10 @@ ln -sf "${INITS_TOP}/.my_bash_funs.sh" "${HOME}/"
 ln -sf "${INITS_TOP}/.xinitrc" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my_profile.rc" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my_startups.sh" "${HOME}/" 
+
+ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
+
+
 ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"
 
 ${STUMPWM_TOP}/idempotent/source-my-rcs.sh

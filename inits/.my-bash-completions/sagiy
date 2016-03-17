@@ -1,0 +1,16 @@
+# Debian apt-get(8) completion                             -*- shell-script -*-
+
+_sagiy()
+{
+
+    local cur
+    _init_completion || return
+
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" \
+			     2> /dev/null ) )
+    return 0
+    
+} &&
+complete -F _sagiy sagiy
+
+# ex: ts=4 sw=4 et filetype=sh
