@@ -12,8 +12,8 @@ REPOS="${HOME}/repos"
 PROGRAMS="${HOME}/programs"
 UNIX_UTILS="${REPOS}/unix_utils"
 
-source .bash_aliases #should already be sourced by normal bashrc
-source .my_bash_funs.sh #lnabs, findiregex, etc
+source ~/.bash_aliases #should already be sourced by normal bashrc
+source ~/.my_bash_funs.sh #lnabs, findiregex, etc
 
 
 #unix utils
@@ -39,7 +39,7 @@ export GOPATH
 
 
 #just source them all
-source ~/.my-bash-completions/sagiy
+source ~/.my-bash-completions/*
 
 #history control from multiple terminals. taken from internet. not really working
 # don't put duplicate lines or lines starting with space in the history.
