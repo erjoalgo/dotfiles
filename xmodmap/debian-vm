@@ -8,3 +8,4 @@ add mod3 = Hyper_L
 add mod4 = Super_L
 
 keycode 78 = Super_L
+keycode 22 = dead_acute grave
