@@ -13,8 +13,8 @@ ln -sf "${INITS_TOP}/.my_bashrc.sh" "${HOME}/"
 ln -sf "${INITS_TOP}/my_bash_funs.sh" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.xinitrc" "${HOME}/" 
-ln -sf "${INITS_TOP}/.myprofile.rc" "${HOME}/" 
+ln -sf "${INITS_TOP}/.my_profile.rc" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my_startups.sh" "${HOME}/" 
-ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/" 
+ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"
 
-#todo add lines to original ~/.profilerc, ~/.bashrc
+${STUMPWM_TOP}/idempotent/source-my-rcs.sh
