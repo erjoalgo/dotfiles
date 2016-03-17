@@ -23,7 +23,7 @@ source .my_bash_funs.sh #lnabs, findiregex, etc
 
 
 #unix utils
-export PATH=$PATH:/sbin:${HOME}/bin:${UNIX_UTILS}
+export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${UNIX_UTILS}
 
 #lisp
 export LISP=sbcl
