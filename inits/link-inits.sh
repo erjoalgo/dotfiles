@@ -10,7 +10,7 @@ ln -sf "${INITS_TOP}/.bash_aliases" "${HOME}/"
 ln -sf "${INITS_TOP}/.pythonrc.py" "${HOME}/"
 ln -sf "${INITS_TOP}/.inputrc" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my_bashrc.sh" "${HOME}/" 
-ln -sf "${INITS_TOP}/my_bash_funs.sh" "${HOME}/" 
+ln -sf "${INITS_TOP}/.my_bash_funs.sh" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.xinitrc" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my_profile.rc" "${HOME}/" 
