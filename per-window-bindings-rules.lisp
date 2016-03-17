@@ -9,8 +9,8 @@
    ;;("S-F4" (send-meta-key (current-screen) (kbd "C-S-F4")))
    ("F9" (send-meta-key (current-screen) (kbd "C--")))
    ("F10" (send-meta-key (current-screen) (kbd "C-=")))
-   ("M-F1" (run-shell-command "xdotool key alt+Left"))
-   ("M-F2" (run-shell-command "xdotool key alt+Right"))
+   ("M-F1" (send-meta-key (current-screen) (kbd "M-Left")))
+   ("M-F2" (send-meta-key (current-screen) (kbd "M-Right")))
 
    ("S-F1" (send-meta-key (current-screen) (kbd "C-S-SunPageUp")))
    ("S-F2" (send-meta-key (current-screen) (kbd "C-S-SunPageDown")))
