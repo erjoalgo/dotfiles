@@ -12,7 +12,7 @@
 	     )))
 	 )
     (if (not visible-weasels)
-	(echo "no visible browsers in other frames")
+	;(echo "no visible browsers in other frames")
 	(progn
 	  (echo "sending key")
 	  (assert (car visible-weasels))
