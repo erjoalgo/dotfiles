@@ -16,3 +16,11 @@ add mod4 = Super_L Super_R
 add mod3 = Hyper_L
 
 keycode 105 = Hyper_L
+
+
+!annoying pgup, pgdown accidental press on lenovo 
+keycode 112 = NoSymbol
+keycode 117 = NoSymbol
+
+!between R_Alt , R_Ctrl
+keycode 135 = NoSymbol
