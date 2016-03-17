@@ -1,7 +1,8 @@
 #!/bin/bash
 function findiregex {
     #echo -e $(find $1 -iregex ".*$2.*")
-    dir=$1
+    # dir=$1
+    dir=${PWD}
     shift
     find ${dir} -iregex ".*$*.*" 
 }
@@ -69,4 +70,8 @@ function straceall {
 
 function psauxgrep {
     ps aux|grep "${1}"
+}
+
+function netstattulpngrep {
+    netstat -tulpn | grep "${1}"
 }
