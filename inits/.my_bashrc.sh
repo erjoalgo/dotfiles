@@ -37,7 +37,6 @@ export LISP=sbcl
 source ${BASH_FILES}/my_bash_funs.sh
 export -f xargsn
 export -f lnabs
-export -f replace_when_differ
 
 PS1="\h$"
 
