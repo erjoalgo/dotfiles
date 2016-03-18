@@ -7,6 +7,11 @@ function findiregex {
     find ${dir} -iregex ".*$*.*" 
 }
 
+function findname {
+    dir=${PWD}
+    find ${dir} -name "${1}" 
+}
+
 function abspath {
      echo $(readlink -f "${1}")
 }
@@ -73,7 +78,7 @@ function psauxgrep {
 }
 
 function netstattulpngrep {
-    netstat -tulpn | grep "${1}"
+    sudo netstat -tulpn | grep "${1}"
 }
 
 function affexact {
