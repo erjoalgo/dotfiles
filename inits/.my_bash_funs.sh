@@ -75,3 +75,10 @@ function psauxgrep {
 function netstattulpngrep {
     netstat -tulpn | grep "${1}"
 }
+
+function affexact {
+    apt-file find "${1}"| grep "/${1}$"
+}
+function durec	{
+    du -ah --max-depth 1 $1 | sort -h
+}
