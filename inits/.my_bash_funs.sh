@@ -1,10 +1,6 @@
 #!/bin/bash
 function findiregex {
-    #echo -e $(find $1 -iregex ".*$2.*")
-    # dir=$1
-    dir=${PWD}
-    shift
-    find ${dir} -iregex ".*$*.*" 
+    find ${PWD} -iregex ".*$*.*" 
 }
 
 function findname {
@@ -86,4 +82,8 @@ function affexact {
 }
 function durec	{
     du -ah --max-depth 1 $1 | sort -h
+}
+
+function dedup_path	{
+    export PATH=$(echo ${PATH} | tr : '\n' | sort | uniq)
 }
