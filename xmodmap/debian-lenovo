@@ -22,5 +22,8 @@ keycode 105 = Hyper_L
 keycode 112 = NoSymbol
 keycode 117 = NoSymbol
 
+!to enable the key, we need to map it to something
+
+
 !between R_Alt , R_Ctrl
 keycode 135 = NoSymbol
