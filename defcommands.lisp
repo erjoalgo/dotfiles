@@ -142,18 +142,14 @@
   )
 
 
-(defcommand insert-key-with-delay (key &optional (times 1)) ((:string ) (:number))
-  ;;(echo-format "times is ~D" times)
-  ;;(sleep .001)
+(defcommand insert-key-with-delay (key &optional (times 1))
+  ((:string ) (:number))
   (let* ((args
 	  (if (eq times 1)
-		key
-		(reduce (lambda (cum b) (concat cum " " b))
-			(loop for n from 0 below 3 collect key))
-		)
-	   ))
-    (xdotool (concat "key " args)))
-  )
+	      key
+	    (reduce (lambda (cum b) (concat cum " " b))
+		    (loop for n from 0 below 3 collect key)))))
+    (xdotool (concat "key " args))))
 
 
 (defcommand xev ()
