@@ -87,3 +87,7 @@ function durec	{
 function dedup_path	{
     export PATH=$(echo ${PATH} | tr : '\n' | sort | uniq)
 }
+
+function append_path	{
+    export PATH=$PATH:$1
+}
