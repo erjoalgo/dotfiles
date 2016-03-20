@@ -6,7 +6,7 @@ alias g='grep'
 alias l='less -R'
 alias c='cat'
 alias gi='grep -i'
-alias go='grep -o'
+alias gol='grep -o'
 alias xs='xsel -ib'
 alias duh='du -h'
 # never used
@@ -42,7 +42,7 @@ alias gitpulloriginmaster='git pull origin master'
 # alias gitcommit='git commit'
 
 #apt
-alias sagi='sudo apt-get install'
+#alias sagi='sudo apt-get install'
 alias sagiy='sudo apt-get install -y'
 alias aff='apt-file find'
 alias acs='apt-cache show'
