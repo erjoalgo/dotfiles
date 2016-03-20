@@ -1,9 +1,16 @@
-#!/bin/bash -x
+#!/bin/bash
 
-LINE="HandleLidSwitch=ignore"
 FN="/etc/systemd/logind.conf"
 
-if ! grep -F "${LINE}" "${FN}"; then
-    echo "${LINE}" | \
-	sudo tee -a "${FN}"
-fi
+for LINE in "HandleLidSwitch=ignore"\
+		"HandlePowerKey=ignore"; do
+
+    
+    if ! grep -F "${LINE}" "${FN}" >/dev/null; then
+	echo "adding line: ${LINE}"
+	echo "${LINE}" | \
+	    sudo tee -a "${FN}"
+	sudo service systemd-logind restart
+    fi
+    
+done
