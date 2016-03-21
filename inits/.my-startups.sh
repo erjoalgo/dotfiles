@@ -5,7 +5,7 @@ echo $$> ${PID_FILE}
 {
     sleep 30
     while ls ${PID_FILE}; do
-	notify-send "my_startups.sh has not finished!"
+	notify-send "my-startups.sh has not finished!"
 	sleep 30
     done
 }&

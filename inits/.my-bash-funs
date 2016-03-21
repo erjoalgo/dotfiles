@@ -2,31 +2,26 @@
 function findiregex {
     find ${PWD} -iregex ".*$*.*" 
 }
-
 function findname {
     dir=${PWD}
     find ${dir} -name "${1}" 
 }
-
 function abspath {
      echo $(readlink -f "${1}")
 }
-
 function lnabs {
     #http://stackoverflow.com/questions/4187210/convert-relative-symbolic-links-to-absolute-symbolic-links
     relative=$1
     shift
     ln -sf "$(readlink -f "${relative}")" "$*"
 }
-
 function lnabs_t {
     target=$1
     relative=$2
     shift
     shift
     ln -s -t ${target} "$(readlink -f "${relative}")"
-    }
-
+}
 function plusx {
     #echo -e $(find $1 -iregex ".*$2.*")
     dest=${HOME}/bin/$(basename $1)
@@ -35,24 +30,17 @@ function plusx {
     chmod +x $1
     #re_source
 }
-
 function xargsn {
     xargs -d'\n' -L 1 $*
 }
-
-
-
 #http://superuser.com/questions/150117/how-to-get-parent-pid-of-a-given-process-in-gnu-linux-from-command-line
 ppid () { ps -p ${1:-$$} -o ppid=; }
-
-
 # http://www.cyberciti.biz/faq/linux-random-password-generator/
 function genpasswd {
     local l=$1;
     [ "$l" == "" ] && l=16;
     tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${l} | xargs;
 }
-
 function test_port	{
     HOST="${1}"
     PORT="${2}"
@@ -61,33 +49,36 @@ function test_port	{
     # cat <&6
     exec 6<>/dev/tcp/"${HOST}/${PORT}"
 }
-
 function straceall {
     set -x
     NAME="${1}"
     shift
     strace $* $(pidof "${NAME}" | sed 's/\([0-9]*\)/-p \1/g')
 }
-
 function psauxgrep {
     ps aux|grep "${1}"
 }
-
 function netstattulpngrep {
     sudo netstat -tulpn | grep "${1}"
 }
-
 function affexact {
     apt-file find "${1}"| grep "/${1}$"
 }
 function durec	{
     du -ah --max-depth 1 $1 | sort -h
 }
-
 function dedup_path	{
     export PATH=$(echo ${PATH} | tr : '\n' | sort | uniq)
 }
-
 function append_path	{
     export PATH=$PATH:$1
 }
+function shred_rec	{
+    read -p "rec shred ${1}?"
+    find "${1}" -type f -exec shred -zuf {} \;
+    find "${1}" -depth -type d -exec rmdir {} \;
+}
+function is_newline_terminated	{
+    LAST_CHAR=$(tail -c1 "${1}")
+    test -z "${LAST_CHAR}"
+} 
