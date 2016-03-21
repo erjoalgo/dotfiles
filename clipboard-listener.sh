@@ -6,6 +6,14 @@
 PORT="${1:-1234}"
 echo "listening on port ${PORT}"
 while true; do
-    nc -lp "${PORT}" | xsel -ib;
-    echo "got  $(xsel -o)"
+    MESSAGE=$(nc -lp "${PORT}")
+    
+    echo "got  "${MESSAGE}""
+    
+    # echo "${MESSAGE}" | xsel -ib;
+    
+    echo "${MESSAGE}" | xsel -ip;
+    # echo "${MESSAGE}" | xsel -ib;
+    # echo "${MESSAGE}" | xsel -is;
+    echo "last clipboard:  $(xsel -o)"
 done
