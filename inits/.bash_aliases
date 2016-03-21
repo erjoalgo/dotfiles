@@ -28,6 +28,8 @@ alias gituncommit='git reset --soft HEAD~1'
 alias gitcheckout='git checkout'
 alias gb='git branch'
 alias gitpulloriginmaster='git pull origin master'
+#bash completion will do the rest below
+alias git-github-clone='git clone'
 # never used
 # alias gm='git commit'
 # alias gmm='git commit -a -m'
