@@ -1,0 +1,16 @@
+_github_list_repos()
+{
+
+    local cur
+    _init_completion || return
+
+    COMPREPLY=( $( compgen -W \	
+    		"$(github-list-repos.sh erjoalgo | tr '\n' ' ')"\
+		-- "$cur" ))
+    COMPREPLY="ssh://git@github.com/erjoalgo/${COMPREPLY}"
+    return 0
+    
+} &&
+complete -F _github_list_repos git-github-clone
+#this is an alias, not a command
+

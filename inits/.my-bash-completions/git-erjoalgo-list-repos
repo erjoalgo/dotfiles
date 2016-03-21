@@ -1,0 +1,12 @@
+_git_erjoalgo_list_repos()
+{
+
+    local cur
+    _init_completion || return
+
+    COMPREPLY=( $( compgen -W \
+			   "$(git-erjoalgo-list-repos.sh | tr '\n' ' ')"\
+			   -- "$cur" ))
+    return 0
+} &&
+complete -F _git_erjoalgo_list_repos git-erjoalgo-clone.sh
