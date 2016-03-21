@@ -1,16 +1,16 @@
 #!/bin/bash -x
 
-LINE="source ${HOME}/.my_profile.rc"
-PROFILERC="${HOME}/.profile"
+LINE="source ${HOME}/.my-profile"
+PROFILE="${HOME}/.profile"
 
-if ! grep -F "${LINE}" "${PROFILERC}"; then
-    echo "${LINE}"| tee -a "${PROFILERC}"
+if ! grep -F "${LINE}" "${PROFILE}"; then
+    echo "${LINE}"| tee -a "${PROFILE}"
 fi
 
 
 BASHRC="${HOME}/.bashrc"
-LINE="source ${HOME}/.my_bashrc.sh"
+LINE="source ${HOME}/.my-bashrc"
 
-if ! grep -F "${LINE}" "${PROFILERC}"; then
-    echo "${LINE}"| tee -a "${PROFILERC}"
+if ! grep -F "${LINE}" "${BASHRC}"; then
+    echo "${LINE}"| tee -a "${BASHRC}"
 fi
