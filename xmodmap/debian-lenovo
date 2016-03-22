@@ -26,4 +26,4 @@ keycode 117 = NoSymbol
 
 
 !between R_Alt , R_Ctrl
-keycode 135 = NoSymbol
+keycode 135 = Super_L
