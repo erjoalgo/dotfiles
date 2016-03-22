@@ -65,11 +65,26 @@
   (get-x-selection )
   )
 
+(defun nc (host port data)
+  (with-output-to-string (output-fh)
+    (with-input-from-string (input-fh data)
+      (SB-EXT:RUN-PROGRAM "nc" (list host port "-q1")
+		   ;;TODO output to tmp?
+		   :search t :wait t :output output-fh :error output-fh :input input-fh))
+    output-fh))
+
 (defun send-mozrepl-command (cmd)
   ;;for now starting a new process for each cmd. better to keep a single pipe open
-  (let* ((out (run-shell-command (format nil "echo '~A' | nc localhost 4242 -q 1" cmd) t)))
-    (ppcre::register-groups-bind (resp) ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
-				 resp)))
+  (let* ((out
+	  (nc "localhost" "4242" cmd)))
+    (or (ppcre::register-groups-bind (resp)
+	    ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
+	  resp)
+	(echo-string-list
+	 (current-screen)
+	 (list "error with mozrepl input:"
+	       cmd
+	       out)))))
 
 (defun get-firefox-url-mozrepl ()
   (let ((out (send-mozrepl-command "content.document.location.href")))
