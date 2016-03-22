@@ -24,10 +24,14 @@
     ("XF86PowerOff" "echo power pressed root!")
     ;;volume
     ("KP_Multiply" "run-shell-command volup")
-    ("XF86AudioLowerVolume" "run-shell-command voldown")
-    ("XF86AudioRaiseVolume" "run-shell-command volup")
+    ("XF86AudioLowerVolume" "voldown")
+    ("XF86AudioRaiseVolume" "volup")
     ("H-F9" "voldown")
     ("H-F10" "volup")
+
+    ;;brightness
+    ;;emergency dimming 
+    ("XF86MonBrightnessDown" "run-shell-command xbacklight -set 1")
     ;;("XF86AudioLowerVolume" nil)
     ;;("XF86AudioRaiseVolume" nil)
 
