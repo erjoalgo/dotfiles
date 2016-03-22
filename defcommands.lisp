@@ -222,3 +222,17 @@ be used to override the default window formatting."
       (run-shell-command cmd nil )))
 
   
+(defparameter *scrots-top*
+  ;;TODO use expand user or some pathname library
+  "/home/ealfonso/pictures/auto-scrots" )
+
+(defcommand scrot-cmd (name)
+    ((:string "enter name for scrot: "))
+  (let ((out-png (format nil 
+			 "~A/~A.png" *scrots-top* name)))
+    (SB-EXT:RUN-PROGRAM "scrot"
+			(list out-png)
+			:search t
+			:output t
+			:error t
+			:wait t)))
