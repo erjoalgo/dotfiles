@@ -1,8 +1,10 @@
-(setq *vol-muted* nil)
+(defvar *vol-muted* nil)
+(defvar *VOLSTEP* 3)
 
 (defcommand volchange (up percentage)
     ((car (:y-or-n "raise volume?"))
      (:number "percentage?"))
+  "change volume by a percentage, via amixer" 
     (let* (
 	   (sign (if up "+" "-"))
            (cmd (format nil
@@ -26,6 +28,7 @@
   )
 
 (defcommand volmute-toggle ()()
+  "mute/unmute" 
   (if (eq *vol-muted* nil )
       (progn
         (setq *vol-muted* (get-curr-volume))
@@ -37,9 +40,9 @@
   )
 
 
-(setq *VOLSTEP* 3)
-(defcommand volup ()() (volchange t *VOLSTEP* ))
-(defcommand voldown ()() (volchange nil *VOLSTEP* ))
+
+(defcommand volup ()() "volume up" (volchange t *VOLSTEP* ))
+(defcommand voldown ()() "volume down" (volchange nil *VOLSTEP* ))
 
     
     

@@ -61,19 +61,14 @@
     l)
   )
 
-(defmacro stumpwm::toggle-var (var)
-  `(setq ,var (not (and (boundp ',var) ,var)))
-  )
+(defmacro toggle-var (var)
+  `(setf ,var (not ,var)))
 
 
-(defun expand-user (fn)
-  ;TODO replace with home directory
-  (cl-ppcre:regex-replace "^~/" fn HOME )
-  )
+
 
 (defun escape-bash-single-quotes (text)
-  (ppcre:regex-replace-all "[']" text "'\\\\''")
-  )
+  (ppcre:regex-replace-all "[']" text "'\\\\''"))
 
 
 (defun error-handler (display error-key &rest key-vals &key asynchronous &allow-other-keys)
@@ -87,7 +82,7 @@
      (write-line "Another window manager is running.")
      (write-line (prin1-to-string error-key) )
      (write-line (prin1-to-string key-vals))
-     (and (boundp 'ab) (write-line (prin1-to-string ab)))
+     ;(and (boundp 'ab) (write-line (prin1-to-string ab)))
      
      ;(throw :top-level :quit)
      )
@@ -98,21 +93,15 @@
       (apply 'error error-key :display display :error-key error-key key-vals))))
 
 (defun extract-match (regexp string i)
-  (multiple-value-bind (m res) (ppcre::scan-to-strings regexp string)
+  (multiple-value-bind (m res)
+      (ppcre::scan-to-strings regexp string)
+    (declare (ignore m))
     ;res)
     (and res (aref res (1- i)))) 
   )
 
 ;;this doesn't short-circuit
-(defun contains (elm L)
-  (reduce (lambda (cum el) (or cum (equal el elm))) L :initial-value nil ))
 
-(defun contains (elm L)
-  (and L (or (equal (car L) elm) (contains elm (cdr L)))))
-
-(defun any (func L)
-  (and L (or (funcall func (car L)) (any func (cdr L))))
-  )
 
 (defun join (joiner &rest strings)
   (if (cdr strings)
@@ -132,3 +121,19 @@
 (fset string-trim-whitespace (curry 'string-trim
 				    '(#\Space #\Newline #\Backspace #\Tab 
 				      #\Linefeed #\Page #\Return #\Rubout)))
+
+(defun trim-spaces (str)
+  (string-trim '(#\space #\tab #\newline) str))
+
+
+
+(defun log-entry-timestamp (entry fn)
+  (with-open-file (fh fn
+		      :if-does-not-exist :create
+		      :if-exists :append
+		      :direction :output
+		      )
+		  (format fh "~A~A~A~%"
+			  entry
+			  (coerce '(#\Tab) 'string)
+			  (time-date-and-time))))

@@ -6,7 +6,7 @@
     (echo msg)
     msg))
 
-(defvar *init-errs-list* nil )
+(defparameter *init-errs-list* nil )
 (defun load-files-verbose (loader-fun &rest fns)
   (loop for fn in fns
 	as str = (if (pathnamep fn) (namestring fn) fn)
@@ -24,12 +24,18 @@
   
 
 (defcommand load-cmd (fn)
-  ((:shell "Enter file to load: "))
+    ((:shell "Enter file to load: "))
+  "load a file"
   (echo (format nil "loading ~A" fn))
   (load fn))
 
-(setq HOME (concat (sb-posix:getenv "HOME") "/")
-      STUMPWM-TOP (merge-pathnames  "repos/stumpwm/" (user-homedir-pathname)))
+(defparameter HOME
+  (concat (sb-posix:getenv "HOME") "/"))
+(defparameter STUMPWM-TOP
+  (merge-pathnames  "repos/stumpwm/lisp/" (user-homedir-pathname)))
+
+(defun expand-user (fn)
+  (cl-ppcre:regex-replace "^~/" fn HOME ))
 
 (load-files-verbose
  'load
@@ -57,6 +63,7 @@
  "decorations.lisp"
  "defcommands.lisp"
  "per-window-bindings.lisp"
+ "tsv-db.lisp"
  "url-launcher.lisp"
  "per-window-bindings.lisp"
  "run-raise-programs.lisp"
@@ -69,6 +76,7 @@
   (if (equal fn "/") fn
   (multiple-value-bind (m res)
       (ppcre::scan-to-strings ".*?/([^/]*)/?$" fn )
+    (declare (ignore m))
     (and res (aref res (1- 1))))))
 
 ;;(fset regular-file-p (compose 'not 'pathname-name))
@@ -85,11 +93,9 @@
   (apply 'append l)
   )
 
-(setq *load-path-extra*
+(defvar *load-path-extra*
       (flatten (list 
-       (mapcar (prepend-dir STUMPWM-TOP) (list "commands"))
-       ))
-       )
+       (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
 
 (apply 'load-files-verbose 'stumpwm-loader
        (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
@@ -97,31 +103,16 @@
 ;;(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
 
 
-(defcommand asdfasdf () ()
-  (run-shell-command (format nil "sleep .5; xdotool type '~A'; xdotool key Return" cmu))
-  ;(run-shell-command "xdotool key Return")
-  ;(run-shell-command "sleep .5; xdotool key Return")
-  )
-
-;;(fset regular-file-lister (compose (compose (curry 'remove-if 'not) (curry 'mapcar 'pathname-name)) 'list-directory) )
-
-
-
-		 
-
 (defcommand load-some-file (&optional fn) ((:string nil ))
+  "load a file" 
   (in-package :stumpwm)
-  (let* (
-	 (fn (or fn (completing-read (current-screen)
+  (let* ((fn (or fn (completing-read (current-screen)
 		   "enter stumpwm file to load (completing read): "
 		   ;;(regular-file-lister (namestring STUMPWM-TOP))
-		   (regular-file-lister nil STUMPWM-TOP) )))
-	 )
+		   (regular-file-lister nil STUMPWM-TOP) ))))
     (if fn
 	(load-files-verbose 'stumpwm-loader fn)
-	(echo "nothing to load"))
-    )
-  )
+	(echo "nothing to load"))))
 
 (echo "finished loading .stumpwmrc")
   
