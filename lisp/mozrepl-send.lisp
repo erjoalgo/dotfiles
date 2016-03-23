@@ -49,7 +49,15 @@
   ;;https://gist.github.com/jabbalaci/a1312d211c110ff3855d
   ;;https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser
   (mozrepl-send-command
-   (format nil "gBrowser.selectedTab = gBrowser.addTab(\"~A\");" url)))
+   (format nil
+	   "gBrowser.selectedTab = gBrowser.addTab(\"~A\");" (escape-dqs url))))
+
+(defun escape-dqs (string)
+  (ppcre:regex-replace-all "\""
+			   string
+			   "\\\""))
+
+  
 
 
 ;;please never again...
