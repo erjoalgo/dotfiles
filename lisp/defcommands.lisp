@@ -1,37 +1,26 @@
 (defvar *browser-classes-hash* nil )
 (defvar *vocab-fn* (stumpwm-merger "sensitive/vocab"))
 
-(defcommand scroll-browser-other-frame (updown) ((:rest "key: "))
+(defun is-browser-win (win)
+  (gethash (window-class win) *browser-classes-hash*))
+
+(defcommand scroll-browser-other-frame (up-down-key)
+    ((:rest "key: "))
   "scroll up/down the browser which is on another, visible frame"
-  (let* (
-	 (currwin (current-window))
-	 (visible-weasels
-	  (filter-windows
+  (let* ((curr-win (current-window))
+	 (visible-browser-wins
+	  (remove-if-not
 	   (lambda (win)
 	     (and
+	      (not (eq win curr-win))
 	      (window-visible-p win)
-	      (gethash (window-class win) *browser-classes-hash*)
-	      (not (eq win currwin))
-	      )
-	     )))
-	 )
-    (if (not visible-weasels)
-	;;(echo "no visible browsers in other frames")
-	nil 
-	(progn
-	  (echo "sending key")
-	  (assert (car visible-weasels))
-	  (if (equal "Evince" (window-class (car visible-weasels)))
-	      ;(setq updown (if (equal "d" updown) "Down" "Up")))
-	      ;(setq updown (if (equal "d" updown) "SunPageUp" "SunPageDown")))
-	      (setq updown (if (equal "d" updown) "n" "p")))
-	  (message (format nil "sending ~A to ~A" updown (car visible-weasels)))
-	  ;(utl-send-key (kbd updown) (car visible-weasels))
-	  (send-meta-key-to-window (car visible-weasels) updown)
-	  )
-	)
-    )
-  )
+	      (is-browser-win win)))
+	   (screen-windows (current-screen)))))
+    
+    (when visible-browser-wins
+      (send-meta-key-to-window
+       (car visible-browser-wins)
+       up-down-key))))
 
 (defvar *time-format-international* "%a %e %b %k:%M:%S")
 (defcommand echo-date-battery () ()
@@ -49,22 +38,23 @@
       time
       (format nil  "battery: ~A (~A)" percentage state )))))
 
-(defcommand kill-window-by-class  ()   ()
-  "kill window by class"
-  (let* (
-	 (classes (mapcar 'window-class (screen-windows (current-screen))))
-	 (to-kill (completing-read (current-screen) "enter a window class to kill (completing read!): " classes :require-match t))
-	 )
-    (when to-kill
-      (mapcar 'kill-window (filter-windows (compose (curry 'equal to-kill) 'window-class))))))
+(define-stumpwm-type-for-completion
+    :win-class
+    (mapcar 'window-class (screen-windows (current-screen))))
 
-(define-stumpwm-type :xrandr-rot (input prompt)
-  (or (argument-pop input)
-  (completing-read (current-screen)
-		   prompt 
-		   ;; find all symbols in the
-		   ;;  stumpwm package.
-		   '("left" "right" "normal" "inverted"))))
+(defcommand kill-window-by-class (win-class)
+    ((:win-class "enter window class to kill: "))
+  "kill window by class"
+  ;;so silly...
+  (mapcar 'kill-window
+	  (filter-windows
+	   (compose
+	    (curry 'equal win-class)
+	    'window-class))))
+
+(define-stumpwm-type-for-completion
+    :xrandr-rot
+    '("left" "right" "normal" "inverted"))
 
 (defcommand rotate-screen (orientation)
     ((:xrandr-rot "enter xrandr orientation: "))
