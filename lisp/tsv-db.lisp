@@ -78,3 +78,8 @@
 		(and verbose (message "no such key-value for key: '~a'" key) nil)
 		key-value)))))
 
+(defmacro define-stumpwm-type-for-completion-from-alist
+    (type-name-sym alist-sym)
+  `(define-stumpwm-type ,type-name-sym (input prompt)
+     (or (argument-pop input)
+	 (completing-read-alist-key-value ,alist-sym :prompt prompt))))
