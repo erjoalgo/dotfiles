@@ -4,19 +4,13 @@
    #:launcher-append-url
    #:search-engine-search
    #:uri-encode
-   ;#:make-persistent-alist
    )
   (:use #:tsv-db))
 
 
-(defparameter *launcher-persistent-alist*
-  ;;TODO sane path handling
-  (make-persistent-alist :fn
-			 (stumpwm-merger "sensitive/url-launcher-data")))
 
-(persistent-alist-load *launcher-persistent-alist*)
 
-(defvar *search-engine-persistent-alist*
+(defparameter *search-engine-persistent-alist*
   (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
 
 (persistent-alist-load *search-engine-persistent-alist*)
@@ -24,6 +18,27 @@
 (defvar *search-history-fn*
   ;;todo should be in sensitive
   (concat (sb-posix:getenv "HOME") "/" "search-history"))
+
+
+(defparameter *search-engine-persistent-alist*
+  (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
+
+(persistent-alist-load *search-engine-persistent-alist*)
+
+(defvar *search-history-fn*
+  ;;todo should be in sensitive
+  (concat (sb-posix:getenv "HOME") "/" "search-history"))
+
+
+
+;;; Launcher 
+(defparameter *launcher-persistent-alist*
+  ;;TODO sane path handling
+  (make-persistent-alist :fn
+			 (stumpwm-merger "sensitive/url-launcher-data")))
+
+;;actually load from the file
+(persistent-alist-load *launcher-persistent-alist*)
 
 (defparameter *url-command-rules*
   '(
@@ -38,17 +53,20 @@
   (loop for (regexp opener) in *url-command-rules*
      thereis (and (cl-ppcre:scan regexp url) opener)))
 
-(defcommand launch-url () ()
+(define-stumpwm-type-for-completion-from-persistent-alist
+  :launcher-url (persistent-alist-alist *launcher-persistent-alist*))
+
+(defcommand launch-url (launcher-key) ((:launcher-url "enter url key: "))
   "do a completing read of stored keys, then launch url"
-  (let ((key-url (completing-read-alist-key-value
-	      (persistent-alist-alist *launcher-persistent-alist*)
-	      :prompt "enter url key: " )))
-    (when key-url
-      (let* ((url (expand-user (cadr key-url)))
+  (let ((url
+	 (persistent-alist-get
+	  *launcher-persistent-alist* launcher-key)))
+    (when url
+      (echo "got url" )
+      (let* ((url (expand-user url))
 	     (opener (url-command url)))
 	(if (symbolp opener)
 	    (funcall opener url)
-
 	    (progn (SB-EXT:RUN-PROGRAM opener (list url)
 				;;TODO output to tmp?
 				:search t
@@ -81,6 +99,8 @@
 	(echo (format nil "added: ~A" url)))))
 
 
+
+
 (defun uri-encode (search-terms)
   (reduce
    (lambda (string from-to)
@@ -96,31 +116,31 @@
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
 
+(define-stumpwm-type-for-completion-from-persistent-alist
+  :search-engine (persistent-alist-alist *search-engine-persistent-alist*))
+
 (defcommand search-engine-search
-    (&optional engine terms)
-    ()
-    "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
-  (let ((engine (or engine
-		    (completing-read-alist
-		     (persistent-alist-alist *search-engine-persistent-alist*)
-		     :prompt "enter search engine: " )))
-	(terms (or terms (read-one-line (current-screen) "enter search query: ")))
-	engine-fmt)
-    
+  (engine terms)
+  ((:search-engine "enter search engine: ")
+   (:string "enter search query: "))
+  
+  "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
+  
+  (let (engine-fmt)
     (when (and engine terms)
-      (if
-       (not (setf engine-fmt
-		  (persistent-alist-get
-		   *search-engine-persistent-alist* engine)))
-	  (message "no such engine: ~A" engine)
-	  
-	  (let* (
-		 ;;(args (escape-bash-single-quotes ))
-		 (args terms)
-		 (query (uri-encode args))
-		 (url (format nil engine-fmt query)))
-	    (mozrepl-firefox-new-tab url)
-	    (log-entry-timestamp terms *search-history-fn*))))))
+      (if (not (setf engine-fmt
+		     ;;ugly but this is to allow "search-engine-search ddg" command
+		     (if (consp engine) (cadr engine) 
+		       (persistent-alist-get
+			*search-engine-persistent-alist* engine))))
+	  (message "no such engine: '~A'" engine)
+	(let* (
+	       ;;(args (escape-bash-single-quotes ))
+	       (args terms)
+	       (query (uri-encode args))
+	       (url (format nil engine-fmt query)))
+	  (mozrepl-firefox-new-tab url)
+	  (log-entry-timestamp terms *search-history-fn*))))))
 
 
 
