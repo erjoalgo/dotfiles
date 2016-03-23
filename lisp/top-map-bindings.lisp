@@ -1,22 +1,21 @@
+(defvar *top-hash-map* );;to eliminate warnings
+
 (defun define-key-bindings (kmap bindings &optional more-kmaps)
   (when kmap (setq more-kmaps (cons kmap more-kmaps)))
-  (mapc (lambda (kmap)
-	  (mapc (lambda (kbd-action)
-		  (destructuring-bind (key action) kbd-action
-		      (define-key kmap (kbd key) action)))
-		bindings))
-	more-kmaps)
-  )
+  (loop for kmap in more-kmaps do
+	(loop for (key action) in bindings do
+	(define-key kmap (kbd key) action))))
 
 
-(mapcar (lambda (kmap-symbol) (set kmap-symbol (make-sparse-keymap)))
-	'(
-	  *screen-rotation-map*
-	  *utils-map*
-	  *special-chars-map*
-	  *commands-map*
-	  ;;*help-map*
-	  ))
+(defmacro def-several-vars (value-form &rest vars)
+  `(progn ,@(loop for var in vars collect `(defvar ,var ,value-form))))
+
+(def-several-vars
+  (make-sparse-keymap)
+  *screen-rotation-map*
+  *utils-map*
+  *special-chars-map*
+  *commands-map*)
 
 (define-key-bindings
   *top-map*
@@ -32,6 +31,7 @@
     ;;brightness
     ;;emergency dimming 
     ("XF86MonBrightnessDown" "run-shell-command xbacklight -set 1")
+    ("XF86MonBrightnessUp" "run-shell-command xbacklight -set 50")
     ;;("XF86AudioLowerVolume" nil)
     ;;("XF86AudioRaiseVolume" nil)
 
@@ -89,7 +89,7 @@
     ("H-h" *help-map*)
 
     ;;("H-G" "search-engine-search-none")
-    ("H-G" "search-engine-search goog")
+    ("H-G" "search-engine-search")
     ("H-d" "dict-lookup-command")
 
     ;;("H-DEL" "run-shell-command xdotool key Hyper_L 0 type '`'")
@@ -146,14 +146,15 @@
     ("H-F9" "voldown")
     ("H-F10" "volup")
     )
-  (list-from-hash *top-hash-map* (lambda (k v) v))
+  (list-from-hash *top-hash-map* (lambda (k v)
+					 (declare (ignore k)) v))
   ;;not efficient nor necessary but only run at initialization
  )
 
 (defun all-top-maps ()
   (cons *top-map*
-	(list-from-hash *top-hash-map* (lambda (k v) v)))
-  )
+	(list-from-hash *top-hash-map* (lambda (k v)
+					 (declare (ignore k)) v))))
 
 (define-key-bindings nil 
     (append 
@@ -193,8 +194,7 @@
    ("P" "save_pic")
    ("r" *screen-rotation-map*)
    ("c" *special-characters-map*)
-   ("w" "connect-internet")
-   ))
+   ("w" "connect-internet")))
 
 
 (define-key-bindings *screen-rotation-map*
