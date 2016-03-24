@@ -21,4 +21,8 @@ ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
 
 ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"
 
+#link the top itself
+ln -sf "${STUMPWM_TOP}" "${HOME}/"
+ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
+
 ${STUMPWM_TOP}/idempotent/source-my-rcs.sh
