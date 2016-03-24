@@ -89,13 +89,12 @@
 
 
 (fset prepend-dir (lambda (dir) (curry 'join-path dir)))
-(defun flatten (l)
-  (apply 'append l)
-  )
 
 (defvar *load-path-extra*
-      (flatten (list 
-       (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
+  (flatten (list 
+	    (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
+
+(defvar *BROWSER-CLASSES* )
 
 (apply 'load-files-verbose 'stumpwm-loader
        (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
