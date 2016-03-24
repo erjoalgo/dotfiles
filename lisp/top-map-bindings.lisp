@@ -42,7 +42,8 @@
     ;;("s-F4" "scroll-browser-other-frame C-F4")
 
     ("Hiragana_Katakana" "run-shell-command /home/ernesto/.xmodmap_jap")
-    ("H-e" "my-emacs-cmd")
+    ;;("H-e" "my-emacs-cmd")
+    ("H-e" "emacs")
     ;;("H-E" "pull-emacs")
     ;;("H-f" "raise-iceweasel")
     ;;("H-c" "raise-x-terminal-emulator")
