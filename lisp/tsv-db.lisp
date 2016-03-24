@@ -84,6 +84,13 @@
 	 (completing-read-alist-key-value ,alist-sym :prompt prompt)
 	 (throw 'error "Abort."))))
 
+(defmacro define-stumpwm-type-for-completion-from-alist-key-only
+    (type-name-sym alist-sym)
+  `(define-stumpwm-type ,type-name-sym (input prompt)
+     (or (argument-pop input)
+	 (completing-read-alist ,alist-sym :prompt prompt)
+	 (throw 'error "Abort."))))
+
 (defvar *persistent-alist-syms* nil )
 
 ;;from LIST, not alist
