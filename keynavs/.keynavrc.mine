@@ -56,11 +56,14 @@ Tab warp
 5 click 5
 shift+space warp, click 3,end
 
+shift+1 click 1,click 1,click 1
+
 # Zoom to the current window
 #w windowzoom
 
 # Zoom to the cursor location with a given height and width
 #c cursorzoom 200 200
+f cursorzoom 200 200
 
 # Handy for holding ctrl while using keynav:
 #ctrl+a cut-left
