@@ -70,7 +70,6 @@
   (let ((key (completing-read-alist alist :prompt prompt)))
     (when key
       (when space-trim (setf key (trim-spaces key)))
-
       (if (and disallow-empty (= (length key) 0))
 	  (and verbose (echo "key must be nonempty")) nil)
 	  (let ((key-value (assoc key alist  :test 'equal)))
@@ -82,4 +81,45 @@
     (type-name-sym alist-sym)
   `(define-stumpwm-type ,type-name-sym (input prompt)
      (or (argument-pop input)
-	 (completing-read-alist-key-value ,alist-sym :prompt prompt))))
+	 (completing-read-alist-key-value ,alist-sym :prompt prompt)
+	 (throw 'error "Abort."))))
+
+(defvar *persistent-alist-syms* nil )
+
+;;from LIST, not alist
+(defmacro define-stumpwm-type-for-completion-from-list
+    (type-name-sym list-sym)
+  `(define-stumpwm-type ,type-name-sym (input prompt)
+     (or (argument-pop input)
+	 (completing-read 
+	   (current-screen) prompt
+	   (mapcar 'symbol-name ,list-sym)))))
+
+(define-stumpwm-type-for-completion-from-list
+    :persistent-alist-sym *persistent-alist-syms*)
+
+(defcommand reload-persistent-alist (alist-sym)
+    ((:persistent-alist-sym "enter p-alist symbol: " ))
+  "reload a persistent alist from its underlying file, message how many entries loaded" 
+  (let ((p-alist (symbol-value (intern alist-sym "STUMPWM"))))
+    (persistent-alist-load p-alist)
+    (message "loaded ~D symbols" (length (persistent-alist-alist p-alist)))))
+
+
+(define-stumpwm-type :symbol (input prompt)
+  (or (find-symbol (string-upcase
+		    (or (argument-pop input)
+			;; Whitespace messes up find-symbol.
+			(string-trim " "
+				     (or (completing-read (current-screen)
+							  prompt
+							  ;; find all symbols in the
+							  ;;  stumpwm package.
+							  (let (acc)
+							    (do-symbols (s (find-package "STUMPWM"))
+							      (push (string-downcase (symbol-name s)) acc))
+							    acc))
+					 (throw 'error "Abort.")))
+			))
+		   "STUMPWM")
+      (throw 'error "Symbol not in STUMPWM package")))
