@@ -1,4 +1,4 @@
-;-*- mode: Lisp eval: (elisp_install_buttons)-*-
+;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
 (defun echo-format (fmt &rest args)
@@ -31,6 +31,7 @@
 
 (defparameter HOME
   (concat (sb-posix:getenv "HOME") "/"))
+
 (defparameter STUMPWM-TOP
   (merge-pathnames  "repos/stumpwm/lisp/" (user-homedir-pathname)))
 
@@ -64,6 +65,7 @@
  "defcommands.lisp"
  "per-window-bindings.lisp"
  "tsv-db.lisp"
+ "mozrepl.lisp"
  "url-launcher.lisp"
  "per-window-bindings.lisp"
  "run-raise-programs.lisp"
