@@ -189,12 +189,12 @@
    ("T" "kill-tk-windows")
    ("M" "echo_pointer")
    ("m" "toggle-magnifier")
-					;("f" "scrot_fema")
    ("F" "define-button")
    ("P" "save_pic")
    ("r" *screen-rotation-map*)
    ("c" *special-characters-map*)
-   ("w" "connect-internet")))
+   ("w" "connect-internet")
+   ("h" *help-map*)))
 
 
 (define-key-bindings *screen-rotation-map*
