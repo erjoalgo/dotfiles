@@ -14,6 +14,7 @@
 	    (let* (
 		   (cmd-name-sub (format nil "autogen-~A-~A" cmd-name-suffix name))
 		   (form `(defcommand ,(intern cmd-name-sub) () ()
+			    ,(format nil "autogen-command to raise ~A" name)
 			    (let* (
 				   (curr-win (current-window))
 				   (matching
@@ -49,7 +50,9 @@
 	      (progn
 		    (eval form)
 		    (funcall kmap-installer *top-map*)
-		    (maphash (lambda (k v) (funcall kmap-installer v)) *top-hash-map*)
+		    (maphash (lambda (k v) (declare (ignore k))
+				     (funcall kmap-installer v))
+			     *top-hash-map*)
 		    )
 	      (print form)
 	      ;;(print `(define-key *top-map* (kbd ,key) ,cmd-name-sub))
@@ -62,7 +65,7 @@
     )
   )
 
-(setq run_raise_pull_list
+(defvar run_raise_pull_list
       `(
 	;;("iceweasel" "H-f" :cmd "firefox --no-remote -P default"
 	("firefox" "H-f"

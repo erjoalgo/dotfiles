@@ -1,8 +1,9 @@
 
 ;;(setq debug-window-bindings t)
-(setq WINDOW-BINDING-RULES-FN "per-window-bindings-rules.lisp")
-(setq debug-window-bindings t)
+(defvar WINDOW-BINDING-RULES-FN "per-window-bindings-rules.lisp")
+(defvar debug-window-bindings t)
 (setq debug-window-bindings nil )
+
 (defun update_bindings_hash ()
   (let* (
 	 (bindings-spec
@@ -44,34 +45,12 @@
     )
   )
    
-(defun focus-window-bindings (b a)
-  
-  )
 
-'(defun focus-window-bindings (b a)
-  (setq ab (list a b))
-  ;;make this a little bit faster?
-  (let* (
-	 (class-source (and a (window-class a)))
-	 (class-dest (and b (window-class b)))
-	 (bindings-source (gethash class-source *top-hash-map*))
-	 (bindings-dest (gethash class-dest *top-hash-map*))
-	 )
-    (when (not (eq bindings-source bindings-dest))
-	(when bindings-source
-	  ;;pop previous top map from source
-	  (when debug-window-bindings (echo "popping..."))
-	  (pop-top-map))
-	(when bindings-dest
-	  (when debug-window-bindings (echo "pushing..."))
-	  (push-top-map bindings-dest))
-	)
-    )
-  )
 
-(setq *current-top-bindings* nil )
+(defvar *current-top-bindings* nil )
 (defun focus-window-bindings (b a)
-  (setq ab (list a b))
+  (declare (ignore a))
+  ;(setq ab (list a b))
   (let* (
 	 (class-dest (and b (window-class b)))
 	 (bindings-dest (gethash class-dest *top-hash-map*))
@@ -94,18 +73,8 @@
     )
   )
 
-(defun destroy-window-bindings (win)
-  
-  )
-(add-hook *destroy-window-hook* 'destroy-window-bindings)
-(defun focus-group-bindings (b a)
-  ;;(pop-top-map)
-  )
-
-
-
-(setq annon-funs-hash (make-hash-table :test 'equal))
-(setq autogen-command-index 0)
+(defvar annon-funs-hash (make-hash-table :test 'equal))
+(defvar autogen-command-index 0)
 
 (defun defcommand-annon  (command)
   (let* (
@@ -130,6 +99,7 @@
 		      ))
 		 
 		 (defcmd-form `(defcommand ,(intern name) () ()
+				 ,(format nil "anon-command: ~A" name)
 				 ,(prin1-to-string (cons name actions))
 				 ,@actions))
 		 )
@@ -143,8 +113,8 @@
   )
 
 (defcommand update_bindings_hash_cmd () ()
-  (stumpwm::update_bindings_hash)
-  )
+  "reload bindings from WINDOW-BINDING-RULES-FN TODO REFACTOR THIS FILE"
+  (stumpwm::update_bindings_hash))
 
 (update_bindings_hash)
 (add-hook *focus-window-hook* 'focus-window-bindings)

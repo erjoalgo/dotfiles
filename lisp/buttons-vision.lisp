@@ -43,9 +43,7 @@
 	  (return)
 	  (setq parents (cons newparent parents)))
       )
-    (reverse parents)
-    )
-  )
+    (reverse parents)))
 
 '(defun sub-scrot (fn &optional eog)
   (let* (
@@ -68,9 +66,7 @@
     (hide-message-windows)
     (run-shell-command cmd t)
     (when eog
-      (run-shell-command (format nil  "eog '~A'" fn) nil ))
-    )
-  )
+      (run-shell-command (format nil  "eog '~A'" fn) nil ))))
 
 (setq scrots_top (join-path HOME "pictures/scrots/")
       subscrots_top (join-path scrots_top "subs"))
