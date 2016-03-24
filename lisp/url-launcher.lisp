@@ -27,36 +27,37 @@
 ;;actually load from the file
 
 (defparameter *url-command-rules*
-  '(
+  `(
     (".*[.]pdf$" "zathura")
     ;;(".*[.]pdf" "evince")
     ;;(".*[.]pdf" "gv")
-    ("(^https?://.*|.*[.]html.*).*" mozrepl-firefox-new-tab)
+    ("(^https?://.*|.*[.]html.*).*" ,#'mozrepl-firefox-new-tab)
     (".*[.](docx?|odt)$" "libreoffice")
-    ("about:config"  mozrepl-firefox-new-tab)))
+    ("about:config" ,#'mozrepl-firefox-new-tab)))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
      thereis (and (cl-ppcre:scan regexp url) opener)))
 
-(define-stumpwm-type-for-completion-from-alist
+(define-stumpwm-type-for-completion-from-alist-key-only
   :launcher-url (persistent-alist-alist *launcher-persistent-alist*))
 
 (defcommand launch-url (launcher-key) ((:launcher-url "enter url key: "))
   "do a completing read of stored keys, then launch url"
   (let ((url
-	 ;;ugly but this is to allow testing via repl
-	 (if (consp launcher-key)
-	     (cadr launcher-key) 
-		       (persistent-alist-get
-			*launcher-persistent-alist* launcher-key))))
-    ;;(message "got url: ~A ~A" url launcher-key)
+	 (persistent-alist-get
+			*launcher-persistent-alist* launcher-key)))
+    ;(message "got url: ~A ~A" url launcher-key)
     (when url
       (let* ((url (expand-user url))
 	     (opener (url-command url)))
-	(if (symbolp opener)
+	
+	(if (functionp opener)
 	    (funcall opener url)
-	    (progn (SB-EXT:RUN-PROGRAM opener (list url)
+	    (progn
+	      (run-shell-command (format nil "~A ~A" opener url))
+	      ;;TODO why this causes hang
+	      '(SB-EXT:RUN-PROGRAM opener  (list url)
 				;;TODO output to tmp?
 				:search t
 				:wait nil 
