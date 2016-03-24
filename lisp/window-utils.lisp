@@ -49,15 +49,8 @@
     )
   )
 
-(defun filter-windows (fun &optional all-screens)
-  ;(remove nil (loop for win in (screen-windows (current-screen)) collect (when (equal (window-class win) "Emacs") win) ))
-  (remove nil (loop for win in (screen-windows (current-screen)) collect
-		   (when
-		       (funcall fun win)
-		     win)
-		   ))
-  ;(loop for win in (screen-windows (current-screen)) (when (funcall fun win) collect win))
-  )
+(defun filter-windows (pred &optional all-screens)
+  (remove-if-not pred (screen-windows (current-screen))))
 
 (defun xdotool (cmd)
   (run-shell-command (format nil "xdotool ~A" cmd) t))

@@ -5,7 +5,7 @@
 (setq *input-window-gravity* :center)
 (define-key *input-map* (kbd "C-v") 'input-yank-selection)
 (setq *run-or-raise-all-groups* nil )
-(setq *time-format-international* "%a %e %b %k:%M:%S")
+
 
 
 
