@@ -1,5 +1,5 @@
 `(
-  ;;(("Iceweasel" "Navigator" "Firefox" wwww-browser "Chromium")
+  ;;(("Iceweasel" "Navigator" "Firefox" www-browser "Chromium")
   (,*browser-classes*
    ("F2" (send-meta-key (current-screen) (kbd "C-TAB")))
    ("F1" (send-meta-key (current-screen) (kbd "C-ISO_Left_Tab")))
