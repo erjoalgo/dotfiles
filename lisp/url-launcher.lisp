@@ -39,16 +39,19 @@
   (loop for (regexp opener) in *url-command-rules*
      thereis (and (cl-ppcre:scan regexp url) opener)))
 
-(define-stumpwm-type-for-completion-from-persistent-alist
+(define-stumpwm-type-for-completion-from-alist
   :launcher-url (persistent-alist-alist *launcher-persistent-alist*))
 
 (defcommand launch-url (launcher-key) ((:launcher-url "enter url key: "))
   "do a completing read of stored keys, then launch url"
   (let ((url
-	 (persistent-alist-get
-	  *launcher-persistent-alist* launcher-key)))
+	 ;;ugly but this is to allow testing via repl
+	 (if (consp launcher-key)
+	     (cadr launcher-key) 
+		       (persistent-alist-get
+			*launcher-persistent-alist* launcher-key))))
+    ;;(message "got url: ~A ~A" url launcher-key)
     (when url
-      (echo "got url" )
       (let* ((url (expand-user url))
 	     (opener (url-command url)))
 	(if (symbolp opener)
@@ -108,7 +111,7 @@
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
 
-(define-stumpwm-type-for-completion-from-persistent-alist
+(define-stumpwm-type-for-completion-from-alist
   :search-engine (persistent-alist-alist *search-engine-persistent-alist*))
 
 (defcommand search-engine-search
