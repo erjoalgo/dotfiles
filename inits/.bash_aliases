@@ -1,4 +1,5 @@
 #shortcuts
+alias j='jobs'
 alias e='emacs'
 alias enw='emacs -nw'
 alias ec='emacsclient -n'
