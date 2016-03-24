@@ -119,5 +119,7 @@
 (update_bindings_hash)
 (add-hook *focus-window-hook* 'focus-window-bindings)
 (add-hook *focus-group-hook* 'focus-group-bindings)
+(defun focus-group-bindings (a b) (declare (ignore a b)))
+
 
 ;(setq *focus-window-hook* nil )
