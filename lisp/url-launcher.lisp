@@ -9,22 +9,6 @@
 
 
 
-
-(defparameter *search-engine-persistent-alist*
-  (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
-
-(persistent-alist-load *search-engine-persistent-alist*)
-
-(defvar *search-history-fn*
-  ;;todo should be in sensitive
-  (concat (sb-posix:getenv "HOME") "/" "search-history"))
-
-
-(defparameter *search-engine-persistent-alist*
-  (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
-
-(persistent-alist-load *search-engine-persistent-alist*)
-
 (defvar *search-history-fn*
   ;;todo should be in sensitive
   (concat (sb-posix:getenv "HOME") "/" "search-history"))
@@ -36,9 +20,11 @@
   ;;TODO sane path handling
   (make-persistent-alist :fn
 			 (stumpwm-merger "sensitive/url-launcher-data")))
+(persistent-alist-load *launcher-persistent-alist*)
+(push '*launcher-persistent-alist* *persistent-alist-syms*)
+
 
 ;;actually load from the file
-(persistent-alist-load *launcher-persistent-alist*)
 
 (defparameter *url-command-rules*
   '(
@@ -74,7 +60,9 @@
 				:output t
 				:error t
 				:input t)
-		   nil ))))))
+		   nil ))
+	;;log to different file? or at least add tags
+	(log-entry-timestamp url *search-history-fn*)))))
 
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")
@@ -98,8 +86,11 @@
 	;;(setq *launcher-alist* (cons key url))
 	(echo (format nil "added: ~A" url)))))
 
-
-
+;;search-engine-search
+(defparameter *search-engine-persistent-alist*
+  (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
+(persistent-alist-load *search-engine-persistent-alist*)
+(push '*search-engine-persistent-alist* *persistent-alist-syms*)
 
 (defun uri-encode (search-terms)
   (reduce
@@ -110,8 +101,9 @@
      ("[+]" "%2B"))
    :initial-value search-terms))
 
-;;would be nice to have an emacs-like
+;;would still be nice to have an emacs-like
 ;;(interactive (list ...))
+;;without having to defne custom, one-off types
 ;(defcommand search-engine-search (engine terms)
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
@@ -140,8 +132,9 @@
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
 	  (mozrepl-firefox-new-tab url)
-	  (log-entry-timestamp terms *search-history-fn*))))))
+	  (log-entry-timestamp (format nil "~A:~A" engine terms)
+			       *search-history-fn*))))))
 
-
-
-
+(defcommand reload-search-engines () ()
+  "reload search engines from file"
+  (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*"))
