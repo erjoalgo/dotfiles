@@ -132,7 +132,8 @@
 	  (message "no such engine: '~A'" engine)
 	(let* (
 	       ;;(args (escape-bash-single-quotes ))
-	       (args terms)
+	       
+	       (args (trim-spaces terms))
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
 	  (mozrepl-firefox-new-tab url)
