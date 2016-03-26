@@ -24,15 +24,15 @@ x-terminal-emulator &
 ##/usr/bin/keynav &
 
 
+command -v keynav  && keynav &
+
 INTERNET_TEST="curl http://erjoalgo.com:7036"
 
 if ! ${INTERNET_TEST}; then
     sudo wifi -y -t ac
-    
     if ! ${INTERNET_TEST}; then
 	sudo dhclient -v eth2
     fi
-    
 fi
 
 
