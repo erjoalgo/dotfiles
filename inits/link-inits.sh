@@ -17,6 +17,7 @@ ln -sf "${INITS_TOP}/.my-profile" "${HOME}/"
 ln -sf "${INITS_TOP}/.my-startups.sh" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
+ln -s "${INITS_TOP}/.gitconfig" "${HOME}"
 
 
 ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"

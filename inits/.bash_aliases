@@ -93,7 +93,7 @@ alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias chmodx='chmod +x'
 
 
-alias sourceproxy='source ~/proxy.sh'
+alias sp='source ~/proxy.sh'
 
 # Local Variables:
 # mode: sh
