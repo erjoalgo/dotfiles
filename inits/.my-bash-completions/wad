@@ -1,0 +1,19 @@
+# Debian apt-get(8) completion                             -*- shell-script -*-
+
+function list_essids	{
+	 sudo iwlist wlan0 scanning | grep '^[[:space:]]*ESSID:' | cut -d'"' -f 2
+}
+_wad()
+{
+
+    local cur
+    _init_completion || return
+
+    COMPREPLY=( $( compgen -W \
+    "$(list_essids | tr '\n' ' ')" -- "$cur"  ) )
+    return 0
+    
+} &&
+complete -F _wad wad
+
+# ex: ts=4 sw=4 et filetype=sh
