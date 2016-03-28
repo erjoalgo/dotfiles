@@ -13,7 +13,7 @@ ln -sf "${INITS_TOP}/.my-bashrc" "${HOME}/"
 ln -sf "${INITS_TOP}/.my-bash-funs" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.xinitrc" "${HOME}/" 
-ln -sf "${INITS_TOP}/.my-profile" "${HOME}/" 
+ln -sf "${INITS_TOP}/.bash_profile" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my-startups.sh" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
@@ -26,4 +26,3 @@ ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"
 ln -sf "${STUMPWM_TOP}" "${HOME}/"
 ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
 
-${STUMPWM_TOP}/idempotent/source-my-rcs.sh
