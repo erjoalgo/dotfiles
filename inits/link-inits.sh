@@ -26,4 +26,3 @@ ln -sf "${STUMPWM_TOP}/.stumpwmrc" "${HOME}/"
 ln -sf "${STUMPWM_TOP}" "${HOME}/"
 ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
 
-${STUMPWM_TOP}/idempotent/source-my-rcs.sh
