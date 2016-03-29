@@ -1,26 +1,35 @@
 (defpackage #:mozrepl)
 
-(defun nc (host port data)
-  (with-output-to-string (output-fh)
-    (with-input-from-string (input-fh data)
-      (SB-EXT:RUN-PROGRAM "nc" (list host port "-q2")
-			  ;;TODO output to tmp?
-			  :search t
-			  :wait t
-			  :output output-fh
-			  :error output-fh
-			  :input input-fh))
-    output-fh))
+(defun nc (host port data &key wait)
+  (with-input-from-string
+   (input-fh data)
+   (if (not wait)
+       (SB-EXT:RUN-PROGRAM "nc" (list host port "-q2")
+			   ;;TODO output to tmp?
+			   :search t
+			   :wait nil 
+			   :output t
+			   :error t
+			   :input input-fh)
+     (with-output-to-string
+       (output-fh)
+       (SB-EXT:RUN-PROGRAM "nc" (list host port "-q2")
+			   ;;TODO output to tmp?
+			   :search t
+			   :wait t
+			   :output output-fh
+			   :error output-fh
+			   :input input-fh)))))
 
 (defvar *mozrepl-port* "4242")
 
-(defun mozrepl-send-command (cmd)
+(defun mozrepl-send-command (cmd &key wait)
   ;;for now starting a new process for each cmd. better to keep a single pipe open
   ;;but risk corrupting state of the repl with malformed input
   (let* ((out
-	  (nc "localhost" *mozrepl-port* cmd)))
+	  (nc "localhost" *mozrepl-port* cmd :wait wait)))
     (or
-     
+     (not wait)
      (ppcre::register-groups-bind
       (resp)
       ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
@@ -42,7 +51,8 @@
      do (mozrepl-send-command cmd)))
 
 (defun mozrepl-firefox-get-url ()
-  (let ((out (mozrepl-send-command "content.document.location.href")))
+  (let ((out (mozrepl-send-command "content.document.location.href"
+				   :wait t)))
     (subseq-minus out 1 -1)))
 
 (defun mozrepl-firefox-new-tab (url)
@@ -51,7 +61,8 @@
   ;;https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser
   (mozrepl-send-command
    (format nil
-	   "gBrowser.selectedTab = gBrowser.addTab(\"~A\");" (escape-dqs url))))
+	   "gBrowser.selectedTab = gBrowser.addTab(\"~A\");"
+	   (escape-dqs url))))
 
 (defun escape-dqs (string)
   (ppcre:regex-replace-all "\""
