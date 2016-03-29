@@ -13,7 +13,7 @@ ln -sf "${INITS_TOP}/.my-bashrc" "${HOME}/"
 ln -sf "${INITS_TOP}/.my-bash-funs" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.xinitrc" "${HOME}/" 
-ln -sf "${INITS_TOP}/.my-profile" "${HOME}/" 
+ln -sf "${INITS_TOP}/.bash_profile" "${HOME}/" 
 ln -sf "${INITS_TOP}/.my-startups.sh" "${HOME}/" 
 
 ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
