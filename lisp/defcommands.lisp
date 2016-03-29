@@ -18,9 +18,7 @@
 	   (screen-windows (current-screen)))))
     
     (when visible-browser-wins
-      (send-meta-key-to-window
-       (car visible-browser-wins)
-       up-down-key))))
+      (send-fake-key (car visible-browser-wins) (kbd up-down-key)))))
 
 (defvar *time-format-international* "%a %e %b %k:%M:%S")
 (defcommand echo-date-battery () ()
