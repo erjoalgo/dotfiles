@@ -51,6 +51,7 @@ alias aff='apt-file find'
 alias acs='apt-cache show'
 alias spsi='sudo python setup.py install'
 alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
+alias dpkgl='dpkg -L'
 
 
 #wifi
