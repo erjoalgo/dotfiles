@@ -72,6 +72,7 @@ alias sstop='bash -xc '\''sudo service $0 stop'\'''
 #misc programs
 alias untar='tar axvf'
 alias umount='sudo umount'
+alias sbcl='rlwrap sbcl'
 alias blkid='sudo blkid'
 alias thon='python'
 alias ura='zathura'
