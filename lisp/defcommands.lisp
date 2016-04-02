@@ -147,4 +147,10 @@ be used to override the default window formatting."
 			:search t
 			:output t
 			:error t
-			:wait t)))
+			:wait t)
+    ;;why does this crash the session
+    '(SB-EXT:RUN-PROGRAM "eog"
+			(list out-png)
+			:search t)
+    (set-x-selection out-png :clipboard)
+    (message "copied to cliboard: ~A" out-png)))
