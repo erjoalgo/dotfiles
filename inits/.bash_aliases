@@ -22,6 +22,7 @@ alias gf='git diff'
 alias gl='git log'
 alias ga='git add'
 alias gsin='git-commit-select-files.sh'
+alias gfsin='git-commit-select-files.sh'
 alias grv='git remote -vv'
 alias gpom='git push origin master'
 alias gpgm='git push github-origin master'
@@ -51,6 +52,7 @@ alias aff='apt-file find'
 alias acs='apt-cache show'
 alias spsi='sudo python setup.py install'
 alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
+alias dpkgl='dpkg -L'
 
 
 #wifi

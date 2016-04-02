@@ -37,14 +37,14 @@ q cut-left,cut-up
 e cut-right,cut-up
 z cut-left,cut-down
 c cut-right,cut-down
-shift+a move-left
-shift+x move-down
-shift+w move-up
-shift+d move-right
-shift+q move-left,move-up
-shift+e move-right,move-up
-shift+z move-left,move-down
-shift+c move-right,move-down
+alt+a move-left
+alt+x move-down
+alt+w move-up
+alt+d move-right
+alt+q move-left,move-up
+alt+e move-right,move-up
+alt+z move-left,move-down
+alt+c move-right,move-down
 s warp,click 1
 shift+s warp,click 3
 semicolon warp,end
@@ -56,7 +56,7 @@ Tab warp
 5 click 5
 shift+space warp, click 3,end
 
-shift+1 click 1,click 1,click 1
+shift+1 warp, click 1, click 1, click 1, sh "xdotool key shift+ctrl+c"
 
 # Zoom to the current window
 #w windowzoom
@@ -128,3 +128,8 @@ ctrl+s drag 1
 #b cell-select 3x1      # down-left
 #n cell-select 3x3      # down-right
 #period cell-select 2x2 # center
+
+
+# Local Variables:
+# mode: conf-mode
+# End:

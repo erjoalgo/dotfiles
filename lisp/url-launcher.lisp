@@ -75,14 +75,11 @@
 
   (setq url (or url (mozrepl-firefox-get-url))
 	key (trim-spaces key))
-  (if (not (and key url (> (length key) 0) (> (length url) 0)))
-      (echo (format nil 
-		    "something failed: (and key url (> (length key) 0) (> (length url) 0)) ~a ~a ~a ~a"
-		    (not (not key))
-		    (not (not url))
-		    (> (length key) 0)
-		    (> (length url) 0)
-		    ))
+  (if (or (not (and key url))
+	  (zerop (length key))
+	  (zerop (length url))
+	  (string= "NIL" key))
+      (message "invalid key")
       (progn
 	(tsv-add-entry (persistent-alist-fn
 			*launcher-persistent-alist*)

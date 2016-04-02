@@ -75,8 +75,12 @@ function append_path	{
 }
 function shred_rec	{
     read -p "rec shred ${1}?"
-    find "${1}" -type f -exec shred -zuf {} \;
-    find "${1}" -depth -type d -exec rmdir {} \;
+    if test -d "${1}"; then
+	find "${1}" -type f -exec shred -zuf {} \;
+	find "${1}" -depth -type d -exec rmdir {} \;
+    else
+	shred -zufn10 "${1}"
+    fi
 }
 function is_newline_terminated	{
     LAST_CHAR=$(tail -c1 "${1}")
