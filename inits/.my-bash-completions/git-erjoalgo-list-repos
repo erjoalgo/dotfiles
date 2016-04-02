@@ -1,4 +1,4 @@
-_git_erjoalgo_list_repos()
+git_erjoalgo_list_repos()
 {
 
     local cur
@@ -9,4 +9,7 @@ _git_erjoalgo_list_repos()
 			   -- "$cur" ))
     return 0
 } &&
-complete -F _git_erjoalgo_list_repos git-erjoalgo-clone.sh
+complete -F git_erjoalgo_list_repos git-erjoalgo-clone.sh
+# Local Variables:
+# mode: sh-mode
+# End:
