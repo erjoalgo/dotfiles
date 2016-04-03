@@ -140,8 +140,11 @@ be used to override the default window formatting."
     ((:string "enter name for scrot: "))
   "save a scrot to *scrots-top*"
   ;;TODO allow selecting region
+  (unmap-message-window (current-screen))
+  (sleep 1)
   (let ((out-png (format nil 
 			 "~A/~A.png" *scrots-top* name)))
+    
     (SB-EXT:RUN-PROGRAM "scrot"
 			(list out-png)
 			:search t
