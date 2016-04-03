@@ -106,6 +106,7 @@
     ;("H-Up" "run-shell-command brightnesschange.py w")
     ;("H-Down" "run-shell-command brightnesschange.py d")
     ("H-g" "search-engine-search ddg")
+    ("H-m" "search-engine-search music")
     ;;("H-G" "search-engine-search wiki")
     ("H-D" "cat-message-command ~/vocab")
     ("H-l" "launch-url")
