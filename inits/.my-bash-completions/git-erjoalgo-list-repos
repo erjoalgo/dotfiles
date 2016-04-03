@@ -1,15 +1,32 @@
-git_erjoalgo_list_repos()
+SELFD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${SELFD}"/erjoalgo-sensitive
+
+function git_erjoalgo_list_repos	{
+    ssh -p"${ERJOALGO_PORT}" "${ERJOALGO}" ls "${ERJOALGO_GIT_BARE_PATH}"
+}
+
+function git_erjoalgo_clone	{
+    REPO=${1}
+    git clone "ssh://${ERJOALGO}:${ERJOALGO_PORT}${ERJOALGO_GIT_BARE_PATH}/$(basename ${REPO} .git).git"
+}
+
+git_erjoalgo_list_repos_completion()
 {
 
     local cur
     _init_completion || return
 
     COMPREPLY=( $( compgen -W \
-			   "$(git-erjoalgo-list-repos.sh | tr '\n' ' ')"\
+			   "$(git_erjoalgo_list_repos | tr '\n' ' ')"\
 			   -- "$cur" ))
     return 0
 } &&
-complete -F git_erjoalgo_list_repos git-erjoalgo-clone.sh
+complete -F git_erjoalgo_list_repos_completion git_erjoalgo_clone
+
+
+
+
+
 # Local Variables:
-# mode: sh-mode
+# mode: sh
 # End:
