@@ -13,5 +13,6 @@ _sagiy()
 } &&
 complete -F _sagiy sagiy
 complete -F _sagiy acs
+complete -F _sagiy dpkgl
 
 # ex: ts=4 sw=4 et filetype=sh
