@@ -15,6 +15,7 @@
   *screen-rotation-map*
   *utils-map*
   *special-chars-map*
+  *search-engine-map*
   *commands-map*)
 
 (define-key-bindings
@@ -106,7 +107,69 @@
     ;("H-Up" "run-shell-command brightnesschange.py w")
     ;("H-Down" "run-shell-command brightnesschange.py d")
     ("H-g" "search-engine-search ddg")
-    ("H-m" "search-engine-search music")
+    ;("H-m" "search-engine-search music")
+    ("H-m" "search-engine-search mulator")
+    ;;("H-m" "raise-remmina")
+    ;;("H-m" "raise-matlab")
+    ;;("H-v" "raise-vbox")
+    ;;("H-E" "pull-emacs")
+    ;;("H-F" "pull-iceweasel")
+    ;;("H-C" "pull-x-terminal-emulator")
+    ;;("H-V" "pull-vbox")
+    ;;("H-p" "raise-pidgin")
+    ("Scroll_Lock" "fnext")
+    ;;("Pause" "run-shell-command save_pics.py")
+    ;;("Pause" "pull-hidden-other")
+    ;;("Pause" nil)
+    ;;("s-F1" "emacs")
+    ;;("s-F2" "raise-iceweasel")
+    ;;("s-F3" "raise-x-terminal-emulator")
+    ;;("s-F4" "raise-remmina")
+    ;;("H-M" "pull-remmina")
+    ("H-a" "echo-date-battery")
+    ;;("H-w" "windows")
+    ("H-w" "my-echo-windows")
+
+    ("H-k" "delete")
+    ("H-K" "kill")
+    ("H-;" "colon")
+    ("H-:" "eval")
+    ("H-x" "exec")
+    ("H-X" *commands-map*)
+    ("H-z" *commands-map*)
+    ("H-u" *utils-map*)
+
+    ("H-/" "pull-hidden-other")
+    ("H--" "fclear")
+    ("H-TAB" "fnext")
+
+    ;;("H-q" "only")
+    ;;("H-3" "hsplit")
+    ;;("H-2" "vsplit")
+    ;;("H-#" "hsplit")
+    ;;("H-@" "vsplit")
+    ;;("H-q" "vsplit")
+    ("H-h" *help-map*)
+
+    ;;("H-G" "search-engine-search-none")
+    ("H-G" "search-engine-search")
+    ("H-d" "dict-lookup-command")
+
+    ;;("H-DEL" "run-shell-command xdotool key Hyper_L 0 type '`'")
+    ("H-DEL" *special-chars-map*)
+    ;;("H-P" "flush-and-message-debug")
+    ("H-I" "invert-current-window")
+    ("H-i" "invert-screen")
+    ;;("H-]" "go-next")
+    ;;("H-[" "go-prev")
+    ("H-p" "pull-hidden-previous")
+    ("H-n" "pull-hidden-next")
+    ;;("XF86AudioMute" "run-shell-command bash -c 'scrot && notify-send scrot taken || notify-send scrot failed'")
+    ;("H-Up" "run-shell-command brightnesschange.py w")
+    ;("H-Down" "run-shell-command brightnesschange.py d")
+    ("H-g" "search-engine-search ddg")
+    ;("H-m" "search-engine-search music")
+    ("H-m" *search-engine-map*)
     ;;("H-G" "search-engine-search wiki")
     ("H-D" "cat-message-command ~/vocab")
     ("H-l" "launch-url")
@@ -216,6 +279,18 @@
       ("!" "run-shell-command xdotool key exclamdown")
       ("~" "insert-key-with-delay degree")
       ("$" "insert-key-with-delay EuroSign")
+      ))
+
+(define-key-bindings
+    *search-engine-map*
+    `(
+      ("g" "search-engine-search ddg")
+      ("m" "search-engine-search music")
+      ("i" "search-engine-search bingimg")
+      ("w" "search-engine-search wordreference")
+      ("y" "search-engine-search youtube")
+      ("s" "search-engine-search stackoverflow")
+      ("w" "search-engine-search wiki")
       ))
 
 
