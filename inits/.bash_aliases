@@ -1,4 +1,5 @@
 #shortcuts
+alias cdrealpath='pwd; cd $(realpath .); pwd'
 alias j='jobs'
 alias e='emacs'
 alias enw='emacs -nw'
@@ -32,6 +33,7 @@ alias gb='git branch'
 alias gitpulloriginmaster='git pull origin master'
 #bash completion will do the rest below
 alias git-github-clone='git clone'
+alias gmmma='git commit -a -m "autocommit on $(date)"'
 # never used
 # alias gm='git commit'
 # alias gmm='git commit -a -m'
@@ -41,7 +43,6 @@ alias git-github-clone='git clone'
 # alias grr='git remote rm'
 # alias gmmm='git commit -a -m "autocommit on $(date)"'
 # alias gamm='git add -A; git commit -a -m'
-# alias gmmma='git add -A; git commit -a -m "autocommit on $(date)"'
 # alias gitstatus='git status'
 # alias gitcommit='git commit'
 
