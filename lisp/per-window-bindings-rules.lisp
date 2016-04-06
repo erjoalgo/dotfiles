@@ -1,4 +1,5 @@
-`(
+(setf *per-window-bindings-rules*
+      `(
   ;;(("Iceweasel" "Navigator" "Firefox" www-browser "Chromium")
   (,*browser-classes*
    ("F2" (send-fake-key (current-window) (kbd "C-TAB")))
@@ -49,4 +50,4 @@
   ;;("SunPageDown" (send-fake-key (current-window) (kbd "S-SunPageUp")) (run-shell-command "xdotool key shift+Next"))
   ;;("F1" (send-fake-key (current-window) (kbd "C-ISO_Left_Tab")))
   ;;("F4" (send-fake-key (current-window) (kbd "C-F4")))
-  )
+  ))
