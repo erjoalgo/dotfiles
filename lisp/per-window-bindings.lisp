@@ -1,125 +1,69 @@
+(defvar *per-window-bindings-rules* nil
+  "a list of (CLASSES BINDINGS),
+where each CLASS is a list of window-class names, 
+where each BINDING is a (KEY . FORM). 
+these are read from a file *per-window-binding-rules-fn*" )
 
-;;(setq debug-window-bindings t)
-(defvar WINDOW-BINDING-RULES-FN "per-window-bindings-rules.lisp")
-(defvar debug-window-bindings t)
-(setq debug-window-bindings nil )
+(defvar *per-window-binding-rules-fn*
+  (stumpwm-merger "per-window-bindings-rules.lisp")
+  "file where *per-window-bindings-rules* should be reloadedd")
 
-(defun update_bindings_hash ()
-  (let* (
-	 (bindings-spec
-	  (eval (read-from-string (file-string (stumpwm-merger WINDOW-BINDING-RULES-FN)))))
-	 (hash (make-hash-table :test 'equal))
-	 )
-    (print (format nil "number of bindings-spec ~D" (length bindings-spec)))
-    
-    (mapcar (lambda (args)
-		       
-	      (let* (
-		     ;;copy the map
-		     (top-copy (deep-copy-map *top-map*))
-		     (matching-classes (car args))
-		     (bindings (cdr args))
-		     )
 
-		(print (format nil "~D matching classes, ~D bindings"
-				      (length matching-classes)
-				      (length bindings)))
-		
-		;;add all the actions to the copied map
-		(mapcar (lambda (key-action)
-			  (let* ((key (car key-action))
-				 (actions (cdr key-action)))
-			    
-			  (define-key top-copy
-			      (kbd key) (defcommand-annon actions))
-			  ))
-			bindings)
-		;;associate all the matching window classes to the copied map
-		(mapcar (lambda (window-class-string)
-			  (setf (gethash window-class-string hash)
-				top-copy))
-			matching-classes)
-		))
-	    bindings-spec)
-    (setq *top-hash-map* hash)
-    )
-  )
-   
+;;internal
+(defvar *per-window-bindings-class-to-map* nil "hash window-class==>keymap" )
+
+(defun per-window-bindings-reload (rules)
+  (setf *per-window-bindings-class-to-map*
+	(make-hash-table :test 'equal))
+  (loop for (classes . bindings) in rules
+     as top-copy = (deep-copy-map *top-map*)
+     do (loop for (key form) in bindings
+	   as defcmd-form = `(defcommand-annon ,form)
+	   as cmd-name = (eval defcmd-form)
+	   do (print defcmd-form)
+	   do
+	     (define-key top-copy (kbd key) cmd-name))
+     do (loop for class in classes 
+	     ;;do (format t "setting class ~A to ~A~%" class top-copy)
+	   do (setf (gethash class *per-window-bindings-class-to-map*) top-copy))))
+
+(defun per-window-bindings-reload-from-fn ()
+  (load *per-window-binding-rules-fn*)
+  (per-window-bindings-reload *per-window-bindings-rules*))
+
+(defcommand per-window-bindings-reload-from-fn-cmd () ()
+  "reload bindings from *per-window-binding-rules-fn*"
+  (stumpwm::per-window-bindings-reload-from-fn))
 
 
 (defvar *current-top-bindings* nil )
 (defun focus-window-bindings (b a)
   (declare (ignore a))
-  ;(setq ab (list a b))
-  (let* (
-	 (class-dest (and b (window-class b)))
-	 (bindings-dest (gethash class-dest *top-hash-map*))
-	 (curr-bindings (car *current-top-bindings*))
-	 )
+  ;;(setq ab (list a b))
+  (let* ((class-dest (and b (window-class b)))
+	 (bindings-dest (gethash class-dest *per-window-bindings-class-to-map*))
+	 (curr-bindings (car *current-top-bindings*)))
     
-    (when (not (eq curr-bindings bindings-dest))
+    (unless (eq curr-bindings bindings-dest)
       (when curr-bindings
-	(when debug-window-bindings (echo "popping..."))
 	(pop-top-map)
-	(setq *current-top-bindings* (cdr *current-top-bindings*))
-	)
+	(pop *current-top-bindings*))
       (when bindings-dest
-	  (when debug-window-bindings (echo "pushing..."))
-	  (push-top-map bindings-dest)
-	  (setq *current-top-bindings* (cons bindings-dest *current-top-bindings*))
-	  )
-	  ;;pop previous top map from source
-	)
-    )
-  )
+	(when debug-window-bindings (echo "pushing..."))
+	(push-top-map bindings-dest)
+	(push bindings-dest *current-top-bindings*)))))
 
-(defvar annon-funs-hash (make-hash-table :test 'equal))
-(defvar autogen-command-index 0)
+(defmacro defcommand-annon  (&rest forms)
+  (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
+	 (docstring (format nil "~A. contents: ~A" name forms))
+	 (form `(progn
+		  (defcommand ,name () () ,docstring ,@forms)
+		  ,(symbol-name name))))
+    (print form)
+    form))
 
-(defun defcommand-annon  (command)
-  (let* (
-	 (name (gethash command annon-funs-hash))
-	 ;(namesmym nil )
-	 ;;(form nil )
-	 )
-	
-    ;(if (not name)
-    (if t
-	(progn 
-	  (setq name (format nil "AUTOGENCMD-~D"  autogen-command-index))
-	  (setq autogen-command-index (1+ autogen-command-index ))
-	  (setf (gethash command annon-funs-hash) name)
-	  (let* (
-		 (actions 
-		  (if debug-window-bindings
-		      (cons
-		       `(echo ,(format nil "running anon-cmd ~A" name))
-		       command)
-		      command
-		      ))
-		 
-		 (defcmd-form `(defcommand ,(intern name) () ()
-				 ,(format nil "anon-command: ~A" name)
-				 ,(prin1-to-string (cons name actions))
-				 ,@actions))
-		 )
-	    ;(print defcmd-form)
-	    ;(print actions)
-	    (eval defcmd-form)
-	    ))
-      )
-    name
-    )
-  )
 
-(defcommand update_bindings_hash_cmd () ()
-  "reload bindings from WINDOW-BINDING-RULES-FN TODO REFACTOR THIS FILE"
-  (stumpwm::update_bindings_hash))
 
-(update_bindings_hash)
+
+(per-window-bindings-reload-from-fn)
 (add-hook *focus-window-hook* 'focus-window-bindings)
-(add-hook *focus-group-hook* 'focus-group-bindings)
-(defun focus-group-bindings (a b) (declare (ignore a b)))
-
-
-;(setq *focus-window-hook* nil )
