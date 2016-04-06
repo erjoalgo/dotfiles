@@ -6,7 +6,8 @@ these are read from a file *per-window-binding-rules-fn*" )
 
 (defvar *per-window-binding-rules-fn*
   (stumpwm-merger "per-window-bindings-rules.lisp")
-  "file where *per-window-bindings-rules* should be reloadedd")
+  "file where *per-window-bindings-rules* should be reloaded.
+it contains lisp code which sets the *per-window-bindings-rules* value")
 
 
 ;;internal
