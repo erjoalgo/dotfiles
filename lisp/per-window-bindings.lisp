@@ -1,3 +1,8 @@
+(defpackage #:stumpwm-per-window-bindings
+  (:export
+   #:per-window-bindings-reload
+   #:per-window-bindings-reload-from-fn))
+
 (defvar *per-window-bindings-rules* nil
   "a list of (CLASSES BINDINGS),
 where each CLASS is a list of window-class names, 
@@ -5,19 +10,19 @@ where each BINDING is a (KEY . FORM).
 these are read from a file *per-window-binding-rules-fn*" )
 
 (defvar *per-window-binding-rules-fn*
-  (stumpwm-merger "per-window-bindings-rules.lisp")
+  (STUMPWM::stumpwm-merger "per-window-bindings-rules.lisp")
   "file where *per-window-bindings-rules* should be reloaded.
 it contains lisp code which sets the *per-window-bindings-rules* value")
 
 
 ;;internal
-(defvar *per-window-bindings-class-to-map* nil "hash window-class==>keymap" )
+(defvar *per-window-bindings-class-to-map* nil "hash map: window-class to keymap" )
 
 (defun per-window-bindings-reload (rules)
   (setf *per-window-bindings-class-to-map*
 	(make-hash-table :test 'equal))
   (loop for (classes . bindings) in rules
-     as top-copy = (deep-copy-map *top-map*)
+     as top-copy = (deep-copy-map STUMPWM::*top-map*)
      do (loop for (key form) in bindings
 	   as defcmd-form = `(defcommand-annon ,form)
 	   as cmd-name = (eval defcmd-form)
@@ -50,7 +55,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 	(pop-top-map)
 	(pop *current-top-bindings*))
       (when bindings-dest
-	(when debug-window-bindings (echo "pushing..."))
 	(push-top-map bindings-dest)
 	(push bindings-dest *current-top-bindings*)))))
 
@@ -58,13 +62,9 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
 	 (docstring (format nil "~A. contents: ~A" name forms))
 	 (form `(progn
-		  (defcommand ,name () () ,docstring ,@forms)
+		  (STUMPWM::defcommand ,name () () ,docstring ,@forms)
 		  ,(symbol-name name))))
-    (print form)
     form))
 
-
-
-
 (per-window-bindings-reload-from-fn)
-(add-hook *focus-window-hook* 'focus-window-bindings)
+(add-hook STUMPWM::*focus-window-hook* 'focus-window-bindings)
