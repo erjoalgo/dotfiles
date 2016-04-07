@@ -68,11 +68,14 @@
  "tsv-db.lisp"
  "mozrepl.lisp"
  "url-launcher.lisp"
- "per-window-bindings.lisp"
+
+ ;;in this order
  "run-raise-programs.lisp"
- "swank-loader.lisp"
+ "per-window-bindings.lisp"
  "top-map-bindings.lisp"
+ 
  "commands-map.lisp"
+ "swank-loader.lisp"
  )
 
 (defun basename (fn)
