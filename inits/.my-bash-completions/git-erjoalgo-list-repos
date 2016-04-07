@@ -1,5 +1,7 @@
 SELFD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source "${SELFD}"/erjoalgo-sensitive
+SENSITIVE="${SELFD}"/erjoalgo-sensitive
+test -e "${SENSITIVE}" && source "${SENSITIVE}"
+
 
 function git_erjoalgo_list_repos	{
     ssh -p"${ERJOALGO_PORT}" "${ERJOALGO}" ls "${ERJOALGO_GIT_BARE_PATH}"
