@@ -67,9 +67,7 @@ alias .brc='source ~/.bashrc'
 alias aa='aliasadd.py'
 
 #service. never used
-alias sstatus='bash -xc '\''sudo service $0 status'\'''
-alias sstart='bash -xc '\''sudo service $0 start'\'''
-alias sstop='bash -xc '\''sudo service $0 stop'\'''
+alias service='sudo service'
 
 #misc programs
 alias untar='tar axvf'
