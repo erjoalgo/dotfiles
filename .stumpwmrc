@@ -100,7 +100,7 @@
   (flatten (list 
 	    (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
 
-(defvar *BROWSER-CLASSES* )
+(defvar *browser-classes*)
 
 (apply 'load-files-verbose 'stumpwm-loader
        (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))

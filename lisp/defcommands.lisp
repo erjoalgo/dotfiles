@@ -1,8 +1,8 @@
-(defvar *browser-classes-hash* nil )
+
 (defvar *vocab-fn* (stumpwm-merger "sensitive/vocab"))
 
 (defun is-browser-win (win)
-  (gethash (window-class win) *browser-classes-hash*))
+  (member (window-class win) *browser-classes* :test 'equal))
 
 (defcommand scroll-browser-other-frame (up-down-key)
     ((:rest "key: "))
