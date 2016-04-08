@@ -1,81 +1,54 @@
-(defun define-run-or-pull-program (name raise-key
-					&key
-					(pull-key (string-upcase raise-key))
-					(cmd name)
-					(classes (funcall (compose 'list 'string-capitalize) name))
-					(all-screens nil )
-					
-					)
-  (let* (
-	 (classes-hash (hash-from-list classes))
-	 
-	 (form-installer
-	  (lambda (pull-or-raise-opt cmd-name-suffix key)
-	    (let* (
-		   (cmd-name-sub (format nil "autogen-~A-~A" cmd-name-suffix name))
-		   (form `(defcommand ,(intern cmd-name-sub) () ()
-			    ,(format nil "autogen-command to raise ~A" name)
-			    (let* (
+(defun define-run-or-pull-program (name
+				   &key
+				     (raise-key (format nil "H-~A" (char name 0)))
+				     (pull-key (string-upcase raise-key))
+				     (cmd name)
+				     (classes (list (string-capitalize name)))
+				     (all-screens nil))
+  
+  (loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
+					 (pull-window ,pull-key))
+       
+     as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
+				    (symbol-name pull-or-raise-fun)
+					;(symbol-name pull-or-raise-fun)
+				    ;; (if (subtypep (type-of pull-or-raise-fun) 'STANDARD-GENERIC-FUNCTION)
+				    ;; 	(slot-value  pull-or-raise-fun 'SB-PCL::NAME)
+				    ;; 	(symbol-name pull-or-raise-fun))
+				    ;;(subtypep (type-of #'pull-window ) 'STANDARD-GENERIC-FUNCTION)
+				    name))
+     as cmd-name-string = (symbol-name cmd-name)
+     ;;as fun = (eval `(function ,pull-or-raise-fun));;TODO !
+     as fun = pull-or-raise-fun
+     as form = `(defcommand ,cmd-name nil nil ,(format nil "doc: ~A" cmd-name-string)
+			    (let* ((win-list ,(if all-screens `(screen-windows (current-screen))
+						  `(group-windows (current-group))))
 				   (curr-win (current-window))
-				   (matching
-				    (remove-if-not
-				     (lambda (win)
-				       (and win (not (eq win curr-win))
-					    (gethash (window-class win) ,classes-hash)
-					    ))
-				     ,(if all-screens
-					  `(screen-windows (current-screen))
-					`(group-windows (current-group)))
-				     )
-				    )
-				   )
-			      (if matching
-				  (progn 
-				    (,pull-or-raise-opt (car matching))
-				    (focus-all (car matching)))
-				(when 
-				    (not (and
-					  (current-window)
-					  (gethash (window-class (current-window)) ,classes-hash)))
-				  (run-shell-command ,cmd)
-				  )
-				)
-			      )
-			    ))
-		   (kmap-installer (lambda (kmap)
-				     (print `(define-key kmap (kbd ,key) ,cmd-name-sub))
-				     (define-key kmap (kbd key) cmd-name-sub)
-				     ))
-		   )
-	      (progn
-		    (eval form)
-		    (funcall kmap-installer *top-map*)
-		    (maphash (lambda (k v) (declare (ignore k))
-				     (funcall kmap-installer v))
-			     *top-hash-map*)
-		    )
-	      (print form)
-	      ;;(print `(define-key *top-map* (kbd ,key) ,cmd-name-sub))
-	      ;;(define-key kmap (kbd key) cmd-name-sub)
-	      ))
-	  )
-	 )
-    (funcall form-installer 'pull-window "pull" pull-key)
-    (funcall form-installer 'raise-window "raise" raise-key)
-    )
-  )
+				   (classes (list ,@classes))
+				   (win (loop for win in win-list
+					   thereis (and win
+							(not (eq win curr-win))
+							(member (window-class win) classes :test 'equal)
+							win))))
+			      (if win
+				  (progn (,fun win)
+					 (focus-all win))
+				  (unless (and curr-win
+					       (member (window-class curr-win) classes))
+				    (run-shell-command ,cmd)))))
+     unless (null key)
+     do (progn
+	  (print form)
+	  (eval form)
+	  (define-key *top-map* (kbd raise-key) cmd-name-string))))
 
-(defvar run_raise_pull_list
-      `(
-	;;("iceweasel" "H-f" :cmd "firefox --no-remote -P default"
-	("firefox" "H-f"
-		   :cmd "firefox --no-remote -P default"
-		   :classes ,*browser-classes* :all-screens t)
-	("x-terminal-emulator" "H-c" :cmd "roxterm" :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
-	;;("emacs" "H-e" :classes (list "emacs" "Emacs"))
-	;; ("skype" "H-s")
-	;; ("jin" "H-j" :classes '("free-jin-JinApplication"))
-	)
-      )
-(mapcar (curry 'apply 'define-run-or-pull-program) run_raise_pull_list)
+(define-run-or-pull-program "firefox"
+    :raise-key "H-f"
+    :cmd "firefox --no-remote -P default"
+    :classes *browser-classes* :all-screens t)
+
+(define-run-or-pull-program "x-terminal-emulator"
+    :raise-key "H-c"
+    :cmd "roxterm" 
+    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
 
