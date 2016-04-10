@@ -34,7 +34,7 @@
 				  (progn (,fun win)
 					 (focus-all win))
 				  (unless (and curr-win
-					       (member (window-class curr-win) classes))
+					       (member (window-class curr-win) classes :test 'equal))
 				    (run-shell-command ,cmd)))))
      unless (null key)
      do (progn
