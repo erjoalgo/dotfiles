@@ -16,7 +16,9 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 
 ;;internal
-(defvar *per-window-bindings-class-to-map* nil "hash map: window-class to keymap" )
+(defvar *per-window-bindings-class-to-map*
+  (make-hash-table :test 'equal);;dummy value in case it isn't initialized properly
+  "hash map: window-class to keymap" )
 
 (defun per-window-bindings-reload (rules)
   (setf *per-window-bindings-class-to-map*
