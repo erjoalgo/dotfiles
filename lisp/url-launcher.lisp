@@ -20,7 +20,9 @@
   ;;TODO sane path handling
   (make-persistent-alist :fn
 			 (stumpwm-merger "sensitive/url-launcher-data")))
-(persistent-alist-load *launcher-persistent-alist*)
+
+(persistent-alist-load-if-exists *launcher-persistent-alist*)
+
 (push '*launcher-persistent-alist* *persistent-alist-syms*)
 
 
@@ -90,7 +92,7 @@
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
   (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
-(persistent-alist-load *search-engine-persistent-alist*)
+(persistent-alist-load-if-exists *search-engine-persistent-alist*)
 (push '*search-engine-persistent-alist* *persistent-alist-syms*)
 
 (defun uri-encode (search-terms)
