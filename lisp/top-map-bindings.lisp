@@ -27,8 +27,9 @@
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
-	(loop for map being the hash-value of *per-window-bindings-class-to-map*
-	   collect map)))
+	  (when *per-window-bindings-class-to-map*
+	    (loop for map being the hash-value of *per-window-bindings-class-to-map*
+	       collect map))))
 
 (define-key-bindings
     (all-top-maps)

@@ -41,6 +41,10 @@
   (setf (persistent-alist-alist palist)
 	(tsv-to-alist (persistent-alist-fn palist))))
 
+(defun persistent-alist-load-if-exists (palist)
+  (when (probe-file (persistent-alist-fn palist))
+    (persistent-alist-load palist)))
+
 (defun persistent-alist-push (palist key value)
   (push (cons key value) (persistent-alist-alist palist))
   (tsv-add-entry (persistent-alist-fn palist)
