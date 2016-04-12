@@ -2,8 +2,11 @@
 
 (defun file-string (path)
   (with-open-file (stream path)
-    (let ((data (make-string (file-length stream))))
-      (read-sequence data stream)
+    (let* ((n-estimate (file-length stream))
+	  (data (make-string n-estimate))
+	  (n (read-sequence data stream)))
+      (unless (= n n-estimate)
+	(setf data (subseq data 0 n)))
       data)))
 
 ;thanks to some contributor from #stumpwm irc. scottj
@@ -14,8 +17,7 @@
              (let ((key (binding-key binding))
                    (command (binding-command binding)))
                (define-key new-map key command)))
-           new-map)
-  )
+           new-map))
 
 (defun curry (fun &rest args)
     (lambda (&rest new-args)
