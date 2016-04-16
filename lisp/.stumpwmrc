@@ -45,18 +45,11 @@
  (merge-pathnames ".sbclrc" HOME))
 
 
-
-
 (progn
   (fset join-path (reverse-fun-args 'merge-pathnames))
   (fset dir-merger (curry 'curry 'join-path))
   (fset stumpwm-merger (dir-merger STUMPWM-TOP))
   (fset stumpwm-loader (compose 'load 'stumpwm-merger)))
-
-;;cleaner way to do this, via ~/.xinitrc
-;;(run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
-;;(run-shell-command (concat (namestring STUMPWM-TOP) ".my_startups.sh" " &" ))
-
 
 (defvar *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"))
