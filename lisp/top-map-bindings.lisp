@@ -58,7 +58,7 @@
       ("Hiragana_Katakana" "run-shell-command /home/ernesto/.xmodmap_jap")
       ;;("H-e" "my-emacs-cmd")
       ("H-e" "emacs")
-      ;;("H-E" "pull-emacs")
+      ("H-E" "pull-emacs")
       ;;("H-f" "raise-iceweasel")
       ;;("H-c" "raise-x-terminal-emulator")
       ;;("H-m" "raise-remmina")
