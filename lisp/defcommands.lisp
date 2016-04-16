@@ -1,8 +1,8 @@
-(defvar *browser-classes-hash* nil )
+
 (defvar *vocab-fn* (stumpwm-merger "sensitive/vocab"))
 
 (defun is-browser-win (win)
-  (gethash (window-class win) *browser-classes-hash*))
+  (member (window-class win) *browser-classes* :test 'equal))
 
 (defcommand scroll-browser-other-frame (up-down-key)
     ((:rest "key: "))
@@ -89,8 +89,8 @@
 
 (defvar magnifier-on nil )
 (defcommand toggle-magnifier () ()
-  "toogle magnifier on/off. requires the magnifier package" 
-  (toggle-var magnifier-on)
+  "toogle magnifier on/off. requires the TODO program" 
+  (setf magnifier-on (not magnifier-on))
   (run-shell-command
    (if (not magnifier-on)
       "magnifier -vm -z 5"

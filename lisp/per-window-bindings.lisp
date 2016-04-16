@@ -28,7 +28,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
      do (loop for (key form) in bindings
 	   as defcmd-form = `(defcommand-annon ,form)
 	   as cmd-name = (eval defcmd-form)
-	   do (print defcmd-form)
+	   ;;do (print defcmd-form)
 	   do
 	     (define-key top-copy (kbd key) cmd-name))
      do (loop for class in classes 

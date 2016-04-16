@@ -18,8 +18,16 @@ map <F4> quit
 map n navigate next
 map p navigate previous
 
+#map N search next
+#map P search previous
+
+map N search forward
+map P search backward
+
+
 map <F3> search forward
 map <A-F3> search backward
+
 map A adjust_window best-fit
 map S adjust_window width
 #map <A-F3> search previous
