@@ -1,6 +1,5 @@
 (setf *per-window-bindings-rules*
       `(
-  ;;(("Iceweasel" "Navigator" "Firefox" www-browser "Chromium")
   (,stumpwm::*browser-classes*
    ("F2" (send-fake-key (current-window) (kbd "C-TAB")))
    ("F1" (send-fake-key (current-window) (kbd "C-ISO_Left_Tab")))
