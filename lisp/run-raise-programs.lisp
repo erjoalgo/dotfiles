@@ -7,7 +7,8 @@
 				     (all-screens nil))
   
   (loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
-					 (pull-window ,pull-key))
+					 (pull-window ,pull-key)
+					 )
        
      as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
 				    (symbol-name pull-or-raise-fun)
@@ -38,12 +39,13 @@
 				    (run-shell-command ,cmd)))))
      unless (null key)
      do (progn
-	  (print form)
+	  ;;(print form)
 	  (eval form)
-	  (define-key *top-map* (kbd raise-key) cmd-name-string))))
+	  (define-key *top-map* (kbd key) cmd-name-string))))
 
 (define-run-or-pull-program "firefox"
     :raise-key "H-f"
+    :pull-key "H-F"
     :cmd "firefox --no-remote -P default"
     :classes *browser-classes* :all-screens t)
 
@@ -51,4 +53,7 @@
     :raise-key "H-c"
     :cmd "roxterm" 
     :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
+
+(define-run-or-pull-program "emacs"
+    :pull-key "H-E")
 
