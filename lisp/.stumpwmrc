@@ -54,10 +54,8 @@
 (load-files-verbose
  'stumpwm-loader
  "sensitive/sensitive.el"
- "window-utils.lisp"
  "decorations.lisp"
  "defcommands.lisp"
- "per-window-bindings.lisp"
  "tsv-db.lisp"
  "mozrepl.lisp"
  "url-launcher.lisp"
@@ -78,9 +76,6 @@
     (declare (ignore m))
     (and res (aref res (1- 1))))))
 
-;;(fset regular-file-p (compose 'not 'pathname-name))
-;;(fset regular-file-p 'pathname-name);; must have trailing slash
-
 (defun regular-file-lister (full-path dir )
   (let* ((list (remove-if-not #'pathname-name
 			      (list-directory dir))))
@@ -88,16 +83,13 @@
 
 
 (defvar *load-path-extra*
-  (flatten (list 
-	    (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
-		    (list "commands")))))
+  (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
+		    (list "commands")))
 
 
 (apply 'load-files-verbose 'stumpwm-loader
-       (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
-
-;;(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
-
+       (flatten (mapcar (lambda (fn) (regular-file-lister t fn))
+			*load-path-extra*)))
 
 (defcommand load-some-file (&optional fn) ((:string nil ))
   "load a file" 

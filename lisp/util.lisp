@@ -15,22 +15,6 @@
 	(define-key new-map key command)))
     new-map))
 
-(defun curry (fun &rest args)
-    (lambda (&rest new-args)
-      (apply fun  (append args new-args))))
-
-(defun compose (f g)
-  (let* ((f f)
-	 (g g))
-    ;(lambda (&rest args) (apply f (apply g args)))))
-    (lambda (&rest args) (funcall f (apply g args)))))
-
-(defmacro fset  (name fun)
-  `(defun ,name (&rest args) (apply ,fun args)))
-
-(defun reverse-fun-args (fun)
-  (compose (curry 'apply fun) (compose 'reverse 'list)))
-
 ;;this fixes a certain issue with Virtualbox and stumpwm
 (defun error-handler (display error-key &rest key-vals &key asynchronous &allow-other-keys)
   "Handle X errors"
