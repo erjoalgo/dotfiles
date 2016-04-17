@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -y sbcl curl autoconf make || exit ${LINENO}
+sudo apt-get install -y sbcl curl autoconf make texinfo || exit ${LINENO}
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 TMPLISP=/tmp/ql-load.lisp
@@ -31,3 +31,4 @@ if ! test -f stumpwm; then #the executable
     ./autogen.sh || exit ${LINENO}
     ./configure || exit ${LINENO} 
     make || exit ${LINENO}
+fi
