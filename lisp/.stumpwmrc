@@ -34,7 +34,7 @@
   (concat (sb-posix:getenv "HOME") "/"))
 
 (defparameter STUMPWM-TOP
-  (merge-pathnames  "repos/stumpwm/lisp/" (user-homedir-pathname)))
+  (merge-pathnames  ".stumpwmrc.d/" (user-homedir-pathname)))
 
 (defun expand-user (fn)
   (cl-ppcre:regex-replace "^~/" fn HOME ))
