@@ -260,7 +260,10 @@
    ("r" *screen-rotation-map*)
    ("c" *special-characters-map*)
    ("w" "connect-internet")
-   ("h" *help-map*)))
+   ("h" *help-map*)
+   ("s" "speak-key" )
+   ("S" "speak-string" )
+   ))
 
 
 (define-key-bindings *screen-rotation-map*

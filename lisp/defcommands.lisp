@@ -157,3 +157,25 @@ be used to override the default window formatting."
 			:search t)
     (set-x-selection out-png :clipboard)
     (message "copied to cliboard: ~A" out-png)))
+
+(defcommand speak-key ()
+    ;;((:key "enter key to speak: " ))
+    ()
+  ;;(let ((text (key-keysym key)))
+  (let ((text (read-one-char (current-screen))))
+    (SB-EXT:RUN-PROGRAM "espeak"
+			(list (format nil "~A" text))
+			:search t
+			:output t
+			:error t
+			:wait t)))
+
+(defcommand speak-string (text)
+    ((:string "enter string to speak: " ))
+  (SB-EXT:RUN-PROGRAM "espeak"
+			(list text)
+			:search t
+			:output t
+			:error t
+			:wait t))
+
