@@ -79,10 +79,10 @@
     (and res (aref res (1- 1))))))
 
 ;;(fset regular-file-p (compose 'not 'pathname-name))
-(fset regular-file-p 'pathname-name);; must have trailing slash
+;;(fset regular-file-p 'pathname-name);; must have trailing slash
 
 (defun regular-file-lister (full-path dir )
-  (let* ((list (remove-if-not 'regular-file-p
+  (let* ((list (remove-if-not #'pathname-name
 			      (list-directory dir))))
     (mapcar (compose (if full-path 'identity 'basename) 'namestring ) list)))
 
