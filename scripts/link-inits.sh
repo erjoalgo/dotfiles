@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-STUMPWM_TOP="${HOME}/.stumpwmrc.d"
+STUMPWM_TOP=$(dirname $(dirname $(readlink -f $0)))
 INITS_TOP="${STUMPWM_TOP}/inits"
 
 ln -sf "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
