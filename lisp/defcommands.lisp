@@ -45,10 +45,11 @@
   "kill window by class"
   ;;so silly...
   (mapcar 'kill-window
-	  (filter-windows
-	   (compose
-	    (curry 'equal win-class)
-	    'window-class))))
+	  (remove-if-not (lambda (win)
+			   (equal
+			    (window-class win)
+			    win-class)))
+	  (screen-windows (current-screen))))
 
 (define-stumpwm-type-for-completion
     :xrandr-rot
