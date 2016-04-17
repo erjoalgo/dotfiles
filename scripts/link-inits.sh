@@ -25,6 +25,6 @@ ln -s "${INITS_TOP}/.gitconfig" "${HOME}"
 ln -sf "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 
 #link the top itself
-ln -sf "${STUMPWM_TOP}" "${HOME}/"
+ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
 ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
 
