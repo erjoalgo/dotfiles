@@ -69,27 +69,17 @@
  "swank-loader.lisp"
  )
 
-(defun basename (fn)
-  (if (equal fn "/") fn
-  (multiple-value-bind (m res)
-      (ppcre::scan-to-strings ".*?/([^/]*)/?$" fn )
-    (declare (ignore m))
-    (and res (aref res (1- 1))))))
-
-(defun regular-file-lister (full-path dir )
-  (let* ((list (remove-if-not #'pathname-name
-			      (list-directory dir))))
-    (mapcar (compose (if full-path 'identity 'basename) 'namestring ) list)))
-
+(defun list-regular-files (dir)
+  (remove-if-not (lambda (fn) (pathname-name fn)) (list-directory dir)))
 
 (defvar *load-path-extra*
   (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
-		    (list "commands")))
+	  (list "commands")))
 
 
-(apply 'load-files-verbose 'stumpwm-loader
-       (flatten (mapcar (lambda (fn) (regular-file-lister t fn))
-			*load-path-extra*)))
+(dolist (extra-path *load-path-extra*)
+	   (dolist (extra-path-fn (list-regular-files extra-path))
+	     (load-files-verbose #'stumpwm-loader extra-path-fn)))
 
 (defcommand load-some-file (&optional fn) ((:string nil ))
   "load a file" 
@@ -97,7 +87,7 @@
   (let* ((fn (or fn (completing-read (current-screen)
 		   "enter stumpwm file to load (completing read): "
 		   ;;(regular-file-lister (namestring STUMPWM-TOP))
-		   (regular-file-lister nil STUMPWM-TOP) ))))
+		   (mapcar 'file-namestring (list-regular-files STUMPWM-TOP)) ))))
     (if fn
 	(load-files-verbose 'stumpwm-loader fn)
 	(echo "nothing to load"))))
