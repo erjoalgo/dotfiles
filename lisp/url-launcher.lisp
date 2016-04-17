@@ -7,13 +7,9 @@
    )
   (:use #:tsv-db))
 
-
-
 (defvar *search-history-fn*
   ;;todo should be in sensitive
-  (concat (sb-posix:getenv "HOME") "/" "search-history"))
-
-
+  (merge-pathnames "search-history" (user-homedir-pathname)))
 
 ;;; Launcher 
 (defparameter *launcher-persistent-alist*
@@ -21,13 +17,13 @@
   (make-persistent-alist :fn
 			 (stumpwm-merger "sensitive/url-launcher-data")))
 
-(persistent-alist-load-if-exists *launcher-persistent-alist*)
+(persistent-alist-load-if-exists
+ *launcher-persistent-alist*)
 
-(push '*launcher-persistent-alist* *persistent-alist-syms*)
-
+(push '*launcher-persistent-alist*
+      *persistent-alist-syms*)
 
 ;;actually load from the file
-
 (defparameter *url-command-rules*
   `(
     (".*[.]pdf$" "zathura")

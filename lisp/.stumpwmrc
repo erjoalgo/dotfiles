@@ -30,29 +30,27 @@
   (echo (format nil "loading ~A" fn))
   (load fn))
 
-(defparameter HOME
-  (concat (sb-posix:getenv "HOME") "/"))
-
 (defparameter STUMPWM-TOP
-  (merge-pathnames  ".stumpwmrc.d/" (user-homedir-pathname)))
+  (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
 (defun expand-user (fn)
-  (cl-ppcre:regex-replace "^~/" fn HOME ))
+  (cl-ppcre:regex-replace "^~/" fn (user-homedir-pathname)))
 
 (load-files-verbose
  'load
  (merge-pathnames "util.lisp" STUMPWM-TOP)
- (merge-pathnames ".sbclrc" HOME))
+ (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
 
-(progn
-  (fset join-path (reverse-fun-args 'merge-pathnames))
-  (fset dir-merger (curry 'curry 'join-path))
-  (fset stumpwm-merger (dir-merger STUMPWM-TOP))
-  (fset stumpwm-loader (compose 'load 'stumpwm-merger)))
+(defun stumpwm-merger (rel)
+  (merge-pathnames rel STUMPWM-TOP))
+
+(defun stumpwm-loader (fn)
+  (load (stumpwm-merger fn)))
 
 (defvar *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"))
+
 (load-files-verbose
  'stumpwm-loader
  "sensitive/sensitive.el"
@@ -89,11 +87,10 @@
     (mapcar (compose (if full-path 'identity 'basename) 'namestring ) list)))
 
 
-(fset prepend-dir (lambda (dir) (curry 'join-path dir)))
-
 (defvar *load-path-extra*
   (flatten (list 
-	    (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
+	    (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
+		    (list "commands")))))
 
 
 (apply 'load-files-verbose 'stumpwm-loader
@@ -113,6 +110,8 @@
 	(load-files-verbose 'stumpwm-loader fn)
 	(echo "nothing to load"))))
 
-(echo "finished loading .stumpwmrc")
+(message "finished loading .stumpwmrc. ~D errors"
+	 (length *init-errs-list*))
   
+;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html

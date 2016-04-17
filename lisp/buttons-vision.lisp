@@ -10,7 +10,8 @@
 
 
 
-(setq buttons-root (join-path HOME "logs/button_images"))
+(setq buttons-root (merge-pathnames "logs/button_images/"
+				    (user-homedir-pathname)))
 
 (defun click-button (parent name)
   (run-shell-command (format nil "subimage_coords.py -c ~A ~A" parent name))
@@ -68,8 +69,8 @@
     (when eog
       (run-shell-command (format nil  "eog '~A'" fn) nil ))))
 
-(setq scrots_top (join-path HOME "pictures/scrots/")
-      subscrots_top (join-path scrots_top "subs"))
+(setq scrots_top (merge-pathnames "pictures/scrots/" (user-homedir-pathname))
+      subscrots_top (merge-pathnames "subs" scrots_top))
 
 (defcommand take-scrot () ()
   (let* (
