@@ -1,7 +1,0 @@
-ERJOALGO_PORT=4410
-ERJOALGO_GIT_BARE_PATH=/opt/git
-ERJOALGO=git@162.228.201.6
-
-# Local Variables:
-# mode: sh
-# End:
