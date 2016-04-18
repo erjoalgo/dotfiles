@@ -30,43 +30,32 @@
   (echo (format nil "loading ~A" fn))
   (load fn))
 
-(defparameter HOME
-  (concat (sb-posix:getenv "HOME") "/"))
-
 (defparameter STUMPWM-TOP
-  (merge-pathnames  "repos/stumpwm/lisp/" (user-homedir-pathname)))
+  (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
 (defun expand-user (fn)
-  (cl-ppcre:regex-replace "^~/" fn HOME ))
+  (cl-ppcre:regex-replace "^~/" fn (user-homedir-pathname)))
 
 (load-files-verbose
  'load
  (merge-pathnames "util.lisp" STUMPWM-TOP)
- (merge-pathnames ".sbclrc" HOME))
+ (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
 
+(defun stumpwm-merger (rel)
+  (merge-pathnames rel STUMPWM-TOP))
 
-
-(progn
-  (fset join-path (reverse-fun-args 'merge-pathnames))
-  (fset dir-merger (curry 'curry 'join-path))
-  (fset stumpwm-merger (dir-merger STUMPWM-TOP))
-  (fset stumpwm-loader (compose 'load 'stumpwm-merger)))
-
-;;cleaner way to do this, via ~/.xinitrc
-;;(run-shell-command (concat (namestring STUMPWM-TOP) "xmodmap/xmodmap_init.sh"))
-;;(run-shell-command (concat (namestring STUMPWM-TOP) ".my_startups.sh" " &" ))
-
+(defun stumpwm-loader (fn)
+  (load (stumpwm-merger fn)))
 
 (defvar *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"))
+
 (load-files-verbose
  'stumpwm-loader
  "sensitive/sensitive.el"
- "window-utils.lisp"
  "decorations.lisp"
  "defcommands.lisp"
- "per-window-bindings.lisp"
  "tsv-db.lisp"
  "mozrepl.lisp"
  "url-launcher.lisp"
@@ -80,35 +69,17 @@
  "swank-loader.lisp"
  )
 
-(defun basename (fn)
-  (if (equal fn "/") fn
-  (multiple-value-bind (m res)
-      (ppcre::scan-to-strings ".*?/([^/]*)/?$" fn )
-    (declare (ignore m))
-    (and res (aref res (1- 1))))))
-
-;;(fset regular-file-p (compose 'not 'pathname-name))
-(fset regular-file-p 'pathname-name);; must have trailing slash
-
-(defun regular-file-lister (full-path dir )
-  (let* ((list (remove-if-not 'regular-file-p
-			      (list-directory dir))))
-    (mapcar (compose (if full-path 'identity 'basename) 'namestring ) list)))
-
-
-(fset prepend-dir (lambda (dir) (curry 'join-path dir)))
+(defun list-regular-files (dir)
+  (remove-if-not (lambda (fn) (pathname-name fn)) (list-directory dir)))
 
 (defvar *load-path-extra*
-  (flatten (list 
-	    (mapcar (prepend-dir STUMPWM-TOP) (list "commands")))))
+  (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
+	  (list "commands")))
 
 
-
-(apply 'load-files-verbose 'stumpwm-loader
-       (flatten (mapcar (curry 'regular-file-lister t) *load-path-extra*)))
-
-;;(setq cmu (file-string (stumpwm-merger "sensitive/cmu")))
-
+(dolist (extra-path *load-path-extra*)
+	   (dolist (extra-path-fn (list-regular-files extra-path))
+	     (load-files-verbose #'stumpwm-loader extra-path-fn)))
 
 (defcommand load-some-file (&optional fn) ((:string nil ))
   "load a file" 
@@ -116,11 +87,13 @@
   (let* ((fn (or fn (completing-read (current-screen)
 		   "enter stumpwm file to load (completing read): "
 		   ;;(regular-file-lister (namestring STUMPWM-TOP))
-		   (regular-file-lister nil STUMPWM-TOP) ))))
+		   (mapcar 'file-namestring (list-regular-files STUMPWM-TOP)) ))))
     (if fn
 	(load-files-verbose 'stumpwm-loader fn)
 	(echo "nothing to load"))))
 
-(echo "finished loading .stumpwmrc")
+(message "finished loading .stumpwmrc. ~D errors"
+	 (length *init-errs-list*))
   
+;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html

@@ -7,13 +7,9 @@
    )
   (:use #:tsv-db))
 
-
-
 (defvar *search-history-fn*
   ;;todo should be in sensitive
-  (concat (sb-posix:getenv "HOME") "/" "search-history"))
-
-
+  (merge-pathnames "search-history" (user-homedir-pathname)))
 
 ;;; Launcher 
 (defparameter *launcher-persistent-alist*
@@ -21,13 +17,13 @@
   (make-persistent-alist :fn
 			 (stumpwm-merger "sensitive/url-launcher-data")))
 
-(persistent-alist-load-if-exists *launcher-persistent-alist*)
+(persistent-alist-load-if-exists
+ *launcher-persistent-alist*)
 
-(push '*launcher-persistent-alist* *persistent-alist-syms*)
-
+(push '*launcher-persistent-alist*
+      *persistent-alist-syms*)
 
 ;;actually load from the file
-
 (defparameter *url-command-rules*
   `(
     (".*[.]pdf$" "zathura")
@@ -85,7 +81,7 @@
       (progn
 	(tsv-add-entry (persistent-alist-fn
 			*launcher-persistent-alist*)
-		       key (escape-bash-single-quotes url))
+		       key url)
 	;;(setq *launcher-alist* (cons key url))
 	(echo (format nil "added: ~A" url)))))
 
@@ -139,6 +135,18 @@
 	  (log-entry-timestamp (format nil "~A:~A" engine terms)
 			       *search-history-fn*))))))
 
+
+
 (defcommand reload-search-engines () ()
   "reload search engines from file"
-  (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*"))
+  (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*")
+  (loop for (eng fmt) in (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*)
+	    as letter = (subseq eng 0 1)
+	    as kbd = (kbd letter)
+     do (define-key *search-engine-map* kbd (format nil "search-engine-search ~A" eng)))
+  (display-bindings-for-keymaps nil *search-engine-map*))
+
+(defun define-key-auto-from-commands-into-keymap ()
+  ;;TODO
+  )
+  

@@ -9,10 +9,8 @@
 
 
 
-;;(run-shell-command (format nil "display -window root ~A" (join-path HOME "sem/meta/2015-01-23-223306_1280x800_scrot.png")))
 (defvar *background-image-fn*
       (merge-pathnames  ".background-image-symlink" (user-homedir-pathname)))
-;;(setq *background-image-fn* "/home/ealfonso/pictures/phone/Photaf-12-08-15_04-50-22/PhotafPanoramaPicHD.jpg")
 (if (not *background-image-fn*)
     (print (concat "no background image found at" *background-image-fn*))
     (run-shell-command

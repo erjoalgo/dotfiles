@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -y sbcl curl autoconf make || exit ${LINENO}
+sudo apt-get install -y sbcl curl autoconf make texinfo || exit ${LINENO}
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 TMPLISP=/tmp/ql-load.lisp
@@ -16,7 +16,7 @@ EOF
 sbcl --load quicklisp.lisp --load "${TMPLISP}" || exit ${LINENO}
 rm quicklisp.lisp
 
-PROGRAMS="${HOME}/lib"
+PROGRAMS="${HOME}/programs"
 test -d "${PROGRAMS}" || mkdir "${PROGRAMS}"
 cd "${PROGRAMS}"
 
@@ -24,6 +24,7 @@ if ! test -d stumpwm; then
     git clone https://github.com/stumpwm/stumpwm.git || exit ${LINENO}
 fi
 
+STUMPWM="${PROGRAM}/stumpwm"
 cd stumpwm
 
 if ! test -f stumpwm; then #the executable
@@ -31,3 +32,6 @@ if ! test -f stumpwm; then #the executable
     ./autogen.sh || exit ${LINENO}
     ./configure || exit ${LINENO} 
     make || exit ${LINENO}
+    test -d ~/bin || mkdir ~/bin
+    ln -s "${STUMPWM}/stumpwm" ~/bin
+fi

@@ -7,4 +7,4 @@ xmodmap ${HOME}/.xmodmap/$(hostname)
 xmodmap ${HOME}/.xmodmap/$(hostname) 
 
 ${HOME}/.my-startups.sh &
-exec ${HOME}/programs/stumpwm/stumpwm
+exec ${HOME}/bin/stumpwm

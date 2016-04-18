@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-STUMPWM_TOP="${HOME}/repos/stumpwm"
+STUMPWM_TOP=$(dirname $(dirname $(readlink -f $0)))
 INITS_TOP="${STUMPWM_TOP}/inits"
 
 ln -sf "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
@@ -25,6 +25,6 @@ ln -s "${INITS_TOP}/.gitconfig" "${HOME}"
 ln -sf "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 
 #link the top itself
-ln -sf "${STUMPWM_TOP}" "${HOME}/"
+ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
 ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
 

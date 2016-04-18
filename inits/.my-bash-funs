@@ -74,13 +74,15 @@ function append_path	{
     export PATH=$PATH:$1
 }
 function shred_rec	{
-    read -p "rec shred ${1}?"
-    if test -d "${1}"; then
-	find "${1}" -type f -exec shred -zuf {} \;
-	find "${1}" -depth -type d -exec rmdir {} \;
-    else
-	shred -zufn10 "${1}"
-    fi
+    for FN in $*; do
+	read -p "rec shred ${FN}?"
+	if test -d "${FN}"; then
+	    find "${FN}" -type f -exec shred -zuf {} \;
+	    find "${FN}" -depth -type d -exec rmdir {} \;
+	else
+	    shred -zufn10 "${FN}"
+	fi
+    done
 }
 function is_newline_terminated	{
     LAST_CHAR=$(tail -c1 "${1}")

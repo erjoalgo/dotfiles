@@ -1,8 +1,8 @@
-(defvar *browser-classes-hash* nil )
+
 (defvar *vocab-fn* (stumpwm-merger "sensitive/vocab"))
 
 (defun is-browser-win (win)
-  (gethash (window-class win) *browser-classes-hash*))
+  (member (window-class win) *browser-classes* :test 'equal))
 
 (defcommand scroll-browser-other-frame (up-down-key)
     ((:rest "key: "))
@@ -45,10 +45,11 @@
   "kill window by class"
   ;;so silly...
   (mapcar 'kill-window
-	  (filter-windows
-	   (compose
-	    (curry 'equal win-class)
-	    'window-class))))
+	  (remove-if-not (lambda (win)
+			   (equal
+			    (window-class win)
+			    win-class)))
+	  (screen-windows (current-screen))))
 
 (define-stumpwm-type-for-completion
     :xrandr-rot
@@ -89,8 +90,8 @@
 
 (defvar magnifier-on nil )
 (defcommand toggle-magnifier () ()
-  "toogle magnifier on/off. requires the magnifier package" 
-  (toggle-var magnifier-on)
+  "toogle magnifier on/off. requires the TODO program" 
+  (setf magnifier-on (not magnifier-on))
   (run-shell-command
    (if (not magnifier-on)
       "magnifier -vm -z 5"
@@ -157,3 +158,25 @@ be used to override the default window formatting."
 			:search t)
     (set-x-selection out-png :clipboard)
     (message "copied to cliboard: ~A" out-png)))
+
+(defcommand speak-key ()
+    ;;((:key "enter key to speak: " ))
+    ()
+  ;;(let ((text (key-keysym key)))
+  (let ((text (read-one-char (current-screen))))
+    (SB-EXT:RUN-PROGRAM "espeak"
+			(list (format nil "~A" text))
+			:search t
+			:output t
+			:error t
+			:wait t)))
+
+(defcommand speak-string (text)
+    ((:string "enter string to speak: " ))
+  (SB-EXT:RUN-PROGRAM "espeak"
+			(list text)
+			:search t
+			:output t
+			:error t
+			:wait t))
+
