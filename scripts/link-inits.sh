@@ -21,6 +21,7 @@ ln -sf "${INITS_TOP}/.my-startups.sh" "${HOME}/"
 ln -sf "${INITS_TOP}/.my-bash-completions" "${HOME}"
 ln -s "${INITS_TOP}/.gitconfig" "${HOME}"
 
+ln -sf "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 
 ln -sf "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 
