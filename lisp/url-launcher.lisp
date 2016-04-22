@@ -87,7 +87,7 @@
 
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
-  (make-persistent-alist :fn (stumpwm-merger "sensitive/search-engines")))
+  (make-persistent-alist :fn (stumpwm-merger "search-engines")))
 (persistent-alist-load-if-exists *search-engine-persistent-alist*)
 (push '*search-engine-persistent-alist* *persistent-alist-syms*)
 
