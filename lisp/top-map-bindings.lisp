@@ -223,6 +223,7 @@
       ("H-F8" "volmute-toggle")
       ("H-F9" "voldown")
       ("H-F10" "volup")
+      ("H-SPC" "speak-key")
       )
   
   ;;not efficient nor necessary but only run at initialization
