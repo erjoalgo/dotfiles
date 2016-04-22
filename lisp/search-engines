@@ -6,3 +6,5 @@ music	http://erjoalgo.com:11407/lucky?~A
 bingimg	http://www.bing.com/images/search?q=~A
 wordreference	http://www.wordreference.com/es/translation.asp?tranword=~A
 ebay	http://www.ebay.com/sch/i.html?&_nkw=~A
+localhost	http://localhost:~A
+github	https://github.com/search?utf8=%E2%9C%93&q=~A
