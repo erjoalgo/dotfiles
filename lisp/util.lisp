@@ -46,8 +46,8 @@
 ;;this doesn't short-circuit
 
 
-(defun join (joiner &rest strings)
-  (reduce (lambda (cum new) (concat cum joiner new))
+(defun join (joiner strings)
+  (reduce (lambda (cum new) (concatenate 'string cum joiner new))
 	  strings))
 
 (defun subseq-minus (seq start &optional end)
