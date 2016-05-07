@@ -1,6 +1,10 @@
-(load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
-(ql:quickload :swank)
+;(load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
+;(ql:quickload :swank)
 ;;TODO get swank to work with slime 2.17
+
+(push (merge-pathnames "quicklisp/dists/quicklisp/software/slime-v2.17/")
+      asdf:*central-registry*)
+(require :swank)
 
 (defvar *swank-port* 4005)
 (defcommand swank () ()
