@@ -145,6 +145,7 @@
 	    as kbd = (kbd letter)
      do (define-key *search-engine-map* kbd (format nil "search-engine-search ~A" eng)))
   (display-bindings-for-keymaps nil *search-engine-map*))
+(reload-search-engines)
 
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
