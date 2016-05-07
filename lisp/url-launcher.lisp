@@ -128,7 +128,7 @@
 	(let* (
 	       ;;(args (escape-bash-single-quotes ))
 	       
-	       (args (trim-spaces terms))
+	       (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
 	  (mozrepl-firefox-new-tab url)
