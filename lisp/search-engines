@@ -7,4 +7,5 @@ bingimg	http://www.bing.com/images/search?q=~A
 wordreference	http://www.wordreference.com/es/translation.asp?tranword=~A
 ebay	http://www.ebay.com/sch/i.html?&_nkw=~A
 localhost	http://localhost:~A
-github	https://github.com/search?utf8=%E2%9C%93&q=~A
+hubgit	https://github.com/search?utf8=%E2%9C%93&q=~A
+p-google-maps	https://www.google.com/maps/search/~A
