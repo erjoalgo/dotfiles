@@ -43,13 +43,13 @@
 (defcommand kill-window-by-class (win-class)
     ((:win-class "enter window class to kill: "))
   "kill window by class"
-  ;;so silly...
   (mapcar 'kill-window
-	  (remove-if-not (lambda (win)
-			   (equal
-			    (window-class win)
-			    win-class)))
-	  (screen-windows (current-screen))))
+	  (remove-if-not
+	   (lambda (win)
+	     (equal
+	      (window-class win)
+	      win-class))
+	   (screen-windows (current-screen)))))
 
 (define-stumpwm-type-for-completion
     :xrandr-rot
@@ -134,17 +134,21 @@ be used to override the default window formatting."
 
   
 (defparameter *scrots-top*
-  ;;TODO use expand user or some pathname library
-  "/home/ealfonso/pictures/auto-scrots" )
+  (merge-pathnames  "pictures/auto-scrots/" (user-homedir-pathname)))
+
+
+
+
 
 (defcommand scrot-cmd (name)
     ((:string "enter name for scrot: "))
   "save a scrot to *scrots-top*"
+  (ensure-directories-exist *scrots-top*)
   ;;TODO allow selecting region
   (unmap-message-window (current-screen))
   (sleep 1)
-  (let ((out-png (format nil 
-			 "~A/~A.png" *scrots-top* name)))
+  (let ((out-png (namestring (merge-pathnames (make-pathname :name name :type "png")
+				   *scrots-top*))))
     
     (SB-EXT:RUN-PROGRAM "scrot"
 			(list out-png)
@@ -160,9 +164,10 @@ be used to override the default window formatting."
     (message "copied to cliboard: ~A" out-png)))
 
 (defcommand speak-key ()
-    ;;((:key "enter key to speak: " ))
+    ;;((:key "enter key to speak: " ));;this requires pressing enter
     ()
   ;;(let ((text (key-keysym key)))
+  "speak the name of the next typed key" 
   (let ((text (read-one-char (current-screen))))
     (SB-EXT:RUN-PROGRAM "espeak"
 			(list (format nil "~A" text))
@@ -173,6 +178,7 @@ be used to override the default window formatting."
 
 (defcommand speak-string (text)
     ((:string "enter string to speak: " ))
+  "speak some text" 
   (SB-EXT:RUN-PROGRAM "espeak"
 			(list text)
 			:search t
