@@ -4,7 +4,7 @@
 (defun is-browser-win (win)
   (member (window-class win) *browser-classes* :test 'equal))
 
-(defcommand scroll-browser-other-frame (up-down-key)
+(defcommand other-frame-scroll-browser (up-down-key)
     ((:rest "key: "))
   "scroll up/down the browser which is on another, visible frame"
   (let* ((curr-win (current-window))
