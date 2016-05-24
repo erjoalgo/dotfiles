@@ -215,3 +215,4 @@
 (set-prefix-key (kbd "SunPrint_Screen"))
 	   
 
+(reload-search-engines)
