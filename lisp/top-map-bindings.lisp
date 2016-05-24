@@ -208,19 +208,6 @@
       ("$" "insert-key-with-delay EuroSign")
       ))
 
-(define-key-bindings
-    *search-engine-map*
-    `(
-      ("g" "search-engine-search ddg")
-      ("m" "search-engine-search music")
-      ("i" "search-engine-search bingimg")
-      ("w" "search-engine-search wordreference")
-      ("y" "search-engine-search youtube")
-      ("s" "search-engine-search stackoverflow")
-      ("w" "search-engine-search wiki")
-      ))
-
-
 (define-key *help-map* (kbd "g") "echo-current-group-name")
 ;;(define-key *special-characters-map* (kbd "?") "run-shell-command xdotool key ¿")
 
