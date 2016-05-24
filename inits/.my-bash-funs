@@ -118,11 +118,32 @@ function git-delete-merged-branches	{
     git branch --merged | g -v '^[*]\|master' | xargs -L 1 git branch -d
 }
 
-
 function git-push-current-branch	{
     BRANCH="$(git rev-parse --abbrev-ref HEAD)"
     # REMOTE=${1:-origin}
     REMOTE="${1}"
     shift
     git push "${REMOTE}" "${BRANCH}" ${*}
+}
+
+function git-review-pull-request	{
+    TO_BRANCH=${1}
+    FROM_BRANCH=${2:-master}
+    if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
+	echo "usage: git-review-pull-request from-branch to-branch"
+	# exit 1
+	return
+    fi
+    HASHES=$(git log --reverse "${FROM_BRANCH}".."${TO_BRANCH}"  --pretty=format:"%h")
+    COUNTER=1
+    TOTAL=$(wc -l <<< "${HASHES}")
+    for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
+	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
+	  # git show ${HASH} --name-status --color;\
+	  git show ${HASH} --stat --color;\
+	  echo -e "\n------PATCH BEGINS NOW------\n";\
+	  git show ${HASH} --format="%B" --color;\
+	}  | less -R;
+	COUNTER=$((COUNTER + 1))
+    done
 }
