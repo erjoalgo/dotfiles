@@ -39,7 +39,8 @@
 (load-files-verbose
  'load
  (merge-pathnames "util.lisp" STUMPWM-TOP)
- (merge-pathnames ".sbclrc" (user-homedir-pathname)))
+ ;'(merge-pathnames ".sbclrc" (user-homedir-pathname))
+ )
 
 
 (defun stumpwm-merger (rel)
