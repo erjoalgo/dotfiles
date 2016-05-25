@@ -3,11 +3,11 @@ SENSITIVE="${SELFD}"/erjoalgo-sensitive
 test -e "${SENSITIVE}" && source "${SENSITIVE}"
 
 
-function git_erjoalgo_list_repos	{
+function git-erjoalgo-list-repos	{
     ssh -p"${ERJOALGO_PORT}" "${ERJOALGO}" ls "${ERJOALGO_GIT_BARE_PATH}"
 }
 
-function git_erjoalgo_clone	{
+function git-erjoalgo-clone	{
     REPO=${1}
     git clone "ssh://${ERJOALGO}:${ERJOALGO_PORT}${ERJOALGO_GIT_BARE_PATH}/$(basename ${REPO} .git).git"
 }
@@ -19,11 +19,11 @@ git_erjoalgo_list_repos_completion()
     _init_completion || return
 
     COMPREPLY=( $( compgen -W \
-			   "$(git_erjoalgo_list_repos | tr '\n' ' ')"\
+			   "$(git-erjoalgo-list-repos | tr '\n' ' ')"\
 			   -- "$cur" ))
     return 0
 } &&
-complete -F git_erjoalgo_list_repos_completion git_erjoalgo_clone
+complete -F git_erjoalgo_list_repos_completion git-erjoalgo-clone
 
 
 

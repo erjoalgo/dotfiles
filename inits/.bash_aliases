@@ -33,7 +33,6 @@ alias gitcheckout='git checkout'
 alias gb='git branch'
 alias gitpulloriginmaster='git pull origin master'
 #bash completion will do the rest below
-alias git-github-clone='git clone'
 alias gmmma='git commit -a -m "autocommit on $(date)"'
 # never used
 # alias gm='git commit'

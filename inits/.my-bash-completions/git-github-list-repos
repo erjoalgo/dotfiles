@@ -1,18 +1,24 @@
-function git_github_list_repos	{
+function git-github-list-repos	{
     USER="${1}"
     curl https://api.github.com/users/"${USER}"/repos 2> /dev/null \
 	|grep \"name |cut -d\" -f4 
 }
 
-_git_github_list_repos()
+_git_github_list_erjoalgo_repos()
 {
     local cur
     _init_completion || return
-    COMPREPLY=( $( compgen -W "$(git_github_list_repos erjoalgo | tr '\n' ' ')" -- "$cur" ) )
-    COMPREPLY="ssh://git@github.com/erjoalgo/${COMPREPLY}"
+    COMPREPLY=( $( compgen -W "$(git-github-list-repos erjoalgo | tr '\n' ' ')" -- "$cur" ) )
+    # COMPREPLY="ssh://git@github.com/erjoalgo/${COMPREPLY}"
     return 0
 }
-complete -F _git_github_list_repos git-github-clone
+
+function git-github-clone	{
+    REPO="${1}"
+    git clone ssh://git@github.com/erjoalgo/${REPO}
+}
+
+complete -F _git_github_list_erjoalgo_repos git-github-clone
 
 
 
@@ -32,6 +38,7 @@ complete -F git_erjoalgo_list_repos git-erjoalgo-clone.sh
 #this is an alias, not a command
 
 
+
 # Local Variables:
-# mode: sh-mode
+# mode: sh
 # End:
