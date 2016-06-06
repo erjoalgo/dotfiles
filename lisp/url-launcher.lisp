@@ -11,7 +11,7 @@
   ;;todo should be in sensitive
   (merge-pathnames "search-history" (user-homedir-pathname)))
 
-;;; Launcher 
+;;; Launcher
 (defparameter *launcher-persistent-alist*
   ;;TODO sane path handling
   (make-persistent-alist :fn
@@ -49,7 +49,7 @@
     (when url
       (let* ((url (expand-user url))
 	     (opener (url-command url)))
-	
+
 	(if (functionp opener)
 	    (funcall opener url)
 	    (progn
@@ -58,7 +58,7 @@
 	      '(SB-EXT:RUN-PROGRAM opener  (list url)
 				;;TODO output to tmp?
 				:search t
-				:wait nil 
+				:wait nil
 				:output t
 				:error t
 				:input t)
@@ -79,9 +79,8 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
-	(tsv-add-entry (persistent-alist-fn
-			*launcher-persistent-alist*)
-		       key url)
+	(persistent-alist-push *launcher-persistent-alist*
+			       key url)
 	;;(setq *launcher-alist* (cons key url))
 	(echo (format nil "added: ~A" url)))))
 
@@ -114,20 +113,20 @@
   (engine terms)
   ((:search-engine "enter search engine: ")
    (:string "enter search query: "))
-  
+
   "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
-  
+
   (let (engine-fmt)
     (when (and engine terms)
       (if (not (setf engine-fmt
 		     ;;ugly but this is to allow "search-engine-search ddg" command
-		     (if (consp engine) (cadr engine) 
+		     (if (consp engine) (cadr engine)
 		       (persistent-alist-get
 			*search-engine-persistent-alist* engine))))
 	  (message "no such engine: '~A'" engine)
 	(let* (
 	       ;;(args (escape-bash-single-quotes ))
-	       
+
 	       (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
@@ -151,4 +150,3 @@
   ;;automatically find the best key for a set of named commands
   ;;for use the first character in the command name that hasn't been used
   )
-  
