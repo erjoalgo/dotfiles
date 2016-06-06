@@ -139,7 +139,7 @@
 (defcommand reload-search-engines () ()
   "reload search engines from file"
   (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*")
-  (loop for (eng fmt) in (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*)
+  (loop for (eng . fmt) in (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*)
 	    as letter = (subseq eng 0 1)
 	    as kbd = (kbd letter)
      do (define-key *search-engine-map* kbd (format nil "search-engine-search ~A" eng)))
