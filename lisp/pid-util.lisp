@@ -1,0 +1,30 @@
+(defun window-pid (win)
+  (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))
+
+(defmacro case-string (keyform &body cases)
+  `(cond ,@(loop for (case-key . case-body) in cases
+     collect `((string= ,keyform ,case-key)
+	       ,@case-body))))
+
+  
+(defvar process-state-codes-alist
+  '((:D . :UNINTERRUPTIBLE);    uninterruptible sleep (usually IO);
+    (:R . :RUNNING);    running or runnable (on run queue);
+    (:S . :SLEEP);    interruptible sleep (waiting for an event to complete);
+    (:T . :STOPPED);    stopped, either by a job control signal or because it is being traced
+    (:W . :PAGING);    paging (not valid since the 2.6.xx kernel);
+    (:X . :DEAD);    dead (should never be seen);
+    (:Z . :DEFUNCT);    defunct ("zombie"); process, terminated but not reaped by  its parent
+    )
+  "map process codes as returned by 'ps -o state=' to a keyword"
+  )
+
+
+(defun process-state (pid)
+  (let* ((cmd (format nil "ps -p ~D -o state=" pid))
+	 (proc-state-string (run-shell-command cmd t))
+	 (trimmed (string-trim '(#\newline) proc-state-string))
+	 (kw (intern trimmed "KEYWORD")))
+    ;;(format t "cmd ~A, kw ~A, out: ~A ~A~%" cmd proc-state-string trimmed kw)
+    (or (cdr (assoc kw process-state-codes-alist))
+	(error "unknown state ~A" proc-state-string))))
