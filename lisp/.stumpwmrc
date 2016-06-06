@@ -6,12 +6,12 @@
     (echo msg)
     msg))
 
-(defparameter *init-errs-list* nil )
+(defparameter *init-errs* nil )
 (defvar ex)
 (defun load-files-verbose (loader-fun &rest fns)
   (loop for fn in fns
 	as str = (if (pathnamep fn) (namestring fn) fn)
-	
+
 	do
 	(echo-format "loading file: ~A..." str)
 	(handler-case
@@ -22,7 +22,7 @@
 		(setq *init-errs-list*
 		      (cons (echo-format "error loading: ~A~%: '~A'" fn err)
 			    *init-errs-list*))))))
-  
+
 
 (defcommand load-cmd (fn)
     ((:shell "Enter file to load: "))
@@ -38,9 +38,7 @@
 
 (load-files-verbose
  'load
- (merge-pathnames "util.lisp" STUMPWM-TOP)
- ;'(merge-pathnames ".sbclrc" (user-homedir-pathname))
- )
+ (merge-pathnames "util.lisp" STUMPWM-TOP))
 
 
 (defun stumpwm-merger (rel)
@@ -65,7 +63,7 @@
  "run-raise-programs.lisp"
  "per-window-bindings.lisp"
  "top-map-bindings.lisp"
- 
+
  "commands-map.lisp"
  "swank-loader.lisp"
  )
@@ -83,7 +81,7 @@
 	     (load-files-verbose #'stumpwm-loader extra-path-fn)))
 
 (defcommand load-some-file (&optional fn) ((:string nil ))
-  "load a file" 
+  "load a file"
   (in-package :stumpwm)
   (let* ((fn (or fn (completing-read (current-screen)
 		   "enter stumpwm file to load (completing read): "
@@ -95,6 +93,6 @@
 
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs-list*))
-  
+
 ;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html
