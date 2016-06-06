@@ -186,3 +186,9 @@ be used to override the default window formatting."
 			:error t
 			:wait t))
 
+'(defcommand send-keys (&rest keys) ((:key-seq "enter keys"))
+  "send the specified keys into the current screen"
+  (echo keys)
+  '(mapcar (lambda (key) (send-meta-key (current-screen) (kbd key)))
+	  keys))
+'(define-key *top-map* (kbd "F12") "SEND-KEYS TAB END RET" )
