@@ -1,9 +1,9 @@
 #!/bin/bash
-function findiregex {
+function find-iregex {
     find ${PWD} -iregex ".*$*.*" 
 }
 
-function findname {
+function find-name {
     dir=${PWD}
     find ${dir} -name "${1}" 
 }
