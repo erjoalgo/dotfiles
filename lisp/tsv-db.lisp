@@ -24,9 +24,11 @@
 		   (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Newline));[^\n]*
 		   :END-ANCHOR));$
 	 matches)
-    (setf matches (ppcre::all-matches-as-strings  regexp contents))
+    (setf matches (ppcre::all-matches-as-strings regexp contents))
     (reverse (loop for el in matches
-		collect (cl-ppcre:split #\Tab el)))))
+		collect (destructuring-bind (k v)
+			    (cl-ppcre:split #\Tab el)
+			  (cons k v))))))
 
 (defun tsv-add-entry (fn key value)
   (with-open-file (out fn
@@ -46,12 +48,14 @@
     (persistent-alist-load palist)))
 
 (defun persistent-alist-push (palist key value)
+  (echo (format nil "before len: ~A" (length (persistent-alist-alist palist))))
   (push (cons key value) (persistent-alist-alist palist))
+  (echo (format nil "after len: ~A" (length (persistent-alist-alist palist))))
   (tsv-add-entry (persistent-alist-fn palist)
-		 key value)) 
+		 key value))
 
 (defun persistent-alist-get (palist key)
-  (cadr (assoc key
+  (cdr (assoc key
 	       (persistent-alist-alist
 		palist)
 	       :test 'equal)))
@@ -70,7 +74,7 @@
        (space-trim t)
        (disallow-empty t)
        (verbose t))
-  
+
   (let ((key (completing-read-alist alist :prompt prompt)))
     (when key
       (when space-trim (setf key (trim-spaces key)))
@@ -102,7 +106,7 @@
     (type-name-sym list-sym)
   `(define-stumpwm-type ,type-name-sym (input prompt)
      (or (argument-pop input)
-	 (completing-read 
+	 (completing-read
 	   (current-screen) prompt
 	   (mapcar 'symbol-name ,list-sym)))))
 
@@ -111,7 +115,7 @@
 
 (defcommand reload-persistent-alist (alist-sym)
     ((:persistent-alist-sym "enter p-alist symbol: " ))
-  "reload a persistent alist from its underlying file, message how many entries loaded" 
+  "reload a persistent alist from its underlying file, message how many entries loaded"
   (let ((p-alist (symbol-value (intern alist-sym "STUMPWM"))))
     (persistent-alist-load p-alist)
     (message "loaded ~D symbols" (length (persistent-alist-alist p-alist)))))
