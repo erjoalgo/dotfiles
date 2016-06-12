@@ -19,9 +19,9 @@
 	   (funcall loader-fun fn)
 	   (echo-format "successful load of ~A" str))
 	 (error (err)
-		(setq *init-errs-list*
+		(setq *init-errs*
 		      (cons (echo-format "error loading: ~A~%: '~A'" fn err)
-			    *init-errs-list*))))))
+			    *init-errs*))))))
 
 
 (defcommand load-cmd (fn)
@@ -92,7 +92,7 @@
 	(echo "nothing to load"))))
 
 (message "finished loading .stumpwmrc. ~D errors"
-	 (length *init-errs-list*))
+	 (length *init-errs*))
 
 ;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html
