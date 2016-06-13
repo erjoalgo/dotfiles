@@ -1,9 +1,9 @@
 #shortcuts
 alias cdrealpath='pwd; cd $(realpath .); pwd'
 alias j='jobs'
-alias e='emacs'
+# alias e='emacs'
+alias e='emacsclient -n'
 alias enw='emacs -nw'
-alias ec='emacsclient -n'
 alias g='grep'
 alias l='less -R'
 alias c='cat'
