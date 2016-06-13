@@ -127,8 +127,9 @@ function git-push-current-branch	{
 }
 
 function git-review-pull-request	{
-    TO_BRANCH=${1}
-    FROM_BRANCH=${2:-master}
+    ORIG_HEAD=$(git rev-parse --abbrev-ref HEAD)
+    TO_BRANCH=${1:-${ORIG_HEAD}}
+    FROM_BRANCH=${2:-origin/master}
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
@@ -137,7 +138,14 @@ function git-review-pull-request	{
     HASHES=$(git log --reverse "${FROM_BRANCH}".."${TO_BRANCH}"  --pretty=format:"%h")
     COUNTER=1
     TOTAL=$(wc -l <<< "${HASHES}")
+    FAILED=""
+
     for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
+
+	git checkout ${HASH}
+	mvn clean install &> /dev/null &
+	COMPILE_CMD_PID=$!
+
 	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
 	  # git show ${HASH} --name-status --color;\
 	  git show ${HASH} --stat --color;\
@@ -145,5 +153,20 @@ function git-review-pull-request	{
 	  git show ${HASH} --format="%B" --color;\
 	}  | less -R;
 	COUNTER=$((COUNTER + 1))
+
+	wait ${COMPILE_CMD_PID}
+
+	if test $? -ne 0; then
+	    FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
+	    FAILED="${FAILED}\n${FAIL}"
+	    echo ${FAIL}
+	    read -p'failure: '
+	fi
     done
+    git checkout ${ORIG_HEAD}
+    if test -n "${FAILED}"; then
+	echo -e "${FAILED}"
+    else
+	echo "BUILD SUCCESS on every commit!"
+    fi
 }
