@@ -99,6 +99,17 @@
      ("[+]" "%2B"))
    :initial-value search-terms))
 
+(defun uri-decode (url)
+  (reduce
+   (lambda (string from-to)
+     (ppcre:regex-replace-all (car from-to) string (cdr from-to)))
+   '(("%25" "%")
+     ("%20" " ")
+     ("%2B" "[+]")
+     ("%3a" ":")
+     ("%2f" "/"))
+   :initial-value url))
+
 ;;would still be nice to have an emacs-like
 ;;(interactive (list ...))
 ;;without having to defne custom, one-off types
