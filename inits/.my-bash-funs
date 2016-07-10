@@ -142,8 +142,9 @@ function git-review-pull-request	{
 
     for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
 
-	git checkout ${HASH}
-	mvn clean install &> /dev/null &
+	# git checkout ${HASH}
+	# mvn clean install &> /dev/null &
+	echo 1 &
 	COMPILE_CMD_PID=$!
 
 	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
