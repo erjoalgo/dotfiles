@@ -55,6 +55,11 @@
 				   :wait t)))
     (subseq-minus out 1 -1)))
 
+(defun escape-dqs (string)
+  (ppcre:regex-replace-all "\""
+			   string
+			   "\\\""))
+
 (defun mozrepl-firefox-new-tab (url)
   ;;taken from:
   ;;https://gist.github.com/jabbalaci/a1312d211c110ff3855d
@@ -63,14 +68,6 @@
    (format nil
 	   "gBrowser.selectedTab = gBrowser.addTab(\"~A\");"
 	   (escape-dqs url))))
-
-(defun escape-dqs (string)
-  (ppcre:regex-replace-all "\""
-			   string
-			   "\\\""))
-
-  
-
 
 ;;please never again...
 '(defun get-firefox-url-clipboard ()
