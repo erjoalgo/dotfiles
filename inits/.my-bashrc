@@ -112,9 +112,9 @@ export EDITOR='emacsclient'
 export PS1='\[\033[0;34m\][\h]\$ \[\033[00m\]'
 
 
-REPOS="${HOME}/repos"
+GIT="${HOME}/git"
 PROGRAMS="${HOME}/programs"
-UNIX_UTILS="${REPOS}/unix_utils"
+UNIX_UTILS="${GIT}/unix_utils"
 
 source ~/.bash_aliases #should already be sourced by normal bashrc
 source ~/.my-bash-funs #lnabs, findiregex, etc
@@ -131,7 +131,7 @@ export PYTHONSTARTUP=${HOME}/.pythonrc.py
 
 # go
 export GOROOT=${PROGRAMS}/go
-export GOPATH=${REPOS}/gopath
+export GOPATH=${GIT}/gopath
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
 #java/maven
