@@ -6,7 +6,7 @@ SCANNER=$(sudo scanimage -L | grep Visioneer | cut -f1 -d\' | cut -f2 -d\`)
 test -n ${SCANNER} || exit ${LINENO}
 while true; do
     DOC_NAME=""
-    while test -z ${DOC_NAME} || test -e ${SCAN_NAME}.pnm; do
+    while test -z ${DOC_NAME}; do
 	read -e -p 'enter document name: ' DOC_NAME
 	DOC_NAME=$(tr -d '/' <<< "${DOC_NAME}")
     done
