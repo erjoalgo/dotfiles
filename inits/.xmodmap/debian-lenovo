@@ -1,7 +1,7 @@
 !keycode 108 = onehalf
 keycode 108 = Super_L
-keycode 22 = dead_acute grave
-keycode 49 = BackSpace asciitilde
+keycode 22 = BackSpace dead_acute
+keycode 49 = grave asciitilde
 keycode 65 = space underscore
 
 clear lock
