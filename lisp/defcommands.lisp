@@ -24,7 +24,7 @@
 (defcommand echo-date-battery () ()
   "echo date and battery status"
   (let* (
-	 (output (run-shell-command "battery_info.sh" t))
+	 (output (run-shell-command "battery-info.sh" t))
 	 (percentage (extract-match "percentage:.*?([0-9][^%]*)%" output 1))
 	 (state (extract-match "state:[^a-z]*([a-z-]+)" output 1))
 	 ;(to-full (extract-match "time to (full|empty: *.+?)\\n" output 1))
