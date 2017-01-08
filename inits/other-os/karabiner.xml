@@ -1,14 +1,22 @@
 <?xml version="1.0"?>
 <root>
+
   <item>
-    <name>Fn to F19</name>
-    <identifier>remap.fn2f19</identifier>
-    <autogen>__KeyToKey__ KeyCode::FN, KeyCode::F19</autogen>
+    <name>r_cmd to JIS_UNDERSCORE</name>
+    <identifier>private.cmdr_to_jisunderscore</identifier>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_R, KeyCode::JIS_UNDERSCORE</autogen>
   </item>
-  
+
   <item>
-    <name>Fn to F18</name>
-    <identifier>private.l_alt_to_f18</identifier>
-    <autogen>__KeyToKey__ KeyCode::OPTION_L, KeyCode::F18</autogen>
+    <name>command_l to option_l</name>
+    <identifier>private.cmdl_to_optl</identifier>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_L, KeyCode::OPTION_L</autogen>
   </item>
+
+  <item>
+    <name>optr_to_cmdr</name>
+    <identifier>private.optr_to_cmdr</identifier>
+    <autogen>__KeyToKey__ KeyCode::OPTION_R, KeyCode::COMMAND_R</autogen>
+  </item>
+
 </root>
