@@ -5,8 +5,8 @@
 
 (defvar *per-window-bindings-rules* nil
   "a list of (CLASSES BINDINGS),
-where each CLASS is a list of window-class names, 
-where each BINDING is a (KEY . FORM). 
+where each CLASS is a list of window-class names,
+where each BINDING is a (KEY . FORM).
 these are read from a file *per-window-binding-rules-fn*" )
 
 (defvar *per-window-binding-rules-fn*
@@ -31,7 +31,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 	   ;;do (print defcmd-form)
 	   do
 	     (define-key top-copy (kbd key) cmd-name))
-     do (loop for class in classes 
+     do (loop for class in classes
 	     ;;do (format t "setting class ~A to ~A~%" class top-copy)
 	   do (setf (gethash class *per-window-bindings-class-to-map*) top-copy))))
 
@@ -51,7 +51,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (let* ((class-dest (and b (window-class b)))
 	 (bindings-dest (gethash class-dest *per-window-bindings-class-to-map*))
 	 (curr-bindings (car *current-top-bindings*)))
-    
+
     (unless (eq curr-bindings bindings-dest)
       (when curr-bindings
 	(pop-top-map)

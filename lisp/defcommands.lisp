@@ -16,7 +16,7 @@
 	      (window-visible-p win)
 	      (is-browser-win win)))
 	   (screen-windows (current-screen)))))
-    
+
     (when visible-browser-wins
       (send-fake-key (car visible-browser-wins) (kbd up-down-key)))))
 
@@ -84,13 +84,13 @@
 
 
 (defcommand echo_pointer ()     ()
-  "echo the mouse location" 
+  "echo the mouse location"
   (echo (run-shell-command "xdotool getmouselocation" t)))
 
 
 (defvar magnifier-on nil )
 (defcommand toggle-magnifier () ()
-  "toogle magnifier on/off. requires the TODO program" 
+  "toogle magnifier on/off. requires the TODO program"
   (setf magnifier-on (not magnifier-on))
   (run-shell-command
    (if (not magnifier-on)
@@ -127,12 +127,12 @@ be used to override the default window formatting."
   ;;debian-mini$kill-wpa-supplicants.sh ; sleep 1 && wac
   (run-shell-command "kill-wpa-supplicants.sh; sleep 1 && sudo wifi -y -t ac&"))
 
-    
+
 
 
 ;;(emacs-in-group)
 
-  
+
 (defparameter *scrots-top*
   (merge-pathnames  "pictures/auto-scrots/" (user-homedir-pathname)))
 
@@ -149,7 +149,7 @@ be used to override the default window formatting."
   (sleep 1)
   (let ((out-png (namestring (merge-pathnames (make-pathname :name name :type "png")
 				   *scrots-top*))))
-    
+
     (SB-EXT:RUN-PROGRAM "scrot"
 			(list out-png)
 			:search t
@@ -167,7 +167,7 @@ be used to override the default window formatting."
     ;;((:key "enter key to speak: " ));;this requires pressing enter
     ()
   ;;(let ((text (key-keysym key)))
-  "speak the name of the next typed key" 
+  "speak the name of the next typed key"
   (let ((text (read-one-char (current-screen))))
     (SB-EXT:RUN-PROGRAM "espeak"
 			(list (format nil "~A" text))
@@ -178,7 +178,7 @@ be used to override the default window formatting."
 
 (defcommand speak-string (text)
     ((:string "enter string to speak: " ))
-  "speak some text" 
+  "speak some text"
   (SB-EXT:RUN-PROGRAM "espeak"
 			(list text)
 			:search t

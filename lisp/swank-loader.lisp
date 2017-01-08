@@ -9,12 +9,12 @@
 (defvar *swank-port* 4005)
 (defcommand swank () ()
   "start swank server on *swank-port*"
-  (echo-string (current-screen) 
+  (echo-string (current-screen)
 	       "Starting swank...")
   (swank:create-server :port *swank-port*
                        :style swank:*communication-style*
                        :dont-close t)
-  (echo-string (current-screen) 
+  (echo-string (current-screen)
 	       "Started swank. M-x slime-connect RET RET, then (in-package stumpwm)."))
 
 (defcommand swank-stop () ()

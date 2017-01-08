@@ -55,7 +55,7 @@
 	 (a (echo "place mouse in bottom right, then press enter"))
 	 (a (read-one-char (current-screen)))
 	 ;(a (run-shell-command "xdotool mousemove 1279 799"))
-	 (mouseb (get-mouse-coords)) 
+	 (mouseb (get-mouse-coords))
 	 (x (nth 0 mousea))
 	 (y (nth 1 mousea))
 	 (w (- (nth 0 mouseb) (nth 0 mousea)))

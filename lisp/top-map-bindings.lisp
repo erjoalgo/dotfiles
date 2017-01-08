@@ -43,7 +43,7 @@
       ("H-F10" "volup")
 
       ;;brightness
-      ;;emergency dimming 
+      ;;emergency dimming
       ("XF86MonBrightnessDown" "run-shell-command xbacklight -set 1")
       ("XF86MonBrightnessUp" "run-shell-command xbacklight -set 50")
       ;;("XF86AudioLowerVolume" nil)
@@ -82,16 +82,16 @@
       ("H-TAB" "fnext")
 
       ("H-h" *help-map*)
-      
+
       ("H-d" "dict-lookup-command")
 
       ("H-DEL" *special-chars-map*)
       ("H-I" "invert-current-window")
       ("H-i" "invert-screen")
-      
+
       ("H-p" "pull-hidden-previous")
       ("H-n" "pull-hidden-next")
-      
+
       ("H-g" "search-engine-search ddg")
       ("Scroll_Lock" "fnext")
       ("H-a" "echo-date-battery")
@@ -136,31 +136,31 @@
       ("H-(" "pull-window-by-number 9")
       ("H-)" "pull-window-by-number 0")
 
-      
+
       ("M-H-1" "only")
       ("M-H-2" "vsplit")
       ("M-H-3" "hsplit")
       ("M-H-q" "remove")
-      
+
       ("H-F8" "volmute-toggle")
       ("H-F9" "voldown")
       ("H-F10" "volup")
       ("H-SPC" "speak-key")
       )
-  
+
   ;;not efficient nor necessary but only run at initialization
   )
 
 
 
-(define-key-bindings (all-top-maps) 
+(define-key-bindings (all-top-maps)
     (append
-     (loop for i from 2 upto 6 
+     (loop for i from 2 upto 6
 	do (gnewbg (format nil "F~D" i))
 	nconc
 	  `((,(format nil "H-F~D" i) ,(format nil "gselect ~D" i))
 	    (,(format nil "S-H-F~D" i) ,(format nil "gmove ~D" i))))
-     
+
      '(("H-F1" "gselect Default")
        ("S-H-F1" "gmove Default"))))
 
@@ -172,7 +172,7 @@
    ("C" "run-shell-command correct_screen.py &")
    ;;("k" "run-shell-command call_skype_numer.py -w")
    ("p" "run-shell-command save_pics.py")
-   
+
    ("s" "save_page")
    ("p" "run-shell-command pgkill.py save_pic -f")
    ("T" "kill-tk-windows")
@@ -213,6 +213,6 @@
 
 (pop-top-map)
 (set-prefix-key (kbd "SunPrint_Screen"))
-	   
+
 
 (reload-search-engines)

@@ -6,7 +6,7 @@
      collect `((string= ,keyform ,case-key)
 	       ,@case-body))))
 
-  
+
 (defvar process-state-codes-alist
   '((:D . :UNINTERRUPTIBLE);    uninterruptible sleep (usually IO);
     (:R . :RUNNING);    running or runnable (on run queue);

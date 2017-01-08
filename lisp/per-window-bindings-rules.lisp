@@ -17,11 +17,11 @@
    ("S-F2" (send-fake-key (current-window) (kbd "C-S-SunPageDown")))
 
    ;;("d" (send-fake-key (current-window) (kbd "SunPageDown")))
-   
+
    ;;("w" (send-fake-key (current-window) (kbd "SunPageUp")))
    ;;("a" (send-fake-key (current-window) (kbd "Left")))
    ;;("s" (send-fake-key (current-window) (kbd "Right")))
-   
+
    )
 
   (("x-terminal-emulator" "X-terminal-emulator" "roxterm" "Roxterm")
@@ -46,7 +46,7 @@
   ;;  ("+" (send-fake-key (current-window) (kbd "C-+")))
   ;;  )
   ;;(("Zathura" "zathura")
-  
+
   ;;("SunPageUp" (echo "hola4") (send-fake-key (current-window) (kbd "S-SunPageUp")) (run-shell-command "xdotool key shift+Prior" t) )
   ;;("SunPageDown" (send-fake-key (current-window) (kbd "S-SunPageUp")) (run-shell-command "xdotool key shift+Next"))
   ;;("F1" (send-fake-key (current-window) (kbd "C-ISO_Left_Tab")))

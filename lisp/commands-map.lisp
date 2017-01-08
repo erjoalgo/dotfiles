@@ -4,7 +4,7 @@
 
 (defcommand type-string (s)
     ((:string ))
-  "type a given string" 
+  "type a given string"
   ;;(echo-format "times is ~D" times)
   ;;(sleep .001)
   (xdotool (concat "type " s)))

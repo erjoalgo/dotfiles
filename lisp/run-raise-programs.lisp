@@ -5,11 +5,11 @@
 				     (cmd name)
 				     (classes (list (string-capitalize name)))
 				     (all-screens nil))
-  
+
   (loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					 (pull-window ,pull-key)
 					 )
-       
+
      as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
 				    (symbol-name pull-or-raise-fun)
 					;(symbol-name pull-or-raise-fun)
@@ -51,7 +51,7 @@
 
 (define-run-or-pull-program "x-terminal-emulator"
     :raise-key "H-c"
-    :cmd "roxterm" 
+    :cmd "roxterm"
     :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
 
 (define-run-or-pull-program "emacs"

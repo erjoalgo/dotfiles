@@ -18,7 +18,7 @@
 ;;this fixes a certain issue with Virtualbox and stumpwm
 (defun error-handler (display error-key &rest key-vals &key asynchronous &allow-other-keys)
   "Handle X errors"
-  (cond 
+  (cond
     ;; ignore asynchronous window errors
     ((and asynchronous
           (find error-key '(xlib:window-error xlib:drawable-error xlib:match-error)))
@@ -28,7 +28,7 @@
      (write-line (prin1-to-string error-key) )
      (write-line (prin1-to-string key-vals))
      ;(and (boundp 'ab) (write-line (prin1-to-string ab)))
-     
+
      ;(throw :top-level :quit)
      )
      ;; all other asynchronous errors are printed.
@@ -58,7 +58,7 @@
     (subseq seq start end)))
 
 ;;silly
-(defvar *whitespace-char-list* '(#\Space #\Newline #\Backspace #\Tab 
+(defvar *whitespace-char-list* '(#\Space #\Newline #\Backspace #\Tab
 				      #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
   (string-trim '(#\space #\tab #\newline) str))

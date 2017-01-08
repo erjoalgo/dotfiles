@@ -7,7 +7,7 @@
        (SB-EXT:RUN-PROGRAM "nc" (list host port "-q2")
 			   ;;TODO output to tmp?
 			   :search t
-			   :wait nil 
+			   :wait nil
 			   :output t
 			   :error t
 			   :input input-fh)
@@ -34,7 +34,7 @@
       (resp)
       ((format nil "repl[0-9]*> (.*)~%repl[0-9]*>") out)
       resp)
-     
+
      (progn
        (echo-string-list
 	(current-screen)
