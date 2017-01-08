@@ -1,29 +1,25 @@
-!keycode 108 = onehalf
-keycode 108 = Super_L
 keycode 22 = BackSpace dead_acute
 keycode 49 = grave asciitilde
 keycode 65 = space underscore
 
 clear lock
 clear control
-add control = Control_L Control_R Caps_Lock
-keycode 66 = Control_L
-keycode 37 = Super_L
-remove mod1 = Super_L
-
 clear mod4
+
+add control = Control_L Control_R Caps_Lock
+remove mod1 = Super_L
 add mod4 = Super_L Super_R
 add mod3 = Hyper_L
 
+keycode 66 = Control_L
+keycode 37 = Super_L
+keycode 108 = Super_L
 keycode 105 = Hyper_L
-
+!between R_Alt , R_Ctrl
+keycode 135 = Super_L
 
 !annoying pgup, pgdown accidental press on lenovo 
 keycode 112 = NoSymbol
 keycode 117 = NoSymbol
 
-!to enable the key, we need to map it to something
 
-
-!between R_Alt , R_Ctrl
-keycode 135 = Super_L
