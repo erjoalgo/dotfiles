@@ -128,8 +128,8 @@ function git-push-current-branch	{
 
 function git-review-pull-request	{
     ORIG_HEAD=$(git rev-parse --abbrev-ref HEAD)
-    TO_BRANCH=${1:-${ORIG_HEAD}}
-    FROM_BRANCH=${2:-origin/master}
+    FROM_BRANCH=${1:-origin/master}
+    TO_BRANCH=${2:-${ORIG_HEAD}}
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
