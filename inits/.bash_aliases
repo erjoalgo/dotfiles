@@ -39,6 +39,8 @@ alias gmmma='git commit -a -m "autocommit on $(date)"'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gcp='VISUAL=vi git commit -p'
+alias gpff='git pull --ff-only'
+alias gfr='git fetch && git rebase origin/master'
 
 # never used
 # alias gm='git commit'
