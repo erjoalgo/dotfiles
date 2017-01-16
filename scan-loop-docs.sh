@@ -3,7 +3,7 @@
 # SCANNER=gt68xx:libusb:002:005
 SCANNER=$(sudo scanimage -L | grep Visioneer | cut -f1 -d\' | cut -f2 -d\`)
 
-test -n ${SCANNER} || exit ${LINENO}
+test -n "${SCANNER}" || exit ${LINENO}
 while true; do
     DOC_NAME=""
     while test -z ${DOC_NAME}; do
