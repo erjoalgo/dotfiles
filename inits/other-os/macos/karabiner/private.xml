@@ -3,6 +3,7 @@
 
   <item>
     <name>r_cmd to JIS_UNDERSCORE</name>
+    <not>EMACS</not>
     <identifier>private.cmdr_to_jisunderscore</identifier>
     <autogen>__KeyToKey__ KeyCode::COMMAND_R, KeyCode::JIS_UNDERSCORE</autogen>
   </item>
