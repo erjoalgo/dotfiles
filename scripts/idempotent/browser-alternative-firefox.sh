@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 FIREFOX_NEW_TAB=$(which firefox-new-tab.sh)
 test $? -eq 0 || exit ${LINENO}
