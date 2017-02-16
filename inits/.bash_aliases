@@ -42,6 +42,7 @@ alias gcp='VISUAL=vi git commit -p'
 alias gpff='git pull --ff-only'
 alias gfr='git fetch && git rebase origin/master'
 
+alias hb='hub browse'
 # never used
 # alias gm='git commit'
 # alias gmm='git commit -a -m'
