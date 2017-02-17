@@ -20,12 +20,18 @@ alias xargsz='xargs -IZ'
 
 
 #git
+# http://stackoverflow.com/questions/342969/
+source /usr/share/bash-completion/completions/git
 alias gt='git status'
+__git_complete gt _git_status
 alias gf='git diff'
+__git_complete gf _git_diff
 alias gl='git log'
+__git_complete gf _git_log
 alias ga='git add'
 alias gsin='git-commit-select-files.sh'
 alias gfsin='git-commit-select-files.sh'
+__git_complete ga _git_add
 alias grv='git remote -vv'
 alias gpom='git push origin master'
 alias gpgm='git push github-origin master'
@@ -40,6 +46,7 @@ alias gmmma='git commit -a -m "autocommit on $(date)"'
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gcp='VISUAL=vi git commit -p'
 alias gpff='git pull --ff-only'
+__git_complete gpff _git_pull
 alias gfr='git fetch && git rebase origin/master'
 
 alias hb='hub browse'
