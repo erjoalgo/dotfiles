@@ -20,29 +20,23 @@
 	  (run-shell-command command)))))
 
 (defmacro define-run-or-pull-program (name
-				   &key
-				     (raise-key (format nil "H-~A" (char name 0)))
-				     (pull-key (string-upcase raise-key))
-				     (cmd name)
-					      (classes `(list ,(string-capitalize name)))
-				     (all-screens nil))
+				      &key
+					(raise-key (format nil "H-~A" (char name 0)))
+					(pull-key (string-upcase raise-key))
+					(cmd name)
+					(classes `(list ,(string-capitalize name)))
+					(all-screens nil))
 
   `(progn
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					      (pull-window ,pull-key))
 
-     as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
-				    (symbol-name pull-or-raise-fun)
-					;(symbol-name pull-or-raise-fun)
-				    ;; (if (subtypep (type-of pull-or-raise-fun) 'STANDARD-GENERIC-FUNCTION)
-				    ;; 	(slot-value  pull-or-raise-fun 'SB-PCL::NAME)
-				    ;; 	(symbol-name pull-or-raise-fun))
-				    ;;(subtypep (type-of #'pull-window ) 'STANDARD-GENERIC-FUNCTION)
-				    name))
+	  as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
+					 (symbol-name pull-or-raise-fun)
+					 name))
 	  as pull-p = (eq pull-or-raise-fun #'pull-window)
-     as cmd-name-string = (symbol-name cmd-name)
-     ;;as fun = (eval `(function ,pull-or-raise-fun));;TODO !
-     as fun = pull-or-raise-fun
+	  as cmd-name-string = (symbol-name cmd-name)
+	  as fun = pull-or-raise-fun
 	  as doc = (format nil "doc: ~A" cmd-name-string)
 	  do (print "classes")
 	  do (print classes)
