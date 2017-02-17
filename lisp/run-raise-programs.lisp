@@ -1,3 +1,24 @@
+(defun raise-pull-or-run-win (win-classes command &optional pull-p all-screens)
+  (let* ((win-list (if all-screens (screen-windows (current-screen))
+		       (group-windows (current-group))))
+	 (curr-win (current-window))
+	 (win-matches (lambda (win)
+			(member (window-class win) win-classes :test 'equal)))
+	 (cands (remove-if-not
+		 (lambda (win)
+		   (and (not (equal win curr-win))
+			(funcall win-matches win)))
+		 win-list))
+	 (cand (car cands)))
+    (if cands
+	(progn (funcall (if pull-p 'pull-window
+			    'raise-window)
+			cand)
+	       (focus-all cand))
+	(unless (and curr-win
+		     (funcall win-matches curr-win))
+	  (run-shell-command command)))))
+
 (defun define-run-or-pull-program (name
 				   &key
 				     (raise-key (format nil "H-~A" (char name 0)))
