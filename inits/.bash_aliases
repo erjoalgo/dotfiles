@@ -29,17 +29,12 @@ __git_complete gf _git_diff
 alias gl='git log'
 __git_complete gf _git_log
 alias ga='git add'
-alias gsin='git-commit-select-files.sh'
-alias gfsin='git-commit-select-files.sh'
 __git_complete ga _git_add
 alias grv='git remote -vv'
 alias gpom='git push origin master'
-alias gpgm='git push github-origin master'
 alias gitresetsoft='git reset --soft HEAD~1'
 alias gitresethead='git reset HEAD'
-alias gitcheckout='git checkout'
 alias gb='git branch'
-alias gitpulloriginmaster='git pull origin master'
 #bash completion will do the rest below
 alias gmmma='git commit -a -m "autocommit on $(date)"'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
