@@ -43,7 +43,13 @@ alias gcp='VISUAL=vi git commit -p'
 alias gpff='git pull --ff-only'
 __git_complete gpff _git_pull
 alias gfr='git fetch && git rebase origin/master'
-
+alias gkt='git checkout'
+__git_complete gck _git_checkout
+alias gkp='git checkout -p'
+__git_complete gck _git_checkout
+alias gw='git show'
+__git_complete gw _git_show
+alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd && ls'
 alias hb='hub browse'
 # never used
 # alias gm='git commit'
