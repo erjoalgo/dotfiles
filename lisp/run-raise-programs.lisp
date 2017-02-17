@@ -19,17 +19,17 @@
 		     (funcall win-matches curr-win))
 	  (run-shell-command command)))))
 
-(defun define-run-or-pull-program (name
+(defmacro define-run-or-pull-program (name
 				   &key
 				     (raise-key (format nil "H-~A" (char name 0)))
 				     (pull-key (string-upcase raise-key))
 				     (cmd name)
-				     (classes (list (string-capitalize name)))
+					      (classes `(list ,(string-capitalize name)))
 				     (all-screens nil))
 
-  (loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
-					 (pull-window ,pull-key)
-					 )
+  `(progn
+     ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
+					      (pull-window ,pull-key))
 
      as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
 				    (symbol-name pull-or-raise-fun)
@@ -39,30 +39,19 @@
 				    ;; 	(symbol-name pull-or-raise-fun))
 				    ;;(subtypep (type-of #'pull-window ) 'STANDARD-GENERIC-FUNCTION)
 				    name))
+	  as pull-p = (eq pull-or-raise-fun #'pull-window)
      as cmd-name-string = (symbol-name cmd-name)
      ;;as fun = (eval `(function ,pull-or-raise-fun));;TODO !
      as fun = pull-or-raise-fun
-     as form = `(defcommand ,cmd-name nil nil ,(format nil "doc: ~A" cmd-name-string)
-			    (let* ((win-list ,(if all-screens `(screen-windows (current-screen))
-						  `(group-windows (current-group))))
-				   (curr-win (current-window))
-				   (classes (list ,@classes))
-				   (win (loop for win in win-list
-					   thereis (and win
-							(not (eq win curr-win))
-							(member (window-class win) classes :test 'equal)
-							win))))
-			      (if win
-				  (progn (,fun win)
-					 (focus-all win))
-				  (unless (and curr-win
-					       (member (window-class curr-win) classes :test 'equal))
-				    (run-shell-command ,cmd)))))
-     unless (null key)
-     do (progn
-	  ;;(print form)
-	  (eval form)
-	  (define-key *top-map* (kbd key) cmd-name-string))))
+	  as doc = (format nil "doc: ~A" cmd-name-string)
+	  do (print "classes")
+	  do (print classes)
+	  append
+	    `(
+	      (defcommand ,cmd-name nil nil ,doc
+			  (raise-pull-or-run-win ,classes ,cmd ,pull-p ,all-screens))
+	      ,(unless (null key)
+		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
 (define-run-or-pull-program "firefox"
     :raise-key "H-f"
