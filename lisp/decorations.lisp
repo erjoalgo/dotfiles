@@ -1,6 +1,6 @@
 (setq *timeout-wait* 999)
-(set-font "-*-*-bold-r-*-*-25-240-*-*-*-*-*-*")
-(set-font "-adobe-helvetica-medium-r-normal--25-240-*-*-*-*-*-*")
+(set-font "-*-*-bold-r-*-*-50-240-*-*-*-*-*-*")
+(set-font "-adobe-helvetica-medium-r-normal--100-240-*-*-*-*-*-*")
 (setq *message-window-gravity* :center)
 (setq *input-window-gravity* :center)
 (define-key *input-map* (kbd "C-v") 'input-yank-selection)
