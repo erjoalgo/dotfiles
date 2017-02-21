@@ -38,8 +38,6 @@
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
 	  as doc = (format nil "doc: ~A" cmd-name-string)
-	  do (print "classes")
-	  do (print classes)
 	  append
 	    `(
 	      (defcommand ,cmd-name nil nil ,doc
