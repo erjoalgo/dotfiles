@@ -66,6 +66,7 @@
 
  "commands-map.lisp"
  "swank-loader.lisp"
+ "correct-screen.lisp"
  )
 
 (defun list-regular-files (dir)
