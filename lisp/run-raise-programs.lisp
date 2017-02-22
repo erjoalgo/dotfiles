@@ -5,16 +5,14 @@
 	 (win-matches (lambda (win)
 			(member (window-class win) win-classes :test 'equal)))
 	 (cands (remove-if-not
-		 (lambda (win)
-		   (and (not (equal win curr-win))
-			(funcall win-matches win)))
+		 win-matches
 		 win-list))
-	 (cand (car cands)))
-    (if cands
+	 (cand-no-curr (car (remove curr-win cands))))
+    (if cand-no-curr
 	(progn (funcall (if pull-p 'pull-window
 			    'raise-window)
-			cand)
-	       (focus-all cand))
+			cand-no-curr)
+	       (focus-all cand-no-curr))
 	(unless (and curr-win
 		     (funcall win-matches curr-win))
 	  (run-shell-command command)))))
