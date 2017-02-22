@@ -2,7 +2,7 @@
   (print cmd)
   (run-shell-command cmd collect-output-p))
 
-(defstruct xrandr-display id state mode modes connected-p)
+(defstruct xrandr-display id state mode modes connected-p extra)
 
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
@@ -14,14 +14,18 @@
      collect (destructuring-bind (id state . etc) (funcall pop-line)
 	       (declare (ignore etc))
 	       (let ((modes (loop
-			       while (ppcre:scan "^ " (car lines))
-			       collect (cdr (funcall pop-line)))))
+			       while (ppcre:scan "^ +[0-9]+x[0-9]+" (car lines))
+			       collect (cdr (funcall pop-line))))
+		     (extra (loop
+			       while (ppcre:scan "^ +" (car lines))
+			       collect (funcall pop-line))))
 		 (make-xrandr-display :id id :state state
 				      :modes (mapcar (lambda (mode)
 						       (mapcar 'parse-integer
 							       (ppcre:split "x" (car mode))))
 						     modes)
-				      :connected-p (equal state "connected"))))))
+				      :connected-p (equal state "connected")
+				      :extra extra)))))
 
 (defun correct-screen (&optional order)
   (let* ((displays (xrandr-displays))
