@@ -1,6 +1,5 @@
 (defun run-shell-command-print (cmd &optional collect-output-p)
   (print cmd)
-  ;(echo cmd)
   (run-shell-command cmd collect-output-p))
 
 (defstruct xrandr-display id state mode modes connected-p)
