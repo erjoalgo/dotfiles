@@ -71,7 +71,8 @@
 	   (order (loop for c across line
 		     collect (- (char-code c) (char-code #\0))))
 	   )
-      (when (>= (apply 'max order) (length displays))
+    (when (and order
+	       (>= (apply 'max order) (length displays)))
 	(error "index out of bounds"))
       (correct-screen order)))
 
