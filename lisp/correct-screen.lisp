@@ -32,7 +32,7 @@
 					  collect (nth ith connected))
 				 connected))
 	 (to-disconnect (remove-if (lambda (display)
-				     (member display connected :test 'equal))
+				     (member display to-connect-ordered))
 				   displays)))
     ;; disconnect
     (mapc (lambda (off-display)
