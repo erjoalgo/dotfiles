@@ -32,7 +32,7 @@
 	  as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
 					 (symbol-name pull-or-raise-fun)
 					 name))
-	  as pull-p = (eq pull-or-raise-fun #'pull-window)
+	  as pull-p = (eq pull-or-raise-fun 'pull-window)
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
 	  as doc = (format nil "doc: ~A" cmd-name-string)
