@@ -44,7 +44,7 @@ alias gpff='git pull --ff-only'
 __git_complete gpff _git_pull
 alias gfr='git fetch && git rebase origin/master'
 alias gkt='git checkout'
-__git_complete gck _git_checkout
+__git_complete gkt _git_checkout
 alias gkp='git checkout -p'
 __git_complete gck _git_checkout
 alias gw='git show'
