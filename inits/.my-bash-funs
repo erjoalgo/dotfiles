@@ -128,8 +128,16 @@ function git-push-current-branch	{
 
 function git-review-pull-request	{
     ORIG_HEAD=$(git rev-parse --abbrev-ref HEAD)
-    FROM_BRANCH=${1:-origin/master}
-    TO_BRANCH=${2:-${ORIG_HEAD}}
+
+    if grep '[.]\{2\}' > /dev/null <<< "${1}"; then
+	SPLIT=$(sed 's/[.]\{2\}/\t/g' <<< "${1}")
+	FROM_BRANCH=$(cut -f1 <<< "${SPLIT}")
+	TO_BRANCH=$(cut -f2 <<< "${SPLIT}")
+    else
+	FROM_BRANCH=${1:-origin/master}
+	TO_BRANCH=${2:-${ORIG_HEAD}}
+    fi
+
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
