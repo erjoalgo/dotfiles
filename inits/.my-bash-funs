@@ -133,11 +133,14 @@ function git-review-pull-request	{
 	SPLIT=$(sed 's/[.]\{2\}/\t/g' <<< "${1}")
 	FROM_BRANCH=$(cut -f1 <<< "${SPLIT}")
 	TO_BRANCH=$(cut -f2 <<< "${SPLIT}")
+	shift
     else
 	FROM_BRANCH=${1:-origin/master}
 	TO_BRANCH=${2:-${ORIG_HEAD}}
+	shift 2
     fi
 
+    CMD=${1}
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
@@ -150,10 +153,11 @@ function git-review-pull-request	{
 
     for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
 
-	# git checkout ${HASH}
-	# mvn clean install &> /dev/null &
-	echo 1 &
-	COMPILE_CMD_PID=$!
+	if test -n "${CMD}"; then
+	    git checkout ${HASH}
+	    ${CMD} &> /dev/null &
+	    COMPILE_CMD_PID=$!
+	fi
 
 	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
 	  # git show ${HASH} --name-status --color;\
@@ -163,19 +167,20 @@ function git-review-pull-request	{
 	}  | less -R;
 	COUNTER=$((COUNTER + 1))
 
-	wait ${COMPILE_CMD_PID}
-
-	if test $? -ne 0; then
-	    FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
-	    FAILED="${FAILED}\n${FAIL}"
-	    echo ${FAIL}
-	    read -p'failure: '
+	if test -n "${CMD}"; then
+	    wait ${COMPILE_CMD_PID}
+	    if test $? -ne 0; then
+		FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
+		FAILED="${FAILED}\n${FAIL}"
+		echo ${FAIL}
+		read -p'failure: '
+	    fi
 	fi
     done
     git checkout ${ORIG_HEAD}
     if test -n "${FAILED}"; then
 	echo -e "${FAILED}"
-    else
+    elif test -n "${CMD}"; then
 	echo "BUILD SUCCESS on every commit!"
     fi
 }
