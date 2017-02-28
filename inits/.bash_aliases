@@ -27,7 +27,7 @@ __git_complete gt _git_status
 alias gf='git diff'
 __git_complete gf _git_diff
 alias gl='git log'
-__git_complete gf _git_log
+__git_complete gl _git_log
 alias ga='git add'
 __git_complete ga _git_add
 alias grv='git remote -vv'
