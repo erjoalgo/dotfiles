@@ -49,7 +49,7 @@ alias gkp='git checkout -p'
 __git_complete gck _git_checkout
 alias gw='git show'
 __git_complete gw _git_show
-alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd && ls'
+alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd'
 alias hb='hub browse'
 # never used
 # alias gm='git commit'
