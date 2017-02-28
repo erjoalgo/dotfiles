@@ -51,6 +51,10 @@ alias gw='git show'
 __git_complete gw _git_show
 alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd'
 alias hb='hub browse'
+# stands for git log "one by one"
+alias gl11='git-review-pull-request'
+__git_complete gl11 _git_log
+
 # never used
 # alias gm='git commit'
 # alias gmm='git commit -a -m'
