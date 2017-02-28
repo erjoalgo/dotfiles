@@ -160,10 +160,7 @@ function git-review-pull-request	{
 	fi
 
 	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
-	  # git show ${HASH} --name-status --color;\
-	  git show ${HASH} --stat --color;\
-	  echo -e "\n------PATCH BEGINS NOW------\n";\
-	  git show ${HASH} --format="%B" --color;\
+	  git show ${HASH} -p --stat --color;\
 	}  | less -R;
 	COUNTER=$((COUNTER + 1))
 
