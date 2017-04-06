@@ -103,6 +103,7 @@ alias ffdefault='firefox -P default'
 alias mmln='move_last_n.py'
 alias gdmapf='gdmap -f'
 alias lp-one-sided='lp -o sides=one-sided'
+alias passgen='pass generate -n'
 
 #bash defaults
 alias ls='ls --color=auto'
