@@ -81,7 +81,7 @@ alias dpkgl='dpkg -L'
 #wifi
 alias was='sudo wifi scan'
 alias wad='sudo wifi add'
-alias wac='sudo wifi -y -t ac'
+alias wac='sudo pkill -e wpa_supplicant; sudo pkill -e dhclient; sudo wifi -y -t ac'
 alias wacc='sudo wifi -y connect'
 
 #meta
