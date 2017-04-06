@@ -28,3 +28,7 @@ keycode 167 = NoSymbol
 ! bind unbound keycodes
 keycode 120 = Prior NoSymbol Prior
 keycode 132 = Next NoSymbol Next
+
+! Local Variables:
+! comment-start: "!"
+! End:
