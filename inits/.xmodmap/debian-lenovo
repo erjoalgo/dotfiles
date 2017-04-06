@@ -22,4 +22,9 @@ keycode 135 = Super_L
 keycode 112 = NoSymbol
 keycode 117 = NoSymbol
 
+keycode 166 = NoSymbol
+keycode 167 = NoSymbol
 
+! bind unbound keycodes
+keycode 120 = Prior NoSymbol Prior
+keycode 132 = Next NoSymbol Next
