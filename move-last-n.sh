@@ -13,6 +13,13 @@ if ! test -d "${DEST}"; then
 fi
 
 for FILE in $(find "${DOWNLOADS}" -cmin -${LAST_N_MINS} -type f); do
+    if grep '.part$' <<< "${FILE}"; then
+	continue;
+    fi
+    PART="${FILE}.part"
+    while test -e "${PART}"; do
+	sleep 1;
+    done
     BASE=$(basename "${FILE}")
     mv -t "${DEST}" "${FILE}"
     FN="${DEST}/${BASE}"
