@@ -5,8 +5,11 @@ DEST="${1}"
 LAST_N_MINS=5
 
 if test -z "${DEST}"; then
-    echo "usage: move-last-n.sh DEST"
-    exit ${LINENO}
+    DEST=$(pwd)
+fi
+
+if ! test -d "${DEST}"; then
+    mkdir -p "${DEST}"
 fi
 
 for FILE in $(find "${DOWNLOADS}" -cmin -${LAST_N_MINS} -type f); do
