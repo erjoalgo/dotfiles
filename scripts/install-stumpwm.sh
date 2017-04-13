@@ -1,6 +1,11 @@
 #!/bin/bash
 
-sudo apt-get install -y sbcl curl autoconf make texinfo || exit ${LINENO}
+APT_GET="apt-get"
+if command -v yum; then
+	APT_GET="yum"
+fi
+
+sudo ${APT_GET} install -y sbcl curl autoconf make texinfo || exit ${LINENO}
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 TMPLISP=/tmp/ql-load.lisp
