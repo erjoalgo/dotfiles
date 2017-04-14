@@ -24,6 +24,7 @@ ln -s "${INITS_TOP}/.gitconfig" "${HOME}"
 ln -sf "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 
 ln -sf "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
+ln -sf "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
 
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
