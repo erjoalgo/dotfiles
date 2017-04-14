@@ -33,10 +33,10 @@ if ! test -d stumpwm; then
     git clone https://github.com/stumpwm/stumpwm.git || exit ${LINENO}
 fi
 
-STUMPWM="${PROGRAM}/stumpwm"
+STUMPWM="${PROGRAMS}/stumpwm"
 cd stumpwm
 
-if ! test -f stumpwm; then #the executable
+if ! command -v stumpwm; then #the executable
     read -p "confirm make in ${PWD}: "
     ./autogen.sh || exit ${LINENO}
     ./configure || exit ${LINENO} 
