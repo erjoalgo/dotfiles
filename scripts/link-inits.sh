@@ -28,5 +28,5 @@ ln -sf "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
 test ! -e "${HOME}/.stumpwmrc.d" && ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
-ln -sf "${HOME}/repos/dotemacs" "${HOME}/"
+ln -sf "${HOME}/git/dotemacs" "${HOME}/"
 
