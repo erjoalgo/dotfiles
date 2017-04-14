@@ -51,8 +51,10 @@
 
 (define-run-or-pull-program "x-terminal-emulator"
     :raise-key "H-c"
-    :cmd "roxterm"
-    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"))
+    :cmd (if (equal "" (run-shell-command "which roxterm" t))
+	     "xterm" "roxterm")
+    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
+		   "xterm" "XTerm"))
 
 (define-run-or-pull-program "emacs"
     :pull-key "H-E")
