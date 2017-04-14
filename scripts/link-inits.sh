@@ -28,6 +28,9 @@ ln -sf "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
 
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
-test ! -e "${HOME}/.stumpwmrc.d" && ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
+if ! test -d "${HOME}/.stumpwmrc.d"; then
+    ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
+fi
+
 ln -sf "${HOME}/git/dotemacs" "${HOME}/"
 
