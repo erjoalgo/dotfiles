@@ -21,7 +21,12 @@ alias xargsz='xargs -IZ'
 
 #git
 # http://stackoverflow.com/questions/342969/
-source /usr/share/bash-completion/completions/git
+GIT_COMPLETIONS=/usr/share/bash-completion/completions/git
+if test -f ${GIT_COMPLETIONS}; then
+	source ${GIT_COMPLETIONS}; 
+fi
+unset GIT_COMPLETIONS
+
 alias gt='git status'
 __git_complete gt _git_status
 alias gf='git diff'
