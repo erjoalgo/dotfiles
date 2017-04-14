@@ -5,7 +5,7 @@ if command -v yum; then
 	APT_GET="yum"
 fi
 
-sudo ${APT_GET} install -y sbcl curl autoconf make texinfo || exit ${LINENO}
+sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap || exit ${LINENO}
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 TMPLISP=/tmp/ql-load.lisp
