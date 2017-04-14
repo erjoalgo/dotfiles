@@ -75,7 +75,12 @@ __git_complete gl11 _git_log
 
 #apt
 #alias sagi='sudo apt-get install'
-alias sagiy='sudo apt-get install -y'
+if command -v apt-get; then
+    alias sagiy='sudo apt-get install -y'
+else
+    alias sagiy='sudo yum install -y'
+fi
+    
 alias sagu='sudo apt-get update'
 alias aff='apt-file find'
 alias acs='apt-cache show'
