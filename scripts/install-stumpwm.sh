@@ -8,18 +8,22 @@ fi
 sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap || exit ${LINENO}
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
-TMPLISP=/tmp/ql-load.lisp
-cat << EOF > "${TMPLISP}"
-(quicklisp-quickstart:install)
-(ql:quickload "clx")
-(ql:quickload "cl-ppcre")
-(ql:quickload "swank")
-(ql:quickload "quicklisp-slime-helper")
-(ql:add-to-init-file)
-(quit)
+sbcl --eval '(progn (ql:quickload "cl-ppcre") (exit))'
+
+if ! test $? -eq 0; then
+    TMPLISP=/tmp/ql-load.lisp
+    cat << EOF > "${TMPLISP}"
+	(quicklisp-quickstart:install)
+	(ql:quickload "clx")
+	(ql:quickload "cl-ppcre")
+	(ql:quickload "swank")
+	(ql:quickload "quicklisp-slime-helper")
+	(ql:add-to-init-file)
+	(quit)
 EOF
-sbcl --load quicklisp.lisp --load "${TMPLISP}" || exit ${LINENO}
-rm quicklisp.lisp
+    sbcl --load quicklisp.lisp --load "${TMPLISP}" || exit ${LINENO}
+    rm quicklisp.lisp
+fi
 
 PROGRAMS="${HOME}/programs"
 test -d "${PROGRAMS}" || mkdir "${PROGRAMS}"
