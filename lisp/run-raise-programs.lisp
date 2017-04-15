@@ -52,7 +52,9 @@
 (define-run-or-pull-program "x-terminal-emulator"
     :raise-key "H-c"
     :cmd (if (equal "" (run-shell-command "which roxterm" t))
-	     "xterm" "roxterm")
+	     ;; "xterm"
+	     "xterm -fa 'Monospace' -fs 20"
+	     "roxterm")
     :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
 		   "xterm" "XTerm"))
 
