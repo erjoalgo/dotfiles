@@ -3,7 +3,9 @@
 KEY_NAME="${1}"
 shift
 if test -z "${KEY_NAME}"; then
-    echo "usage git-hub-post-ssh-key.sh <KEY_NAME>"
+    set +x
+    echo "usage git-hub-post-ssh-key.sh <KEY_NAME> [-g GITHUB_API_URL]"
+    echo "	[-s PATH_TO_ID_RSA_PUB] [-u GITHUB_USER] [-u GITHUB_TOKEN]"
     exit ${LINENO}
 fi
 
