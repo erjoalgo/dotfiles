@@ -13,13 +13,17 @@ IDRSAPUB="${HOME}/.ssh/id_rsa.pub"
 read  -p "enter github username: " GITHUB_USERNAME
 read -p "enter github password: " -s GITHUB_PASSWD
 
-while getopts "g:s:" OPT; do
+while getopts "g:s:h" OPT; do
     case ${OPT} in
 	g)
 	    GITHUB_API="${OPTARG}"
 	    ;;
 	s)
 	    IDRSAPUB="${OPTARG}"
+	    ;;
+	h)
+	    less $0
+	    exit 0
 	    ;;
     esac
 done
