@@ -10,16 +10,19 @@ fi
 GITHUB_API="https://api.github.com"
 IDRSAPUB="${HOME}/.ssh/id_rsa.pub"
 
-read  -p "enter github username: " GITHUB_USERNAME
-read -p "enter github password: " -s GITHUB_PASSWD
-
-while getopts "g:s:h" OPT; do
+while getopts "g:s:hu:t:" OPT; do
     case ${OPT} in
 	g)
 	    GITHUB_API="${OPTARG}"
 	    ;;
 	s)
 	    IDRSAPUB="${OPTARG}"
+	    ;;
+	t)
+	    GITHUB_TOKEN="${OPTARG}"
+	    ;;
+	u)
+	    GITHUB_USERNAME="${OPTARG}"
 	    ;;
 	h)
 	    less $0
@@ -36,9 +39,20 @@ DATA=$(cat <<EOF
    "key": "$(cat ${IDRSAPUB})"
 }
 EOF
-	    )
-curl "${GITHUB_API}/user/keys"\
-     -H "Content-Type: application/json" -i \
-     -u "${GITHUB_USERNAME}:${GITHUB_PASSWD}" \
-     --data "${DATA}" -i
-     # -H "Authorization: token ${GITHUB_PASSWD}"
+)
+
+if test -n  "${GITHUB_TOKEN}"; then
+    curl "${GITHUB_API}/user/keys" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: token ${GITHUB_TOKEN}" \
+	--data "${DATA}" -i
+else
+    if test -z "${GITHUB_USERNAME}"; then
+	read  -p "enter github username: " GITHUB_USERNAME
+    fi
+    
+    curl "${GITHUB_API}/user/keys" \
+	-H "Content-Type: application/json" \
+	-u "${GITHUB_USERNAME}" \
+	--data "${DATA}" -i
+fi
