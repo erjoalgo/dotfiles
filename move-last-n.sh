@@ -12,7 +12,8 @@ if ! test -d "${DEST}"; then
     mkdir -p "${DEST}"
 fi
 
-for FILE in $(find "${DOWNLOADS}" -cmin -${LAST_N_MINS} -type f); do
+find "${DOWNLOADS}" -cmin -${LAST_N_MINS} -type f|\
+while read FILE; do
     if grep '.part$' <<< "${FILE}"; then
 	continue;
     fi
