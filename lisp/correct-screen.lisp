@@ -69,8 +69,11 @@
 	   ;(line (read-one-line (current-screen) prompt))
 	   ;(line (progn (echo (mapcar 'caar info))
 			;(read-one-line (current-screen) ": ")))
-	   (line (read-one-line (current-screen)
-				prompt))
+	   (line (if (null (cdr displays))
+		     ;; `((0 . ,(car displays)))
+		     "0"
+		     (read-one-line (current-screen)
+				prompt)))
 	   (order (loop for c across line
 		     collect (- (char-code c) (char-code #\0))))
 	   )
