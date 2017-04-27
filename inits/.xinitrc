@@ -3,7 +3,7 @@
 xmodmap /tmp/xmodmap.pke #prevents corruption when repeated xmodmap $(hostaname). TODO fix
 
 XMODMAP_FILE="${HOME}/.xmodmap/$(hostname)"
-if ! test -f XMODMAP_BASE; then
+if ! test -f "${XMODMAP_FILE}"; then
     XMODMAP_FILE="${HOME}/.xmodmap/default"
 fi
 
