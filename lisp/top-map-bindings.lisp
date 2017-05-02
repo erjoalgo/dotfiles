@@ -66,7 +66,7 @@
       ("H-:" "eval")
       ("H-x" "exec")
       ("H-X" *commands-map*)
-      ("H-z" *commands-map*)
+      ;; ("H-z" *commands-map*)
       ("H-u" *utils-map*)
 
       ("H-/" "pull-hidden-other")

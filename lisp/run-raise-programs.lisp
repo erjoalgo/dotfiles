@@ -61,3 +61,5 @@
 (define-run-or-pull-program "emacs"
     :pull-key "H-E")
 
+(define-run-or-pull-program "zathura")
+
