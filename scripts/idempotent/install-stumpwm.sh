@@ -47,7 +47,7 @@ if ! command -v stumpwm; then #the executable
     ./configure || exit ${LINENO} 
     make || exit ${LINENO}
     test -d ~/bin || mkdir ~/bin
-    ln -s "${STUMPWM}/stumpwm" ~/bin
+    sudo ln -s "${STUMPWM}/stumpwm" /usr/local/bin
 fi
 
 if command -v yum; then
