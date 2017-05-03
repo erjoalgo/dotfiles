@@ -1,9 +1,15 @@
 #!/bin/bash -x
 
-#ealfonso ALL=(ALL:ALL) NOPASSWD:ALL
+SUDO_ASKPASS=$(which false) sudo -A echo hola
+if test 0 -ne $?; then
+	SUDOCMD="su"
+else
+	SUDOCMD="sudo bash"
+fi
 
+#ealfonso ALL=(ALL:ALL) NOPASSWD:ALL
 LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
 SUDOERS="/etc/sudoers"
-if ! sudo grep -F "${LINE}" "${SUDOERS}"; then
-    echo "${LINE}"| sudo tee -a "${SUDOERS}"
+if ! ${SUDOCMD} -c "grep -F '${LINE}' ${SUDOERS}"; then
+	${SUDOCMD} -c "echo '${LINE}' >> ${SUDOERS}"
 fi
