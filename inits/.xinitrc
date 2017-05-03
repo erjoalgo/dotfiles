@@ -12,4 +12,4 @@ xmodmap "${XMODMAP_FILE}"
 xmodmap "${XMODMAP_FILE}"
 
 ${HOME}/.my-startups.sh &
-exec ${HOME}/bin/stumpwm
+exec stumpwm
