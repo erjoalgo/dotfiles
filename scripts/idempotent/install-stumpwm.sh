@@ -55,4 +55,4 @@ if command -v yum; then
 fi
 
 # nc currently used to talk to mozrepl TODO
-sudo ${APT_GET} install -y xsel nc || exit ${LINENO}
+sudo ${APT_GET} install -y xsel || exit ${LINENO}
