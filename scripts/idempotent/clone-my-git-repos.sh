@@ -1,5 +1,5 @@
 #!/bin/bash
-REPOS="${HOME}git"
+REPOS="${HOME}/git"
 if test -d "${REPOS}"; then
     mkdir "${REPOS}"
 fi
