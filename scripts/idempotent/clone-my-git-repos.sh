@@ -6,7 +6,7 @@ fi
 
 for REPO in \
     erjoalgo-stumpwmrc \
-    erjoalgo-gnus-scripts \
+    erjoalgo-gnu-scripts \
     dotemacs \
     erjoalgo-firefox-addons \
     erjoalgo-vimfx-config \
