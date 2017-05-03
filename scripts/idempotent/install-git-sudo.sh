@@ -6,5 +6,5 @@ fi
 
 
 if ! command -v git || ! command -v sudo; then
-    sudo ${APT_GET} install -y git sudo || exit ${LINENO}
+    su -c "${APT_GET} install -y git sudo" || exit ${LINENO}
 fi
