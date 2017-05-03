@@ -5,16 +5,16 @@ INITS_TOP="${STUMPWM_TOP}/inits"
 
 for LINK in \
     .bash_aliases \
-    pythonrc.py \
-    inputrc \
-    my-bashrc \
-    my-bash-funs \
-    xmodmap \
-    xinitrc \
-    bash_profile \
-    my-startups.sh \
-    my-bash-completions \
-    gitconfig \
+    .pythonrc.py \
+    .inputrc \
+    .my-bashrc \
+    .my-bash-funs \
+    .xmodmap \
+    .xinitrc \
+    .bash_profile \
+    .my-startups.sh \
+    .my-bash-completions \
+    .gitconfig \
     ; do \
 
     ln -sf "${INITS_TOP}/${LINK}" "${HOME}/"
