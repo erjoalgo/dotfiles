@@ -4,6 +4,7 @@ if test -d "${REPOS}"; then
     mkdir "${REPOS}"
 fi
 
+cd ${REPOS} || exit ${LIENO}
 for REPO in \
     erjoalgo-stumpwmrc \
     erjoalgo-gnu-scripts \
