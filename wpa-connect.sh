@@ -54,5 +54,8 @@ disconnect
 exit
 
 EOF
+# sudo wpa_supplicant -i ${IFACE} -c ${NETWORK} -D nl80211,wext &
+# sleep 10
+
 echo "post CTRL-EVENT-CONNECTED expect"
 sudo dhclient -v ${IFACE} 
