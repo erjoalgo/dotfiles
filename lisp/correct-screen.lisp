@@ -21,8 +21,10 @@
 			       collect (funcall pop-line))))
 		 (make-xrandr-display :id id :state state
 				      :modes (mapcar (lambda (mode)
-						       (mapcar 'parse-integer
-							       (ppcre:split "x" (car mode))))
+						       (ppcre:register-groups-bind (w h)
+							   ("([0-9]+)x([0-9]+)i?"
+							    (car mode))
+							 (mapcar 'parse-integer (list w h))))
 						     modes)
 				      :connected-p (equal state "connected")
 				      :extra extra)))))
