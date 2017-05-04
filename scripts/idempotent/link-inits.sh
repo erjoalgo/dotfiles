@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-STUMPWM_TOP=$(dirname $(dirname $(readlink -f $0)))
+STUMPWM_TOP=$(dirname $(dirname $(dirname $(readlink -f $0))))
 INITS_TOP="${STUMPWM_TOP}/inits"
 
 for LINK in \
