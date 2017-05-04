@@ -5,4 +5,6 @@ if command -v yum; then
 fi
 
 
-sudo ${APT_GET} install -y git sudo || exit ${LINENO}
+if ! command -v git || ! command -v sudo; then
+    sudo ${APT_GET} install -y git sudo || exit ${LINENO}
+fi
