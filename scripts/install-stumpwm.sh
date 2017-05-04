@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if command -v stumpwm; then
+    echo "stumpwm already installed"
+    exit 0
+fi
+
 APT_GET="apt-get"
 if command -v yum; then
 	APT_GET="yum"
