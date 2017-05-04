@@ -45,7 +45,7 @@ sudo pkill -e dhclient
 
 cat <<EOF | expect -df - 
 set timeout -1
-eval spawn echo sudo wpa_supplicant -i ${WLAN} -c ${NETWORK} -D nl80211,wext &
+eval spawn sudo wpa_supplicant -i ${IFACE} -c ${NETWORK} -D nl80211,wext &
 # expect "Established DTLS connection"
 # expect -re "CTRL-EVENT-CONNECTED - Connection to 00:1a:1e:87:3c:01 completed"
 # expect -re "CTRL-EVENT-CONNECTED - Connection to [0-9a-z:]+ completed"
