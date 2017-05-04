@@ -2,6 +2,11 @@
 
 IFACE=${1:-$(ifconfig | grep -Po '^wlan[0-9]' | head -1)}
 
+if ! command -v wpa_supplicant || ! command -v wpa_passphrase ||  \
+	! command -v expect; then
+    echo "missing wireless-tools or expect" && exit ${LINENO}
+fi
+
 if test 0 -ne $? || test -z ${IFACE}; then
     echo "wireless iface not found"
 fi
