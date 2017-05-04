@@ -18,7 +18,10 @@ fi
 
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
-sbcl --eval --disable-debugger --disable-ldb '(progn (ql:quickload "cl-ppcre") (exit))'
+SBCLRC="${HOME}/.sbclrc"
+if test -f "${SBCLRC}"; then
+    sbcl --load "${SBCLRC}" --script /dev/stdin <<< '(ql:quickload "cl-ppcre")'
+fi
 
 if ! test $? -eq 0; then
     TMPLISP=/tmp/ql-load.lisp
