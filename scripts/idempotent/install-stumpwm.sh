@@ -10,7 +10,11 @@ if command -v yum; then
 	APT_GET="yum"
 fi
 
-sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap xinit x11-xserver-utils xbacklight || exit ${LINENO}
+sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap || exit ${LINENO}
+
+sudo ${APT_GET} install -y xinit x11-xserver-utils \
+     xbacklight xcalib  xsel || exit ${LINENO}
+
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 sbcl --eval '(progn (ql:quickload "cl-ppcre") (exit))'
@@ -54,5 +58,4 @@ if command -v yum; then
    yum groupinstall "X Window Server";
 fi
 
-# nc currently used to talk to mozrepl TODO
-sudo ${APT_GET} install -y xsel || exit ${LINENO}
+
