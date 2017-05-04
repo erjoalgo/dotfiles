@@ -37,7 +37,7 @@ esac
 
 echo "selected ${NETWORK}"
 
-read PASS -p "enter password for ${NETWORK}"
+read -p "enter password for ${NETWORK}: " PASS
 wpa_passphrase "${NETWORK}" "${PASS}" > "${NETWORK}"
     
 sudo pkill -e wpa_supplicant
