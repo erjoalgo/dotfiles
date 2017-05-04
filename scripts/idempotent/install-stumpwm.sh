@@ -49,3 +49,10 @@ if ! command -v stumpwm; then #the executable
     test -d ~/bin || mkdir ~/bin
     ln -s "${STUMPWM}/stumpwm" ~/bin
 fi
+
+if command -v yum; then
+   yum groupinstall "X Window Server";
+fi
+
+# nc currently used to talk to mozrepl TODO
+sudo ${APT_GET} install -y xsel nc || exit ${LINENO}
