@@ -11,7 +11,7 @@ if test 0 -ne $? || test -z ${IFACE}; then
     echo "wireless iface not found"
 fi
 
-NETWORKS=$(iwlist ${IFACE} scan |& grep ESSID | sed 's/.*ESSID:"\(.*\)".*/\1/g')
+NETWORKS=$(sudo iwlist ${IFACE} scan |& grep ESSID | sed 's/.*ESSID:"\(.*\)".*/\1/g')
 # if test 0 -ne $? || test -z ${NETWORKS}; then
 #     echo "couldn't scan for wireless networks"
 # fi
