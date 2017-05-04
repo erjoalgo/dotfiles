@@ -1,0 +1,1 @@
+../idempotent/link-inits.sh

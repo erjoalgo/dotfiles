@@ -1,0 +1,1 @@
+../idempotent/add-auto-login.sh
