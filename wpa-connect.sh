@@ -31,7 +31,7 @@ case ${COUNT} in
 	;;
     *)
 	select NETWORK in ${NETWORKS}; do
-	    echo 1
+	    break
 	done
 esac
 
