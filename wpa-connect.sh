@@ -12,9 +12,10 @@ if test 0 -ne $? || test -z ${IFACE}; then
 fi
 
 NETWORKS=$(sudo iwlist ${IFACE} scan |& grep ESSID | sed 's/.*ESSID:"\(.*\)".*/\1/g')
-# if test 0 -ne $? || test -z ${NETWORKS}; then
-#     echo "couldn't scan for wireless networks"
-# fi
+if test 0 -ne $? || test -z ${NETWORKS}; then
+    sudo iwlist ${IFACE} scan
+    echo "couldn't scan for wireless networks" && exit ${LINENO}
+fi
 
 NETWORKS_DIR=/tmp/wpa
 test -d ${NETWORKS_DIR} || mkdir -p ${NETWORKS_DIR}
