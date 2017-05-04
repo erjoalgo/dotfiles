@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if command -v stumpwm; then
-    echo "stumpwm already installed"
-    exit 0
-fi
 
 APT_GET="apt-get"
 if command -v yum; then
@@ -14,6 +10,11 @@ sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap || exit ${LINE
 
 sudo ${APT_GET} install -y xinit x11-xserver-utils \
      xbacklight xcalib  xsel || exit ${LINENO}
+
+if command -v stumpwm; then
+    echo "stumpwm already installed"
+    exit 0
+fi
 
 curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
