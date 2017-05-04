@@ -34,6 +34,9 @@ echo "selected ${NETWORK}"
 read PASS -p "enter password for ${NETWORK}"
 wpa_passphrase "${NETWORK}" "${PASS}" > "${NETWORK}"
     
+sudo pkill -e wpa_supplicant
+sudo pkill -e dhclient
+
 cat <<EOF | expect -df - 
 set timeout -1
 eval spawn echo sudo wpa_supplicant -i ${WLAN} -c ${NETWORK} -D nl80211,wext &
