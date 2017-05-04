@@ -5,7 +5,9 @@ if ! command -v go; then
 fi
 
 for REPO in\
-    github.com/github/hub\
-	; do
+    github.com/github/hub \
+    golang.org/x/tools/cmd/goimports \
+    github.com/golang/lint \
+    ; do
     go get ${REPO}
 done
