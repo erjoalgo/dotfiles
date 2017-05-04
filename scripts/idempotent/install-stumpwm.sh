@@ -16,7 +16,6 @@ if command -v stumpwm; then
     exit 0
 fi
 
-curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
 
 SBCLRC="${HOME}/.sbclrc"
 if test -f "${SBCLRC}"; then
@@ -24,19 +23,23 @@ if test -f "${SBCLRC}"; then
 fi
 
 if ! test $? -eq 0; then
-    TMPLISP=/tmp/ql-load.lisp
-    cat << EOF > "${TMPLISP}"
-	(quicklisp-quickstart:install)
-	(ql:quickload "clx")
-	(ql:quickload "cl-ppcre")
-	(ql:quickload "swank")
-	(ql:quickload "quicklisp-slime-helper")
-	(ql:add-to-init-file)
-	(quit)
-EOF
-    sbcl --load quicklisp.lisp --load "${TMPLISP}" || exit ${LINENO}
+    curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
+    sbcl --load quicklisp.lisp --script  \
+	 /dev/stdin <<< '(quicklisp-quickstart:install) (ql:add-to-init-file)' \
+	|| exit ${LINENO}
     rm quicklisp.lisp
 fi
+
+sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
+(mapcar 'ql:quickload
+	'(
+"clx"
+"cl-ppcre"
+"swank"
+"quicklisp-slime-helper"
+"usocket"
+))
+EOF
 
 PROGRAMS="${HOME}/programs"
 test -d "${PROGRAMS}" || mkdir "${PROGRAMS}"
