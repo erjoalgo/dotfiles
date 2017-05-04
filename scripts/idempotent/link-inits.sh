@@ -32,6 +32,3 @@ ln -sf "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
 if ! test -d "${HOME}/.stumpwmrc.d"; then
     ln -sf "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
 fi
-
-ln -sf "${HOME}/git/dotemacs" "${HOME}/"
-
