@@ -9,7 +9,7 @@ fi
 sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap || exit ${LINENO}
 
 sudo ${APT_GET} install -y xinit x11-xserver-utils \
-     xbacklight xcalib  xsel || exit ${LINENO}
+     xbacklight xcalib xsel upower|| exit ${LINENO}
 
 if command -v stumpwm; then
     echo "stumpwm already installed"
