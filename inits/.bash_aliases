@@ -13,6 +13,8 @@ alias gol='grep -o'
 alias xs='xsel -ib'
 alias duh='du -h'
 alias xargsz='xargs -IZ'
+alias ps-aux-grep='ps aux|grep -i '
+alias netstat-tulpn-grep='sudo netstat -tulpn | grep -i'
 # never used
 # alias tail1='tail -1'
 # alias head1='head -1'
