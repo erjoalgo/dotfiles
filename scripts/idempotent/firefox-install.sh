@@ -51,3 +51,9 @@ if ! grep -F "${LINE}" "${PREFSJS}"; then
     echo "${LINE}" >> "${PREFSJS}"
 fi
 
+
+# CHROME=$(find "${PROFILE}" -name chrome)
+CHROME="${PROFILE}/chrome"
+test -d "${CHROME}" || mkdir "${CHROME}"
+ln -s "${HOME}/git/erjoalgo-vimfx-config/userChrome.css" \
+   "${CHROME}"
