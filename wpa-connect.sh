@@ -67,6 +67,9 @@ EOF
 	echo "post CTRL-EVENT-CONNECTED expect"
 	;;
 
+    off)
+	sudo iwconfig ${IFACE} essid "${NETWORK}" || exit ${LINENO}
+	;;
     *)
 	echo "unknown encrption ${ENC}" && exit ${LINENO}
 	;;
