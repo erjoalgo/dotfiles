@@ -31,6 +31,7 @@ case ${COUNT} in
 	echo "no networks found" && exit ${LINENO}
 	;;
     *)
+	IFS=$'\n'
 	select NETWORK in ${NETWORKS}; do
 	    break
 	done
