@@ -186,6 +186,10 @@ be used to override the default window formatting."
 			:error t
 			:wait t))
 
+(defcommand echo-window-class () ()
+  "echo window class"
+  (message "window class: ~A" (window-class (current-window))))
+
 '(defcommand send-keys (&rest keys) ((:key-seq "enter keys"))
   "send the specified keys into the current screen"
   (echo keys)
