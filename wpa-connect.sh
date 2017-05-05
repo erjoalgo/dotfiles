@@ -38,6 +38,9 @@ case ${COUNT} in
 esac
 
 echo "selected ${NETWORK}"
+ENC=$(grep -B1 -F "${NETWORK}" <<< "${IWLIST_OUT}"  | head -1 \
+	 | sed 's/.*Encryption key:\(.*\)/\1/')
+
 
 read -p "enter password for ${NETWORK}: " PASS
 wpa_passphrase "${NETWORK}" "${PASS}" > "${NETWORK}"
