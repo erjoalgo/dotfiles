@@ -42,13 +42,15 @@ ENC=$(grep -B1 -F "${NETWORK}" <<< "${IWLIST_OUT}"  | head -1 \
 	 | sed 's/.*Encryption key:\(.*\)/\1/')
 
 
-read -p "enter password for ${NETWORK}: " PASS
-wpa_passphrase "${NETWORK}" "${PASS}" > "${NETWORK}"
-    
-sudo pkill -e wpa_supplicant
-sudo pkill -e dhclient
+case "${ENC}" in
+    on) #assume wpa
+	read -p "enter password for ${NETWORK}: " PASS
+	wpa_passphrase "${NETWORK}" "${PASS}" > "${NETWORK}"
+	
+	sudo pkill -e wpa_supplicant
+	sudo pkill -e dhclient
 
-cat <<EOF | expect -df - 
+	cat <<EOF | expect -df -
 set timeout -1
 eval spawn sudo wpa_supplicant -i ${IFACE} -c ${NETWORK} -D nl80211,wext &
 # expect "Established DTLS connection"
@@ -59,8 +61,15 @@ disconnect
 exit
 
 EOF
-# sudo wpa_supplicant -i ${IFACE} -c ${NETWORK} -D nl80211,wext &
-# sleep 10
+	# sudo wpa_supplicant -i ${IFACE} -c ${NETWORK} -D nl80211,wext &
+	# sleep 10
 
-echo "post CTRL-EVENT-CONNECTED expect"
+	echo "post CTRL-EVENT-CONNECTED expect"
+	;;
+
+    *)
+	echo "unknown encrption ${ENC}" && exit ${LINENO}
+	;;
+esac
+
 sudo dhclient -v ${IFACE} 
