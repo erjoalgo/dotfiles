@@ -47,8 +47,9 @@
 (defun stumpwm-loader (fn)
   (load (stumpwm-merger fn)))
 
-(defvar *browser-classes*
-  '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"))
+(defparameter *browser-classes*
+  '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
+    "Chromium-browser"))
 
 (load-files-verbose
  'stumpwm-loader
