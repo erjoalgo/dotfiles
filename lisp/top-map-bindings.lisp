@@ -44,8 +44,8 @@
 
       ;;brightness
       ;;emergency dimming
-      ("XF86MonBrightnessDown" "run-shell-command xbacklight -set 1")
-      ("XF86MonBrightnessUp" "run-shell-command xbacklight -set 50")
+      ("XF86MonBrightnessDown" "brightness-down")
+      ("XF86MonBrightnessUp" "brightness-up")
       ;;("XF86AudioLowerVolume" nil)
       ;;("XF86AudioRaiseVolume" nil)
 
