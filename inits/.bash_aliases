@@ -48,7 +48,8 @@ alias gcp='VISUAL=vi git commit -p'
 __git_complete gcp _git_commit
 alias gpff='git pull --ff-only'
 __git_complete gpff _git_pull
-alias gfr='git fetch && git rebase origin/master'
+alias gfr='git fetch && git rebase'
+__git_complete gfr _git_rebase
 alias gkt='git checkout'
 __git_complete gkt _git_checkout
 alias gkp='git checkout -p'
