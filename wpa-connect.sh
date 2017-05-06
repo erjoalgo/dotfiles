@@ -13,6 +13,8 @@ if test 0 -ne $? || test -z ${IFACE}; then
     echo "wireless iface not found" && exit ${LINENO}
 fi
 
+sudo ifconfig ${IFACE} up
+
 IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
 ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
 if test 0 -ne $? || test -z ${ESSIDS}; then
