@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 
 if ! command -v wpa_supplicant > /dev/null \
