@@ -10,7 +10,7 @@ fi
 IFACE=${1:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
-    echo "wireless iface not found"
+    echo "wireless iface not found" && exit ${LINENO}
 fi
 
 IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
