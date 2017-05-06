@@ -58,7 +58,6 @@
     (run-shell-command cmd t)
     cmd))
 
-'(init-brightness)
 
 (defun up-down-brightness (up-p)
   (let* ((current (read-brightness *actual-brightness-pathname*))
@@ -79,3 +78,5 @@
 
 (defcommand brightness-down () ()
   (up-down-brightness nil))
+
+(init-brightness)
