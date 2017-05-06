@@ -46,14 +46,14 @@ ENC=$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
 	 | sed 's/.*Encryption key:\(.*\)/\1/')
 
 
+sudo pkill -e wpa_supplicant
+sudo pkill -e dhclient
+
 case "${ENC}" in
     on) #assume wpa
 	read -p "enter password for ${ESSID}: " PASS
 	wpa_passphrase "${ESSID}" "${PASS}" > "${ESSID}"
 	
-	sudo pkill -e wpa_supplicant
-	sudo pkill -e dhclient
-
 	cat <<EOF | expect -df -
 set timeout -1
 eval spawn sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
