@@ -17,7 +17,7 @@ sudo ifconfig ${IFACE} up
 
 IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
 ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
-if test 0 -ne $? || test -z ${ESSIDS}; then
+if test 0 -ne $? || test -z "${ESSIDS}"; then
     sudo iwlist ${IFACE} scan
     echo "couldn't scan for wireless networks" && exit ${LINENO}
 fi
