@@ -75,7 +75,7 @@ EOF
 	sudo iwconfig ${IFACE} essid "${ESSID}" || exit ${LINENO}
 	;;
     *)
-	echo "unknown encrption ${ENC}" && exit ${LINENO}
+	echo "unknown encryption ${ENC}" && exit ${LINENO}
 	;;
 esac
 
