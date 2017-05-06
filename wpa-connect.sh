@@ -1,8 +1,9 @@
 #!/bin/bash -x
 
 
-if ! command -v wpa_supplicant || ! command -v wpa_passphrase ||  \
-	! command -v expect; then
+if ! command -v wpa_supplicant > /dev/null \
+	|| ! command -v wpa_passphrase > /dev/null \
+	|| ! command -v expect > /dev/null; then
     echo "missing wireless-tools or expect" && exit ${LINENO}
 fi
 
