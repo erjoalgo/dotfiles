@@ -1,3 +1,3 @@
 #!/bin/bash -x
 
-sudo apt-get install -y tmux lynx curl
+sudo apt-get install -y tmux lynx curl htop nmap pass
