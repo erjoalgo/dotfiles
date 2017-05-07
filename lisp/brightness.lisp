@@ -22,7 +22,7 @@
 (defvar *brightness-pathname*)
 (defvar *max-brightness-pathname*)
 (defvar *max-brightness*)
-(defvar *min-brightness* 5)
+(defparameter *min-brightness* 3)
 
 (defun init-brightness ()
   (let ((actual-brightness-pathname
