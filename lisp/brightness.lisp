@@ -61,7 +61,7 @@
 
 (defun up-down-brightness (up-p)
   (let* ((current (read-brightness *actual-brightness-pathname*))
-	 (percentage (/ (- current *min-brightness*)
+	 (percentage (/ (max 0 (- current *min-brightness*))
 			(- *max-brightness* *min-brightness*)))
 	 (delta (if (zerop percentage)
 		    0
