@@ -36,18 +36,18 @@ echo "using profile ${PROFILE}"
 erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
 
 
-PREFSJS=$(find ${PROFILE} -name prefs.js)
+PREFSJS=$(find ${PROFILE} -name prefs.js | head -1)
 if test -z "${PREFSJS}"; then
     echo "unable to locate prefsjs" && exit ${LINENO}
 fi
 
 LINE=$(cat <<EOF
-user_pref("extensions.VimFx.config_file_directory", "${HOME}/git/erjoalgo-vimfx-config/VimFx-config@vimfx.org/");
+user_pref("extensions.VimFx.config_file_directory", "${HOME}/git/erjoalgo-vimfx-config/VimFx-config@vimfx.org");
 EOF
     )
 if ! grep -F "${LINE}" "${PREFSJS}"; then
     # pkill firefox
-    while ps -c | grep -v $$ | grep firefox; do
+    while ps aux | grep -v $$ | grep firefox; do
 	echo "waiting for firefox exit to modify prefs.js ..."
 	sleep 1
     done
