@@ -27,7 +27,10 @@ fi
 
 PROFILE=$(find ~/.mozilla/firefox -name '*.default' -type d)
 if test -z "${PROFILE}"; then
-    echo "unable to locate prfile directory" && exit ${LINENO}
+    PROFILE=$(find ~/.mozilla/firefox -maxdepth 1 -type d -iregex '.*/[a-z0-9]+[.].*')
+    if test -z "${PROFILE}"; then
+	echo "unable to locate profile directory" && exit ${LINENO}
+    fi
 fi
 echo "using profile ${PROFILE}"
 erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
