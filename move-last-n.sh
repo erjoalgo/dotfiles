@@ -35,7 +35,7 @@ while read FILE; do
 	EXT="${1}"
 	PROGRAM="${2}"
 	if test "${EXT}" = "${FN_EXT}"; then
-	    ${PROGRAM} "${FN}"
+	    nohup ${PROGRAM} "${FN}" > /dev/null &
 	    break
 	fi
     done
