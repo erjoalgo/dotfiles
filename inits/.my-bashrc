@@ -130,7 +130,7 @@ export LISP=sbcl
 export PYTHONSTARTUP=${HOME}/.pythonrc.py
 
 # go
-export GOROOT=${PROGRAMS}/go
+export GOROOT=/usr/local/go
 export GOPATH=${GIT}/gopath
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
