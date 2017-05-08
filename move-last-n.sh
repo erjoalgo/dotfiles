@@ -19,6 +19,7 @@ while read FILE; do
     fi
     PART="${FILE}.part"
     while test -e "${PART}"; do
+	echo "waiting for ${PART}..."
 	sleep 1;
     done
     BASE=$(basename "${FILE}")
