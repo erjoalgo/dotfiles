@@ -68,6 +68,7 @@
  "commands-map.lisp"
  "swank-loader.lisp"
  "correct-screen.lisp"
+ "brightness.lisp"
  )
 
 (defun list-regular-files (dir)
