@@ -11,12 +11,13 @@
     '(usocket:socket-close socket)))
 
 (defvar *mozrepl-port* 4242)
+(defvar *localhost* "127.0.0.1")
 
 (defun mozrepl-send-command (cmd &key wait)
   ;;for now starting a new process for each cmd. better to keep a single pipe open
   ;;but risk corrupting state of the repl with malformed input
   (let* ((out
-	  (nc "localhost" *mozrepl-port* cmd :wait wait)))
+	  (nc *localhost* *mozrepl-port* cmd :wait wait)))
     (or
      (not wait)
      (ppcre::register-groups-bind
