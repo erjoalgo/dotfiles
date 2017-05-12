@@ -14,13 +14,13 @@ if ! test -f ${FNAME}.sig; then
 fi
 
 # gpg --recv-keys BE216115
-gpg --recv-keys 7C207910 || exit ${LINENO}
-gpg --verify ${FNAME}{.sig,} || exit ${LINENO}
 
 INSTALL_DIR=/usr/local
 DNAME=$(basename ${FNAME} .tar.gz)
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
+    gpg --recv-keys 7C207910 || exit ${LINENO}
+    gpg --verify ${FNAME}{.sig,} || exit ${LINENO}
     sudo tar -C ${INSTALL_DIR} -xvf ${FNAME} || exit ${LINENO}
 fi
 cd ${INSTALL_DIR}/${DNAME} || exit ${LINENO}
