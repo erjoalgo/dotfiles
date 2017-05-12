@@ -35,6 +35,8 @@ if command -v yum; then
     sudo yum install -y giflib-devel libXdmcp-devel m17n-lib-devel  \
     libotf-devel ImageMagick-devel GConf2-devel gpm-devel  \
     liblockfile-devel webkitgtk4-devel python3-devel
+elif command -v apt-get; then
+    sudo apt-get build-dep -y emacs24 || exit ${LINENO}
 fi
 
 ./configure && make && sudo make install || exit ${LINENO}
