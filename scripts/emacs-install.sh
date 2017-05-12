@@ -21,7 +21,7 @@ INSTALL_DIR=/usr/local
 DNAME=$(basename ${FNAME} .tar.gz)
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
-    sudo tar -C ${INSTALL_DIR} -xvf ${DNAME} || exit ${LINENO}
+    sudo tar -C ${INSTALL_DIR} -xvf ${FNAME} || exit ${LINENO}
 fi
 cd ${INSTALL_DIR}/${DNAME} || exit ${LINENO}
 
