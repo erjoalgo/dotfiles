@@ -34,7 +34,7 @@ if command -v yum; then
     # rpmbuild --rebuild ftp://rpmfind.net/linux/fedora/linux/development/rawhide/Everything/source/tree/Packages/e/emacs-25.2-2.fc27.src.rpm
     sudo yum install -y giflib-devel libXdmcp-devel m17n-lib-devel  \
     libotf-devel ImageMagick-devel GConf2-devel gpm-devel  \
-    liblockfile-devel webkitgtk4-devel python3-devel 
+    liblockfile-devel webkitgtk4-devel python3-devel
 fi
 
 ./configure && make && sudo make install || exit ${LINENO}
