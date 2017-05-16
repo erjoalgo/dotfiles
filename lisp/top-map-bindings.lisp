@@ -3,7 +3,11 @@
 ;;to avoid sync-keys on every define-key
 (defvar *real-top-map* nil )
 (setf *real-top-map* *top-map*)
-(push-top-map (deep-copy-map *top-map*))
+
+;; why are we pushing a real copy of top map, which will be discarded?
+;; perhaps to leave us with a usabe top-map if eval of this file fails
+;; before (pop-top-map)
+(push-top-map (make-sparse-keymap))
 
 (defun define-key-bindings (kmap-or-kmap-list bindings)
   (loop with kmap-list = (if (listp kmap-or-kmap-list)
