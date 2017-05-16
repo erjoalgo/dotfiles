@@ -64,3 +64,9 @@
 
 (define-run-or-pull-program "zathura")
 
+;; Warning: these bindings affect the *top-map*, which is
+;; later deep-copied onto other per-window bindings.
+;; Changes won't take effect on existing deep-copies of
+;; *top-map*
+;; for changes to take effect, 'per-window-bindings' and
+;; top-map-bindings.lisp should be evaled in that order
