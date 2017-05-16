@@ -39,4 +39,6 @@ elif command -v apt-get; then
     sudo apt-get build-dep -y emacs24 || exit ${LINENO}
 fi
 
-./configure && make && sudo make install || exit ${LINENO}
+./configure --with-xwidgets && read -p 'continue: ' &&  \
+    make &&  \
+    sudo make install || exit ${LINENO}
