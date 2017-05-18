@@ -150,8 +150,8 @@ be used to override the default window formatting."
   (let ((out-png (namestring (merge-pathnames (make-pathname :name name :type "png")
 				   *scrots-top*))))
 
-    (SB-EXT:RUN-PROGRAM "scrot"
-			(list out-png)
+    (SB-EXT:RUN-PROGRAM "shutter"
+			(list "-e" "-f" "-o" out-png)
 			:search t
 			:output t
 			:error t
