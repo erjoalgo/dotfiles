@@ -50,7 +50,7 @@ if test -n "${MACCHANGE_OPT}"; then
 	echo "macchanger not installed" && exit ${LINENO}
     fi
     sudo ifconfig ${IFACE} down || exit ${LINENO}
-    sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" || exit ${LINENO}
+    sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" #|| exit ${LINENO}
 fi
 
 sudo ifconfig ${IFACE} up
