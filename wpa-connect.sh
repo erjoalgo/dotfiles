@@ -56,11 +56,11 @@ fi
 sudo ifconfig ${IFACE} up
 
 TRIES=3
-for _ in $(seq ${TRIES}); do
+for i in $(seq ${TRIES}); do
     IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
     ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
     if test 0 -ne $? || test -z "${ESSIDS}"; then
-	if test $i = ${TRIES}; then
+	if test $i -eq ${TRIES}; then
 	    echo "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
 	else
 	    echo "retrying scan..." && sleep 1
