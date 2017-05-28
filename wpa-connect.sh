@@ -66,9 +66,6 @@ done
 
 
 
-NETWORKS_DIR=/tmp/wpa
-test -d ${NETWORKS_DIR} || mkdir -p ${NETWORKS_DIR}
-cd ${NETWORKS_DIR}
 
 COUNT=$(wc -l <<< "${ESSIDS}")
 case ${COUNT} in
@@ -105,6 +102,9 @@ case "${ENC}" in
 	    echo "missing wpasupplicant or expect" && exit ${LINENO}
 	fi
 
+	NETWORKS_DIR=/etc/wpa-connect
+	test -d ${NETWORKS_DIR} || sudo mkdir -p ${NETWORKS_DIR}
+	cd ${NETWORKS_DIR}
 
 	if test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
 	    read -p "enter password for ${ESSID}: " PASS
