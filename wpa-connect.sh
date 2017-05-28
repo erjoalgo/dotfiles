@@ -6,9 +6,6 @@ while getopts "of:hp:e:m:" OPT; do
 	o)
 	    OVERWRITE="true"
 	    ;;
-	f)
-	    PASS_FILE="${OPTARG}"
-	    ;;
 	e)
 	    ESSID="${OPTARG}"
 	    ;;
@@ -27,10 +24,6 @@ while getopts "of:hp:e:m:" OPT; do
 	    ;;
     esac
 done
-PASS_FILE=${PASS_FILE:-/etc/wpa-connect-pass}
-if ! test -f "${PASS_FILE}"; then
-    sudo touch "${PASS_FILE}"
-fi
 
 if ! command -v iwlist > /dev/null \
 	|| ! command -v iwconfig > /dev/null
@@ -111,17 +104,12 @@ case "${ENC}" in
 		|| ! command -v expect > /dev/null; then
 	    echo "missing wpasupplicant or expect" && exit ${LINENO}
 	fi
-	PASS=$(grep "^${ESSID}" "${PASS_FILE}")
-	if test -z "${OVERWRITE}" -a -n "${PASS}"; then
-	    PASS=$(cut -f2 <<< "${PASS}")
-	else
+
+
+	if test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
 	    read -p "enter password for ${ESSID}: " PASS
-	    sed "/d/^${ESSID}/"
-	    echo -e "${ESSID}\t${PASS}" | sudo tee -a "${PASS_FILE}"
+	    wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
 	fi
-
-
-	wpa_passphrase "${ESSID}" "${PASS}" > "${ESSID}"
 
 	cat <<EOF | expect -df -
 set timeout -1
