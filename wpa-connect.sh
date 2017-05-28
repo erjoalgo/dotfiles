@@ -122,7 +122,7 @@ case "${ENC}" in
 
 
 	wpa_passphrase "${ESSID}" "${PASS}" > "${ESSID}"
-	
+
 	cat <<EOF | expect -df -
 set timeout -1
 eval spawn sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
@@ -148,4 +148,4 @@ EOF
 	;;
 esac
 
-sudo dhclient -v ${IFACE} 
+sudo dhclient -v ${IFACE}
