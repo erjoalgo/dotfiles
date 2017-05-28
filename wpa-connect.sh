@@ -40,12 +40,23 @@ fi
 
 sudo ifconfig ${IFACE} up
 
-IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
-ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
-if test 0 -ne $? || test -z "${ESSIDS}"; then
-    sudo iwlist ${IFACE} scan
-    echo "couldn't scan for wireless networks" && exit ${LINENO}
-fi
+TRIES=3
+for _ in $(seq ${TRIES}); do
+    IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
+    ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
+    if test 0 -ne $? || test -z "${ESSIDS}"; then
+	if test $i = ${TRIES}; then
+	    echo "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
+	else
+	    echo "retrying scan..." && sleep 1
+	fi
+    else
+	break
+    fi
+done
+
+
+
 
 NETWORKS_DIR=/tmp/wpa
 test -d ${NETWORKS_DIR} || mkdir -p ${NETWORKS_DIR}
