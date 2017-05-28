@@ -55,7 +55,7 @@ fi
 
 sudo ifconfig ${IFACE} up
 
-TRIES=3
+TRIES=7
 for i in $(seq ${TRIES}); do
     IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
     ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
