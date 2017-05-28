@@ -15,6 +15,9 @@ while getopts "of:hp:e:m:" OPT; do
 	p)
 	    PASS="${OPTARG}"
 	    ;;
+	i)
+	    IFACE="${OPTARG}"
+	    ;;
 	h)
 	    less $0
 	    exit 0
@@ -32,7 +35,8 @@ then
     echo "missing wireless-tools" && exit ${LINENO}
 fi
 
-IFACE=${1:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
+
+IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
     echo "wireless iface not found" && exit ${LINENO}
