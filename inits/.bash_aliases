@@ -63,6 +63,7 @@ alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd'
 alias hb='hub browse'
 # stands for git log "one by one"
 alias gl11='git-review-pull-request'
+alias grc='git rebase --continue'
 __git_complete gl11 _git_log
 
 # never used
