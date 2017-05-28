@@ -15,6 +15,9 @@ while getopts "of:hp:e:m:" OPT; do
 	p)
 	    PASS="${OPTARG}"
 	    ;;
+	m)
+	    MACCHANGE_OPT="${OPTARG}"
+	    ;;
 	i)
 	    IFACE="${OPTARG}"
 	    ;;
@@ -40,6 +43,14 @@ IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
     echo "wireless iface not found" && exit ${LINENO}
+fi
+
+if test -n "${MACCHANGE_OPT}"; then
+    if ! command -v macchanger &> /dev/null; then
+	echo "macchanger not installed" && exit ${LINENO}
+    fi
+    sudo ifconfig ${IFACE} down || exit ${LINENO}
+    sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" || exit ${LINENO}
 fi
 
 sudo ifconfig ${IFACE} up
