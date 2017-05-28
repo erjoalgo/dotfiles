@@ -15,6 +15,7 @@ for LINK in \
     .my-startups.sh \
     .my-bash-completions \
     .gitconfig \
+    .tmux.conf \
     ; do \
 
     ln -sf "${INITS_TOP}/${LINK}" "${HOME}/"
