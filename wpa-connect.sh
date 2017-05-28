@@ -9,6 +9,9 @@ while getopts "of:hp:e:m:" OPT; do
 	f)
 	    PASS_FILE="${OPTARG}"
 	    ;;
+	e)
+	    ESSID="${OPTARG}"
+	    ;;
 	p)
 	    PASS="${OPTARG}"
 	    ;;
@@ -57,10 +60,14 @@ case ${COUNT} in
 	echo "no networks found" && exit ${LINENO}
 	;;
     *)
-	IFS=$'\n'
-	select ESSID in ${ESSIDS}; do
-	    break
-	done
+	if test -z "${ESSID}"; then
+	    IFS=$'\n'
+	    select ESSID in ${ESSIDS}; do
+		break
+	    done
+	elif ! grep -F "${ESSID}" "${ESSIDS}"; then
+	     echo -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
+	fi
 esac
 
 echo "selected ${ESSID}"
