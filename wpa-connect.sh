@@ -1,10 +1,10 @@
 #!/bin/bash
 
 
-if ! command -v wpa_supplicant > /dev/null \
-	|| ! command -v wpa_passphrase > /dev/null \
-	|| ! command -v expect > /dev/null; then
-    echo "missing wireless-tools or expect" && exit ${LINENO}
+if ! command -v iwlist > /dev/null \
+	|| ! command -v iwconfig > /dev/null
+then
+    echo "missing wireless-tools" && exit ${LINENO}
 fi
 
 IFACE=${1:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
@@ -51,6 +51,12 @@ sudo pkill -e dhclient
 
 case "${ENC}" in
     on) #assume wpa
+	if ! command -v wpa_supplicant > /dev/null \
+		|| ! command -v wpa_passphrase > /dev/null \
+		|| ! command -v expect > /dev/null; then
+	    echo "missing wpasupplicant or expect" && exit ${LINENO}
+	fi
+
 	read -p "enter password for ${ESSID}: " PASS
 	wpa_passphrase "${ESSID}" "${PASS}" > "${ESSID}"
 	
