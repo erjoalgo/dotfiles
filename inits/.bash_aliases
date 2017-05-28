@@ -19,6 +19,7 @@ alias netstat-tulpn-grep='sudo netstat -tulpn | grep -i'
 # alias tail1='tail -1'
 # alias head1='head -1'
 # alias j='jobs'
+alias ssh-nohostcheck="ssh -o 'UserKnownHostsFile /dev/null' -o 'VerifyHostKeyDNS no' -o 'StrictHostKeyChecking no'"
 
 
 #git
