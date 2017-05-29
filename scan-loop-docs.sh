@@ -19,16 +19,17 @@ while true; do
 	test ! -e ${PAGE}.pnm && break
 	PAGE=$(expr ${PAGE} + 1)
     done
-	
+
+    FMT=pnm
     while true; do
 	echo "scanning page ${PAGE} of ${DOC_NAME}..."
-	time sudo scanimage --device ${SCANNER} > ${PAGE}.pnm
+	time sudo scanimage --device ${SCANNER} --format ${FMT} --mode color > ${PAGE}.${FMT}
 	read -p "enter new doc name to scan a new doc, <Return> to scan more ${DOC_NAME} pages, q to quit: " NEW_DOC_NAME
 	test -z "${NEW_DOC_NAME}" || break
 	PAGE=$(expr ${PAGE} + 1)
     done
 
-    find . -name '*pnm' -exec convert {} -quality 15 {}.jpg \; && \
+    find . -name "*${FMT}" -exec convert {} -quality 15 {}.jpg \; && \
     	convert *jpg ${DOC_NAME}.pdf || exit ${LINENO} &
 
     cd ..
