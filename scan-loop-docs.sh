@@ -4,8 +4,8 @@
 SCANNER=$(sudo scanimage -L | grep Visioneer | cut -f1 -d\' | cut -f2 -d\`)
 
 test -n "${SCANNER}" || exit ${LINENO}
+DOC_NAME=""
 while true; do
-    DOC_NAME=""
     while test -z ${DOC_NAME}; do
 	read -e -p 'enter document name: ' DOC_NAME
 	DOC_NAME=$(tr -d '/' <<< "${DOC_NAME}")
@@ -23,8 +23,8 @@ while true; do
     while true; do
 	echo "scanning page ${PAGE} of ${DOC_NAME}..."
 	time sudo scanimage --device ${SCANNER} > ${PAGE}.pnm
-	read -p 'press n to stop scanning more ${DOC_NAME} pages: ' CONT
-	test -z ${CONT} || break
+	read -p "enter new doc name to scan a new doc, <Return> to scan more ${DOC_NAME} pages, q to quit: " NEW_DOC_NAME
+	test -z "${NEW_DOC_NAME}" || break
 	PAGE=$(expr ${PAGE} + 1)
     done
 
@@ -32,4 +32,6 @@ while true; do
     	convert *jpg ${DOC_NAME}.pdf || exit ${LINENO} &
 
     cd ..
+    test "${NEW_DOC_NAME}" = "q" && break
+    DOC_NAME="${NEW_DOC_NAME}"
 done
