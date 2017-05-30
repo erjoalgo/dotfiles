@@ -81,7 +81,7 @@ case ${COUNT} in
 	    select ESSID in ${ESSIDS}; do
 		break
 	    done
-	elif ! grep -F "${ESSID}" "${ESSIDS}"; then
+	elif ! grep -F "${ESSID}" <<< "${ESSIDS}"; then
 	     echo -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
 	fi
 esac
