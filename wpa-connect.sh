@@ -66,6 +66,7 @@ done
 
 
 
+NETWORKS_DIR=/etc/wpa-connect
 
 COUNT=$(wc -l <<< "${ESSIDS}")
 case ${COUNT} in
@@ -102,7 +103,6 @@ case "${ENC}" in
 	    echo "missing wpasupplicant or expect" && exit ${LINENO}
 	fi
 
-	NETWORKS_DIR=/etc/wpa-connect
 	test -d ${NETWORKS_DIR} || sudo mkdir -p ${NETWORKS_DIR}
 	cd ${NETWORKS_DIR}
 
