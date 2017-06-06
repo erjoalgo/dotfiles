@@ -78,10 +78,17 @@ case ${COUNT} in
 	;;
     *)
 	if test -z "${ESSID}"; then
-	    IFS=$'\n'
-	    select ESSID in ${ESSIDS}; do
-		break
-	    done
+	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) <(sort <<< "${ESSIDS}"))
+	    if test 1 -eq $(wc -l <<< "${COMM}") -a -n "${COMM}"; then
+		ESSID="${COMM}"
+	    else
+		OLDIFS=$IFS
+		IFS=$'\n'
+		select ESSID in ${ESSIDS}; do
+		    break
+		done
+		IFS=$OLDIFS
+	    fi
 	elif ! grep -F "${ESSID}" <<< "${ESSIDS}"; then
 	     echo -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
 	fi
