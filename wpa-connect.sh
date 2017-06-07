@@ -102,6 +102,9 @@ ENC=$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
 sudo pkill -e wpa_supplicant
 sudo pkill -e dhclient
 
+cd ${NETWORKS_DIR}
+test -d ${NETWORKS_DIR} || sudo mkdir -p ${NETWORKS_DIR}
+
 case "${ENC}" in
     on) #assume wpa
 	if ! command -v wpa_supplicant > /dev/null \
@@ -110,8 +113,6 @@ case "${ENC}" in
 	    echo "missing wpasupplicant or expect" && exit ${LINENO}
 	fi
 
-	test -d ${NETWORKS_DIR} || sudo mkdir -p ${NETWORKS_DIR}
-	cd ${NETWORKS_DIR}
 
 	if test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
 	    read -p "enter password for ${ESSID}: " PASS
@@ -137,6 +138,7 @@ EOF
 
     off)
 	sudo iwconfig ${IFACE} essid "${ESSID}" || exit ${LINENO}
+	test -f "${ESSID}" || sudo touch "${ESSID}"
 	;;
     *)
 	echo "unknown encryption ${ENC}" && exit ${LINENO}
