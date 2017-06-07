@@ -4,21 +4,27 @@
 while getopts "of:hp:e:m:a" OPT; do
     case ${OPT} in
 	o)
+	    # flag to disregard any existing password
 	    OVERWRITE="true"
 	    ;;
 	e)
+	    # connect to given essid
 	    ESSID="${OPTARG}"
 	    ;;
 	p)
+	    # the wpa password
 	    PASS="${OPTARG}"
 	    ;;
 	m)
+	    # one-character flag to be passed to macchanger
 	    MACCHANGE_OPT="${OPTARG}"
 	    ;;
 	i)
+	    # wireless interface
 	    IFACE="${OPTARG}"
 	    ;;
 	a)
+	    # flag to prompt for essid, even if matching entry exists
 	    ASK_ESSID="true"
 	    ;;
 	h)
