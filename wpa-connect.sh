@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-while getopts "of:hp:e:m:" OPT; do
+while getopts "of:hp:e:m:a" OPT; do
     case ${OPT} in
 	o)
 	    OVERWRITE="true"
@@ -17,6 +17,9 @@ while getopts "of:hp:e:m:" OPT; do
 	    ;;
 	i)
 	    IFACE="${OPTARG}"
+	    ;;
+	a)
+	    ASK_ESSID="true"
 	    ;;
 	h)
 	    less $0
@@ -79,7 +82,7 @@ case ${COUNT} in
     *)
 	if test -z "${ESSID}"; then
 	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) <(sort <<< "${ESSIDS}"))
-	    if test 1 -eq $(wc -l <<< "${COMM}") -a -n "${COMM}"; then
+	    if test -z "${ASK_ESSID}" -a 1 -eq $(wc -l <<< "${COMM}") -a -n "${COMM}"; then
 		ESSID="${COMM}"
 	    else
 		OLDIFS=$IFS
