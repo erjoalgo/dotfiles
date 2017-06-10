@@ -124,7 +124,9 @@ case "${ENC}" in
 
 
 	if test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
-	    read -p "enter password for ${ESSID}: " PASS
+	    if test -z "${PASS}"; then
+		read -p "enter password for ${ESSID}: " PASS
+	    fi
 	    wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
 	fi
 
