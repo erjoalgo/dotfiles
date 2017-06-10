@@ -156,4 +156,4 @@ EOF
 	;;
 esac
 
-sudo dhclient -v ${IFACE}
+sudo dhclient -v ${IFACE} || exit ${LINENO}
