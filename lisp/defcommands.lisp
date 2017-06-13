@@ -57,8 +57,13 @@
 
 (defcommand rotate-screen (orientation)
     ((:xrandr-rot "enter xrandr orientation: "))
-    "rotate screen"
-  (run-shell-command (format nil "xrandr --orientation ~A; keynav_restart" orientation)))
+  "rotate screen"
+  (let ((cmd (format nil
+		     "xrandr --output VGA1 --orientation ~A"
+		     orientation)))
+    (run-shell-command cmd t)
+    cmd))
+
 
 (defcommand move-window-toggle () ()
   "move window to next monitor (display)"
