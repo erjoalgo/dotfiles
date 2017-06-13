@@ -7,6 +7,8 @@
 # let cron send the mail automatically
 # 30  7	* * *	root	~ealfonso/git/erjoalgo-gnu-scripts/git-notify.sh ~ealfonso/git/*
 
+# echo "git-notify called with args: $0 $*, PATH: $PATH, USER: $(whoami)"  \
+#     | sudo tee /var/log/git-notify
 
 while test $# -gt 0; do
     REPO=${1}
