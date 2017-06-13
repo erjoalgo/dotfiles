@@ -136,8 +136,11 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
 #java/maven
 export PATH=$PATH:${PROGRAMS}/apache-maven-3.3.9/bin
-export JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/jdk-8-oracle-x64}
 
+ORACLE_JAVA=/usr/lib/jvm/jdk-8-oracle-x64
+if test -z "${JAVA_HOME}" -a -d "${ORACLE_JAVA}"; then
+    export JAVA_HOME="${ORACLE_JAVA}"
+fi
 
 export PATH
 export GOPATH
