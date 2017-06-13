@@ -56,7 +56,7 @@
 	(cmd (format nil "echo ~D | sudo tee ~A"
 	     new-actual *brightness-pathname*)))
     (run-shell-command cmd t)
-    cmd))
+    (echo cmd)))
 
 
 (defun up-down-brightness (up-p)
