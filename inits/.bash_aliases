@@ -20,6 +20,7 @@ alias netstat-tulpn-grep='sudo netstat -tulpn | grep -i'
 # alias head1='head -1'
 # alias j='jobs'
 alias ssh-nohostcheck="ssh -o 'UserKnownHostsFile /dev/null' -o 'VerifyHostKeyDNS no' -o 'StrictHostKeyChecking no'"
+alias netcatdroid='ifconfig |grep inet && echo "nc -l -p 4711" && nc -l -p 4711 | tar xv'
 
 
 #git
