@@ -15,15 +15,16 @@ while test $# -gt 0; do
     cd "${REPO}" || exit ${LINENO}
 
     # if ! git status &> /dev/null; then
+    # if ! test -d .git; then
     if ! git status &> /dev/null; then
+	# echo "not at a git repo: ${REPO}" && continue
 	continue
     fi
 
     BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
     if test $? -ne 0 || test $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
-	# echo mail -s "git-notify: ${REPO}/${BRANCH} might be ahead of all remotes" $(whoami)
-	echo ${REPO}
+	echo "${REPO}/${BRANCH} might be ahead of all remotes"
     fi
     # read
 done
