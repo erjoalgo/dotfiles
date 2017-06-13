@@ -94,6 +94,10 @@
 	(load-files-verbose 'stumpwm-loader fn)
 	(echo "nothing to load"))))
 
+(if (zerop (length (run-shell-command "which xscreensaver" t)))
+    (error "xscreensaver not installed")
+    (run-shell-command "xscreensaver &"))
+
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
 

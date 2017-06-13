@@ -16,6 +16,7 @@ for LINK in \
     .my-bash-completions \
     .gitconfig \
     .tmux.conf \
+    .xscreensaver \
     ; do \
 
     ln -sf "${INITS_TOP}/${LINK}" "${HOME}/"
