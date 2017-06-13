@@ -1,14 +1,31 @@
 (defpackage #:mozrepl)
 
 (ql:quickload "usocket")
+
+(defvar *nc-timeout-millis* 3000)
+(defvar *nc-default-buff-size* 3000)
 (defun nc (host port data &key wait)
   "write some data to a tcp socket"
-  (declare (ignore wait))
   (let* ((socket (usocket:socket-connect host port))
-	 (stream (usocket:socket-stream socket)))
+	 (stream (usocket:socket-stream socket))
+	 seq)
     (princ data stream)
     (force-output stream)
-    '(usocket:socket-close socket)))
+    (when wait
+      (setf seq (make-sequence 'string *nc-default-buff-size*))
+      (usocket:wait-for-input socket :timeout 1 :ready-only t)
+      (loop
+	 with start-time-millis = (get-internal-real-time)
+	 with timeout = (if (numberp wait) wait *nc-timeout-millis*)
+	 with i = 0
+	 as char = (read-char-no-hang stream)
+	 as time-elapsed = (- (get-internal-real-time) start-time-millis)
+	 as time-left = (- timeout time-elapsed)
+	 while (or char (> time-left 0)) do
+	   (when char (setf (aref seq i) char) (incf i))
+	 finally (setf seq (subseq seq 0 i))))
+    (usocket:socket-close socket)
+    seq))
 
 (defvar *mozrepl-port* 4242)
 (defvar *localhost* "127.0.0.1")
