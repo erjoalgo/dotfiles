@@ -16,7 +16,7 @@ while test $# -gt 0; do
 
     # if ! git status &> /dev/null; then
     if ! test -d .git; then
-	echo "not at a git repo: ${REPO}" && exit ${LINENO}
+	continue
     fi
 
     BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
