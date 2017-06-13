@@ -15,7 +15,7 @@ while test $# -gt 0; do
     cd "${REPO}" || exit ${LINENO}
 
     # if ! git status &> /dev/null; then
-    if ! test -d .git; then
+    if ! git status &> /dev/null; then
 	continue
     fi
 
