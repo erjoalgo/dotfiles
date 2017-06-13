@@ -31,4 +31,5 @@ keycode 132 = Next NoSymbol Next
 
 ! Local Variables:
 ! comment-start: "!"
+! compile-command: "xmodmap debian-lenovo "
 ! End:
