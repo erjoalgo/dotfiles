@@ -1,0 +1,364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+<title>NetCallback - Forwarding TCP and UDP ports behind a firewall</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="white">
+
+<a href="http://sourceforge.net"> <img src="http://sourceforge.net/sflogo.php?group_id=98301&amp;type=5" width="210" height="62" border="0" align="right" alt="SourceForge.net Logo" /></a>
+
+<h1>NetCallback 1.3.1</h1>
+
+
+<!-- ====================================================================== -->
+<h2>Forwarding TCP and UDP ports behind a firewall</h2>
+
+<p>
+Copyright &copy; 2001 Alexander V. Konstantinou 
+(<a href="mailto:akonstan@acm.org">akonstan@acm.org</a>)
+<p>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+<p>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<p>
+You should have received a copy of the 
+<a href="COPYRIGHT.txt">GNU General Public License</a> along with this program;
+if not, write to the <a href="http://www.gnu.org/">Free Software Foundation Inc.</a>, 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+<!-- ====================================================================== -->
+<h2>Contents</h2>
+<ul>
+<li><a href="#Overview">Overview</a>
+<li><a href="#Protocol">Protocol</a>
+<li><a href="#Usage">Usage</a>
+<li><a href="#Requirements">Requirements</a>
+<li><a href="#SSL">Secure Socket Layer (SSL) Support</a>
+<li><a href="#History">History</a>
+<li><a href="#Downloading">Downloading</a>
+</ul>
+
+<!-- ====================================================================== -->
+<h2><a name="Overview">Overview</a></h2>
+
+NetCallback is a Java application permitting the export of TCP and UDP
+ports behind a firewall to hosts outside the firewall.  This may
+be useful in some special cases, for example, centralized control of
+test (demo) networks, or connection to applets running in browsers.
+<p>
+NetCallback consists of a public and a private server.  The public server
+executes on a host outside the firewall and is responsible for receiving
+port forwarding connection requests.  The private server executes on
+a host behind the firewall and is responsible for contacting the public
+server and connecting the protected TCP and/or UDP service to the public
+server clients. The connection between public and private server may be 
+optionally encrypted using SSL.
+<p>
+Note that firewalls exist to protect internal services from external
+access, and therefore one should be very careful before creating a hole
+in one! As stated in the copyright statement, this program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<p>
+Users are responsible for checking their network use policy
+for possible violations before using this software.  Use at your own risk!
+
+<!-- ====================================================================== -->
+<h2><a name="Protocol">Protocol</a></h2>
+
+The NetCallback service requires the execution of two
+network daemons.  The first daemon executes on a host behind the
+firewall and is called <em>PrivateServer</em>.  The second daemon
+executes on a host outside the firewall and is called <em>PublicServer</em>.
+<p>
+The <em>PublicServer</em> is invoked with three port numbers.  The 
+first port number is used to receive the connection request from the
+<em>PrivateServer</em> (service port).  The second port number is
+the one used by clients to connect to the TCP port forwarding endpoint
+(redirect port), and the third for UDP.
+<p>
+The <em>PrivateServer</em> is invoked with the host name and service port
+number of <em>PublicServer</em>. Additionally, the <em>PrivateServer</em>
+must be provided with both the address and port number of a TCP and/or 
+a UDP internal service that needs to be exported.
+
+<h3>Connect Protocol</h3>
+
+The protocol interactions are illustrated in the diagram below (order
+is important!): 
+<ol>
+<li> A protected service running on a protected host and bound to a port must
+     be chosen (as the target for redirection).
+<li> A <em>PublicServer</em> must be started on a public host with
+     a service and a redirect port.
+<li> A <em>PrivateServer</em> must be started on a host that
+     can access both the target host, as well as the public host.
+<li> Once the <em>PrivateServer</em> is started, it will connect to the
+     <em>PublicServer</em>'s service port.
+</ol>
+<p align=center>
+<img src="images/connect-diagram.png" align="center" alt="netcallback connect diagram">
+
+<h3>TCP Tunneling Protocol</h3>
+
+At this point, the NetCallback service is ready to accept client TCP redirect
+requests:
+
+<ol start=5>
+<li> A client host connects to the <em>PublicServer</em> redirect port
+<li> The <em>PublicServer</em> binds to a temporary port and waits for
+     a connection (on a separate thread)
+<li> The <em>PublicServer</em> uses the established connection with the
+     <em>PrivateServer</em> (from step 4) to request a callback connection
+     on the temporary port.
+<li> The <em>PrivateServer</em> connects to the <em>PublicHost</em>
+     temporary port
+<li> The <em>PublicServer</em> starts bridging traffic between the
+     temporary port and the redirect port (actually the anonymous
+     socket created when the client connected in step 5).
+<li> The <em>PrivateServer</em> connects to the target host
+<li> The <em>PrivateServer</em> starts bridging traffic between the
+     target host and the temporary port sockets.
+</ol>
+<p align=center>
+<img src="images/tcp-diagram.png" align="center" alt="netcallback TCP diagram">
+<p>
+At this point two way communication has been established.  The tunnel
+is automatically torn down when either the client, or the target host
+close the connection.
+
+<h3>UDP Tunneling Protocol</h3>
+
+In parallel, the NetCallback service is ready to accept client UDP redirect
+requests:
+<p align=center>
+<img src="images/udp-diagram-send.png" align="center" alt="netcallback TCP send diagram">
+<p>
+
+<ol type="Alpha">
+<li> The client host sends a UDP datagram addressed to the 
+     <em>PublicServer</em> UDP redirect port
+<li> The <em>PublicServer</em> writes the datagram's source address/port and
+     payload to the <em>PrivateServer</em> over the established connection
+     (TCP/SSL)
+<li> The <em>PrivateServer</em> consults its internal state and checks to
+     see if a UDP socket has been created to forward requests from the
+     given client (identified by the address/port combination). If one
+     has not been created yet, it is initiated and a thread for receiving
+     datagrams addressed to this socket is created.
+     <p>
+     The reason that each client must have its own UDP socket is to
+     determine the destination of returned UDP datagrams (as will be
+     shown in the next diagram)
+<li> The UDP socket is used to send the payload to the <em>TargetHost</em>
+</ol>
+<p align=center>
+<img src="images/udp-diagram-receive.png" align="center" alt="netcallback TCP receive diagram">
+<p>
+<ol type="Alpha" start=5>
+<li> The UDP service on the <em>TargetHost</em> possibly replies to the
+     UDP datagram by sending a datagram addressed to the <em>PrivateServer</em>
+     at the client-specific socket (i.e. port).
+<li> Upon receipt the dedicated <em>PrivateServer</em> thread for this
+     socket (which knows the real destination) writes the actual
+     destination address/port and payload over the shared TCP/SSL
+     connection.
+<li> Upon receipt of the streamed datagram in the <em>PublicServer</em>,
+     a datagram with the specified information (address/port/payload)
+     is transmitted.
+</ol>
+
+<!-- ====================================================================== -->
+<h2><a name="Usage">Usage</a></h2>
+
+
+<table border="1" width="100%">
+
+<tr><th rowspan="5">PublicServer
+    <td colspan="2"><code><strong>java -jar netcallback.jar -public { -ssl } -servicePort &lt;port&gt; { -tcpPort &lt;port&gt; } { -udpPort &lt;port&gt; }</strong></code>
+<tr><td><code>-ssl</code>
+    <td>optional flag to enable SSL communication between servers
+<tr><td><code>-servicePort port</code>
+    <td> port used to receive private server communications
+<tr><td><code>-tcpPort port</code>
+    <td>clients use this TCP port to use tunnel
+<tr><td><code>-udpPort port</code>
+    <td>clients use this UDP port to use tunnel
+
+<tr><th rowspan="5">PrivateServer
+    <td colspan="2"><code><strong>java -jar netcallback.jar -private { -ssl } 
+    -service &lt;host&gt; &lt;port&gt;
+    { -tcp &lt;host&gt; &lt;port&gt; }
+    { -udp &lt;host&gt; &lt;port&gt; }
+    </strong></code>
+<tr><td><code>-ssl</code>
+    <td>optional flag to enable SSL communication between servers
+<tr><td><code>-service host port</code>
+    <td>name and port of host executing public server
+<tr><td><code>-tcp host port </code>
+    <td>TCP redirection target host and port
+<tr><td><code>-udp host port </code>
+    <td>UDP redirection target host and port
+</tr>
+</table>
+<p>
+Public server examples executing on host &quot;free&quot; (without SSL/with SSL):
+<p>
+<pre>
+java -jar netcallback.jar -public -servicePort 1234 -tcpPort 8080 -udpPort 1616
+
+java -jar -Djavax.net.ssl.trustStore=keystore -Djavax.net.ssl.keyStore=keystore -Djavax.net.ssl.keyStorePassword=&quot;testing&quot; netcallback.jar -public -ssl -servicePort 1234 -tcpPort 8080 -udpPort 16161
+</pre>
+<p>
+Private server examples executing contacting public server on host &quot;free&quot; and exposing the telnet service on host &quot;protected&quot; (without SSL/with SSL):
+<p>
+<pre>
+java -jar netcallback.jar -private -service free 1234 -tcp protected 80 -udp protected 161
+
+java -jar -Djavax.net.ssl.trustStore=keystore -Djavax.net.ssl.keyStore=keystore -Djavax.net.ssl.keyStorePassword=&quot;testing&quot; netcallback.jar -private -ssl -service free 1234 -tcp protected 80 -udp protected 161
+</pre>
+<p>
+Web-access (TCP) and SNMP access (UDP) forwarding examples (UNIX)
+<p>
+<pre>
+lynx http://free:8080
+snmpwalk -v 1 -p 1616 free public
+</pre>
+
+<!-- ====================================================================== -->
+<h2><a name="SSL">Secure Socket Layer (SSL) Support</a></h2>
+
+NetCallback supports encrypted socket communications using the 
+<a href="http://java.sun.com/products/jsse/">Java Secure Socket Extension
+(JSSE)</a>.  SSL is used to encrypt communication between the 
+<em>PublicServer</em> and the <em>PrivateServer</em>, however,
+<strong>the connection between the <em>PrivateServer</em> and the private host, as well as the connection between the <em>PublicServer</em> and the client are NOT ENCRYPTED!</strong>.
+<ol>
+<li> Download the Java JSSE from the URL <a href="http://java.sun.com/products/jsse/"><tt>http://java.sun.com/products/jsse/</tt></a> (Starting with JDK1.4 SSL support is a standard part of Java2 and does not need to be downloaded).
+<p>
+<li> Unzip the downloaded package and follow the installation instructions.
+     In particular, verify that (again, if your running JDK 1.4 or above you don't need to perform these steps):
+<p>
+  <ul>
+    <li> The JSSE <tt>lib/*.jar</tt> files have been copied to <tt>$JAVA_HOME/jre/lib/ext</tt>
+    <li> The <tt>$JAVA_HOME/jre/lib/security/java.security</tt> file has been edited and the <tt>security.provider.3=com.sun.net.ssl.internal.ssl.Provider</tt> property has been added.
+  </ul>
+<p>
+<li> Create an RSA public/private key to be used in the session using the <tt>keytool</tt> utility found in <tt>$JAVA_HOME/bin</tt>.  Bold items indicate user input (clearly users should pick a different password and user identity!):
+
+<pre>
+<strong>keytool -genkey -v -keyalg RSA -keystore keystore</strong>
+Enter keystore password:  <strong>testing</strong>
+What is your first and last name?
+  [Unknown]:  <strong>Alexander Konstantinou</strong>
+What is the name of your organizational unit?
+  [Unknown]:  <strong>Computer Science</strong>
+What is the name of your organization?
+  [Unknown]:  <strong>Columbia University</strong>
+What is the name of your City or Locality?
+  [Unknown]:  <strong>New York</strong>
+What is the name of your State or Province?
+  [Unknown]:  <strong>NY</strong>
+What is the two-letter country code for this unit?
+  [Unknown]:  <strong>US</strong>
+Is &lt;CN=Alexander Konstantinou, OU=Computer Science, O=Columbia University, L=New York, ST=NY, C=US&gt; correct?
+  [no]:  <strong>yes</strong>
+
+Generating 1024 bit RSA key pair and self-signed certificate (MD5WithRSA)
+	for: CN=Alexander Konstantinou, OU=Computer Science, O=Columbia University, L=New York, ST=NY, C=US
+Enter key password for &lt;mykey&gt;
+	(RETURN if same as keystore password):  
+[Saving keystore]
+
+</pre>
+
+<li> Invoke the Java interpeter for the <em>PublicServer</em> (-public) 
+     and the <em>PrivateServer</em> (-private) with the following three flags: 
+  <ul>
+  <li><code>-Djavax.net.ssl.trustStore=keystore</code>
+  <li><code>-Djavax.net.ssl.keyStore=keystore</code>
+  <li><code>-Djavax.net.ssl.keyStorePassword=&quot;testing&quot;</code>
+  </ul>
+
+</ol>
+
+<!-- ====================================================================== -->
+<h2><a name="Requirements">Requirements</a></h2>
+
+<ul>
+<li><a href="http://java.sun.com/j2se/">Java2 Runtime Environment</a>
+    version &gt;= 1.2
+<li> [ <em>Optional</em> ] <a href="http://java.sun.com/products/jsse/">Java Secure Socket Extention (JSSE)</a> version &gt;= 1.0.2
+</ul>
+
+<!-- ====================================================================== -->
+<h2><a name="History">History</a></h2>
+
+<ul>
+<li> Version 1.3.1 (15 FEB 2004)
+  <ul>
+  <li> Project migrated to sourceforge.net (package rename)
+  </ul>
+<li> Version 1.3 (15 OCT 2001)
+  <ul>
+  <li> Added support for UDP tunneling
+  <li> Modified command-line invocation to support TCP and UDP tunnelling.
+  </ul>
+<li> Version 1.2.1b (10 AUG 2001)
+  <ul>
+  <li> Fixed regression of private server command-line verification
+       code in 1.2.1 that broke non-SSL use.
+  </ul>
+<li> Version 1.2.1 (09 AUG 2001)
+  <ul>
+  <li> Security hole fix: SSL server socket had not been configured to
+       require client authentication. This potentially allowed any
+       PrivateServer to connect to a PublicServer.
+  </ul>
+<li> Version 1.2 (22 MAR 2001)
+  <ul>
+  <li> Added Secure Socket Layer (SSL) support
+  <li> CLOSE request now also sent from PublicServer to PrivateServer
+  <li> Improved documentation
+  </ul>
+<li> Version 1.1 (21 MAR 2001)
+  <ul>
+  <li> Public and private servers ping each-other in order to prevent
+       firewalls from terminating the connection.
+  <li> When a private server detects termination of the connection to the
+       protected host it will notify the public server so that the
+       public server can terminate bridging.  Normally, this should not
+       be necessary, but some firewalls will simply drop packets once
+       the connection has been closed, making detection by the public
+       server difficult.
+  </ul>
+<p>
+<li> Version 1.0 (13 MAR 2001)
+</ul>
+
+<!-- ====================================================================== -->
+<h2><a name="Downloading">Downloading</a></h2>
+
+The latest version of NetCallback can be found at the URL 
+<a href="http://netcallback.sourceforge.net/">http://netcallback.sourceforge.net/</a>
+<p>
+The download package includes the NetCallback source code and binary files as well as the current documentation.  It is available in two formats: ZIP (Windows) and TAR/GZIP (Unix).
+<ul>
+<li><a href="http://netcallback.sourceforge.net/release/netcallback-1.3.1.zip">netcallback-1.3.1.zip</a> or <a href="http://netcallback.sourceforge.net/release/netcallback-1.3.1.tar.gz">netcallback-1.3.1.tar.gz</a>
+</ul>
+<!-- ====================================================================== -->
+<hr>
+
+Please address comments/questions to <a href="mailto:akonstan@acm.org">akonstan@acm.org</a>
+<p>
+$Id: README.html,v 1.3 2004/02/16 02:12:50 akonstan Exp $
+</body>
+</html>
