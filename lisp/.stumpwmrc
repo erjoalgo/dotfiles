@@ -96,7 +96,8 @@
 
 (if (zerop (length (run-shell-command "which xscreensaver" t)))
     (error "xscreensaver not installed")
-    (run-shell-command "xscreensaver &"))
+    (when (zerop (length (run-shell-command "pidof xscreensaver" t)))
+      (run-shell-command "xscreensaver &" nil)))
 
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
