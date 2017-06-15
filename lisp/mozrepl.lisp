@@ -23,8 +23,8 @@
 	 as time-left = (- timeout time-elapsed)
 	 while (or char (> time-left 0)) do
 	   (when char (setf (aref seq i) char) (incf i))
-	 finally (setf seq (subseq seq 0 i))))
-    (usocket:socket-close socket)
+	 finally (setf seq (subseq seq 0 i)))
+      (usocket:socket-close socket))
     seq))
 
 (defvar *mozrepl-port* 4242)
