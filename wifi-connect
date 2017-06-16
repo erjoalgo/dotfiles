@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 while getopts "of:hp:e:m:a" OPT; do
     case ${OPT} in
 	o)
