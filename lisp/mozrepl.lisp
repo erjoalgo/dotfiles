@@ -25,6 +25,11 @@
 	   (when char (setf (aref seq i) char) (incf i))
 	 finally (setf seq (subseq seq 0 i)))
       (usocket:socket-close socket))
+    (unless wait
+      (sb-thread:make-thread
+       (lambda ()
+	 (sleep (/ *nc-timeout-millis* 1000))
+	 (usocket:socket-close socket))))
     seq))
 
 (defvar *mozrepl-port* 4242)
