@@ -84,15 +84,17 @@ __git_complete gl11 _git_log
 #alias sagi='sudo apt-get install'
 if command -v apt-get > /dev/null; then
     alias sagiy='sudo apt-get install -y'
+    alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
+    alias aff='apt-file find'
 else
     alias sagiy='sudo yum install -y'
+    alias aff='yum provides '
+    alias affexact='bash -xc '\''yum provides "*/$0"'\'''
 fi
     
 alias sagu='sudo apt-get update'
-alias aff='apt-file find'
 alias acs='apt-cache show'
 alias spsi='sudo python setup.py install'
-alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
 alias dpkgl='dpkg -L'
 
 
