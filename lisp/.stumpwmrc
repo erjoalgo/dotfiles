@@ -49,7 +49,7 @@
 
 (defparameter *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
-    "Chromium-browser"))
+    "Chromium-browser" "Tor Browser" "Google-chrome"))
 
 (load-files-verbose
  'stumpwm-loader
