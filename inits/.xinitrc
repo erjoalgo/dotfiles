@@ -3,6 +3,7 @@
 xmodmap /tmp/xmodmap.pke #prevents corruption when repeated xmodmap $(hostaname). TODO fix
 
 XMODMAP_FILE="${HOME}/.xmodmap/$(hostname)"
+
 if ! test -f "${XMODMAP_FILE}"; then
     XMODMAP_FILE="${HOME}/.xmodmap/default"
 fi
@@ -11,5 +12,7 @@ fi
 xmodmap "${XMODMAP_FILE}"
 xmodmap "${XMODMAP_FILE}"
 
-${HOME}/.my-startups.sh &
+SCRIPTSD=${HOME}/.stumpwmrc.d/scripts
+"${SCRIPTSD}/run-scripts-in-order.sh" "${SCRIPTSD}/on-startup" &
+
 exec stumpwm
