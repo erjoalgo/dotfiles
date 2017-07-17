@@ -86,6 +86,7 @@ if command -v apt-get > /dev/null; then
     alias sagiy='sudo apt-get install -y'
     alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
     alias aff='apt-file find'
+    alias afl='apt-file list'
 else
     alias sagiy='sudo yum install -y'
     alias aff='yum provides '
