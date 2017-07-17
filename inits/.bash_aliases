@@ -125,6 +125,7 @@ alias mmln='move-last-n.sh'
 alias gdmapf='gdmap -f'
 alias lp-one-sided='lp -o sides=one-sided'
 alias passgen='pass generate -n'
+alias pip-install='pip install --user'
 
 #bash defaults
 alias ls='ls --color=auto'
