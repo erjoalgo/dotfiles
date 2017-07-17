@@ -40,9 +40,16 @@
 			 *actual-brightness-pathname*)
 	  *max-brightness* (read-brightness *max-brightness-pathname*))))
 
+(defun my-read-file-into-string (pathname)
+  (with-open-file (fh pathname)
+    (format nil "~{~A~%~}"
+	    (loop for line = (read-line fh nil)
+	       while line
+	       collect line))))
+
 (defun read-brightness (pathname)
   (-> pathname
-      read-file-into-string
+      my-read-file-into-string
       trim-spaces
       parse-integer))
 
