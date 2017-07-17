@@ -121,7 +121,7 @@ source ~/.my-bash-funs #lnabs, findiregex, etc
 
 
 #gnu scripts
-export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}
+export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin
 
 #lisp
 export LISP=sbcl
