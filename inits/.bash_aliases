@@ -43,7 +43,7 @@ __git_complete ga _git_add
 alias grv='git remote -vv'
 alias gpom='git push origin master'
 alias gitresetsoft='git reset --soft HEAD~1'
-alias gitresethead='git reset HEAD'
+alias grh='git reset HEAD'
 alias gb='git branch'
 #bash completion will do the rest below
 alias gmmma='git commit -a -m "autocommit on $(date)"'
