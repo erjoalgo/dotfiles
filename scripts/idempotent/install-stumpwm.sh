@@ -18,9 +18,8 @@ fi
 
 
 SBCLRC="${HOME}/.sbclrc"
-if test -f "${SBCLRC}"; then
+test -f "${SBCLRC}" && \
     sbcl --load "${SBCLRC}" --script /dev/stdin <<< '(ql:quickload "cl-ppcre")'
-fi
 
 if ! test $? -eq 0; then
     curl -O http://beta.quicklisp.org/quicklisp.lisp || exit ${LINENO}
