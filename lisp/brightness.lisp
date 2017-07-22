@@ -24,17 +24,23 @@
 (defvar *max-brightness*)
 (defparameter *min-brightness* 3)
 
+(defun run-shell-command-t (cmd)
+  (run-shell-command cmd t))
+
 (defun init-brightness ()
-  (let ((actual-brightness-pathname
-	 (-> "find /sys/devices -name actual_brightness"
-	     (run-shell-command t)
-	     trim-spaces
-	     pathname)))
+  (flet ((find-pathname (filename)
+	   (->>
+	    (format nil "find /sys/devices -name ~A"
+		    filename)
+	    run-shell-command-t
+	    (cl-ppcre:split #\Newline)
+	    car
+	    trim-spaces
+	    pathname)))
     (setf *actual-brightness-pathname*
-	  actual-brightness-pathname
+	  (find-pathname "actual_brightness")
 	  *max-brightness-pathname*
-	  (make-pathname :name "max_brightness" :defaults
-			 *actual-brightness-pathname*)
+	  (find-pathname "max_brightness")
 	  *brightness-pathname*
 	  (make-pathname :name "brightness" :defaults
 			 *actual-brightness-pathname*)
