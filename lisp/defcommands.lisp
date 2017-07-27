@@ -202,6 +202,16 @@ be used to override the default window formatting."
 	  keys))
 '(define-key *top-map* (kbd "F12") "SEND-KEYS TAB END RET" )
 
+(defcommand type-ge-email
+    () ()
+  (run-shell-command
+   "sleep 1 && xdotool type ernesto.alfonsogonzalez@ge.com"))
+
+(defcommand type-gmail
+    () ()
+  (run-shell-command
+   "sleep 1 && xdotool type erjoalgo@gmail.com"))
+
 (defcommand type-clipboard-contents () ()
   (let* ((clipboard (get-x-selection)))
     (run-shell-command (format nil "xdotool type ~A" clipboard))))
