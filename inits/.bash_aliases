@@ -127,6 +127,7 @@ alias gdmapf='gdmap -f'
 alias lp-one-sided='lp -o sides=one-sided'
 alias passgen='pass generate -n'
 alias pip-install='pip install --user'
+alias lein-repl-tee-log='lein repl |& tee log'
 
 #bash defaults
 alias ls='ls --color=auto'
