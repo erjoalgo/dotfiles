@@ -10,3 +10,4 @@ localhost	http://localhost:~A
 hubgit	https://github.com/search?utf8=%E2%9C%93&q=~A
 p-google-maps	https://www.google.com/maps/search/~A
 r-word-reference	http://www.wordreference.com/es/translation.asp?tranword=~A
+baidu	https://www.baidu.com/s?wd=~A
