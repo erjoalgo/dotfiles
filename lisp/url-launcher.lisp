@@ -150,10 +150,22 @@
 (defcommand reload-search-engines () ()
   "reload search engines from file"
   (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*")
-  (loop for (eng . fmt) in (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*)
-	    as letter = (subseq eng 0 1)
-	    as kbd = (kbd letter)
-     do (define-key *search-engine-map* kbd (format nil "search-engine-search ~A" eng)))
+  (loop
+     with used-letters = nil
+     for (eng . fmt) in
+       (reverse (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*))
+     as letter = (loop for letter across eng
+		    unless (member letter used-letters :test 'eql)
+		    return letter)
+     as kbd = (kbd (format nil "~A" letter))
+     do (if (not letter)
+	    (warn "unable to find a letter for engine ~A" eng)
+	    (progn
+	      (format t "mapping ~A to ~A. used: ~A~%" eng letter
+		      used-letters)
+	      (define-key *search-engine-map* kbd
+		(format nil "search-engine-search ~A" eng))
+	      (push letter used-letters))))
   (display-bindings-for-keymaps nil *search-engine-map*))
 
 (defun define-key-auto-from-commands-into-keymap ()
