@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "of:hp:e:m:a" OPT; do
+while getopts "of:hp:e:m:aE:" OPT; do
     case ${OPT} in
 	o)
 	    # flag to disregard any existing password
@@ -8,6 +8,7 @@ while getopts "of:hp:e:m:a" OPT; do
 	    ;;
 	e)
 	    # connect to given essid
+	    # required when connecting to a hidden essid
 	    ESSID="${OPTARG}"
 	    ;;
 	p)
@@ -25,6 +26,11 @@ while getopts "of:hp:e:m:a" OPT; do
 	a)
 	    # flag to prompt for essid, even if matching entry exists
 	    ASK_ESSID="true"
+	    ;;
+	E)
+	    # sets the network's encryption
+	    # required when connecting to a hidden essid
+	    ENC="${OPTARG}"
 	    ;;
 	h)
 	    less $0
@@ -57,6 +63,13 @@ fi
 sudo ifconfig ${IFACE} up
 
 TRIES=7
+if test -n "${ENC}" -a -n "${ESSID}"; then
+    # no need to scan, we know the ESSID and the encyrption
+    # need to skip scan to not err when connecting to hidden essid
+    TRIES=0
+    ESSIDS="${ESSID}"
+fi
+
 for i in $(seq ${TRIES}); do
     IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
     ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
@@ -70,8 +83,6 @@ for i in $(seq ${TRIES}); do
 	break
     fi
 done
-
-
 
 
 NETWORKS_DIR=/etc/wpa-connect
@@ -103,8 +114,8 @@ case ${COUNT} in
 esac
 
 echo "selected ${ESSID}"
-ENC=$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
-	 | sed 's/.*Encryption key:\(.*\)/\1/')
+ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
+	 | sed 's/.*Encryption key:\(.*\)/\1/')}
 
 
 sudo pkill -e wpa_supplicant
