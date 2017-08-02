@@ -62,6 +62,8 @@ fi
 
 sudo ifconfig ${IFACE} up
 
+SCAN_RESULTS_FN=/tmp/wifi-scan-results
+
 TRIES=7
 if test -n "${ENC}" -a -n "${ESSID}"; then
     # no need to scan, we know the ESSID and the encyrption
@@ -71,7 +73,7 @@ if test -n "${ENC}" -a -n "${ESSID}"; then
 fi
 
 for i in $(seq ${TRIES}); do
-    IWLIST_OUT=$(sudo iwlist ${IFACE} scan)
+    IWLIST_OUT=$(sudo iwlist ${IFACE} scan |& tee ${SCAN_RESULTS_FN})
     ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
     if test 0 -ne $? || test -z "${ESSIDS}"; then
 	if test $i -eq ${TRIES}; then
