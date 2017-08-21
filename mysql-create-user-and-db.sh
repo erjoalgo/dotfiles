@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 DBNAME=${1} && shift
 USER=${1:-${DBNAME}} && shift
