@@ -32,5 +32,5 @@ keycode 118 = ntilde exclamdown
 
 ! Local Variables:
 ! comment-start: "!"
-! compile-command: "xmodmap debian-lenovo "
+! compile-command: "xmodmap ${EMACS_COMPILATION_FILENAME}"
 ! End:
