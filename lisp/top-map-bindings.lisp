@@ -88,6 +88,7 @@
       ("H-p" "pull-hidden-previous")
       ("H-n" "pull-hidden-next")
 
+      ;; ("H-g" "search-engine-search baidu")
       ("H-g" "search-engine-search ddg")
       ("Scroll_Lock" "fnext")
       ("H-a" "echo-date-battery")
