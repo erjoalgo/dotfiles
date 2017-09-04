@@ -1,4 +1,6 @@
 #!/bin/bash
+# taken from https://www.emacswiki.org/emacs/MailtoHandler
+
 emacsclient -c --eval "(browse-url-mail \"$@\")"  
 
 # Local Variables:
