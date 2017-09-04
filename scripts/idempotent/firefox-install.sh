@@ -55,6 +55,17 @@ if ! grep -F "${LINE}" "${PREFSJS}"; then
 fi
 
 
+# add content type handlers
+#   mailto => emacsmail
+
+EMACSMAIL_EXE="${HOME}/git/erjoalgo-gnu-scripts/emacsmail"
+xmlstarlet ed -L -S \
+	   -a "/RDF:RDF/RDF:Description[last()]" -t elem -n "RDF:Description"  \
+	   -a '$prev' -t attr -n RDF:about -v "urn:scheme:externalApplication:mailto" \
+	   -a '$prev/..' -t attr -n NC:prettyName -v "emacsmail" \
+	   -a '$prev/..' -t attr -n NC:path -v "${EMACSMAIL_EXE}" \
+	   ${PROFILE}/mimeTypes.rdf
+
 # CHROME=$(find "${PROFILE}" -name chrome)
 CHROME="${PROFILE}/chrome"
 test -d "${CHROME}" || mkdir "${CHROME}"
