@@ -69,5 +69,5 @@ xmlstarlet ed -L -S \
 # CHROME=$(find "${PROFILE}" -name chrome)
 CHROME="${PROFILE}/chrome"
 test -d "${CHROME}" || mkdir "${CHROME}"
-ln -s "${HOME}/git/erjoalgo-vimfx-config/userChrome.css" \
+ln -sf "${HOME}/git/erjoalgo-vimfx-config/userChrome.css" \
    "${CHROME}"
