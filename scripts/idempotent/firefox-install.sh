@@ -47,7 +47,7 @@ EOF
     )
 if ! grep -F "${LINE}" "${PREFSJS}"; then
     # pkill firefox
-    while ps aux | grep -v $$ | grep firefox; do
+    while ps aux | grep -v "$$\|grep" | grep firefox ; do
 	echo "waiting for firefox exit to modify prefs.js ..."
 	sleep 1
     done
