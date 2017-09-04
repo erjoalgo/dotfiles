@@ -1,0 +1,6 @@
+#!/bin/bash
+emacsclient -c --eval "(browse-url-mail \"$@\")"  
+
+# Local Variables:
+# mode: sh
+# End:
