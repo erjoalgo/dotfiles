@@ -99,7 +99,7 @@ case ${COUNT} in
 	;;
     *)
 	if test -z "${ESSID}"; then
-	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) <(sort <<< "${ESSIDS}"))
+	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) <(sort <<< "${ESSIDS}") | tee /tmp/common-essids)
 	    if test -z "${ASK_ESSID}" -a 1 -eq $(wc -l <<< "${COMM}") -a -n "${COMM}"; then
 		ESSID="${COMM}"
 	    else
