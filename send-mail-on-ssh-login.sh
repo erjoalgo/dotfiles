@@ -1,12 +1,12 @@
 #!/bin/bash -x
 
 # EMAIL=${1:-erjoalgo@gmail.com}
-EMAIL=${1}
-test -n "${EMAIL}" || exit ${LINENO}
+EMAILS=${*}
+test -n "${EMAILS}" || exit ${LINENO}
 
 if test "$PAM_TYPE" = "open_session" ; then
    SUBJECT="$PAM_SERVICE login on $(hostname -s) for account $PAM_USER"
-   cat <<EOF | mutt -s "${SUBJECT}" "${EMAIL}"
+   cat <<EOF | mutt -s "${SUBJECT}" ${EMAILS}
         User: $PAM_USER
         Remote Host: $PAM_RHOST
         Service: $PAM_SERVICE
