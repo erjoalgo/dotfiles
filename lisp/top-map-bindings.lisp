@@ -166,17 +166,9 @@
  *utils-map*
  '(
    ("i" "invert-screen")
-   ("C" "run-shell-command correct_screen.py &")
    ;;("k" "run-shell-command call_skype_numer.py -w")
-   ("p" "run-shell-command save_pics.py")
-
-   ("s" "save_page")
-   ("p" "run-shell-command pgkill.py save_pic -f")
-   ("T" "kill-tk-windows")
    ("M" "echo_pointer")
    ("m" "toggle-magnifier")
-   ("F" "define-button")
-   ("P" "save_pic")
    ("r" *screen-rotation-map*)
    ("c" *special-characters-map*)
    ("w" "connect-internet")
