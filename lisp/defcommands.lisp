@@ -130,7 +130,7 @@ be used to override the default window formatting."
   "connect to the internet via the wifi program"
   (echo "connecting to internet...")
   ;;debian-mini$kill-wpa-supplicants.sh ; sleep 1 && wac
-  (run-shell-command "kill-wpa-supplicants.sh; sleep 1 && sudo wifi -y -t ac&"))
+  (run-shell-command "wifi-connect"))
 
 
 
