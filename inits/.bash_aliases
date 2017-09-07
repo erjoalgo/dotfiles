@@ -11,7 +11,11 @@ alias l='less -R'
 alias c='cat'
 alias gi='grep -i'
 alias gol='grep -o'
-alias xs='xsel -ib'
+if command -v xsel > /dev/null; then
+    alias xs='xsel -ib'
+else
+    alias xs='pbcopy'
+fi
 alias duh='du -h'
 alias xargsz='xargs -IZ'
 alias ps-aux-grep='ps aux|grep -i '
