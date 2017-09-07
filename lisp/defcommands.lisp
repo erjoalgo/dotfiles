@@ -159,8 +159,13 @@ be used to override the default window formatting."
   ;;TODO allow selecting region
   (unmap-message-window (current-screen))
   (sleep 1)
-  (let ((out-png (namestring (merge-pathnames (make-pathname :name name :type "png")
-				   *scrots-top*))))
+  (let* ((out-png-pathname (merge-pathnames
+			  (make-pathname :name name :type "png")
+			   *scrots-top*))
+	(out-png (namestring out-png-pathname)))
+
+    (when (cl-ppcre:all-matches "\\s" out-png)
+      (error "filename may not contain spaces: ~A" out-png))
 
     (SB-EXT:RUN-PROGRAM "shutter"
 			(append (list "-e" "-f" "-o" out-png "-n")
