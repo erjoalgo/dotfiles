@@ -147,6 +147,13 @@ be used to override the default window formatting."
 
 (defcommand scrot-cmd (name)
     ((:string "enter name for scrot: "))
+  (take-scrot name nil))
+
+(defcommand scrot-cmd-full-screen (name)
+    ((:string "enter name for scrot: "))
+  (take-scrot name t))
+
+(defun take-scrot (name fullscreen-p)
   "save a scrot to *scrots-top*"
   (ensure-directories-exist *scrots-top*)
   ;;TODO allow selecting region
@@ -156,7 +163,8 @@ be used to override the default window formatting."
 				   *scrots-top*))))
 
     (SB-EXT:RUN-PROGRAM "shutter"
-			(list "-e" "-f" "-o" out-png)
+			(append (list "-e" "-f" "-o" out-png "-n")
+				(unless fullscreen-p (list "-s")))
 			:search t
 			:output t
 			:error t
