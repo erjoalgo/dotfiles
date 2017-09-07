@@ -181,8 +181,9 @@
    ("c" *special-characters-map*)
    ("w" "connect-internet")
    ("h" *help-map*)
-   ("s" "speak-key" )
-   ("S" "speak-string" )
+   ("s" "scrot-cmd" )
+   ("S" "scrot-cmd-full-screen" )
+   ("k" "speak-string" )
    ))
 
 
