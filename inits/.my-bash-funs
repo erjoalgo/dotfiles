@@ -177,3 +177,10 @@ function git-review-pull-request	{
 function pid-listening-at	{
     netstat -tlpn 2>/dev/null| grep "[^0-9]${1}[^0-9]" | grep -o '[0-9]*/' | cut -f1 -d/
 }
+
+function git-browse-remote	{
+    REMOTE="${1:-origin}" && shift
+    URL=$(git config --get "remote.${REMOTE}.url" |  \
+       sed -e 's|ssh://git@|https://|')
+    firefox-new-tab "${URL}"
+}
