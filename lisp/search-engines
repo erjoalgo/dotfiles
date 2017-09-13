@@ -4,6 +4,7 @@ youtube	https://www.youtube.com/results?search_query=~A
 soverflow	http://stackoverflow.com/search?q=~A
 music	http://erjoalgo.com:11407/by-lyrics?lyrics=~A
 bingimg	http://www.bing.com/images/search?q=~A
+bingimg	https://www.google.com/search?tbm=isch&q=~A
 wordreference	http://www.wordreference.com/es/translation.asp?tranword=~A
 ebay	http://www.ebay.com/sch/i.html?&_nkw=~A
 localhost	http://localhost:~A
