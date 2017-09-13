@@ -1,8 +1,29 @@
 #!/bin/bash
 
-DOWNLOADS="${HOME}/Downloads"
-DEST="${1}"
-LAST_N_MINS=5
+while getopts "m:nht:" OPT; do
+    case ${OPT} in
+	m)
+	    LAST_N_MINS="${OPTARG}"
+	    ;;
+	n)
+	    NO_OPEN=true
+	    ;;
+	t)
+	    DEST="${OPTARG}"
+	    ;;
+	d)
+	    DOWNLOADS="${OPTARG}"
+	    ;;
+	h)
+	    less $0
+	    exit 0
+	    ;;
+    esac
+done
+
+LAST_N_MINS=${LAST_N_MINS:-5}
+DEST=${DEST:-${1}}
+DOWNLOADS=${DOWNLOADS:-"${HOME}/Downloads"}
 
 if test -z "${DEST}"; then
     DEST=$(pwd)
@@ -34,7 +55,7 @@ while read FILE; do
 	set -- $EXT_PROGRAM
 	EXT="${1}"
 	PROGRAM="${2}"
-	if test "${EXT}" = "${FN_EXT}"; then
+	if test -z "${NO_OPEN}" -a "${EXT}" = "${FN_EXT}"; then
 	    nohup ${PROGRAM} "${FN}" > /dev/null &
 	    break
 	fi
