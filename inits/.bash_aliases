@@ -112,7 +112,7 @@ alias wac='sudo pkill -e wpa_supplicant; sudo pkill -e dhclient; sudo wifi -y -t
 alias wacc='sudo wifi -y connect'
 
 #meta
-alias .a='source ~/.bash_aliases'
+alias .a='source ~/.bash_aliases && source ~/.my-bash-funs'
 alias .brc='source ~/.bashrc'
 alias aa='aliasadd.py'
 
