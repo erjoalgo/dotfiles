@@ -184,3 +184,5 @@ function git-browse-remote	{
        sed -e 's|ssh://git@|https://|')
     firefox-new-tab "${URL}"
 }
+# completion with remotes
+__git_complete git-browse-remote _git_pull
