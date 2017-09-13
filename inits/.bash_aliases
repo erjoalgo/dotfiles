@@ -99,7 +99,8 @@ else
 fi
     
 alias sagu='sudo apt-get update'
-alias acs='apt-cache show'
+alias acw='apt-cache show'
+alias acs='apt-cache search'
 alias spsi='sudo python setup.py install'
 alias dpkgl='dpkg -L'
 
