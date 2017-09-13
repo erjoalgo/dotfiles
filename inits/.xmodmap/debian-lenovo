@@ -29,6 +29,7 @@ keycode 167 = NoSymbol
 keycode 120 = Prior NoSymbol Prior
 keycode 132 = Next NoSymbol Next
 keycode 118 = ntilde udiaeresis
+keycode 119 = Delete emdash Delete
 
 ! Local Variables:
 ! comment-start: "!"
