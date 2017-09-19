@@ -77,6 +77,4 @@ ${RESP}
 EOF
 
 git init
-git remote add https-origin "${URL}"
-
-
+git remote add origin "${URL}"
