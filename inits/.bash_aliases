@@ -145,6 +145,8 @@ alias untarprogram='tar -C ~/programs/ -axvf'
 alias unzipprogram='unzip -d ~/programs/'
 alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias chmodx='chmod +x'
+alias chown-rec='sudo chown -R '
+complete -F _usermod chown-rec
 
 
 alias sp='source ~/proxy.sh'
