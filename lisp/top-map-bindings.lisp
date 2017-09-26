@@ -203,7 +203,7 @@
 ;;(define-key *special-characters-map* (kbd "?") "run-shell-command xdotool key ¿")
 
 (pop-top-map)
-(set-prefix-key (kbd "SunPrint_Screen"))
+(set-prefix-key (kbd "F19"))
 
 
 (reload-search-engines)
