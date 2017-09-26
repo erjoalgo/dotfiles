@@ -147,15 +147,18 @@ be used to override the default window formatting."
 
 (defcommand scrot-cmd (name)
     ((:string "enter name for scrot: "))
-  (take-scrot name nil))
+  (take-scrot name :fullscreen-p nil))
 
 (defcommand scrot-cmd-full-screen (name)
     ((:string "enter name for scrot: "))
-  (take-scrot name t))
-
-(defun take-scrot (name fullscreen-p)
+  (take-scrot name :fullscreen-p t))
+(defun take-scrot (name &key
+			  (fullscreen-p nil)
+			  (scrot-top *scrots-top*)
+			  (verbose t)
+			  (eog-scrot t))
   "save a scrot to *scrots-top*"
-  (ensure-directories-exist *scrots-top*)
+  (ensure-directories-exist scrot-top)
   ;;TODO allow selecting region
   (unmap-message-window (current-screen))
   (sleep 1)
@@ -175,12 +178,15 @@ be used to override the default window formatting."
 			:error t
 			:wait t)
     ;;why does this crash the session
-    (SB-EXT:RUN-PROGRAM "eog"
-			(list out-png)
-			:search t
-			:wait nil)
+    (when eog-scrot
+      (SB-EXT:RUN-PROGRAM "eog"
+			  (list out-png)
+			  :search t
+			  :wait nil))
     (set-x-selection out-png :clipboard)
-    (message "copied to cliboard: ~A" out-png)))
+    (when verbose
+      (message "copied to cliboard: ~A" out-png))
+    out-png))
 
 (defcommand speak-key ()
     ;;((:key "enter key to speak: " ));;this requires pressing enter
