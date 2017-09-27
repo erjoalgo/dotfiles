@@ -27,7 +27,7 @@
 	 (output (run-shell-command "battery-info.sh" t))
 	 (percentage (extract-match "percentage:.*?([0-9][^%]*)%" output 1))
 	 (state (extract-match "state:[^a-z]*([a-z-]+)" output 1))
-	 ;(to-full (extract-match "time to (full|empty: *.+?)\\n" output 1))
+					;(to-full (extract-match "time to (full|empty: *.+?)\\n" output 1))
 	 (time (time-format *time-format-international*))
 	 )
     (echo-string-list
@@ -74,10 +74,10 @@
     ((:string "Word to lookup: "))
   "lookup a word in the dictionary (requires the dict package)"
   (let* (
-	(definition
-	 (run-shell-command (format nil "dict ~a" word) t))
-	(*suppress-echo-timeout* t); let me read the definition in peace
-	)
+	 (definition
+	  (run-shell-command (format nil "dict ~a" word) t))
+	 (*suppress-echo-timeout* t); let me read the definition in peace
+	 )
     (when word
       (log-entry-timestamp word *vocab-fn*)
       (message "definition: ~a" definition))))
@@ -99,8 +99,8 @@
   (setf magnifier-on (not magnifier-on))
   (run-shell-command
    (if (not magnifier-on)
-      "magnifier -vm -z 5"
-      "pkill magnifier")))
+       "magnifier -vm -z 5"
+       "pkill magnifier")))
 
 
 
@@ -183,9 +183,9 @@ perform ocr on it, place ocr'd text into clipboard"
   (unmap-message-window (current-screen))
   (sleep 1)
   (let* ((out-png-pathname (merge-pathnames
-			  (make-pathname :name name :type "png")
+			    (make-pathname :name name :type "png")
 			    scrot-top))
-	(out-png (namestring out-png-pathname)))
+	 (out-png (namestring out-png-pathname)))
 
     (when (cl-ppcre:all-matches "\\s" out-png)
       (error "filename may not contain spaces: ~A" out-png))
@@ -225,11 +225,11 @@ perform ocr on it, place ocr'd text into clipboard"
     ((:string "enter string to speak: " ))
   "speak some text"
   (SB-EXT:RUN-PROGRAM "espeak"
-			(list text)
-			:search t
-			:output t
-			:error t
-			:wait t))
+		      (list text)
+		      :search t
+		      :output t
+		      :error t
+		      :wait t))
 
 (defcommand echo-window-class () ()
   "echo window class"
@@ -239,7 +239,7 @@ perform ocr on it, place ocr'd text into clipboard"
   "send the specified keys into the current screen"
   (echo keys)
   '(mapcar (lambda (key) (send-meta-key (current-screen) (kbd key)))
-	  keys))
+    keys))
 '(define-key *top-map* (kbd "F12") "SEND-KEYS TAB END RET" )
 
 (defcommand type-ge-email
