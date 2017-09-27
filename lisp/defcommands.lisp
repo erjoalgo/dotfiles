@@ -184,7 +184,7 @@ perform ocr on it, place ocr'd text into clipboard"
   (sleep 1)
   (let* ((out-png-pathname (merge-pathnames
 			  (make-pathname :name name :type "png")
-			   *scrots-top*))
+			    scrot-top))
 	(out-png (namestring out-png-pathname)))
 
     (when (cl-ppcre:all-matches "\\s" out-png)
