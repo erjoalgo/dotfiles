@@ -40,7 +40,9 @@ unset GIT_COMPLETIONS
 alias gt='git status'
 __git_complete gt _git_status
 alias gf='git diff'
+alias gfc='git diff --cached'
 __git_complete gf _git_diff
+__git_complete gfc _git_diff
 alias gl='git log'
 __git_complete gl _git_log
 alias ga='git add'
