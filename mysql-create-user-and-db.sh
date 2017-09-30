@@ -11,7 +11,7 @@ echo 'enter mysql password for root' -n
 read -s ADMINPASS
 echo
 
-if ! test -n "${DBNAME}" -a -n "${USER}" -a -n "${PASS}" -a -n "${HOST}"; then
+if ! test -n "${DBNAME}" -a -n "${USER}" -a -n "${HOST}"; then
     echo "missing arguments" && exit ${LINENO}
 fi
 
