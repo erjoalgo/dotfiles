@@ -90,14 +90,29 @@ __git_complete gl11 _git_log
 #apt
 #alias sagi='sudo apt-get install'
 if command -v apt-get > /dev/null; then
-    alias sagiy='sudo apt-get install -y'
     alias affexact='bash -xc '\''apt-file find $0 | grep "/$0$"'\'''
     alias aff='apt-file find'
     alias afl='apt-file list'
+    alias sagiy='sudo apt-get install -y'
+    _sagiy()
+    {
+
+	local cur
+	_init_completion || return
+
+	COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" \
+				 2> /dev/null ) )
+	return 0
+    } &&
+	complete -F _sagiy sagiy
+    complete -F _sagiy acs
+    complete -F _sagiy acw
+    complete -F _sagiy dpkgl
 else
     alias sagiy='sudo yum install -y'
     alias aff='yum provides '
     alias affexact='bash -xc '\''yum provides "*/$0"'\'''
+    complete -F _command affexact
 fi
     
 alias sagu='sudo apt-get update'

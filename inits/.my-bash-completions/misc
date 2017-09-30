@@ -1,2 +1,0 @@
-complete -F _command affexact
-# ex: ts=4 sw=4 et filetype=sh
