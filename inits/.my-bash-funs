@@ -186,3 +186,15 @@ function git-browse-remote	{
 }
 # completion with remotes
 __git_complete git-browse-remote _git_pull
+
+function cert-fetch	{
+    HOSTPORT=${1} && shift
+    PEM=/tmp/last-cert.pem
+    openssl s_client -showcerts -connect ${HOSTPORT}  \
+	    2>/dev/null  \
+	    < /dev/null \
+	    > ${PEM}
+
+    openssl x509 -in ${PEM} -text -fingerprint | less
+    echo ${PEM}
+}
