@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/bash -x
+
 
 DBNAME=${1} && shift
 USER=${1:-${DBNAME}} && shift
 HOST=${1:-localhost} && shift
 
+set -euo pipefail
 
 echo 'enter mysql password for root' -n
 read -s ADMINPASS
