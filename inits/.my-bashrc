@@ -152,15 +152,19 @@ for COMPL in ~/.my-bash-completions/*; do
     source "${COMPL}"
 done
 
-#history control from multiple terminals. taken from internet. not really working
-# don't put duplicate lines or lines starting with space in the history.
+# don't put duplicate lines in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoredups
+
 # append to the history file, don't overwrite it
 shopt -s histappend
+
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=100000
 export HISTFILESIZE=100000000
+
+# https://askubuntu.com/questions/80371/
+export PROMPT_COMMAND='history -a'
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
