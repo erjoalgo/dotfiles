@@ -1,0 +1,34 @@
+#!/usr/bin/python
+from __future__ import print_function
+import sys, argparse, re
+
+parser = argparse.ArgumentParser()
+parser.add_argument("line", help = "universally unique line")
+parser.add_argument("filename", help = "input/output file")
+parser.add_argument("-b", "--begining_append",  action="store_true",
+                    help = "preppend instead of append")
+
+args=vars(parser.parse_args())
+globals().update(args)
+
+uuid=re.search("[a-fA-F0-9-]+", line).group(0)
+block="{}\n{}\n{}".format(line, sys.stdin.read(), line)
+beg_end=["", ""]
+beg_end[int(begining_append)]=block
+orig_text=open(filename)
+
+with open( filename+".new", "w") as fh:
+    print (beg_end[0], file=fh)
+    echo=True
+    for line in orig_text:
+        if uuid in line:
+            echo=not echo
+        elif echo:
+            print (line, file=fh)
+    print (beg_end[1], file=fh)
+
+
+# Local Variables:
+# mode: python
+# compile-command: "./text-block '# 07b37c2c-a63f-11e7-94e3-cff9e57fa83f' test -b  <<< \"$(echo -e 'LINEA\\nLINEB')\""
+# End:
