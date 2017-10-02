@@ -198,3 +198,11 @@ function cert-fetch	{
     openssl x509 -in ${PEM} -text -fingerprint | less
     echo ${PEM}
 }
+
+function gpom	{
+    {
+	git push origin master &>/dev/null
+	LAST=$?
+	test 0 -eq $LAST || echo "gpom failed with $LAST !"
+    } &
+}

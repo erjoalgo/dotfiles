@@ -48,7 +48,7 @@ __git_complete gl _git_log
 alias ga='git add'
 __git_complete ga _git_add
 alias grv='git remote -vv'
-alias gpom='git push origin master'
+# alias gpom='git push origin master'
 alias gitresetsoft='git reset --soft HEAD~1'
 alias grh='git reset HEAD'
 alias gb='git branch'
