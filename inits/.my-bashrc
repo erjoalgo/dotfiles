@@ -130,9 +130,8 @@ export LISP=sbcl
 export PYTHONSTARTUP=${HOME}/.pythonrc.py
 
 # go
-export GOROOT=/usr/local/go
 export GOPATH=${GIT}/gopath
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+export PATH=$PATH:$GOPATH/bin
 
 #java/maven
 export PATH=$PATH:${PROGRAMS}/apache-maven-3.3.9/bin
