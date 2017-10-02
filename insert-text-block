@@ -7,26 +7,29 @@ parser.add_argument("line", help = "universally unique line")
 parser.add_argument("filename", help = "input/output file")
 parser.add_argument("-b", "--begining_append",  action="store_true",
                     help = "preppend instead of append")
+parser.add_argument("-n", "--no_strip_newline",  action="store_true",
+                    help = "don't strip trailing newline from stdin")
 
 args=vars(parser.parse_args())
 globals().update(args)
 
-uuid=re.search("[a-fA-F0-9-]+", line).group(0)
-block="{}\n{}\n{}".format(line, sys.stdin.read(), line)
-beg_end=["", ""]
-beg_end[int(begining_append)]=block
-orig_text=open(filename)
+stdin=sys.stdin.read()
+if not no_strip_newline and stdin[-1]=="\n":
+    stdin=stdin[:-1]
+block="\n".join((line, stdin, line))
+orig_text=open(filename).read()
+regexp="(?sm)^(.*?)((?:\n)?{0}.*{0}(?:\n)?)(.*)$".format(re.escape(line))
+match=re.match(regexp, orig_text)
+middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text]
 
-with open( filename+".new", "w") as fh:
-    print (beg_end[0], file=fh)
-    echo=True
-    for line in orig_text:
-        if uuid in line:
-            echo=not echo
-        elif echo:
-            print (line, file=fh)
-    print (beg_end[1], file=fh)
+if begining_append:
+    middle.insert(0, block)
+else:
+    middle.append(block)
 
+new_text="\n".join(middle)
+with open( filename, "w") as fh:
+    fh.write(new_text)
 
 # Local Variables:
 # mode: python
