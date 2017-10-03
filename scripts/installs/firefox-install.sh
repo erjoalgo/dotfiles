@@ -35,8 +35,10 @@ while pidof firefox; do
     echo "waiting for firefox exit to modify prefs.js ..." && sleep 1
 done
 
-LINE=$(cat <<EOF
-user_pref("extensions.VimFx.config_file_directory", "${HOME}/git/erjoalgo-vimfx-config/VimFx-config@vimfx.org");
+VIMFX_CONFIG_DIR="${HOME}/git/erjoalgo-vimfx-config"
+sleep 10 # ensure changes don't get overwritten
+insert-text-block '// -add-vimfx-config-file-directory' "${PREFSJS}"<<EOF
+user_pref("extensions.VimFx.config_file_directory", "${VIMFX_CONFIG_DIR}/VimFx-config@vimfx.org");
 EOF
 
 
