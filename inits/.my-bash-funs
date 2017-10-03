@@ -210,3 +210,11 @@ function gpom	{
 	test 0 -eq $LAST || echo "gpom failed with $LAST !"
     } &
 }
+
+function mvbak	{
+    mv -n ${1} ${1}.bak
+}
+
+function bakmv	{
+    mv -n ${1} $(basename ${1} .bak)
+}
