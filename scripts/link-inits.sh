@@ -9,7 +9,7 @@ function safe_ln	{
     if ! test -e ${DST}; then
 	echo "warning: skipping symlink to nonexistent ${DST} of  ${SRC}"
 	return
-    elif test -d ${DST}; then
+    elif test -d ${DST} -a ! -d ${SRC}; then
 	DST=${DST}/$(basename "${SRC}")
     fi
     if test -e ${DST} -a ! -L ${DST}; then
