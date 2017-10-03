@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 STUMPWM_TOP=$(dirname $(dirname $(readlink -f $0)))
 INITS_TOP="${STUMPWM_TOP}/inits"
