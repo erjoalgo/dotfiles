@@ -26,10 +26,9 @@ echo "using profile ${PROFILE}"
 ${HOME}/git/erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
 
 
-PREFSJS=$(find ${PROFILE} -name prefs.js | head -1)
-if test -z "${PREFSJS}"; then
-    echo "unable to locate prefsjs" && exit ${LINENO}
-fi
+PREFSJS=$(find "${PROFILE}" -name prefs.js | head -1)
+test -f "${PREFSJS}"
+
 
 while pidof firefox; do
     echo "waiting for firefox exit to modify prefs.js ..." && sleep 1
@@ -55,6 +54,5 @@ xmlstarlet ed -L -S \
 
 # CHROME=$(find "${PROFILE}" -name chrome)
 CHROME="${PROFILE}/chrome"
-test -d "${CHROME}" || mkdir "${CHROME}"
-ln -sf "${HOME}/git/erjoalgo-vimfx-config/userChrome.css" \
-   "${CHROME}"
+mkdir -p "${CHROME}"
+ln -sf  "${VIMFX_CONFIG_DIR}/userChrome.css" "${CHROME}"
