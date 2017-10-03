@@ -55,6 +55,7 @@ sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc"
 # autologin to stumpwm on tty1
 AUTOLOGIN_CONF="/etc/systemd/system/getty@tty1.service.d/autologin.conf"
 sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
+test -e "${AUTOLOGIN_CONF}" || sudo touch "${AUTOLOGIN_CONF}"
 sudo ${ADDBLOCK} '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
      "${AUTOLOGIN_CONF}" <<EOF
 [Service]
@@ -67,11 +68,11 @@ GRUB_FILE=/etc/default/grub
 if test -e ${GRUB_FILE} &&  \
 	grep -P '^GRUB_TIMEOUT=[0-9]+$' ${GRUB_FILE} | grep -v '=0'; then
     sudo sed -i 's/^GRUB_TIMEOUT=[0-9]*$/GRUB_TIMEOUT=0/' ${GRUB_FILE}
-    sudo update-grub
+    which update-grub && sudo update-grub
 fi
 
 # link inits, install stumpwm
-cd ~/git/erjoalgo-stumpwmrc/scripts/idempotent
+cd ~/git/erjoalgo-stumpwmrc/scripts/
 for SCRIPT in link-inits.sh\
 	      ;do
     # install-stumpwm.sh
@@ -80,4 +81,4 @@ done
 
 # some essential scripts
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
-sudo apt-get install -y apt-file && sudo apt-file update
+which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
