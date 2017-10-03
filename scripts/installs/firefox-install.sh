@@ -31,18 +31,13 @@ if test -z "${PREFSJS}"; then
     echo "unable to locate prefsjs" && exit ${LINENO}
 fi
 
+while pidof firefox; do
+    echo "waiting for firefox exit to modify prefs.js ..." && sleep 1
+done
+
 LINE=$(cat <<EOF
 user_pref("extensions.VimFx.config_file_directory", "${HOME}/git/erjoalgo-vimfx-config/VimFx-config@vimfx.org");
 EOF
-    )
-if ! grep -F "${LINE}" "${PREFSJS}"; then
-    # pkill firefox
-    while ps aux | grep -v "$$\|grep" | grep firefox ; do
-	echo "waiting for firefox exit to modify prefs.js ..."
-	sleep 1
-    done
-    echo "${LINE}" >> "${PREFSJS}"
-fi
 
 
 # add content type handlers
