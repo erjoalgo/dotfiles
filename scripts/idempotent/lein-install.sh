@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -x
+
+set -euo pipefail
 
 if command -v lein && lein version; then
     exit 0
@@ -6,9 +8,7 @@ fi
 
 LEIN="${HOME}/.local/bin/lein"
 
-if ! test -d $(dirname ${LEIN}); then
-    mkdir $(dirname ${LEIN}) || exit ${LINENO}
-fi
+mkdir -p $(dirname ${LEIN})
 
 if ! test -f ${LEIN}; then
     URL=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
