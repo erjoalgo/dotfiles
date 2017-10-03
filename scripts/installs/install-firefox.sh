@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+set -euo pipefail
+
+
 # 'https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US'
 # URL="https://download.mozilla.org/?product=firefox-52.1.1esr-SSL&os=linux64&lang=en-US"
 URL="https://download.mozilla.org/?product=firefox-45.9.0esr-SSL&os=linux64&lang=en-ZA"
