@@ -4,8 +4,7 @@ if command -v lein && lein version; then
     exit 0
 fi
 
-# LEIN=/usr/local/lein
-LEIN="${HOME}/bin/lein"
+LEIN="${HOME}/.local/bin/lein"
 
 if ! test -d $(dirname ${LEIN}); then
     mkdir $(dirname ${LEIN}) || exit ${LINENO}
