@@ -1,1 +1,0 @@
-../idempotent/sudo-nopasswd.sh

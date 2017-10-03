@@ -1,1 +1,0 @@
-../idempotent/install-stumpwm.sh
