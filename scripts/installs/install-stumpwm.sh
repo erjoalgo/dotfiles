@@ -86,3 +86,5 @@ sudo ${ADDBLOCK} '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
 ExecStart=
 ExecStart=-/sbin/agetty --autologin "${USER}" %I
 EOF
+
+sudo ${APT_GET} install -y nc
