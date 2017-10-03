@@ -13,6 +13,8 @@ xmodmap "${XMODMAP_FILE}"
 xmodmap "${XMODMAP_FILE}"
 
 SCRIPTSD=${HOME}/.stumpwmrc.d/scripts
-"${SCRIPTSD}/run-scripts-in-order.sh" "${SCRIPTSD}/on-startup" &
+for SCRIPT in $(find "${SCRIPTSD}/on-startup" -type f); do
+    ${SCRIPT}
+done
 
 exec stumpwm
