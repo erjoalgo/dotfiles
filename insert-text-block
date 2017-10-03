@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from __future__ import print_function
-import sys, argparse, re
+import sys, argparse, re, os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("line", help = "universally unique line")
@@ -17,6 +17,10 @@ stdin=sys.stdin.read()
 if not no_strip_newline and stdin[-1]=="\n":
     stdin=stdin[:-1]
 block="\n".join((line, stdin, line))
+if not os.path.exists(filename):
+    with open( filename, "w") as fh:
+        pass
+assert(os.path.exists(filename))
 orig_text=open(filename).read()
 regexp="(?sm)^(.*?)((?:\n)?{0}.*{0}(?:\n)?)(.*)$".format(re.escape(line))
 match=re.match(regexp, orig_text)
