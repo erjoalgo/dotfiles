@@ -3,18 +3,13 @@
 set -euo pipefail
 
 command -v firefox
-REPOS="${HOME}/git"
-cd ${REPOS} || exit ${LIENO}
 
-for REPO in \
-    erjoalgo-firefox-addons \
-    erjoalgo-vimfx-config \
-    ;do
 
-    test -d ${REPO} ||  \
-	git clone "https://github.com/erjoalgo/${REPO}" || exit ${LINENO}
+which git-fetch-ff
 
-done
+GIT_HOME="${HOME}/git" git-fetch-ff \
+    "https://github.com/erjoalgo/erjoalgo-firefox-addons" \
+    "https://github.com/erjoalgo/erjoalgo-vimfx-config"
 
 test -d ~/.mozilla
 
@@ -26,7 +21,7 @@ if test -z "${PROFILE}"; then
     fi
 fi
 echo "using profile ${PROFILE}"
-erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
+${HOME}/git/erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
 
 
 PREFSJS=$(find ${PROFILE} -name prefs.js | head -1)
