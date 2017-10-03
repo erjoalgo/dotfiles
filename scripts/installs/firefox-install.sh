@@ -1,9 +1,8 @@
 #!/bin/bash -x
 
-if ! command -v firefox; then
-    sudo apt-get install -y firefox-esr
-fi
+set -euo pipefail
 
+command -v firefox
 REPOS="${HOME}/git"
 cd ${REPOS} || exit ${LIENO}
 
@@ -17,13 +16,7 @@ for REPO in \
 
 done
 
-if ! test -d ~/.mozilla; then
-    firefox &
-    while ! test -d ~/.mozilla; do
-	echo "waiting for ~/.mozilla creation..."
-	sleep 2;
-    done
-fi
+test -d ~/.mozilla
 
 PROFILE=$(find ~/.mozilla/firefox -name '*.default' -type d)
 if test -z "${PROFILE}"; then
