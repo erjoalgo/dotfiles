@@ -175,7 +175,11 @@ function git-review-pull-request	{
 }
 
 function pid-listening-at	{
-    sudo netstat -tlpn 2>/dev/null| grep "[^0-9]${1}[^0-9]" | grep -o '[0-9]*/' | cut -f1 -d/
+    LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${1}[^0-9]")
+    PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
+    echo -e "${LINE}\n" 1>&2
+    ps -fp ${PID} -w 30 1>&2
+    echo ${PID}
 }
 
 function git-browse-remote	{
