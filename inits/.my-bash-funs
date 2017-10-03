@@ -185,7 +185,7 @@ function pid-listening-at	{
 function git-browse-remote	{
     REMOTE="${1:-origin}" && shift
     URL=$(git config --get "remote.${REMOTE}.url" |  \
-       sed -e 's|ssh://git@|https://|')
+	      sed -e 's|:|/|g' -e 's|^\(ssh///\)\?git@|https://|')
     firefox-new-tab "${URL}"
 }
 # completion with remotes
