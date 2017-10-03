@@ -6,13 +6,7 @@ INITS_TOP="${STUMPWM_TOP}/inits"
 function safe_ln	{
     SRC=${1} && shift
     DST=${1} && shift
-    if ! test -e ${DST}; then
-	echo "warning: skipping symlink to nonexistent ${DST} of  ${SRC}"
-	return
-    elif test -d ${DST} -a ! -d ${SRC}; then
-	DST=${DST}/$(basename "${SRC}")
-    fi
-    if test -e ${DST} -a ! -L ${DST}; then
+    if test -f ${DST} -a ! -L ${DST}; then
 	echo "warning: skipping symlink to existent non-symlink ${DST} of  ${SRC}"
     else
 	ln -sf ${SRC} ${DST}
