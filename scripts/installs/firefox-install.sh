@@ -51,7 +51,7 @@ xmlstarlet ed -L -S \
 	   -a '$prev' -t attr -n RDF:about -v "urn:scheme:externalApplication:mailto" \
 	   -a '$prev/..' -t attr -n NC:prettyName -v "emacsmail" \
 	   -a '$prev/..' -t attr -n NC:path -v "${EMACSMAIL_EXE}" \
-	   ${PROFILE}/mimeTypes.rdf
+	   "${PROFILE}/mimeTypes.rdf"
 
 # CHROME=$(find "${PROFILE}" -name chrome)
 CHROME="${PROFILE}/chrome"
