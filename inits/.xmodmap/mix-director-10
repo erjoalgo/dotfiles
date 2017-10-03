@@ -1,0 +1,18 @@
+clear lock
+keycode 134 = Hyper_L
+keycode 65 = space underscore
+clear mod4
+!remove mod4 = Hyper_L
+add mod3 = Hyper_L
+add mod4 = Super_L
+
+keycode 78 = Super_L
+keycode 72 = Super_L
+keycode 97 = Super_L
+keycode 134 = Hyper_L
+keycode 22 = BackSpace dead_acute
+
+! Local Variables:
+! mode: conf-unix
+! compile-command: "xmodmap ${EMACS_COMPILATION_FILENAME}"
+! End:
