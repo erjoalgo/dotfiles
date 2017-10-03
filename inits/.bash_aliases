@@ -166,8 +166,6 @@ alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 
 
-alias sp='source ~/proxy.sh'
-
 # Local Variables:
 # mode: sh
 # End:
