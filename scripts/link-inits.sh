@@ -6,12 +6,17 @@ INITS_TOP="${STUMPWM_TOP}/inits"
 function safe_ln	{
     SRC=${1} && shift
     DST=${1} && shift
-    if test -f ${DST} -a ! -L ${DST}; then
-	echo "warning: skipping symlink to existent non-symlink ${DST} of  ${SRC}"
-    else
-	ln -sf ${SRC} ${DST}
+    DSTFILE=${DST}
+    if test -d ${DSTFILE} -a ! -d ${SRC}; then
+	DSTFILE=${DST}/$(basename ${SRC})
     fi
 
+    if test -f ${DSTFILE} -a ! -L ${DSTFILE}; then
+	# echo "warning: skipping symlink to existent non-symlink ${DST} of  ${SRC}"
+	echo "warning: moving ${DSTFILE} to ${DSTFILE}.bak"
+	mv -n ${DSTFILE}{,.bak}
+    fi
+    ln -sf ${SRC} ${DST}
 }
 
 for LINK in \
