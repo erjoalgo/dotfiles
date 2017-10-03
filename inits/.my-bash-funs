@@ -211,10 +211,10 @@ function gpom	{
     } &
 }
 
-function mvbak	{
+function mvbk	{
     mv -n ${1} ${1}.bak
 }
 
-function bakmv	{
+function bkmv	{
     mv -n ${1} $(dirname ${1})/$(basename ${1} .bak)
 }
