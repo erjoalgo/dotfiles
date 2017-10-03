@@ -51,18 +51,6 @@ git config --global user.name "Ernesto Alfonso"
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc"
-
-# autologin to stumpwm on tty1
-AUTOLOGIN_CONF="/etc/systemd/system/getty@tty1.service.d/autologin.conf"
-sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
-test -e "${AUTOLOGIN_CONF}" || sudo touch "${AUTOLOGIN_CONF}"
-sudo ${ADDBLOCK} '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
-     "${AUTOLOGIN_CONF}" <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin "${USER}" %I
-EOF
-
 # set GRUB timeout to zero
 GRUB_FILE=/etc/default/grub
 if test -e ${GRUB_FILE} &&  \
