@@ -216,5 +216,5 @@ function mvbak	{
 }
 
 function bakmv	{
-    mv -n ${1} $(basename ${1} .bak)
+    mv -n ${1} $(dirname ${1})/$(basename ${1} .bak)
 }
