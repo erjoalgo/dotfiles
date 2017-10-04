@@ -15,7 +15,13 @@ if ! command -v go; then
 
     test -d ${INSTALL_DIR}/go
 
-    export PATH=${PATH}:${INSTALL_DIR}/go/bin
+    PROFILE_FILE=/etc/profile.d/go-env.sh
+    sudo $(which insert-text-block) \
+	 '# c0b15b6c-e5fc-495a-b1be-f02308cee38d-add-go-tools-to-path'  \
+		      ${PROFILE_FILE} <<EOF
+    export PATH=\${PATH}:${INSTALL_DIR}/go/bin
+EOF
+    source ${PROFILE_FILE}
     go version
 fi
 
