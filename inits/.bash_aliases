@@ -164,7 +164,7 @@ alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias chmodx='chmod +x'
 alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
-
+alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 
 # Local Variables:
 # mode: sh
