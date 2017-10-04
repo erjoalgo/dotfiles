@@ -5,7 +5,7 @@ set -euo pipefail
 URL=http://gnu.mirrors.pair.com/gnu/emacs/emacs-25.2.tar.gz
 
 FNAME=$(basename ${URL})
-cd ~/Downloads
+mkdir -p ~/src && cd ~/src
 
 test -f ${FNAME} || wget ${URL}
 test -f ${FNAME}.sig || wget ${URL}.sig
