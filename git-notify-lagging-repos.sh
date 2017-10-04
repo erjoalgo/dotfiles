@@ -11,8 +11,7 @@
 #     | sudo tee /var/log/git-notify
 
 while test $# -gt 0; do
-    REPO=${1}
-    shift
+    REPO=${1} && shift
 
     cd "${REPO}" || exit ${LINENO}
 
@@ -25,9 +24,8 @@ while test $# -gt 0; do
 
     BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
-    if test $? -ne 0 || test $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
+    if test $? -ne 0 -o $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
 	echo "${REPO}/${BRANCH} might be ahead of all remotes"
     fi
     # read
 done
-
