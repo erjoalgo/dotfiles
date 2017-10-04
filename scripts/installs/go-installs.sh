@@ -35,6 +35,18 @@ export GOPATH=$GOPATH
 export PATH=\$PATH:\$GOPATH/bin
 EOF
 
+GOPATH=${HOME}/src/go
+mkdir -p ${GOPATH}
+insert-text-block '# a7095f2e-b531-4f1e-9fd6-ea4e404f19f2-add-user-gopath'  \
+		  ~/.bashrc <<EOF
+export GOPATH=$GOPATH
+export PATH=\$PATH:\$GOPATH/bin
+EOF
+
+set +u
+source ~/.bashrc
+set -u
+
 sudo $(which insert-text-block) '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
 		  /etc/environment <<< "GOPATH=$GOPATH"
 
