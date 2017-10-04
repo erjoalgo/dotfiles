@@ -31,6 +31,10 @@ if command -v yum; then
     sudo yum install -y giflib-devel libXdmcp-devel m17n-lib-devel  \
     libotf-devel ImageMagick-devel GConf2-devel gpm-devel  \
     liblockfile-devel webkitgtk4-devel python3-devel
+
+    sudo yum install -y libtool libtool-ltdl libtool-ltdl-devel
+
+    sudo yum install -y libXpm libXpm-devel.x86_64
 elif command -v apt-get; then
     sudo apt-get build-dep -y emacs24
 fi
