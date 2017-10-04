@@ -205,7 +205,7 @@ function cert-fetch	{
 
 function gpom	{
     {
-	git push origin master &>/dev/null </dev/null
+	GIT_TERMINAL_PROMPT=0 git push origin master &>/dev/null </dev/null
 	LAST=$?
 	test 0 -eq $LAST || echo "gpom failed with $LAST !"
     } &
