@@ -166,6 +166,9 @@ alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 
+# color
+alias grep='grep --color=auto'
+alias ls='ls --color=auto'
 # Local Variables:
 # mode: sh
 # End:
