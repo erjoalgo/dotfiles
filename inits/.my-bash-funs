@@ -81,7 +81,7 @@ function append_path	{
     export PATH=$PATH:$1
 }
 
-function shred_rec	{
+function shred-rec	{
     for FN in $*; do
 	read -p "rec shred ${FN}?"
 	if test -d "${FN}"; then
