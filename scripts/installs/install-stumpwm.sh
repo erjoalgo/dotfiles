@@ -52,7 +52,7 @@ sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
 ))
 EOF
 
-mkdir -p "${HOME}/.local"
+mkdir -p "${HOME}/src" && cd "${HOME}/src"
 cd "${HOME}/.local"
 
 if ! test -d stumpwm; then
