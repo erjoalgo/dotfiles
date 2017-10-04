@@ -2,11 +2,13 @@
 from __future__ import print_function
 import sys, argparse, re, os
 
+import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("line", help = "universally unique line")
 parser.add_argument("filename", help = "input/output file")
 parser.add_argument("-b", "--begining_append",  action="store_true",
                     help = "preppend instead of append")
+parser.add_argument("-o", "--output", help = "specify a different output file")
 parser.add_argument("-n", "--no_strip_newline",  action="store_true",
                     help = "don't strip trailing newline from stdin")
 
@@ -17,11 +19,15 @@ stdin=sys.stdin.read()
 if not no_strip_newline and stdin[-1]=="\n":
     stdin=stdin[:-1]
 block="\n".join((line, stdin, line))
-if not os.path.exists(filename):
+if not filename.startswith("/dev/fd") and os.path.exists(filename):
     with open( filename, "w") as fh:
         pass
-assert(os.path.exists(filename))
+# assert(os.path.exists(filename))
 orig_text=open(filename).read()
+output=output or filename
+if output=="-":
+    output="/dev/stdout"
+
 regexp="(?sm)^(.*?)((?:\n)?{0}.*{0}(?:\n)?)(.*)$".format(re.escape(line))
 match=re.match(regexp, orig_text)
 middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text]
@@ -32,7 +38,7 @@ else:
     middle.append(block)
 
 new_text="\n".join(middle)
-with open( filename, "w") as fh:
+with open( output, "w") as fh:
     fh.write(new_text)
 
 # Local Variables:
