@@ -35,6 +35,7 @@ if command -v yum; then
     sudo yum install -y libtool libtool-ltdl libtool-ltdl-devel
 
     sudo yum install -y libXpm libXpm-devel.x86_64
+    sudo yum install -y gnutls gnutls-utils
 elif command -v apt-get; then
     sudo apt-get build-dep -y emacs24
 fi
