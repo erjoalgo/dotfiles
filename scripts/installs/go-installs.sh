@@ -25,6 +25,18 @@ EOF
     go version
 fi
 
+# add fallback-gopath if user's GOPATH not set
+
+GOPATH=/usr/share/gopath
+insert-text-block '# 387b6046-a715-11e7-b87e-2be468b96d0a-set-default-gopath'  \
+		  /etc/bash.bashrc <<EOF
+export GOPATH=$GOPATH
+export PATH=\$PATH:\$GOPATH/bin
+EOF
+
+insert-text-block '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
+		  /etc/environment <<< "GOPATH=$GOPATH"
+
 for REPO in\
     github.com/github/hub \
     golang.org/x/tools/cmd/goimports \
