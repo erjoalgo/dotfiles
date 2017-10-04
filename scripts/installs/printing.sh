@@ -1,3 +1,3 @@
 #!/bin/bash -x
 
-sudo apt-get install -y cups cups-pdf cups-bsd #lpr
+sudo $(which apt-get yum 2>/dev/null) install -y cups cups-pdf cups-bsd #lpr
