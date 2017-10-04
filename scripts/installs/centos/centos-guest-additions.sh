@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+# https://unix.stackexchange.com/questions/18435/
+
 URL=${1:-http://download.virtualbox.org/virtualbox/5.1.2/VBoxGuestAdditions_5.1.2.iso}
 
 mkdir -p ~/Downloads && cd ~/Downloads
