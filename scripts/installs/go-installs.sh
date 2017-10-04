@@ -1,23 +1,22 @@
 #!/bin/bash -x
 
+set -euo pipefail
 
 if ! command -v go; then
     GO_URL=https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz
-    cd ~/Downloads || exit ${LINENO}
-    if ! test -f $(basename ${GO_URL}); then
-	wget "${GO_URL}" || exit ${LINENO}
-    fi
+    mkdir -p ~/src && cd ~/src
+    test -f $(basename ${GO_URL}) || wget "${GO_URL}"
     FNAME=$(basename ${GO_URL})
     INSTALL_DIR=/usr/local
     DNAME=$(basename ${FNAME} .tar.gz)
 
     test -d ${INSTALL_DIR}/go ||  \
-	sudo tar -C ${INSTALL_DIR} -xzf ${FNAME} || exit ${LINENO}
+	sudo tar -C ${INSTALL_DIR} -xzf ${FNAME}
 
-    test -d ${INSTALL_DIR}/go || exit ${LINENO}
+    test -d ${INSTALL_DIR}/go
 
     export PATH=${PATH}:${INSTALL_DIR}/go/bin
-    go version || exit ${LINENO}
+    go version
 fi
 
 for REPO in\
