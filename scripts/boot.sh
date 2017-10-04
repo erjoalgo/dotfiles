@@ -71,11 +71,7 @@ done
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
 
-# /var/spool/cron/crontabs/${USER}<<EOF
-# sudo mkdir -p /var/spool/cron/crontabs
-sudo $(which insert-text-block) '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
-    /etc/crontab <<EOF
-MAILTO=${USER}
-30 * * * * ${USER} bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
-MAILTO=root
+insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
+    <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
+0 * * * * ${USER} bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
 EOF
