@@ -7,11 +7,11 @@ function safe_ln	{
     SRC=${1} && shift
     DST=${1} && shift
     DSTFILE=${DST}
-    if test -d ${DSTFILE} -a ! -d ${SRC}; then
-	DSTFILE=${DST}/$(basename ${SRC})
+    if grep '.*/$'<<<"${DSTFILE}"; then
+	DSTFILE=${DST}$(basename ${SRC})
     fi
 
-    if test -f ${DSTFILE} -a ! -L ${DSTFILE}; then
+    if test -e ${DSTFILE} -a ! -L ${DSTFILE}; then
 	# echo "warning: skipping symlink to existent non-symlink ${DST} of  ${SRC}"
 	echo "warning: moving ${DSTFILE} to ${DSTFILE}.bak"
 	mv -n ${DSTFILE}{,.bak}
