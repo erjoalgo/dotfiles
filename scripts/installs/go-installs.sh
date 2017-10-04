@@ -38,7 +38,6 @@ insert-text-block '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
 		  /etc/environment <<< "GOPATH=$GOPATH"
 
 for REPO in\
-    github.com/github/hub \
     golang.org/x/tools/cmd/goimports \
     github.com/golang/lint \
     ; do
