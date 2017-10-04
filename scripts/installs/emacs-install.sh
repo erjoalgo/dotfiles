@@ -39,6 +39,6 @@ elif command -v apt-get; then
     sudo apt-get build-dep -y emacs24
 fi
 
-./configure --with-xwidgets && read -p 'continue: ' &&  \
+./configure && \
     make &&  \
     sudo make install
