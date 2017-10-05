@@ -36,8 +36,10 @@ if command -v yum; then
 
     sudo yum install -y libXpm libXpm-devel.x86_64
     sudo yum install -y gnutls gnutls-utils
+    sagiy hunspell{,-es}
 elif command -v apt-get; then
     sudo apt-get build-dep -y emacs24
+    sudo apt-get install -y aspell-es emacs-goodies-el
 fi
 
 ./configure && \
