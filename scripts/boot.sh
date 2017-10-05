@@ -73,5 +73,5 @@ which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || tru
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
     <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
-0 * * * * ${USER} bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
+0 * * * * bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
 EOF
