@@ -2,25 +2,25 @@
 
 set -euo pipefail
 
+GOROOT=/usr/local/go
 if ! command -v go; then
     GO_URL=https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz
     mkdir -p ~/src && cd ~/src
     test -f $(basename ${GO_URL}) || wget "${GO_URL}"
     FNAME=$(basename ${GO_URL})
-    INSTALL_DIR=/usr/local
     DNAME=$(basename ${FNAME} .tar.gz)
 
-    test -d ${INSTALL_DIR}/go ||  \
-	sudo tar -C ${INSTALL_DIR} -xzf ${FNAME}
+    test -d ${GOROOT} ||  \
+	sudo tar -C $(dirname ${GOROOT}) -xzf ${FNAME}
 
-    test -d ${INSTALL_DIR}/go
+    test -d ${GOROOT}
 
     PROFILE_FILE=/etc/profile.d/go-env.sh
     which insert-text-block
     sudo $(which insert-text-block) \
 	 '# c0b15b6c-e5fc-495a-b1be-f02308cee38d-add-go-tools-to-path'  \
 		      ${PROFILE_FILE} <<EOF
-    export PATH=\${PATH}:${INSTALL_DIR}/go/bin
+    export PATH=\${PATH}:${GOROOT}/bin
 EOF
     source ${PROFILE_FILE}
     go version
@@ -40,7 +40,7 @@ mkdir -p ${GOPATH}
 insert-text-block '# a7095f2e-b531-4f1e-9fd6-ea4e404f19f2-add-user-gopath'  \
 		  ~/.bashrc <<EOF
 export GOPATH=$GOPATH
-export PATH=\$PATH:\$GOPATH/bin
+export PATH=\$PATH:\$GOPATH/bin:${GOROOT}/bin
 EOF
 
 set +u
