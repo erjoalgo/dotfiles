@@ -7,7 +7,7 @@ function safe_ln	{
     SRC=${1} && shift
     DST=${1} && shift
     DSTFILE=${DST}
-    if grep '.*/$'<<<"${DSTFILE}"; then
+    if grep '.*/$'<<<"${DSTFILE}" >/dev/null; then
 	DSTFILE=${DST}$(basename ${SRC})
     fi
 
