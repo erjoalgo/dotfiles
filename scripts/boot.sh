@@ -44,10 +44,6 @@ sudo update-alternatives --install $(which x-www-browser) \
      x-www-browser ${FIREFOX_NEW_TAB} 200 || true
 sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 
-git config --global user.email "erjoalgo@gmail.com"
-git config --global user.name "Ernesto Alfonso"
-
-
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc"
@@ -66,6 +62,9 @@ for SCRIPT in link-inits.sh\
     # install-stumpwm.sh
     ./${SCRIPT}
 done
+
+git config --global user.email "erjoalgo@gmail.com"
+git config --global user.name "Ernesto Alfonso"
 
 # some essential scripts
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
