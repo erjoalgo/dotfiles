@@ -27,7 +27,7 @@ for LINK in \
     .my-bash-funs \
     .xmodmap \
     .xinitrc \
-    .bash_profile \
+    .my-bash-profile \
     .my-startups.sh \
     .my-bash-completions \
     .gitconfig \

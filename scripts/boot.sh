@@ -46,6 +46,10 @@ sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
+
+insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-bashrc'  \
+		  ${HOME}/.bash_profile <<< "source ${HOME}/.my-bash-profile"
+
 sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc"
 # set GRUB timeout to zero
 GRUB_FILE=/etc/default/grub
