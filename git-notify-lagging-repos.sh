@@ -10,6 +10,11 @@
 # echo "git-notify called with args: $0 $*, PATH: $PATH, USER: $(whoami)"  \
 #     | sudo tee /var/log/git-notify
 
+# TODO
+# #  flag to check if remote has more recent changes
+# #  iterate over all branches, notify unpublished branches
+# #  # is this possible?
+
 BLACK='\033[0;30m'
 DARK_GRAY='\033[1;30m'
 RED='\033[0;31m'
