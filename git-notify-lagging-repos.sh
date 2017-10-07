@@ -58,8 +58,9 @@ function check_lagging	{
     if test "${STASH_CNT}" -gt 0; then
 	TAGS+=" ${YELLOW}${STASH_CNT}-STASHED${NC}"
     fi
-    if test $(git ls-files --others --exclude-standard | wc -l) -ne 0; then
-	TAGS+=" ${DARK_GRAY}UNTRACKED${NC}"
+    UNTRACKED_CNT=$(git ls-files --others --exclude-standard | wc -l)
+    if test ${UNTRACKED_CNT} -ne 0; then
+	TAGS+=" ${DARK_GRAY}${UNTRACKED_CNT}-UNTRACKED${NC}"
     fi
 
     if test -n "${TAGS}"; then
