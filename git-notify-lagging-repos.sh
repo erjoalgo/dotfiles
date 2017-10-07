@@ -10,29 +10,60 @@
 # echo "git-notify called with args: $0 $*, PATH: $PATH, USER: $(whoami)"  \
 #     | sudo tee /var/log/git-notify
 
+BLACK='\033[0;30m'
+DARK_GRAY='\033[1;30m'
+RED='\033[0;31m'
+LIGHT_RED='\033[1;31m'
+GREEN='\033[0;32m'
+LIGHT_GREEN='\033[1;32m'
+BROWN_ORANGE='\033[0;33m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+LIGHT_BLUE='\033[1;34m'
+PURPLE='\033[0;35m'
+LIGHT_PURPLE='\033[1;35m'
+CYAN='\033[0;36m'
+LIGHT_CYAN='\033[1;36m'
+LIGHT_GRAY='\033[0;37m'
+WHITE='\033[1;37m'
+
 function check_lagging	{
     test -d ${REPO} && cd "${REPO}" || return 2
 
-    git status &> /dev/null || return 2
-    BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || return 2
+    if ! git status &> /dev/null; then
+	printf "${DARK_GRAY}$(basename ${REPO}) not a git repo?${NC}\n"
+	return
+    fi
+
+    BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    if test 0 -ne $?; then
+	printf "${DARK_GRAY}$(basename ${REPO}) has no commits?${NC}\n"
+	return
+    fi
 
     TAGS=""
     if test $? -ne 0 -o $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
-	TAGS+=" UNPUBLISHED"
+	# REMOTE=$(git rev-parse --abbrev-ref --symbolic-full-name ${BRANCH})
+	REMOTE=$(git config branch.${BRANCH}.remote)
+	CNT=$(git log ${REMOTE}/${BRANCH}..HEAD --oneline | wc -l)
+	TAGS+=" ${LIGHT_RED}${CNT}-UNPUBLISHED${NC}"
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
-	TAGS+=" NOT-COMMITED"
+	TAGS+=" ${BROWN_ORANGE}UNCOMMITED${NC}"
     fi
     if test 0 -eq $(git remote | wc -l); then
-	TAGS+=" NO-REMOTE"
+	TAGS+=" ${YELLOW}NO-REMOTE${NC}"
     fi
-    # check stash
+    STASH_CNT=$(git stash list | wc -l)
+    if test "${STASH_CNT}" -gt 0; then
+	TAGS+=" ${YELLOW}${STASH_CNT}-STASHED${NC}"
+    fi
     if test $(git ls-files --others --exclude-standard | wc -l) -ne 0; then
-	TAGS+=" UNTRACKED"
+	TAGS+=" ${DARK_GRAY}UNTRACKED${NC}"
     fi
 
     if test -n "${TAGS}"; then
-	echo "$(basename ${REPO})/${BRANCH} ${TAGS}"
+	printf "$(basename ${REPO})/${BRANCH} ${TAGS}\n"
     fi
 }
 
@@ -43,8 +74,4 @@ NC='\033[0m' # No Color
 while test $# -gt 0; do
     REPO=${1} && shift
     check_lagging "${REPO}"
-    LAST=$?
-    if test ${LAST} -ne 1; then
-	printf "${RED}problem processing ${REPO} ...${NC}\n" 1>&2
-    fi
 done
