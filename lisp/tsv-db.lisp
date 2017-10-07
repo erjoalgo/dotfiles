@@ -11,27 +11,59 @@
   ;(:use #:util)
   )
 
-(defstruct persistent-alist alist fn)
+(defstruct persistent-alist alist fn fs-type)
 
-(defun tsv-to-alist (dir)
-  (loop for filename in (directory (make-pathname :name :wild
-						  :defaults dir))
-     when (not (directory-pathname-p filename))
-     collect (cons (pathname-name filename)
-		   (with-open-file (stream filename)
-		     (read-line stream)))))
+(defun tsv-to-alist (palist &aux fn)
+  (setf fn (persistent-alist-fn palist))
+  (case (persistent-alist-fs-type palist)
+    (:single-tsv-file
+     (let ((contents (file-string fn))
+	   (regexp '(:sequence
+		     :MULTI-LINE-MODE-P
+		     :START-ANCHOR;^
+		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Tab));[^\t]*
+		     #\Tab;\t
+		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Newline));[^\n]*
+		     :END-ANCHOR))
+	   matches)
+       (setf matches (ppcre::all-matches-as-strings regexp contents))
+       (reverse (loop for el in matches
+		   collect (destructuring-bind (k v)
+			       (cl-ppcre:split #\Tab el)
+			     (cons k v))))))
 
-(defun tsv-add-entry (dir key value)
-  (with-open-file (out (make-pathname :name key
-				      :defaults dir)
-		       :if-does-not-exist :create
-		       :if-exists :err
-		       :direction :output)
-    (format out "~A%" value)))
+    (:directory
+     (loop for filename in (directory (make-pathname :name :wild
+						     :defaults fn))
+	when (not (directory-pathname-p filename))
+	collect (cons (pathname-name filename)
+		      (with-open-file (stream filename)
+			(read-line stream)))))
+
+    (t (error "unknown fs type"))))
+
+(defun tsv-add-entry (palist key value &aux fn)
+  (setf fn (persistent-alist-fn palist))
+  (case (persistent-alist-fs-type palist)
+    (:single-tsv-file
+     (with-open-file (out fn
+			  :if-does-not-exist :create
+			  :if-exists :append
+			  :direction :output)
+       (format out "~A%" value)))
+    (:directory
+     (with-open-file (out (make-pathname :name key
+					 :defaults fn)
+			  :if-does-not-exist :create
+			  :if-exists :overwrite
+			  :direction :output)
+       (format out "~A~A~A~%"
+	       key (coerce '(#\Tab) 'string) value)
+       (format out "~A%" value)))))
 
 (defun persistent-alist-load (palist)
   (setf (persistent-alist-alist palist)
-	(tsv-to-alist (persistent-alist-fn palist))))
+	(tsv-to-alist palist)))
 
 (defun persistent-alist-load-if-exists (palist)
   (when (probe-file (persistent-alist-fn palist))
@@ -41,7 +73,7 @@
   (echo (format nil "before len: ~A" (length (persistent-alist-alist palist))))
   (push (cons key value) (persistent-alist-alist palist))
   (echo (format nil "after len: ~A" (length (persistent-alist-alist palist))))
-  (tsv-add-entry (persistent-alist-fn palist)
+  (tsv-add-entry palist
 		 key value))
 
 (defun persistent-alist-get (palist key)

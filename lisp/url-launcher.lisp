@@ -19,7 +19,8 @@
    (make-pathname
     :directory (append (pathname-directory STUMPWM-TOP)
 		       '("sensitive" "url-launcher-urls"))
-    :defaults (user-homedir-pathname))))
+    :defaults (user-homedir-pathname))
+   :fs-type :directory))
 
 (persistent-alist-load-if-exists
  *launcher-persistent-alist*)
@@ -90,7 +91,9 @@
 
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
-  (make-persistent-alist :fn (stumpwm-merger "search-engines")))
+  (make-persistent-alist :fn (stumpwm-merger "search-engines")
+			 :fs-type :single-tsv-file))
+
 (persistent-alist-load-if-exists *search-engine-persistent-alist*)
 (push '*search-engine-persistent-alist* *persistent-alist-syms*)
 
