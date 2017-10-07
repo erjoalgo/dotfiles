@@ -13,31 +13,21 @@
 
 (defstruct persistent-alist alist fn)
 
-(defun tsv-to-alist (fn)
-  (let ((contents (file-string fn))
-	 ;;(regex (format nil "[~a~a]" (coerce '(#\Newline) 'string) (coerce '(#\Tab) 'string) ))
-	 (regexp '(:sequence
-		   :MULTI-LINE-MODE-P
-		   :START-ANCHOR;^
-		   (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Tab));[^\t]*
-		   #\Tab;\t
-		   (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Newline));[^\n]*
-		   :END-ANCHOR));$
-	 matches)
-    (setf matches (ppcre::all-matches-as-strings regexp contents))
-    (reverse (loop for el in matches
-		collect (destructuring-bind (k v)
-			    (cl-ppcre:split #\Tab el)
-			  (cons k v))))))
+(defun tsv-to-alist (dir)
+  (loop for filename in (directory (make-pathname :name :wild
+						  :defaults dir))
+     when (not (directory-pathname-p filename))
+     collect (cons (pathname-name filename)
+		   (with-open-file (stream filename)
+		     (read-line stream)))))
 
-(defun tsv-add-entry (fn key value)
-  (with-open-file (out fn
+(defun tsv-add-entry (dir key value)
+  (with-open-file (out (make-pathname :name key
+				      :defaults dir)
 		       :if-does-not-exist :create
-		       :if-exists :append
+		       :if-exists :err
 		       :direction :output)
-    ;;(format out "~A	~A~%";;this is a tab
-    (format out "~A~A~A~%"
-	    key (coerce '(#\Tab) 'string) value)))
+    (format out "~A%" value)))
 
 (defun persistent-alist-load (palist)
   (setf (persistent-alist-alist palist)

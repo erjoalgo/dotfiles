@@ -14,8 +14,12 @@
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
   ;;TODO sane path handling
-  (make-persistent-alist :fn
-			 (stumpwm-merger "sensitive/url-launcher-data")))
+  (make-persistent-alist
+   :fn
+   (make-pathname
+    :directory (append (pathname-directory STUMPWM-TOP)
+		       '("sensitive" "url-launcher-urls"))
+    :defaults (user-homedir-pathname))))
 
 (persistent-alist-load-if-exists
  *launcher-persistent-alist*)
