@@ -1,5 +1,4 @@
-#!/bin/bash -x
-
+#!/bin/bash
 set -euo pipefail
 
 DATAFN=${1:-url-launcher-data} && shift || true
