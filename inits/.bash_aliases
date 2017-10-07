@@ -32,9 +32,7 @@ alias lynx-accept-all-cookies='lynx -accept_all_cookies'
 #git
 # http://stackoverflow.com/questions/342969/
 GIT_COMPLETIONS=/usr/share/bash-completion/completions/git
-if test -f ${GIT_COMPLETIONS}; then
-	source ${GIT_COMPLETIONS}; 
-fi
+test -f ${GIT_COMPLETIONS} && source ${GIT_COMPLETIONS}
 unset GIT_COMPLETIONS
 
 alias gt='git status'
