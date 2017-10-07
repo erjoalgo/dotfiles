@@ -10,8 +10,16 @@ mkdir -p ${PARENT}
 while IFS= read -r LINE; do
     KEY=$(cut -f1 <<< "${LINE}")
     URL=$(cut -f2 <<< "${LINE}")
-    ! grep "/" <<< "${KEY}" &&
-    ! test -e "${KEY}"
-    ! test "${DATAFN}" != "${KEY}"
-    echo "${URL}" > "${PARENT}/${KEY}"
+    ! grep "/" <<< "${KEY}"
+    OUT="${PARENT}/${KEY}"
+    if test -e "${OUT}"; then
+	if test "$URL" != $(cat $OUT); then
+	    echo "warning: not overwriting $KEY"
+	else
+	    true
+	fi
+    else
+	! test "${DATAFN}" != "${KEY}"
+	echo "${URL}" > "${OUT}"
+    fi
 done < "${DATAFN}"
