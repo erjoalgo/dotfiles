@@ -205,12 +205,21 @@ function cert-fetch	{
 }
 
 function gpom	{
-    {
-	GIT_TERMINAL_PROMPT=0 git push origin master &>/dev/null </dev/null
+    REMOTE=${1:-origin} && shift
+    BRANCH=${1:-$(git rev-parse --abbrev-ref HEAD 2> /dev/null)} && shift
+    (
+	GIT_TERMINAL_PROMPT=0 git push ${REMOTE} ${BRANCH} &>/dev/null </dev/null
 	LAST=$?
-	test 0 -eq $LAST || echo "gpom failed with $LAST !"
-    } &
+	if test 0 -ne $LAST; then
+	    echo
+	    echo "gpom failed with $LAST!"
+	    set -x
+	    GIT_TERMINAL_PROMPT=0 git push ${REMOTE} ${BRANCH}
+	    set +x
+	fi
+    ) &
 }
+__git_complete gpom _git_pull #complete by remote
 
 function mvbk	{
     mv ${1} ${1}.bak
