@@ -23,6 +23,9 @@ function check_lagging	{
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
 	TAGS+=" NOT-COMMITED"
     fi
+    if test 0 -eq $(git remote | wc -l); then
+	TAGS+=" NO-REMOTE"
+    fi
     # check stash
     if test $(git ls-files --others --exclude-standard | wc -l) -ne 0; then
 	TAGS+=" UNTRACKED"
