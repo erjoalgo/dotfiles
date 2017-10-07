@@ -16,10 +16,21 @@ function check_lagging	{
     git status &> /dev/null || return 2
     BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || return 2
 
+    TAGS=""
     if test $? -ne 0 -o $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
-	return 1
-    else
-	return 0
+	TAGS+=" UNPUBLISHED"
+	echo "$(basename ${REPO})/${BRANCH} "
+    fi
+    if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
+	TAGS+=" NOT-COMMITED"
+    fi
+    # check stash
+    if test $(git ls-files --others --exclude-standard | wc -l) -ne 0; then
+	TAGS+=" UNTRACKED"
+    fi
+
+    if test -n "${TAGS}"; then
+	echo "$(basename ${REPO})/${BRANCH} ${TAGS}"
     fi
 }
 
@@ -31,9 +42,7 @@ while test $# -gt 0; do
     REPO=${1} && shift
     check_lagging "${REPO}"
     LAST=$?
-    if test 1 -eq ${LAST}; then
-	echo "${REPO}/${BRANCH} might be ahead of all remotes"
-    elif test ${LAST} -gt 1; then
+    if test ${LAST} -ne 1; then
 	printf "${RED}problem processing ${REPO} ...${NC}\n" 1>&2
     fi
 done
