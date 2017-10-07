@@ -19,7 +19,6 @@ function check_lagging	{
     TAGS=""
     if test $? -ne 0 -o $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
 	TAGS+=" UNPUBLISHED"
-	echo "$(basename ${REPO})/${BRANCH} "
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
 	TAGS+=" NOT-COMMITED"
