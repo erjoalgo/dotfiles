@@ -2,8 +2,8 @@
 set -euo pipefail
 
 DATAFN=${1:-url-launcher-data} && shift || true
+PARENT=${1:-webdav} && shift || true
 
-PARENT=webdav
 mkdir -p ${PARENT}
 #  https://unix.stackexchange.com/questions/7011/
 while IFS= read -r LINE; do
@@ -12,7 +12,7 @@ while IFS= read -r LINE; do
     ! grep "/" <<< "${KEY}"
     OUT="${PARENT}/${KEY}"
     if test -e "${OUT}"; then
-	if test "$URL" != $(cat $OUT); then
+	if test "$URL" != "$(cat $OUT)"; then
 	    echo "warning: not overwriting $KEY"
 	else
 	    true
