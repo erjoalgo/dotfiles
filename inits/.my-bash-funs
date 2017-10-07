@@ -219,3 +219,9 @@ function mvbk	{
 function bkmv	{
     mv ${1} $(dirname ${1})/$(basename ${1} .bak)
 }
+
+function grvv	{
+    REMOTE=${1:-origin} && shift
+    git config --get remote.${REMOTE}.url
+}
+__git_complete grvv _git_pull
