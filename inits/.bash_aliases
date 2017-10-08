@@ -74,6 +74,8 @@ alias grc='git rebase --continue'
 __git_complete gl11 _git_log
 alias gss='git stash show -p'
 alias gsd='git stash drop'
+alias gsl='git stash list'
+alias gsp='git stash pop'
 
 # never used
 # alias gm='git commit'
