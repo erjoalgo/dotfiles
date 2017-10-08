@@ -135,8 +135,6 @@ alias .a='source ~/.bash_aliases && source ~/.my-bash-funs'
 alias .brc='source ~/.bashrc'
 alias aa='aliasadd.py'
 
-#service. never used
-
 #misc programs
 alias untar='tar axvf'
 alias sbcl='rlwrap sbcl'
@@ -149,10 +147,6 @@ alias lp-one-sided='lp -o sides=one-sided'
 alias passgen='pass generate -n'
 alias pip-install='pip install --user'
 alias lein-repl-tee-log='lein repl |& tee log'
-
-#bash defaults
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
 
 #combinations
 alias cataliasgrep='cat ~/.bash_aliases | grep '
