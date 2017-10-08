@@ -22,6 +22,9 @@ git init --bare
 chown -R git:git .
 EOF
 
-REMOTE="ssh://git@${HOST}:${PORT}${SRV_PREFIX}/${REPO}"
-echo ${REMOTE}
-git remote add origin ${REMOTE}
+REMOTE_URL="ssh://git@${HOST}:${PORT}${SRV_PREFIX}/${REPO}"
+echo ${REMOTE_URL}
+git remote add origin ${REMOTE_URL} || true
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+git fetch origin
+git branch --set-upstream-to=origin/${BRANCH}
