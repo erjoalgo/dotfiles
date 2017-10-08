@@ -220,6 +220,7 @@ function gpom	{
 	    set +x
 	fi
     ) &
+    disown %-
 }
 __git_complete gpom _git_pull #complete by remote
 
