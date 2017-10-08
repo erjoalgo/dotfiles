@@ -50,15 +50,14 @@
 			  :if-does-not-exist :create
 			  :if-exists :append
 			  :direction :output)
-       (format out "~A%" value)))
+       (format out "~A~A~A~%"
+	       key (coerce '(#\Tab) 'string) value)))
     (:directory
      (with-open-file (out (make-pathname :name key
 					 :defaults fn)
 			  :if-does-not-exist :create
 			  :if-exists :overwrite
 			  :direction :output)
-       (format out "~A~A~A~%"
-	       key (coerce '(#\Tab) 'string) value)
        (format out "~A%" value)))))
 
 (defun persistent-alist-load (palist)
