@@ -164,9 +164,10 @@ alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 
-# color
+# defaults
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
+alias pkill='pkill -e'
 
 # misc
 alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
