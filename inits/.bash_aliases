@@ -132,13 +132,10 @@ alias .brc='source ~/.bashrc'
 alias aa='aliasadd.py'
 
 #service. never used
-alias service='sudo service'
 
 #misc programs
 alias untar='tar axvf'
-alias umount='sudo umount'
 alias sbcl='rlwrap sbcl'
-alias blkid='sudo blkid'
 alias thon='python'
 alias ura='zathura'
 alias ffdefault='firefox -P default'
@@ -168,6 +165,9 @@ alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
 alias pkill='pkill -e'
+alias service='sudo service'
+alias umount='sudo umount'
+alias blkid='sudo blkid'
 
 # misc
 alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
