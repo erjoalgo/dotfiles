@@ -46,6 +46,14 @@ sudo update-alternatives --install $(which x-www-browser) \
      x-www-browser ${FIREFOX_NEW_TAB} 200 || true
 sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 
+# link inits
+cd ~/git/erjoalgo-stumpwmrc/scripts/
+for SCRIPT in link-inits.sh\
+	      ;do
+    ./${SCRIPT}
+done
+
+# needs to go after link-inits.sh
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 
@@ -61,17 +69,8 @@ if test -e ${GRUB_FILE} &&  \
     which update-grub && sudo update-grub
 fi
 
-# link inits, install stumpwm
-cd ~/git/erjoalgo-stumpwmrc/scripts/
-for SCRIPT in link-inits.sh\
-	      ;do
-    # install-stumpwm.sh
-    ./${SCRIPT}
-done
-
 git config --global user.email "erjoalgo@gmail.com"
 git config --global user.name "Ernesto Alfonso"
-
 # some essential scripts
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
