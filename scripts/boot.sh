@@ -30,9 +30,11 @@ for REPO in erjoalgo-stumpwmrc \
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
 done
 
-export PATH=$PATH:${GIT_HOME}/erjoalgo-gnu-scripts
+GNU_SCRIPTS=${GIT_HOME}/erjoalgo-gnu-scripts
+cd ${GNU_SCRIPTS} && git pull --ff-only
+export PATH=$PATH:${GNU_SCRIPTS}
 
-ADDBLOCK=${GIT_HOME}/erjoalgo-gnu-scripts/insert-text-block
+ADDBLOCK=${GNU_SCRIPTS}/insert-text-block
 # sudo ln -sf  /usr/local/bin
 # sudo which insert-text-block
 
