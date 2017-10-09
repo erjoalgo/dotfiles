@@ -112,3 +112,5 @@
 (defun xdotool (cmd)
   (run-shell-command (format nil "xdotool ~A" cmd) t))
 
+(defun last-msg-print ()
+  (screen-last-msg (current-screen)))
