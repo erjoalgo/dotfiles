@@ -5,9 +5,9 @@ set -euo pipefail
 # this script uses netcallback to expose a local port to the public
 # by default it uses erjoalgo.com service port 1917, and exposes VNC port 5900
 
-while getopts "h:s:p:P" opt; do
+while getopts "H:s:p:Ph" opt; do
     case $opt in
-	h)
+	H)
 	    NCB_HOST=$OPTARG
 	    ;;
 	s)
@@ -21,6 +21,7 @@ while getopts "h:s:p:P" opt; do
 	    ;;
 	h)
 	    less $0
+	    exit 0
 	    ;;
     esac
 done
@@ -30,6 +31,8 @@ PUBLIC=${PUBLIC:-}
 if ! which java; then
     echo "java not available" && exit ${LINENO}
 fi
+
+test "${NCB_HOST}" -a -n "${NCB_SERVICE_PORT}" -a -n "${LOCALHOST_PORT}"
 
 JAR="${HOME}/.local/bin/netcallback.jar"
 mkdir -p $(dirname "${JAR}")
