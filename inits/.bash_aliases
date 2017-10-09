@@ -169,6 +169,7 @@ alias blkid='sudo blkid'
 
 # misc
 alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
+alias fail2ban-unban-ip='sudo fail2ban-client set ssh unbanip'
 # Local Variables:
 # mode: sh
 # End:
