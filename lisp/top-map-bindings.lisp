@@ -143,6 +143,8 @@
       ("H-F9" "voldown")
       ("H-F10" "volup")
       ("H-SPC" "speak-key")
+
+      ("H-F12" "last-macro" )
       )
 
   ;;not efficient nor necessary but only run at initialization
@@ -177,6 +179,8 @@
    ("S" "scrot-cmd-full-screen" )
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
+   ("e" "last-macro" )
+   ("H-u" "set-prefix-arg" )
    ))
 
 

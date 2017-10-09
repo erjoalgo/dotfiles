@@ -252,6 +252,66 @@ perform ocr on it, place ocr'd text into clipboard"
   (run-shell-command
    "sleep 1 && xdotool type erjoalgo@gmail.com"))
 
+'(defcommand last-macro
+    () ()
+  (run-shell-command
+   "sleep 1 && xdotool key Tab type 11/06/1990 && xdotool key Tab Return && sleep 3 && xdotool key Tab type 5285 && xdotool key Tab Return"))
+
+
+(defun gen-xdotool-cmd (&rest specs)
+  (format nil "~{~A~^ && ~}"
+	  (mapcar (lambda (spec) (format nil "~A ~A"
+					 (if (numberp spec) "sleep" "xdotool")
+					 spec))
+		  specs)))
+
+
+(defvar *current-prefix-arg* "emacs-like prefix argument")
+
+(defcommand set-prefix-arg (count) ((:number "enter prefix arg count: "))
+  (echo (format nil "from ~A to ~A" *current-prefix-arg* count))
+  (setf *current-prefix-arg* count)
+  )
+
+
+(defcommand last-macro
+    () ()
+  (let ((cmds (list 1
+		    "key Tab type 11/06/1990"
+		    "key Tab Return"
+		    3
+		    "key Tab type 5285"
+		    "key Tab Return")))
+
+    '("click 3"
+      .5
+      "key w"
+      2
+      "key Ctrl+s"
+      1
+      "key Return"
+      1
+      "key F4")
+
+    ;; (echo (apply 'gen-xdotool-cmd cmds))
+    (run-shell-command
+     (format nil
+	     "for _ in $(seq ~D); do ~A; done"
+	     (or *current-prefix-arg* 1)
+	     (apply 'gen-xdotool-cmd cmds))))
+  '(gen-xdotool-cmd .5
+    "click 3"
+    .5
+    "key h"
+    .5
+    "key t"
+    2
+    )
+  (setf *current-prefix-arg* nil)
+  )
+
+
+
 (defcommand type-clipboard-contents () ()
   (let* ((clipboard (get-x-selection)))
     (run-shell-command (format nil "xdotool type ~A" clipboard))))
