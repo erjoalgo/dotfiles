@@ -15,6 +15,7 @@ sudo ${APT_GET} install -y xinit x11-xserver-utils \
 
 QL_SETUP="${HOME}/quicklisp/setup.lisp"
 if ! test -f "${QL_SETUP}"; then
+    cd /tmp
     curl -O https://beta.quicklisp.org/quicklisp.lisp
     curl -O https://beta.quicklisp.org/quicklisp.lisp.asc
     gpg --verify quicklisp.lisp.asc quicklisp.lisp
