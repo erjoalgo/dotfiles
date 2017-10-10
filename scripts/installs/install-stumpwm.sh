@@ -72,7 +72,7 @@ if ! command -v stumpwm; then #the executable
 fi
 
 if command -v yum; then
-   sudo yum groupinstall "X Window System";
+   sudo yum groupinstall -y "X Window System";
 fi
 
 
