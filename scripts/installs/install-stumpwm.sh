@@ -54,7 +54,6 @@ sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
 EOF
 
 mkdir -p "${HOME}/src" && cd "${HOME}/src"
-cd "${HOME}/.local"
 
 if ! test -d stumpwm; then
     git clone https://github.com/stumpwm/stumpwm.git
