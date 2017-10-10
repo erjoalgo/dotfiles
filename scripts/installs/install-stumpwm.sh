@@ -18,7 +18,7 @@ if ! test -f "${QL_SETUP}"; then
     cd /tmp
     curl -O https://beta.quicklisp.org/quicklisp.lisp
     curl -O https://beta.quicklisp.org/quicklisp.lisp.asc
-    gpg --verify quicklisp.lisp.asc quicklisp.lisp
+    # gpg --verify quicklisp.lisp.asc quicklisp.lisp
     sbcl --load quicklisp.lisp --non-interactive --eval  \
 	'(quicklisp-quickstart:install)'
     rm quicklisp.lisp{,.asc}
