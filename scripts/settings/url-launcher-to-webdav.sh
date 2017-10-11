@@ -12,7 +12,8 @@ while IFS= read -r LINE; do
     ! grep "/" <<< "${KEY}"
     OUT="${PARENT}/${KEY}"
     if test -e "${OUT}"; then
-	if test "$URL" != "$(cat $OUT)"; then
+	CONTENTS=$(cat "${OUT}")
+	if test "$URL" != "${CONTENTS}"; then
 	    echo "warning: not overwriting $KEY"
 	else
 	    true
