@@ -110,6 +110,10 @@ if command -v apt-get > /dev/null; then
     complete -F _sagiy acs
     complete -F _sagiy acw
     complete -F _sagiy dpkgl
+
+    alias sagu='sudo apt-get update'
+    alias acw='apt-cache show'
+    alias acs='apt-cache search'
 else
     alias sagiy='sudo yum install -y'
     alias aff='yum provides '
@@ -117,9 +121,6 @@ else
     complete -F _command affexact
 fi
     
-alias sagu='sudo apt-get update'
-alias acw='apt-cache show'
-alias acs='apt-cache search'
 alias spsi='sudo python setup.py install'
 alias dpkgl='dpkg -L'
 
