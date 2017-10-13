@@ -33,7 +33,7 @@ LIGHT_GRAY='\033[0;37m'
 WHITE='\033[1;37m'
 
 function check_lagging	{
-    test -d ${REPO} && cd "${REPO}" || return 2
+    test -d "${REPO}" && cd "${REPO}" || return 2
 
     if ! git status &> /dev/null; then
 	printf "${DARK_GRAY}$(basename ${REPO}) not a git repo?${NC}\n"
