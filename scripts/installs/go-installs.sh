@@ -20,7 +20,7 @@ if ! command -v go; then
     sudo $(which insert-text-block) \
 	 '# c0b15b6c-e5fc-495a-b1be-f02308cee38d-add-go-tools-to-path'  \
 		      ${PROFILE_FILE} <<EOF
-    export PATH=\${PATH}:${GOROOT}/bin
+export PATH=\${PATH}:${GOROOT}/bin
 EOF
     source ${PROFILE_FILE}
     go version
