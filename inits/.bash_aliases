@@ -116,7 +116,9 @@ if command -v apt-get > /dev/null; then
     alias acs='apt-cache search'
 else
     alias sagiy='sudo yum install -y'
-    alias aff='yum provides '
+    alias aff='yum provides'
+    alias acw='yum info'
+    alias acs='yum search'
     alias affexact='bash -xc '\''yum provides "*/$0"'\'''
     complete -F _command affexact
 fi
