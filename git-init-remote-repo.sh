@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+git status
 USERHOST=${1} && shift
 PORT=${1:-22} && shift || true
 
