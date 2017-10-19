@@ -58,7 +58,7 @@
 			  :if-does-not-exist :create
 			  :if-exists :overwrite
 			  :direction :output)
-       (format out "~A%" value)))))
+       (format out "~A" value)))))
 
 (defun persistent-alist-load (palist)
   (setf (persistent-alist-alist palist)
