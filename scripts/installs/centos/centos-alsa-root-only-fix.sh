@@ -1,9 +1,7 @@
 #!/bin/bash -x
 
-LINE="chmod -R a+rw /dev/snd/*"
-FILE="/etc/rc.d/rc.local"
 
-if ! grep -F "${LINE}" "${FILE}"; then
-    sudo tee -a ${FILE} <<< "${LINE}"
-fi
-
+sudo $(which insert-text-block) "# 23fdc4cd-826f-481a-a4fd-03b9a12054a7-centos-alsa-root-only-fix" \
+     /etc/rc.d/rc.local <<EOF
+chmod -R a+rw /dev/snd/*
+EOF
