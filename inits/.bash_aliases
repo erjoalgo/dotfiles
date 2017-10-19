@@ -170,6 +170,7 @@ alias pkill='pkill -e'
 alias service='sudo service'
 alias umount='sudo umount'
 alias blkid='sudo blkid'
+alias killall='sudo killall -v'
 
 # misc
 alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
