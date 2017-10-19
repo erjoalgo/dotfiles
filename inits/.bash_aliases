@@ -149,7 +149,7 @@ alias mmln='move-last-n.sh'
 alias gdmapf='gdmap -f'
 alias lp-one-sided='lp -o sides=one-sided'
 alias passgen='pass generate -n'
-alias pip-install='pip install --user'
+alias pip-install-user='pip install --user'
 alias lein-repl-tee-log='lein repl |& tee log'
 
 #combinations
