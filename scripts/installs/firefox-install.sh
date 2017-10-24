@@ -40,6 +40,10 @@ insert-text-block '// -add-vimfx-config-file-directory' "${PREFSJS}"<<EOF
 user_pref("extensions.VimFx.config_file_directory", "${VIMFX_CONFIG_DIR}/VimFx-config@vimfx.org");
 EOF
 
+insert-text-block '# ee72ded3-b0d4-4804-9348-44f0f5e01e14-tree-style-tab-prefs'  \
+		  "${PREFSJS}" <<EOF
+user_pref("extensions.treestyletab.closeParentBehavior", 2);
+EOF
 
 # add content type handlers
 #   mailto => emacsmail
