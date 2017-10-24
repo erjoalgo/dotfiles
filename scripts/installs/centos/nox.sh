@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-sudo yum install -y net-tools
+sudo yum install -y net-tools expect strace
