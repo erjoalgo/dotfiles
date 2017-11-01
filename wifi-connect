@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "of:hp:e:m:aE:" OPT; do
+while getopts "of:hp:e:m:aE:i:" OPT; do
     case ${OPT} in
 	o)
 	    # flag to disregard any existing password
