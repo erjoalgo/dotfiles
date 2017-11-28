@@ -166,6 +166,9 @@ alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 # defaults
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
+if ! ls --color=auto &> /dev/null; then
+    unalias ls;
+fi
 alias pkill='pkill -e'
 alias service='sudo service'
 alias umount='sudo umount'
