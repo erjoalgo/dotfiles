@@ -43,16 +43,16 @@ export GOPATH=$GOPATH
 export PATH=\$PATH:\$GOPATH/bin:${GOROOT}/bin
 EOF
 
-set +u
-source ~/.bashrc
-set -u
 
 sudo $(which insert-text-block) '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
 		  /etc/environment <<< "GOPATH=$GOPATH"
 
+GOEXE=${GOROOT}/bin/go
+export GOPATH
+export GOROOT
 for REPO in\
     golang.org/x/tools/cmd/goimports \
     github.com/golang/lint \
     ; do
-    go get ${REPO}
+    ${GOEXE} get ${REPO}
 done
