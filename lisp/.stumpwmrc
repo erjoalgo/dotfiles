@@ -51,6 +51,8 @@
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Chromium-browser" "Tor Browser" "Google-chrome"))
 
+(defvar *browser-name* "chromium")
+
 (load-files-verbose
  'stumpwm-loader
  "sensitive/sensitive.el"

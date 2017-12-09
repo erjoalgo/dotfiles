@@ -34,7 +34,7 @@
     (".*[.]pdf$" "zathura")
     ;;(".*[.]pdf" "evince")
     ;;(".*[.]pdf" "gv")
-    ("(^https?://.*|.*[.]html.*).*" ,#'mozrepl-firefox-new-tab)
+    ("(^https?://.*|.*[.]html.*).*" ,#'url-launcher-browser-new-tab)
     (".*[.](docx?|odt)$" "libreoffice")
     ("about:config" ,#'mozrepl-firefox-new-tab)))
 
@@ -76,7 +76,7 @@
      (:string nil ))
   "read a new key-url pair, defaulting to current (firefox) browser url"
 
-  (setq url (or url (mozrepl-firefox-get-url))
+  (setq url (or url (url-launcher-get-browser-current-url))
 	key (trim-spaces key))
   (if (or (not (and key url))
 	  (zerop (length key))
@@ -152,7 +152,7 @@
 	       (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
-	  (mozrepl-firefox-new-tab url)
+	  (url-launcher-browser-new-tab url)
 	  (log-entry-timestamp (format nil "~A:~A" engine terms)
 			       *search-history-fn*))))))
 
@@ -184,3 +184,20 @@
   ;;automatically find the best key for a set of named commands
   ;;for use the first character in the command name that hasn't been used
   )
+
+(defun url-launcher-get-browser-current-url ()
+  (mozrepl-firefox-get-url))
+
+(defun url-launcher-browser-new-tab (url)
+  ;;(mozreplfirefoxnewtab url)
+  (SB-EXT:RUN-PROGRAM *browser-name*
+		      (list url)
+		      :search t
+		      :wait nil
+		      :output t
+		      :error t))
+
+(dolist (class *browser-classes*)
+  (push `(:class ,class) stumpwm:*deny-raise-request*))
+
+(setf *suppress-deny-messages* t)

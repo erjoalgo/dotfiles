@@ -43,10 +43,9 @@
 	      ,(unless (null key)
 		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
-(define-run-or-pull-program "firefox"
+(define-run-or-pull-program *browser-name*
     :raise-key "H-f"
     :pull-key "H-F"
-    :cmd "firefox --no-remote -P default"
     :classes *browser-classes* :all-screens t)
 
 (define-run-or-pull-program "x-terminal-emulator"
