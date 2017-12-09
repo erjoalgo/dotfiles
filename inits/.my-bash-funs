@@ -271,3 +271,29 @@ EOF
     done
     set +x
 }
+
+function git-remote-exists	{
+    REMOTE=${1} && shift
+    git config remote.${REMOTE}.url > /dev/null
+}
+
+function git-promote-remote-to-origin	{
+    EXISTING=${1} && shift
+    if test -z "${EXISTING}" || ! git-remote-exists ${EXISTING}; then
+	echo "error: remote ${EXISTING} doesn't exist"
+    else
+	if git-remote-exists origin; then
+	    # rename origin
+	    OLD_ORIGIN_NEW_NAME=${1:-old-origin} && shift
+
+	    if git-remote-exists ${OLD_ORIGIN_NEW_NAME}; then
+		echo "error: provide a new name for origin"
+		return
+	    else
+		git remote rename origin ${OLD_ORIGIN_NEW_NAME}
+	    fi
+	fi
+	git remote rename ${EXISTING} origin
+    fi
+}
+__git_complete git-promote-remote-to-origin _git_pull
