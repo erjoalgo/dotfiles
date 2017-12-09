@@ -99,7 +99,9 @@ function is_newline_terminated	{
 }
 
 function gitignore-append-commit	{
-    echo "${1}" >> .gitignore
+    for IGNORE in ${*}; do
+	echo ${IGNORE} >> .gitignore
+    done
     git add .gitignore
     git commit -m "gitignore ${1}"
 }
