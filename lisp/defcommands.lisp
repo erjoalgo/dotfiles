@@ -244,16 +244,17 @@ perform ocr on it, place ocr'd text into clipboard"
     keys))
 '(define-key *top-map* (kbd "F12") "SEND-KEYS TAB END RET" )
 
-(defcommand type-ge-email
-    () ()
-  (run-shell-command
-   "sleep 1 && xdotool type ernesto.alfonsogonzalez@ge.com"))
 
-(defcommand type-gmail
-    () ()
-  (run-shell-command
-   "sleep 1 && xdotool type erjoalgo@gmail.com"))
 
-(defcommand type-clipboard-contents () ()
-  (let* ((clipboard (get-x-selection)))
-    (run-shell-command (format nil "xdotool type ~A" clipboard))))
+(defmacro defcommand-xdotool-type (text-form &key (sleep-time 1) name)
+  (setf name (or name text-form))
+  `(defcommand ,(intern (format nil "xdotool-type-~A" name))
+       () ()
+     ,(format nil "autogen cmd to type '~A'" name)
+     (run-shell-command
+      ,(format nil "sleep ~D && xdotool type '~A'" sleep-time
+	       text-form))))
+
+(defcommand-xdotool-type "ernesto.alfonsogonzalez@ge.com")
+(defcommand-xdotool-type "erjoalgo@gmail.com")
+(defcommand-xdotool-type (get-x-selection) :name "clipboard")
