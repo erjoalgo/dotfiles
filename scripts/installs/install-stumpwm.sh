@@ -87,4 +87,5 @@ ExecStart=
 ExecStart=-/sbin/agetty --autologin "${USER}" %I
 EOF
 
-sudo ${APT_GET} install -y nc xdotool
+sudo ${APT_GET} install -y xdotool
+which nc || sudo ${APT_GET} install -y net-tools
