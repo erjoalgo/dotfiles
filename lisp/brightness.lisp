@@ -87,9 +87,11 @@
     (print new-percentage)))
 
 (defcommand brightness-up () ()
+  "increase brightness"
   (up-down-brightness t))
 
 (defcommand brightness-down () ()
+  "decrease brightness"
   (up-down-brightness nil))
 
 (init-brightness)

@@ -147,10 +147,12 @@ be used to override the default window formatting."
 
 (defcommand scrot-cmd (name)
     ((:string "enter name for scrot: "))
+  "take a non-full-screen screen shot. select box interactively"
   (take-scrot name :fullscreen-p nil))
 
 (defcommand scrot-cmd-full-screen (name)
     ((:string "enter name for scrot: "))
+  "take a full-screen screen shot"
   (take-scrot name :fullscreen-p t))
 
 (defun image-fn-to-text (image-fn)
