@@ -6,6 +6,7 @@ command -v firefox
 
 
 which git-fetch-ff
+which xmlstarlet
 
 GIT_HOME="${HOME}/git" git-fetch-ff \
     "https://github.com/erjoalgo/erjoalgo-firefox-addons" \
