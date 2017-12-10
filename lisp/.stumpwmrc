@@ -1,6 +1,8 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+(load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
+
 (defun echo-format (fmt &rest args)
   (let* ((msg (apply 'format nil (cons fmt args))))
     (echo msg)
