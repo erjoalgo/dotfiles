@@ -1,21 +1,10 @@
 #!/bin/bash
 
-FN="/etc/systemd/logind.conf"
+sudo $(which insert-text-block) \
+     '# 03c99349-27b7-4d7e-a414-a3ef9b85acbc-ignore-lid-close-toggle'  \
+     /etc/systemd/logind.conf <<EOF
+HandleLidSwitch=ignore
+HandlePowerKey=ignore
+EOF
 
-CHANGED=""
-for LINE in "HandleLidSwitch=ignore"\
-		"HandlePowerKey=ignore"; do
-
-    
-    if ! grep -F "${LINE}" "${FN}" >/dev/null; then
-	echo "adding line: ${LINE}"
-	echo "${LINE}" | \
-	    sudo tee -a "${FN}"
-	CHANGED=true
-    fi
-    
-done
-
-if test -n ${CHANGED}; then
-    sudo service systemd-logind restart
-fi
+sudo service systemd-logind restart
