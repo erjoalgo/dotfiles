@@ -37,7 +37,7 @@ done
 
 VIMFX_CONFIG_DIR="${HOME}/git/erjoalgo-vimfx-config"
 sleep 10 # ensure changes don't get overwritten
-insert-text-block '// -add-vimfx-config-file-directory' "${PREFSJS}"<<EOF
+insert-text-block '// fd5c00d3-7d91-4dd3-933c-9d8e590f1e51-add-vimfx-config-file-directory' "${PREFSJS}"<<EOF
 user_pref("extensions.VimFx.config_file_directory", "${VIMFX_CONFIG_DIR}/VimFx-config@vimfx.org");
 EOF
 
