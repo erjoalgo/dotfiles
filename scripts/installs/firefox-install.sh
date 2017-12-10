@@ -15,7 +15,7 @@ GIT_HOME="${HOME}/git" git-fetch-ff \
 test -d ~/.mozilla
 
 # find profile
-PROFILE=$(find ~/.mozilla/firefox -name '*.default' -type d | head -1)
+PROFILE=${PROFILE:-$(find ~/.mozilla/firefox -name '*.default' -type d | head -1)}
 if test -z "${PROFILE}"; then
     PROFILE=$(find ~/.mozilla/firefox -maxdepth 1 -type d -iregex '.*/[a-z0-9]+[.].*' \
 	 | head -1)
