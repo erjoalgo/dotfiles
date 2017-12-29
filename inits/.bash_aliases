@@ -52,6 +52,7 @@ alias grh='git reset HEAD'
 alias gb='git branch'
 #bash completion will do the rest below
 alias gmmma='git commit -a -m "autocommit on $(date)"'
+alias gmmma-gpom='git add -A . && gmmma && gpom'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
