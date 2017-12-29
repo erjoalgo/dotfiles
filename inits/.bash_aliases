@@ -149,7 +149,6 @@ alias untar-src='tar -C ~/src/ -axvf'
 alias unzip-src='unzip -d ~/src'
 
 #combinations
-alias cataliasgrep='cat ~/.bash_aliases | grep '
 alias psgrep='ps ax | grep -i'
 
 alias echolastcmd="fc -ln -1 | xsel --clipboard"
