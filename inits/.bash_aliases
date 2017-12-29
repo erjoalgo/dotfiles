@@ -16,7 +16,7 @@ if command -v xsel > /dev/null; then
 else
     alias xs='pbcopy'
 fi
-alias duh='du -h'
+
 alias xargsz='xargs -IZ'
 alias ps-aux-grep='ps aux|grep -i '
 alias nnn='sudo netstat -tulpn'
@@ -144,9 +144,12 @@ alias untar='tar axvf'
 alias sbcl='rlwrap sbcl'
 alias thon='python'
 alias ura='zathura'
-alias ffdefault='firefox -P default'
 alias mmln='move-last-n.sh'
 alias gdmapf='gdmap -f'
+
+# useful arguments as new commands
+alias duh='du -h'
+alias ffdefault='firefox -P default'
 alias lp-one-sided='lp -o sides=one-sided'
 alias passgen='pass generate -n'
 alias pip-install-user='pip install --user'
