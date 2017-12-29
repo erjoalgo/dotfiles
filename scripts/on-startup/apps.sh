@@ -1,7 +1,7 @@
 #!/bin/bash
 
 emacs &
-firefox &
+$(which chromium-browser chromium chrome google-chrome) &
 x-terminal-emulator &
 
 command -v keynav  && keynav &
