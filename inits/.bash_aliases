@@ -145,12 +145,13 @@ alias duh='du -h'
 alias ffdefault='firefox -P default'
 alias lp-one-sided='lp -o sides=one-sided'
 alias lein-repl-tee-log='lein repl |& tee log'
+alias untar-src='tar -C ~/src/ -axvf'
+alias unzip-src='unzip -d ~/src'
 
 #combinations
 alias cataliasgrep='cat ~/.bash_aliases | grep '
 alias psgrep='ps ax | grep -i'
-alias untarprogram='tar -C ~/programs/ -axvf'
-alias unzipprogram='unzip -d ~/programs/'
+
 alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias chmodx='chmod +x'
 alias chown-rec='sudo chown -R '
