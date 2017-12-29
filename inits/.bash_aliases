@@ -144,18 +144,18 @@ alias mmln='move-last-n.sh'
 alias duh='du -h'
 alias ffdefault='firefox -P default'
 alias lp-one-sided='lp -o sides=one-sided'
-alias lein-repl-tee-log='lein repl |& tee log'
 alias untar-src='tar -C ~/src/ -axvf'
 alias unzip-src='unzip -d ~/src'
-
-#combinations
-alias psgrep='ps ax | grep -i'
-
-alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias chmodx='chmod +x'
 alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
+
+#pipes
+alias lein-repl-tee-log='lein repl |& tee log'
+alias psgrep='ps ax | grep -i'
+alias echolastcmd="fc -ln -1 | xsel --clipboard"
+
 
 # command defaults
 alias grep='grep --color=auto'
