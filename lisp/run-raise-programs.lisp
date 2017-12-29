@@ -3,7 +3,8 @@
 		       (group-windows (current-group))))
 	 (curr-win (current-window))
 	 (win-matches (lambda (win)
-			(member (window-class win) win-classes :test 'equal)))
+			(member (string-downcase (window-class win))
+				win-classes :test 'equal)))
 	 (cands (remove-if-not
 		 win-matches
 		 win-list))
@@ -39,7 +40,8 @@
 	  append
 	    `(
 	      (defcommand ,cmd-name nil nil ,doc
-			  (raise-pull-or-run-win ,classes ,cmd ,pull-p ,all-screens))
+			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
+						 ,cmd ,pull-p ,all-screens))
 	      ,(unless (null key)
 		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
