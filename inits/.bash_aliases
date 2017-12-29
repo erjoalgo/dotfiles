@@ -136,18 +136,14 @@ alias aa='aliasadd.py'
 
 #misc programs
 alias untar='tar axvf'
-alias sbcl='rlwrap sbcl'
 alias thon='python'
 alias ura='zathura'
 alias mmln='move-last-n.sh'
-alias gdmapf='gdmap -f'
 
 # useful arguments as new commands
 alias duh='du -h'
 alias ffdefault='firefox -P default'
 alias lp-one-sided='lp -o sides=one-sided'
-alias passgen='pass generate -n'
-alias pip-install-user='pip install --user'
 alias lein-repl-tee-log='lein repl |& tee log'
 
 #combinations
@@ -161,13 +157,20 @@ alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
 
-# defaults
+# command defaults
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
 if ! ls --color=auto &> /dev/null; then
     unalias ls;
 fi
 alias pkill='pkill -e'
+alias sbcl='rlwrap sbcl'
+alias gdmapf='gdmap -f'
+alias pip-install-user='pip install --user'
+# this is a default since pass generate is
+# like a command
+alias passgen='pass generate -n'
+
 alias service='sudo service'
 alias umount='sudo umount'
 alias blkid='sudo blkid'
