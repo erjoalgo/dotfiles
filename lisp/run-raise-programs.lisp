@@ -63,6 +63,11 @@
 (define-run-or-pull-program "emacs"
     :pull-key "H-E")
 
+(define-run-or-pull-program "android-studio"
+    :classes '("jetbrains-studio")
+    :cmd "~/Downloads/android-studio/bin/studio.sh"
+    :raise-key "H-r")
+
 (define-run-or-pull-program "zathura")
 
 ;; Warning: these bindings affect the *top-map*, which is
