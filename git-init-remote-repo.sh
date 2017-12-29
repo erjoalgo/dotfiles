@@ -10,9 +10,27 @@ REPO=$(basename $(pwd))
 HOST=$(sed 's/.*@//g' <<< ${USERHOST})
 SRV_PREFIX=/opt/git
 
-CMD=$(cat <<EOF
+# git server setup. ensure git user has been set up with right shell
+RSA=$(cat ${HOME}/.ssh/id_rsa.pub)
+
+ssh ${USERHOST} -p${PORT}  "sudo bash -s" <<EOF
+which git-shell
+
+grep git-shell /etc/shells || which git-shell >> /etc/shells
+
+cat /etc/passwd | grep ^git: ||  \
+	sudo adduser git --disabled-password --shell $(which git-shell) \
+	--gecos ",,,"
+
+# double-check that git-shell is the shell
+sudo chsh git -s $(which git-shell)
+
+KEYS=~git/.ssh/authorized_keys
+# sudo -u git ssh-keygen
+sudo -u git mkdir ~git/.ssh
+echo "${RSA}" | sudo -u git tee -a \${KEYS}
+chmod 644 \${KEYS}
 EOF
-)
 
 ssh ${USERHOST} -p${PORT}  "sudo bash -s" <<EOF
 set -e
