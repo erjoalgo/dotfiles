@@ -43,7 +43,17 @@ EOF
 
 REMOTE_URL="ssh://git@${HOST}:${PORT}${SRV_PREFIX}/${REPO}"
 echo ${REMOTE_URL}
-git remote add origin ${REMOTE_URL} || true
+ORIGIN_NAME=origin
+for NAME in origin origin-${USERHOST} origin-${USERHOST}-${RANDOM}; do
+    ORIGIN_NAME=${NAME}
+    if test $(git config --get remote.${NAME}.url) = ${REMOTE_URL}; then
+	break
+    elif git remote add ${ORIGIN_NAME} ${REMOTE_URL}; then
+	break
+    fi
+done
+
+
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-git fetch origin
-git branch --set-upstream-to=origin/${BRANCH}
+git fetch ${ORIGIN_NAME}
+git branch --set-upstream-to=${ORIGIN_NAME}/${BRANCH}
