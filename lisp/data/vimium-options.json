@@ -1,5 +1,5 @@
 {
-  "settingsVersion": "1.62",
+  "settingsVersion": "1.62.4",
   "exclusionRules": [
     {
       "pattern": "https?://mail.google.com/*",
@@ -9,7 +9,7 @@
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "# Insert your preferred key mappings here.\n\nmap d scrollPageDown\nmap w scrollPageUp\nmap a scrollLeft\nmap s scrollRight\n\nmap , scrollToTop\nmap . scrollToBottom\nmap q LinkHints.activateModeToOpenInNewTab",
+  "keyMappings": "# Insert your preferred key mappings here.\n\nmap d scrollPageDown\nmap w scrollPageUp\nmap a scrollLeft\nmap s scrollRight\n\nmap , scrollToTop\nmap . scrollToBottom\nmap q LinkHints.activateModeToOpenInNewTab\nmap <f1> previousTab\nmap <f2> nextTab\nmap <f4> removeTab",
   "linkHintCharacters": "1234qwerasdfgzxcvb",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "about:newtab",
