@@ -151,6 +151,9 @@ alias chmodx='chmod +x'
 alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
 alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
+alias tail-auth='sudo tail -f /var/log/auth.log'
+alias tail-syslog='sudo tail -f /var/log/syslog'
+alias tail-mail='sudo tail -f /var/mail/$(whoami)'
 
 #pipes
 alias lein-repl-tee-log='lein repl |& tee log'
