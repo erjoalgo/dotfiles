@@ -40,22 +40,31 @@ while getopts "ohp:e:m:aE:i:" OPT; do
     esac
 done
 
+X_NOTIFIY=true
+function message	{
+    if test -z "${X_NOTIFIY}"; then
+	notify-send ${*}
+    else
+	echo ${*}
+    fi
+}
+
 if ! command -v iwlist > /dev/null \
 	|| ! command -v iwconfig > /dev/null
 then
-    echo "missing wireless-tools" && exit ${LINENO}
+    message "missing wireless-tools" && exit ${LINENO}
 fi
 
 
 IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
-    echo "wireless iface not found" && exit ${LINENO}
+    message "wireless iface not found" && exit ${LINENO}
 fi
 
 if test -n "${MACCHANGE_OPT}"; then
     if ! command -v macchanger &> /dev/null; then
-	echo "macchanger not installed" && exit ${LINENO}
+	message "macchanger not installed" && exit ${LINENO}
     fi
     sudo ifconfig ${IFACE} down || exit ${LINENO}
     sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" #|| exit ${LINENO}
@@ -78,9 +87,9 @@ for i in $(seq ${TRIES}); do
     ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
     if test 0 -ne $? || test -z "${ESSIDS}"; then
 	if test $i -eq ${TRIES}; then
-	    echo "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
+	    message "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
 	else
-	    echo "retrying scan..." && sleep 1
+	    message "retrying scan..." && sleep 1
 	fi
     else
 	break
@@ -96,7 +105,7 @@ case ${COUNT} in
 	ESSID="${ESSIDS}"
 	;;
     0)
-	echo "no networks found" && exit ${LINENO}
+	message "no networks found" && exit ${LINENO}
 	;;
     *)
 	if test -z "${ESSID}"; then
@@ -112,11 +121,12 @@ case ${COUNT} in
 		IFS=$OLDIFS
 	    fi
 	elif ! grep -F "${ESSID}" <<< "${ESSIDS}"; then
-	     echo -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
+	     message -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
 	fi
 esac
 
-echo "selected ${ESSID}"
+message "selected ${ESSID}"
+
 ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
 	 | sed 's/.*Encryption key:\(.*\)/\1/')}
 
@@ -132,7 +142,7 @@ case "${ENC}" in
 	if ! command -v wpa_supplicant > /dev/null \
 		|| ! command -v wpa_passphrase > /dev/null \
 		|| ! command -v expect > /dev/null; then
-	    echo "missing wpasupplicant or expect" && exit ${LINENO}
+	    message "missing wpasupplicant or expect" && exit ${LINENO}
 	fi
 
 
@@ -157,7 +167,7 @@ EOF
 	# sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
 	# sleep 10
 
-	echo "post CTRL-EVENT-CONNECTED expect"
+	message "post CTRL-EVENT-CONNECTED expect"
 	;;
 
     off)
@@ -165,7 +175,7 @@ EOF
 	test -f "${ESSID}" || sudo touch "${ESSID}"
 	;;
     *)
-	echo "unknown encryption ${ENC}" && exit ${LINENO}
+	message "unknown encryption ${ENC}" && exit ${LINENO}
 	;;
 esac
 
