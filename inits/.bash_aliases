@@ -171,9 +171,6 @@ alias pkill='pkill -e'
 alias sbcl='rlwrap sbcl'
 alias gdmapf='gdmap -f'
 alias pip-install-user='pip install --user'
-# this is a default since pass generate is
-# like a command
-alias passgen='pass generate -n'
 
 # auto sudo
 alias service='sudo service'
