@@ -128,11 +128,6 @@ alias spsi='sudo python setup.py install'
 alias dpkgl='dpkg -L'
 
 
-#wifi
-alias was='sudo wifi scan'
-alias wad='sudo wifi add'
-alias wac='sudo pkill -e wpa_supplicant; sudo pkill -e dhclient; sudo wifi -y -t ac'
-alias wacc='sudo wifi -y connect'
 
 #meta
 alias .a='source ~/.bash_aliases && source ~/.my-bash-funs'
