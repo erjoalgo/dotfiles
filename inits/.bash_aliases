@@ -180,6 +180,7 @@ alias killall='sudo killall -v'
 # hard-to-remember or reproduce
 alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
 alias fail2ban-unban-ip='sudo fail2ban-client set ssh unbanip'
+alias echo-pings='sudo tcpdump ip proto \\icmp'
 # Local Variables:
 # mode: sh
 # End:
