@@ -28,6 +28,18 @@
 (push '*launcher-persistent-alist*
       *persistent-alist-syms*)
 
+(defun url-launcher-get-browser-current-url ()
+  (mozrepl-firefox-get-url))
+
+(defun url-launcher-browser-new-tab (url)
+  ;;(mozreplfirefoxnewtab url)
+  (SB-EXT:RUN-PROGRAM *browser-name*
+		      (list url)
+		      :search t
+		      :wait nil
+		      :output t
+		      :error t))
+
 ;;actually load from the file
 (defparameter *url-command-rules*
   `(
@@ -185,17 +197,7 @@
   ;;for use the first character in the command name that hasn't been used
   )
 
-(defun url-launcher-get-browser-current-url ()
-  (mozrepl-firefox-get-url))
 
-(defun url-launcher-browser-new-tab (url)
-  ;;(mozreplfirefoxnewtab url)
-  (SB-EXT:RUN-PROGRAM *browser-name*
-		      (list url)
-		      :search t
-		      :wait nil
-		      :output t
-		      :error t))
 
 (dolist (class *browser-classes*)
   (push `(:class ,class) stumpwm:*deny-raise-request*))
