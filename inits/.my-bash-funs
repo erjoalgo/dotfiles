@@ -4,8 +4,8 @@ function find-iregex {
 }
 
 function find-name {
-    dir=${PWD}
-    find ${dir} -name "${1}" 
+    DIR=${1} && shift
+    find "${DIR}" -name ${*}
 }
 
 function abspath {
