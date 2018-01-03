@@ -63,6 +63,11 @@
 (define-run-or-pull-program "emacs"
     :pull-key "H-E")
 
+(defun first-existing-file (&rest files)
+  (loop for file in files thereis
+       (and (probe-file (parse-namestring file))
+	    file)))
+
 (define-run-or-pull-program "android-studio"
     :classes '("jetbrains-studio")
     :cmd "~/Downloads/android-studio/bin/studio.sh"
