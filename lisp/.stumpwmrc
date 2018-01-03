@@ -53,7 +53,7 @@
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Chromium-browser" "Tor Browser" "Google-chrome"))
 
-(setf *browser-name*
+(defparameter *browser-name*
   (string-trim '(#\newline)
 	       (run-shell-command
 		"basename $(which chromium chromium-browser chrome)" t)))
