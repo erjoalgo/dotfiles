@@ -53,7 +53,10 @@
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Chromium-browser" "Tor Browser" "Google-chrome"))
 
-(defvar *browser-name* "chromium")
+(setf *browser-name*
+  (string-trim '(#\newline)
+	       (run-shell-command
+		"basename $(which chromium chromium-browser chrome)" t)))
 
 (load-files-verbose
  'stumpwm-loader
