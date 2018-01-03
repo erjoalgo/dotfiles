@@ -1,2 +1,3 @@
 *.fasl
 inits/.my-bash-completions/erjoalgo-sensitive
+lisp/data/url-launcher-urls.local
