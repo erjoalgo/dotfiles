@@ -246,7 +246,7 @@ perform ocr on it, place ocr'd text into clipboard"
 
 
 
-(defmacro defcommand-xdotool-type (text-form &key (sleep-time 1) name)
+(defmacro defcommand-xdotool-type (text-form &key (sleep-time .5) name)
   (setf name (or name text-form))
   `(defcommand ,(intern (string-upcase (format nil "xdotool-type-~A" name)))
        () ()
