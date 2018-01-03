@@ -69,8 +69,11 @@
 	    file)))
 
 (define-run-or-pull-program "android-studio"
-    :classes '("jetbrains-studio")
-    :cmd "~/Downloads/android-studio/bin/studio.sh"
+    :classes '("jetbrains-studio" "Spring Tool Suite")
+    :cmd (first-existing-file
+	  "~/Downloads/android-studio/bin/studio.sh"
+	  "~/src/sts-bundle/sts-3.9.2.RELEASE/STS"
+	  )
     :raise-key "H-r")
 
 (define-run-or-pull-program "zathura")
