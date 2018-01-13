@@ -141,7 +141,7 @@ function git-review-pull-request	{
 	shift 2
     fi
 
-    CMD=${1}
+    CMD=${1:-$CMD}
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
