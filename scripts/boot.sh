@@ -71,8 +71,6 @@ if test -e ${GRUB_FILE} &&  \
     which update-grub && sudo update-grub
 fi
 
-git config --global user.email "erjoalgo@gmail.com"
-git config --global user.name "Ernesto Alfonso"
 # some essential scripts
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
