@@ -1,6 +1,6 @@
 #!/bin/bash
 
-STUMPWM_TOP=$(dirname $(dirname $(readlink -f $0)))
+STUMPWM_TOP=$(dirname $(dirname $($(which {g,}readlink|head -1) -f $0)))
 INITS_TOP="${STUMPWM_TOP}/inits"
 
 function safe_ln	{
