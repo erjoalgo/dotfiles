@@ -19,7 +19,7 @@ fi
 
 alias xargsz='xargs -IZ'
 alias ps-aux-grep='ps aux|grep -i '
-alias nnn='sudo netstat -tulpn'
+alias nnn='sudo netstat -tulpn | less'
 # never used
 # alias tail1='tail -1'
 # alias head1='head -1'
