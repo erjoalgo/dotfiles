@@ -62,7 +62,7 @@ insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-bashrc'  \
 		  ${HOME}/.bash_profile <<< "source ${HOME}/.my-bash-profile"
 
-sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc"
+sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc" || true
 # set GRUB timeout to zero
 GRUB_FILE=/etc/default/grub
 if test -e ${GRUB_FILE} &&  \
