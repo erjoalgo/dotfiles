@@ -175,8 +175,13 @@ function git-review-pull-request	{
 		FAILED="${FAILED}\n${FAIL}"
 		${CMD}
 		echo ${FAIL}
-		read -p"failure (${CMD}): "
+		echo -p"failure (${CMD}): "
 		notify-send "FAILURE (${CMD}): "
+		bash
+		read -p"cont (q: quit)? : " CONT
+		if test "${CONT}" = q; then
+		    return
+		fi
 	    fi
 	fi
     done
