@@ -160,9 +160,12 @@ function git-review-pull-request	{
 	    COMPILE_CMD_PID=$!
 	fi
 
-	{ echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
-	  git show ${HASH} -p --stat --color;\
-	}  | less -R;
+	if test -z "${NOLESS}"; then
+	    { echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
+	      git show ${HASH} -p --stat --color;\
+	      }  | less -R;
+	fi
+
 	COUNTER=$((COUNTER + 1))
 
 	if test -n "${CMD}"; then
