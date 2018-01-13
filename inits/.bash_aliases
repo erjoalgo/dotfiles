@@ -116,6 +116,7 @@ if command -v apt-get > /dev/null; then
     alias sagu='sudo apt-get update'
     alias acw='apt-cache show'
     alias acs='apt-cache search'
+    alias dpkgl='dpkg -L'
 else
     alias sagiy='sudo yum install -y'
     alias aff='yum provides'
@@ -123,10 +124,10 @@ else
     alias acs='yum search'
     alias affexact='bash -xc '\''yum provides "*/$0"'\'''
     complete -F _command affexact
+    alias dpkgl='repoquery -l'
 fi
     
 alias spsi='sudo python setup.py install'
-alias dpkgl='dpkg -L'
 
 
 
