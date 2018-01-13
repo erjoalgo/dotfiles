@@ -173,8 +173,10 @@ function git-review-pull-request	{
 	    if test $? -ne 0; then
 		FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
 		FAILED="${FAILED}\n${FAIL}"
+		${CMD}
 		echo ${FAIL}
-		read -p'failure: '
+		read -p"failure (${CMD}): "
+		notify-send "FAILURE (${CMD}): "
 	    fi
 	fi
     done
