@@ -17,4 +17,6 @@ for SCRIPT in $(find "${SCRIPTSD}/on-startup" -type f); do
     ${SCRIPT}
 done
 
+/usr/libexec/notification-daemon &
+
 exec stumpwm
