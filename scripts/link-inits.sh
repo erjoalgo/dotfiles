@@ -1,4 +1,5 @@
-#!/bin/bash
+
+set -euo pipefail
 
 STUMPWM_TOP=$(dirname $(dirname $($(which {g,}readlink|head -1) -f $0)))
 INITS_TOP="${STUMPWM_TOP}/inits"
