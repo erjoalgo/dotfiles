@@ -109,5 +109,11 @@
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
 
+(defmacro alias (to fn)
+  `(setf (fdefinition ',to) #',fn))
+
+(alias last-msg-show last-msg-print)
+(alias print-last-msg last-msg-print)
+
 ;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html
