@@ -11,7 +11,9 @@ if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
     SUDOCMD="sudo"
 fi
 
-${SUDOCMD} ${APT_GET} install -y git sudo curl
+if test -n "${APT_GET}"; then
+   ${SUDOCMD} ${APT_GET} install -y git sudo curl
+fi
 
 # set up passwordless sudo
 LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
