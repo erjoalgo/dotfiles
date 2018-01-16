@@ -47,18 +47,26 @@ function check_lagging	{
     fi
 
     TAGS=""
-    if test $? -ne 0 -o $(git branch -r --contains ${BRANCH} | wc -l) -eq 0; then
-	# REMOTE=$(git rev-parse --abbrev-ref --symbolic-full-name ${BRANCH})
-	REMOTE=$(git config branch.${BRANCH}.remote)
-	CNT=$(git log ${REMOTE}/${BRANCH}..HEAD --oneline | wc -l)
-	TAGS+=" ${LIGHT_RED}${CNT}-UNPUBLISHED${NC}"
+    REMOTE=$(git config branch.${BRANCH}.remote)
+    if test -z "${REMOTE}"; then
+	TAGS+=" ${YELLOW}NO-REMOTE${NC}"
+    else
+	if test 0 -eq $(git branch -r --contains ${BRANCH} | wc -l); then
+	    CNT=$(git log ${REMOTE}/${BRANCH}..HEAD --oneline | wc -l)
+	    TAGS+=" ${LIGHT_RED}${CNT}-UNPUBLISHED${NC}"
+	fi
+	if test "${FETCH}" = true; then
+	    git fetch ${REMOTE}
+	fi
+	CNT=$(git log HEAD..${REMOTE}/${BRANCH} --oneline | wc -l)
+	if test 0 -ne ${CNT}; then
+	    TAGS+=" ${BLUE}${CNT}-BEHIND-REMOTE${NC}"
+	fi
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
 	TAGS+=" ${BROWN_ORANGE}UNCOMMITED${NC}"
     fi
-    if test 0 -eq $(git remote | wc -l); then
-	TAGS+=" ${YELLOW}NO-REMOTE${NC}"
-    fi
+
     STASH_CNT=$(git stash list | wc -l)
     if test "${STASH_CNT}" -gt 0; then
 	TAGS+=" ${YELLOW}${STASH_CNT}-STASHED${NC}"
