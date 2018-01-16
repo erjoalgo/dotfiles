@@ -21,4 +21,4 @@ if test -z ${SUBNET}; then
 fi
 
 # subnet = re.sub("[0-9]+$", "1/24", subnet)
-nmap -sP ${SUBNET}
+nmap -p 22 ${SUBNET}
