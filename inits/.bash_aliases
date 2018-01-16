@@ -74,7 +74,7 @@ alias hb='hub browse'
 alias gl11='git-review-pull-request'
 alias grc='git rebase --continue'
 __git_complete gl11 _git_log
-alias gss='git stash show -p'
+alias gsw='git stash show -p'
 alias gsd='git stash drop'
 alias gsl='git stash list'
 alias gsp='git stash pop'
