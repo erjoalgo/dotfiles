@@ -1,6 +1,8 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+;; (proclaim '(optimize debug))
+
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
 (defun echo-format (fmt &rest args)
