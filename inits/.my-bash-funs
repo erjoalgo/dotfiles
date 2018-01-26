@@ -179,6 +179,7 @@ function git-review-pull-request	{
 		bash
 		read -p"cont (q: quit)? : " CONT
 		if test "${CONT}" = q; then
+		    git checkout ${ORIG_HEAD}
 		    return
 		fi
 	    fi
