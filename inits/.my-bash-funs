@@ -136,9 +136,8 @@ function git-review-pull-request	{
 	TO_BRANCH=$(cut -f2 <<< "${SPLIT}")
 	shift
     else
-	FROM_BRANCH=${1:-origin/master}
-	TO_BRANCH=${2:-${ORIG_HEAD}}
-	shift 2
+	FROM_BRANCH=${1:-origin/master} && shift
+	TO_BRANCH=${1:-${ORIG_HEAD}} && shift
     fi
 
     CMD=${1:-$CMD}
