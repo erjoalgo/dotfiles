@@ -12,10 +12,15 @@ function safe_ln	{
 	DSTFILE=${DST}$(basename ${SRC})
     fi
 
+    DIR=$(dirname "${DSTFILE}")
+
     if test -e ${DSTFILE} -a ! -L ${DSTFILE}; then
 	# echo "warning: skipping symlink to existent non-symlink ${DST} of  ${SRC}"
 	echo "warning: moving ${DSTFILE} to ${DSTFILE}.bak"
 	mv -n ${DSTFILE}{,.bak}
+    elif test ! -d $DIR; then
+	echo "warning: skipping symlink to non-existent parent dir: $DIR"
+	return
     fi
     ln -sf ${SRC} ${DST}
 }
