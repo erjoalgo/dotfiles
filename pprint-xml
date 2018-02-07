@@ -1,0 +1,11 @@
+#!/usr/bin/python
+import lxml.etree as etree
+import sys
+
+# x = etree.parse(sys.stdin.read())
+x = etree.parse(sys.stdin)
+print etree.tostring(x, pretty_print=True)
+
+# Local Variables:
+# mode: python
+# End:
