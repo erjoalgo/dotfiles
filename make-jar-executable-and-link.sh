@@ -3,6 +3,8 @@
 JAR=$(realpath "${1}")
 grep "[.]jar$" <<< "${JAR}" || exit ${LINENO}
 EXE="${JAR}.sh"
+LINKNAME=${LINKNAME:-$(basename ${EXE})}
+
 cat /dev/stdin "${JAR}" <<'EOF' > "${EXE}"
 #!/bin/sh
 #https://coderwall.com/p/ssuaxa/how-to-make-a-jar-file-linux-executable
@@ -16,5 +18,6 @@ EOF
 
 chmod +x "${EXE}"
 BINDIR=${2:-/usr/local/bin}
-sudo ln -sf "${EXE}" "${BINDIR}"
-echo "${BINDIR}/$(basename ${EXE})"
+DEST="${BINDIR}/${LINKNAME}"
+sudo ln -sf "${EXE}" "${DEST}"
+echo "${DEST}"
