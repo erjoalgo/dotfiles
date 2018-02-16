@@ -161,6 +161,10 @@ alias cflogs='cf logs $(grep -Po "(?<=name: ).*" manifest.yml)'
 alias lein-repl-tee-log='lein repl |& tee log'
 alias psgrep='ps ax | grep -i'
 alias echolastcmd="fc -ln -1 | xsel --clipboard"
+alias javafmt="eclipse \
+       -nosplash -application  \
+      org.eclipse.jdt.core.JavaCodeFormatter -config \
+      ${JAVA_FORMATTER_CONFIG_FILE}"
 
 
 # command defaults
