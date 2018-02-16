@@ -140,6 +140,11 @@ function git-review-pull-request	{
 	TO_BRANCH=${1:-${ORIG_HEAD}} && shift
     fi
 
+    if test -z "${CMD}"; then
+	# NOLESS only makes sense with a command
+	NOLESS=''
+    fi
+
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
 	echo "usage: git-review-pull-request from-branch to-branch"
 	# exit 1
