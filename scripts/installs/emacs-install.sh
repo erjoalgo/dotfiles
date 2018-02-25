@@ -4,6 +4,12 @@ set -euo pipefail
 
 URL=http://gnu.mirrors.pair.com/gnu/emacs/emacs-25.2.tar.gz
 
+VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
+if emacs --version | grep -F "${VERSION}"; then
+    echo emacs ${VERSION} already installed
+    exit 0
+fi
+
 FNAME=$(basename ${URL})
 mkdir -p ~/src && cd ~/src
 
