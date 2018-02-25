@@ -1,0 +1,25 @@
+clear lock
+clear control
+clear mod3
+clear mod4
+remove mod1 = Alt_R
+
+keycode 66 = Control_L
+keycode 105 = Hyper_L
+keycode 135 = Super_L
+keycode 108 = Super_L
+! keycode 97 = Super_L
+
+clear lock
+clear control
+clear mod3
+clear mod4
+
+add control = Control_L
+
+add mod3 = Hyper_L
+
+add mod4 = Super_L
+
+keycode 65 = space underscore
+keycode 22 = BackSpace dead_acute
