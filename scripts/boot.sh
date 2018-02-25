@@ -8,16 +8,16 @@ test 0 -ne "${EUID}"
 APT_GET=$(which apt-get yum 2>/dev/null) || true
 SUDOCMD="su -c"
 if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
-    SUDOCMD="sudo"
+    SUDOCMD="sudo bash -c"
 fi
 
 if test -n "${APT_GET}"; then
-   ${SUDOCMD} ${APT_GET} install -y git sudo curl
+   ${SUDOCMD} "${APT_GET} install -y git sudo curl"
 fi
 
 # set up passwordless sudo
 LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
-grep -F "${LINE}" /etc/sudoers || ${SUDOCMD} tee -a /etc/sudoers <<< "${LINE}"
+${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers" || ${SUDOCMD} "tee -a /etc/sudoers <<< \"${LINE}\""
 
 # fetch my git repos
 GIT_HOME=${HOME}/git
