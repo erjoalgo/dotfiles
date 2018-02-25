@@ -49,6 +49,7 @@ sudo update-alternatives --install $(which x-www-browser) \
 sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 
 # link inits
+mkdir -p ${HOME}/.config
 cd ~/git/erjoalgo-stumpwmrc/scripts/
 for SCRIPT in link-inits.sh\
 	      ;do
