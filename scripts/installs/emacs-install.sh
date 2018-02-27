@@ -5,6 +5,7 @@ set -euo pipefail
 # URL=http://gnu.mirrors.pair.com/gnu/emacs/emacs-25.2.tar.gz
 # URL=http://gnu.mirrors.hoobly.com/emacs/emacs-25.2.tar.gz
 URL=http://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.xz
+EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
 
 VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
 if emacs --version | grep -F "${VERSION}"; then
@@ -21,7 +22,7 @@ test -f ${FNAME}.sig || wget ${URL}.sig
 # gpg --recv-keys BE216115
 
 INSTALL_DIR=/usr/local
-DNAME=$(basename ${FNAME} .tar.gz)
+DNAME=$(basename ${FNAME} ${EXT})
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
     gpg --recv-keys 7C207910
