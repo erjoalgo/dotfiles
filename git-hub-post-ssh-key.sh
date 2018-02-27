@@ -2,10 +2,14 @@
 
 KEY_NAME="${1}"
 shift
-if test -z "${KEY_NAME}"; then
+usage()	{
     set +x
-    echo "usage git-hub-post-ssh-key.sh <KEY_NAME> [-g GITHUB_API_URL]"
-    echo "	[-s PATH_TO_ID_RSA_PUB] [-u GITHUB_USER] [-u GITHUB_TOKEN]"
+    echo "usage: git-hub-post-ssh-key.sh [-k <KEY_NAME>] [-g GITHUB_API_URL]"
+    echo "	[-s PATH_TO_ID_RSA_PUB] [-u GITHUB_USER] [-t GITHUB_TOKEN]"
+}
+
+if test -z "${KEY_NAME}"; then
+    usage
     exit ${LINENO}
 fi
 
@@ -28,6 +32,7 @@ while getopts "g:s:hu:t:" OPT; do
 	    ;;
 	h)
 	    less $0
+            usage
 	    exit 0
 	    ;;
     esac
