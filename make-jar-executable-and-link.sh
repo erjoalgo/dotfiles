@@ -1,6 +1,8 @@
 #!/bin/bash -x
 
-JAR=$(realpath "${1}")
+set -euo pipefail
+
+JAR=$(python -c "import os; print(os.path.realpath('$1'));")
 grep "[.]jar$" <<< "${JAR}" || exit ${LINENO}
 EXE="${JAR}.sh"
 LINKNAME=${LINKNAME:-$(basename ${EXE})}
