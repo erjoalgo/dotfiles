@@ -1,23 +1,20 @@
 #!/bin/bash -x
 
-KEY_NAME="${1}"
-shift
 usage()	{
     set +x
     echo "usage: git-hub-post-ssh-key.sh [-k <KEY_NAME>] [-g GITHUB_API_URL]"
     echo "	[-s PATH_TO_ID_RSA_PUB] [-u GITHUB_USER] [-t GITHUB_TOKEN]"
 }
 
-if test -z "${KEY_NAME}"; then
-    usage
-    exit ${LINENO}
-fi
-
 GITHUB_API="https://api.github.com"
 IDRSAPUB="${HOME}/.ssh/id_rsa.pub"
+KEY_NAME=autogen-$(hostname)
 
-while getopts "g:s:hu:t:" OPT; do
+while getopts "g:s:hu:t:k:" OPT; do
     case ${OPT} in
+        k)
+            KEY_NAME="${OPTARG}"
+            ;;
 	g)
 	    GITHUB_API="${OPTARG}"
 	    ;;
