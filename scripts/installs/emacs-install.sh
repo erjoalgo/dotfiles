@@ -26,6 +26,7 @@ DNAME=$(basename ${FNAME} ${EXT})
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
     gpg --recv-keys 7C207910
+    # 28D3 BED8 51FD F3AB 57FE F93C 2335 87A4 7C20 7910
     gpg --verify ${FNAME}{.sig,}
     sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
 fi
