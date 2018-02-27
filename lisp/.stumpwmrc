@@ -53,10 +53,14 @@
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Chromium-browser" "Tor Browser" "Google-chrome"))
 
+(defun coalesce (a b)
+  (if (zerop (length a)) b a))
+
 (defparameter *browser-name*
-  (string-trim '(#\newline)
+  (coalesce (string-trim '(#\newline)
 	       (run-shell-command
-		"basename $(which chromium chromium-browser chrome)" t)))
+		"basename $(which chromium chromium-browser chrome)" t))
+            "chromium"))
 
 (load-files-verbose
  'stumpwm-loader
