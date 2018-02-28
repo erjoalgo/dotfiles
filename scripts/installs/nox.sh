@@ -1,4 +1,4 @@
 #!/bin/bash -x
 
 sudo apt-get install -y tmux lynx curl  \
-     htop nmap pass sshfs eog davfs2
+     htop nmap pass sshfs davfs2

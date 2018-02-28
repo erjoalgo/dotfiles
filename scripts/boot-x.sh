@@ -8,6 +8,8 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 ./installs/emacs-install.sh
 ./installs/roxterm-install.sh
 sudo apt-get install -y chromium zathura
+sudo apt-get install -y eog
+
 
 # TODO wifi-boot
 # TODO automate debian installer seed
