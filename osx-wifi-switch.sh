@@ -15,7 +15,8 @@ say "turning wifi ${NEW_STATE}"
 
 
 if test "On" = "${NEW_STATE}"; then
-    while ! /usr/sbin/networksetup -getairportnetwork ${IFACE}; do
+    while /usr/sbin/networksetup -getairportnetwork ${IFACE}  2>&1 |  \
+            grep "not associated with an AirPort"; do
         sleep 1
         say "waiting for connection"
     done
