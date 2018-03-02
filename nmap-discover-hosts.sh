@@ -3,9 +3,8 @@
 if true; then
     LOCALHOST='127.0.0.1'
     SUBNETS=$(ifconfig -a |\
-		     grep -oP 'inet addr:.*? '|\
-		     cut -d: -f2|\
-		     grep -v ${LOCALHOST})
+		  grep -oP '(?<=inet addr:)[0-9.]+' |\
+		  grep -v ${LOCALHOST})
 
    if test $(wc -l <<< "${SUBNETS}") -gt 1; then
        select SUBNET in ${SUBNETS}; do
