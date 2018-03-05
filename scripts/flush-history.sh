@@ -21,7 +21,7 @@ FILENAME=$(hostname)-$(date "+%F-%T")
 
 which zip
 
-zip -r ${FILENAME}.zip -9 ${FILES}
+zip -r autosave-history-${FILENAME}.zip -9 ${FILES}
 
 SHRED_ARGS=-zufn10
 for FN in ${FILES}; do
