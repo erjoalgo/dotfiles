@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 select SERVICE in $(sudo service --status-all \
 		   |& grep "[+]" | awk '{print $4}'); do

@@ -3,7 +3,8 @@
 set -euo pipefail
 
 # IFACE=$(networksetup -listnetworkserviceorder | grep -oP '(?<=Wi-Fi, Device: )[^)]+')
-IFACE=$(networksetup -listnetworkserviceorder | grep -o 'Wi-Fi, Device:[^)]*' | cut -f2 -d: | tr -d ' ')
+IFACE=$(networksetup -listnetworkserviceorder |  \
+            grep -o 'Wi-Fi, Device:[^)]*' | cut -f2 -d: | tr -d ' ')
 
 STATE=$(/usr/sbin/networksetup -getairportpower ${IFACE} | grep -o 'On\|Off')
 
@@ -21,7 +22,8 @@ if test "On" = "${NEW_STATE}"; then
         sleep 1
     done
 
-    ESSID=$(/usr/sbin/networksetup -getairportnetwork ${IFACE} | cut -d: -f2 | xargs echo)
+    ESSID=$(/usr/sbin/networksetup -getairportnetwork ${IFACE} |  \
+                cut -d: -f2 | xargs echo)
     say "connected to ${ESSID}"
     IP_ADDR=$(ifconfig ${IFACE} | grep -o "inet [0-9.]*")
     say "my ip address is ${IP_ADDR}"
