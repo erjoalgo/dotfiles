@@ -36,8 +36,8 @@
 	  as pull-p = (eq pull-or-raise-fun 'pull-window)
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
-	  as doc = (format nil "doc: ~A" cmd-name-string)
 	  as cmd-string = (eval cmd)
+	  as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd-string)
 	  append
 	    `(
 	      (defcommand ,cmd-name nil nil ,doc
