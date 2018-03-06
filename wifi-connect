@@ -56,7 +56,7 @@ then
 fi
 
 
-IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]' | head -1)}
+IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]|wlp[^:]*' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
     message "wireless iface not found" && exit ${LINENO}
