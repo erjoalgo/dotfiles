@@ -164,7 +164,7 @@ alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias javafmt="eclipse \
        -nosplash -application  \
       org.eclipse.jdt.core.JavaCodeFormatter -config \
-      ${JAVA_FORMATTER_CONFIG_FILE}"
+      \${JAVA_FORMATTER_CONFIG_FILE}"
 
 
 # command defaults
