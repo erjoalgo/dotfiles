@@ -40,7 +40,8 @@
     (setf *actual-brightness-pathname*
 	  (find-pathname "actual_brightness")
 	  *max-brightness-pathname*
-	  (find-pathname "max_brightness")
+	  (make-pathname :name "max_brightness" :defaults
+			 *actual-brightness-pathname*)
 	  *brightness-pathname*
 	  (make-pathname :name "brightness" :defaults
 			 *actual-brightness-pathname*)
