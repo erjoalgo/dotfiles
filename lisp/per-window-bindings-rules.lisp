@@ -24,10 +24,11 @@
 
    )
 
-  (("x-terminal-emulator" "X-terminal-emulator" "roxterm" "Roxterm")
+  (("x-terminal-emulator" "X-terminal-emulator" "roxterm" "Roxterm" "Gnome-terminal")
    ("SunPageUp" (send-fake-key (current-window) (kbd "S-SunPageUp")) (echo "sunpageup"))
    ("SunPageDown" (send-fake-key (current-window) (kbd "S-SunPageDown")) (echo "sunpagedown"))
-					;("F1" (send-fake-key (current-window) (kbd "C-ISO_Left_Tab")))
+   ("F1" (send-fake-key (current-window) (kbd "C-SunPageUp")))
+   ("F2" (send-fake-key (current-window) (kbd "C-SunPageDown")))
 					;("F4" (send-fake-key (current-window) (kbd "C-F4")))
 					;("M-F1" (send-fake-key (current-window) (kbd "M-Left")))
    )
