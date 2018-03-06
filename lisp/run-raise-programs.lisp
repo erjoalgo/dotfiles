@@ -37,11 +37,12 @@
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
 	  as doc = (format nil "doc: ~A" cmd-name-string)
+	  as cmd-string = (eval cmd)
 	  append
 	    `(
 	      (defcommand ,cmd-name nil nil ,doc
 			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
-						 ,cmd ,pull-p ,all-screens))
+						 ,cmd-string ,pull-p ,all-screens))
 	      ,(unless (null key)
 		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
