@@ -8,7 +8,7 @@ if command -v yum; then
     APT_GET="yum"
 fi
 
-sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap
+sudo ${APT_GET} install -y sbcl curl autoconf make texinfo rlwrap install-info
 
 sudo ${APT_GET} install -y xinit x11-xserver-utils \
      xbacklight xcalib xsel upower xscreensaver
