@@ -76,6 +76,10 @@ fi
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
 
+if which apt-get; then
+    sudo ./update-sources-list.sh
+fi
+
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
     <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
 30 10 * * * bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
