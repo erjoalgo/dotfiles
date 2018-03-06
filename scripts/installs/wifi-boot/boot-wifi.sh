@@ -2,7 +2,16 @@
 
 set -euo pipefail
 
-sudo apt-get install -y wireless-tools expect
+LINE=$(lspci | grep -i network)
+
+if grep -i centrino <<< "$LINE"; then
+    sudo apt-get install firmware-iwlwifi
+    sudo modprobe -r iwlwifi
+    sudo modprobe iwlwifi
+elif false; then
+    echo false
+fi
+sudo apt-get install -y expect
 
 # apt-get install -y firmware-realtek
 # apt-get install -y firmware-iwlwifi
