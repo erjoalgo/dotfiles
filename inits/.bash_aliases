@@ -170,6 +170,7 @@ alias ecdsa-fingerprint='ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub'
 alias ecdsa-fingerprint-md5='ecdsa-fingerprint -Emd5'
 alias ecdsa-fingerprint-sha256='ecdsa-fingerprint -Esha256'
 alias ecdsa-fingerprint-sha256-old-ssh="awk '{print \$2}' /etc/ssh/ssh_host_ecdsa_key.pub | base64 -d | sha256sum -b | awk '{print \$1}' | xxd -r -p | base64"
+alias pem-sha256='openssl x509 -noout -fingerprint -sha256 -in'
 
 # command defaults
 alias grep='grep --color=auto'
