@@ -166,6 +166,9 @@ alias javafmt="eclipse \
       org.eclipse.jdt.core.JavaCodeFormatter -config \
       \${JAVA_FORMATTER_CONFIG_FILE}"
 alias cat-id-rsa-pub-xs='cat ~/.ssh/id_rsa.pub | xs'
+alias ecdsa-fingerprint='ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub'
+alias ecdsa-fingerprint-md5='ecdsa-fingerprint -Emd5'
+alias ecdsa-fingerprint-sha256='ecdsa-fingerprint -Esha256'
 
 # command defaults
 alias grep='grep --color=auto'
