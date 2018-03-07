@@ -165,7 +165,7 @@ alias javafmt="eclipse \
        -nosplash -application  \
       org.eclipse.jdt.core.JavaCodeFormatter -config \
       \${JAVA_FORMATTER_CONFIG_FILE}"
-
+alias cat-id-rsa-pub-xs='cat ~/.ssh/id_rsa.pub | xs'
 
 # command defaults
 alias grep='grep --color=auto'
