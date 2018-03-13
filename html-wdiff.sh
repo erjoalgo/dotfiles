@@ -12,8 +12,8 @@ cat <<EOF
 <body>
 EOF
 wdiff \
-    --start-delete '<font size="3" color="red">' \
-    --end-delete '</font>' \
+    --start-delete '<font size="3" color="red"><strike>' \
+    --end-delete '</strike></font>' \
     --start-insert  '<font size="3" color="green">' \
     --end-insert '</font>' \
     -n "$1" "$2" \
