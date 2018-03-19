@@ -46,7 +46,7 @@ echo ${REMOTE_URL}
 ORIGIN_NAME=origin
 for NAME in origin origin-${USERHOST} origin-${USERHOST}-${RANDOM}; do
     ORIGIN_NAME=${NAME}
-    if test $(git config --get remote.${NAME}.url) = ${REMOTE_URL}; then
+    if test "$(git config --get remote.${NAME}.url)" = "${REMOTE_URL}"; then
 	break
     elif git remote add ${ORIGIN_NAME} ${REMOTE_URL}; then
 	break
