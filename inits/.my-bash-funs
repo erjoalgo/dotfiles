@@ -121,9 +121,7 @@ function git-delete-merged-branches	{
 
 function git-push-current-branch	{
     BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-    # REMOTE=${1:-origin}
-    REMOTE="${1}"
-    shift
+    REMOTE=${1:-origin} && shift
     git push "${REMOTE}" "${BRANCH}" ${*}
 }
 
