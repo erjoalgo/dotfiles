@@ -70,6 +70,8 @@ alias gw='git show'
 alias gww='git show HEAD^'
 alias gwww='git show HEAD^^'
 alias gwwww='git show HEAD^^^'
+alias gwwwww='git show HEAD^^^^'
+alias gwwwwww='git show HEAD^^^^^'
 __git_complete gw _git_show
 alias cdgittop='cd $(git rev-parse --show-toplevel) && pwd'
 alias hb='hub browse'
