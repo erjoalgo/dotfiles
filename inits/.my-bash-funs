@@ -124,6 +124,7 @@ function git-push-current-branch	{
     REMOTE=${1:-origin} && shift
     git push "${REMOTE}" "${BRANCH}" ${*}
 }
+__git_complete git-push-current-branch _git_pull
 
 function git-review-pull-request	{
     ORIG_HEAD=$(git rev-parse --abbrev-ref HEAD)
