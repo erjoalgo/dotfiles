@@ -51,7 +51,7 @@
 
 (defparameter *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
-    "Chromium-browser" "Tor Browser" "Google-chrome"))
+    "Chromium-browser" "Tor Browser" "Google-chrome" "Firefox-esr"))
 
 (defun coalesce (a b)
   (if (zerop (length a)) b a))
