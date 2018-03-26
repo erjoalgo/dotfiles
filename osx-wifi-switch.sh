@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+say "entering wifi switch script"
 # IFACE=$(networksetup -listnetworkserviceorder | grep -oP '(?<=Wi-Fi, Device: )[^)]+')
 IFACE=$(networksetup -listnetworkserviceorder |  \
             grep -o 'Wi-Fi, Device:[^)]*' | cut -f2 -d: | tr -d ' ')
