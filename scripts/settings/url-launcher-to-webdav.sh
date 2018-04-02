@@ -11,7 +11,9 @@ while IFS= read -r LINE; do
     URL=$(cut -f2 <<< "${LINE}")
     ! grep "/" <<< "${KEY}"
     OUT="${PARENT}/${KEY}"
-    if test -e "${OUT}"; then
+    if test -z "${KEY}"; then
+	echo "warning: skipping empty line"
+    elif test -e "${OUT}"; then
 	CONTENTS=$(cat "${OUT}")
 	if test "$URL" != "${CONTENTS}"; then
 	    echo "warning: not overwriting $KEY"
