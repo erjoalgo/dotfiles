@@ -16,6 +16,7 @@ if command -v xsel > /dev/null; then
 else
     alias xs='pbcopy'
 fi
+alias pd='pushd .'
 
 alias xargsz='xargs -IZ'
 alias ps-aux-grep='ps aux|grep -i '
