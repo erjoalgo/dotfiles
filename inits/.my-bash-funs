@@ -324,3 +324,7 @@ function ps-tree	{
 	CURR=$(ps -o ppid= -p ${CURR})
     done
 }
+
+function gg    {
+    git grep ${*} $(git rev-list --all)
+}
