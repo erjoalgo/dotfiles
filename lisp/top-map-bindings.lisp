@@ -1,7 +1,7 @@
 ;(defvar *top-hash-map* nil )
 
 ;;to avoid sync-keys on every define-key
-(defvar *real-top-map* nil )
+(defvar *real-top-map* nil)
 (setf *real-top-map* *top-map*)
 
 ;; why are we pushing a real copy of top map, which will be discarded?
