@@ -91,6 +91,7 @@ alias gsw='git stash show -p'
 alias gsd='git stash drop'
 alias gsl='git stash list'
 alias gsp='git stash pop'
+alias gsh='git stash'
 
 # never used
 # alias gm='git commit'
