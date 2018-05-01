@@ -71,6 +71,8 @@ alias gkp='git checkout -p'
 __git_complete gck _git_checkout
 alias gcrp='git cherry-pick'
 __git_complete gck _git_cherry-pick
+alias gkp-last='git checkout -p HEAD^'
+__git_complete gck _git_checkout
 alias gw='git show'
 alias gww='git show HEAD^'
 alias gwww='git show HEAD^^'
