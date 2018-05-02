@@ -329,6 +329,10 @@ function gg    {
     git grep ${*} $(git rev-list --all)
 }
 
+function git-merge-base-show    {
+    git show $(git merge-base ${*})
+}
+
 function git-filter-branch-rewrite-path-sed    {
     SED_EXP=${1} && shift
     git filter-branch -f --index-filter '
