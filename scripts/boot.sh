@@ -84,4 +84,7 @@ insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-u
     <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
 30 10 * * * bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
 EOF
+
+mkdir -p ${HOME}/src
+
 echo "success"
