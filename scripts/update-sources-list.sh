@@ -1,10 +1,13 @@
 #!/bin/bash -x
 
-if test -n "$TEST"; then
+SOURCES=/etc/apt/sources.list
+
+if ! test -e ${SOURCES}.bak; then
     cp /etc/apt/sources.list{,.bak}
-    SOURCES=/etc/apt/sources.list.bak
-else
-    SOURCES=/etc/apt/sources.list
+fi
+
+if ! test -e "${TEST}"; then
+    SOURCES=${SOURCES}.bak
 fi
 
 CODENAME=$(
