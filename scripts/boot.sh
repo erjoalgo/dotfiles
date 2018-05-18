@@ -76,7 +76,7 @@ fi
 sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
 
-if which apt-get; then
+if which apt-get && grep cdrom /etc/apt/sources.list; then
     sudo ./update-sources-list.sh
 fi
 
