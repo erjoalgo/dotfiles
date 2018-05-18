@@ -10,10 +10,12 @@ if ! test -e "${TEST}"; then
     SOURCES=${SOURCES}.bak
 fi
 
-CODENAME=$(
 . /etc/os-release
-printf '%s\n' "$VERSION" | grep -o '[a-z]*'
-)
+if test -n "${VERSION_CODENAME}"; then
+    CODENAME=$VERSION_CODENAME
+else
+    CODENAME=$(printf '%s\n' "$VERSION" | grep -o '[a-z]*')
+fi
 
 cat << EOF >> $SOURCES
 deb http://ftp.debian.org/debian $CODENAME main
