@@ -186,7 +186,7 @@ alias pem-sha256='openssl x509 -noout -fingerprint -sha256 -in'
 # command defaults
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
-if ! ls --color=auto &> /dev/null; then
+if ! ls --color=auto &> /dev/null && alias ls; then
     unalias ls;
 fi
 alias pkill='pkill -e'
