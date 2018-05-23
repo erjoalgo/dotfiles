@@ -17,6 +17,7 @@ else
     alias xs='pbcopy'
 fi
 alias pd='pushd .'
+alias ppd='popd'
 
 alias xargsz='xargs -IZ'
 alias ps-aux-grep='ps aux|grep -i '
