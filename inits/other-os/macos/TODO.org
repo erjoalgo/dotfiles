@@ -1,0 +1,2 @@
+- invert trackpad direction
+- use f[0-12] as standard function keys
