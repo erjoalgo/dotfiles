@@ -152,7 +152,7 @@ function git-review-pull-request	{
     HASHES=$(git log --reverse "${FROM_BRANCH}".."${TO_BRANCH}"   \
 		 --pretty=format:"%h")
     COUNTER=1
-    TOTAL=$(wc -l <<< "${HASHES}")
+    TOTAL=$(wc -l <<< "${HASHES}" | tr -d ' ')
     FAILED=""
 
     for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
