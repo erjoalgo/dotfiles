@@ -73,7 +73,10 @@ if test -e ${GRUB_FILE} &&  \
 fi
 
 # some essential scripts
-sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
+if test -n "${APT_GET}"; then
+    sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
+fi
+
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
 
 if which apt-get && grep cdrom /etc/apt/sources.list; then
