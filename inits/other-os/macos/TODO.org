@@ -1,2 +1,4 @@
 - invert trackpad direction
 - use f[0-12] as standard function keys
+- Terminal > Preferences > Profiles > Keyboard you can check "Use option key as meta key."
+    https://stackoverflow.com/questions/327664/mac-os-x-terminal-map-optiondelete-to-backward-delete-word?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
