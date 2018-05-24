@@ -135,14 +135,6 @@
                 },
                 {
                     "from": {
-                        "key_code": "right_command"
-                    },
-                    "to": {
-                        "key_code": "right_command"
-                    }
-                },
-                {
-                    "from": {
                         "key_code": "caps_lock"
                     },
                     "to": {
