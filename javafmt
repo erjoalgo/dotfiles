@@ -1,0 +1,10 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+eclipse -nosplash -application org.eclipse.jdt.core.JavaCodeFormatter \
+	-config ${JAVA_FORMATTER_CONFIG_FILE} ${*}
+
+# Local Variables:
+# mode: sh
+# End:
