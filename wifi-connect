@@ -84,7 +84,7 @@ fi
 
 for i in $(seq ${TRIES}); do
     IWLIST_OUT=$(sudo iwlist ${IFACE} scan |& tee ${SCAN_RESULTS_FN})
-    ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*ESSID:"\(.*\)".*/\1/g')
+    ESSIDS=$(grep ESSID <<< "${IWLIST_OUT}" | sed 's/.*SSID:"\(.*\)".*/\1/g')
     if test 0 -ne $? || test -z "${ESSIDS}"; then
 	if test $i -eq ${TRIES}; then
 	    message "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
