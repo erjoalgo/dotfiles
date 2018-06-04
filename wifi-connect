@@ -97,7 +97,9 @@ for i in $(seq ${TRIES}); do
 done
 
 
-NETWORKS_DIR=/etc/wpa-connect
+NETWORKS_DIR=${HOME}/.config/wifi-connect
+mkdir -p ${NETWORKS_DIR}
+cd ${NETWORKS_DIR}
 
 COUNT=$(wc -l <<< "${ESSIDS}")
 case ${COUNT} in
@@ -133,9 +135,6 @@ ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
 
 sudo pkill -e wpa_supplicant
 sudo pkill -e dhclient
-
-cd ${NETWORKS_DIR}
-test -d ${NETWORKS_DIR} || sudo mkdir -p ${NETWORKS_DIR}
 
 case "${ENC}" in
     on) #assume wpa
