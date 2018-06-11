@@ -48,9 +48,8 @@ DATA=$(cat <<EOF
 EOF
 )
 
-if test -z "${DESCRIPTION}"; then
+test -n "${DESCRIPTION}" || \
     read  -p "enter description for ${REPO_NAME}: " DESCRIPTION
-fi
 
 if test -n  "${GITHUB_TOKEN}"; then
     AUTH_OPT_KEY="-H"
