@@ -39,7 +39,7 @@ PRIVATE=${PRIVATE:-false}
 DATA=$(cat <<EOF
 {
   "name": "${REPO_NAME}",
-  "description": "",
+  "description": "${DESCRIPTION}",
   "private": ${PRIVATE},
   "has_issues": true,
   "has_projects": true,
