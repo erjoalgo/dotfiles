@@ -172,6 +172,8 @@ alias tail-syslog='sudo tail -f /var/log/syslog'
 alias tail-mail='sudo less /var/mail/$(whoami)'
 alias mci='mvn clean install'
 alias cflogs='cf logs $(grep -Po "(?<=name: ).*" manifest.yml)'
+alias json-pp='python -mjson.tool'
+
 #pipes
 alias lein-repl-tee-log='lein repl |& tee log'
 alias psgrep='ps ax | grep -i'
