@@ -233,6 +233,11 @@ perform ocr on it, place ocr'd text into clipboard"
 		      :error t
 		      :wait t))
 
+(defcommand spell-clipboard () ()
+            "spell clipboard contents, character by character"
+            (speak-string
+             (cl-ppcre:regex-replace-all "(.)" (GET-X-SELECTION) " \\1")))
+
 (defcommand echo-window-class () ()
   "echo window class"
   (message "window class: ~A" (window-class (current-window))))

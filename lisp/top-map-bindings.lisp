@@ -177,6 +177,7 @@
    ("S" "scrot-cmd-full-screen" )
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
+   ("K" "spell-clipboard" )
    ))
 
 
