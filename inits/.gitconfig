@@ -8,3 +8,7 @@
   interactive = auto
   ui = true
   pager = true
+
+
+[branch]
+  autosetupmerge = always
