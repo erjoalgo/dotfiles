@@ -12,6 +12,10 @@ GNU_SCRIPTS="${HOME}/git/erjoalgo-gnu-scripts"
 source ~/.bash_aliases #should already be sourced by original bashrc
 source ~/.my-bash-funs #lnabs, findiregex, etc
 
+# bash completion on macos
+test -f $(brew --prefix)/etc/bash_completion &&  \
+    . $(brew --prefix)/etc/bash_completion
+
 #gnu scripts
 export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin
 
