@@ -91,6 +91,7 @@ function shred-rec	{
 	read -p "rec shred ${FN}?"
 	if test -d "${FN}"; then
 	    find "${FN}" -type f -exec shred -zuf {} \;
+	    find "${FN}" -type l -exec unlink {} \;
 	    find "${FN}" -depth -type d -exec rmdir {} \;
 	else
 	    shred -zufn10 "${FN}"
