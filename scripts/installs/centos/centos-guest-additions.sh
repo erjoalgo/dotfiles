@@ -18,6 +18,6 @@ sudo yum install -y dkms gcc make kernel-devel bzip2 binutils patch libgomp glib
 
 # mount /dev/scd0 /media/cdrom
 sudo mkdir -p /media/cdrom
-sudo umount /media/cdrom
+sudo umount /media/cdrom || true
 sudo mount ${BASE} /media/cdrom
 sudo sh /media/cdrom/VBoxLinuxAdditions.run
