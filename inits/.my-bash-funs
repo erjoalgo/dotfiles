@@ -93,6 +93,8 @@ function shred-rec	{
 	    find "${FN}" -type f -exec shred -zuf {} \;
 	    find "${FN}" -type l -exec unlink {} \;
 	    find "${FN}" -depth -type d -exec rmdir {} \;
+	elif test -L "${FN}"; then
+            unlink "${FN}"
 	else
 	    shred -zufn10 "${FN}"
 	fi
