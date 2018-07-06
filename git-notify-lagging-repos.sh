@@ -85,7 +85,9 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 # https://stackoverflow.com/questions/5947742/
 
+ORIGPWD=$(pwd)
 while test $# -gt 0; do
+    cd "${ORIGPWD}"
     REPO=${1} && shift
     check_lagging "${REPO}"
 done
