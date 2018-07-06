@@ -49,7 +49,7 @@ function check_lagging	{
     TAGS=""
     REMOTE=$(git config branch.${BRANCH}.remote)
     if test -z "${REMOTE}"; then
-	TAGS+=" ${YELLOW}NO-REMOTE${NC}"
+	TAGS+=" ${BROWN_ORANGE}NO-REMOTE${NC}"
     else
 	if test 0 -eq $(git branch -r --contains ${BRANCH} | wc -l); then
 	    CNT=$(git log ${REMOTE}/${BRANCH}..HEAD --oneline | wc -l)
@@ -64,12 +64,12 @@ function check_lagging	{
 	fi
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
-	TAGS+=" ${BROWN_ORANGE}UNCOMMITED${NC}"
+	TAGS+=" ${YELLOW}UNCOMMITED${NC}"
     fi
 
     STASH_CNT=$(git stash list | wc -l)
     if test "${STASH_CNT}" -gt 0; then
-	TAGS+=" ${YELLOW}${STASH_CNT}-STASHED${NC}"
+	TAGS+=" ${BROWN_ORANGE}${STASH_CNT}-STASHED${NC}"
     fi
     UNTRACKED_CNT=$(git ls-files --others --exclude-standard | wc -l)
     if test ${UNTRACKED_CNT} -ne 0; then
