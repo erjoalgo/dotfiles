@@ -1,0 +1,4 @@
+xterm*eightBitInput: false
+XTerm*selectToClipboard: true
+xterm*font:     *-Monospace-*-*-*-20-*
+xterm*loginShell: true

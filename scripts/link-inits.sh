@@ -41,6 +41,7 @@ for LINK in \
     .gitconfig \
     .tmux.conf \
     .xscreensaver \
+    .Xdefaults \
     ; do \
 
     safe_ln "${INITS_TOP}/${LINK}" "${HOME}/"
