@@ -79,6 +79,7 @@ which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || tru
 if which apt-get && grep cdrom /etc/apt/sources.list; then
     sudo ./update-sources-list.sh
 fi
+sudo apt-get update
 
 # some essential scripts
 if test -n "${APT_GET}"; then
