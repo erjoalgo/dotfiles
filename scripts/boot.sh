@@ -12,7 +12,7 @@ if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
 fi
 
 if test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y git sudo curl"
+   ${SUDOCMD} "${APT_GET} install -y git sudo curl python"
 fi
 
 # set up passwordless sudo
