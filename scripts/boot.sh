@@ -72,15 +72,16 @@ if test -e ${GRUB_FILE} &&  \
     which update-grub && sudo update-grub
 fi
 
-# some essential scripts
-if test -n "${APT_GET}"; then
-    sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
-fi
 
 which apt-get && sudo apt-get install -y apt-file && sudo apt-file update || true
 
 if which apt-get && grep cdrom /etc/apt/sources.list; then
     sudo ./update-sources-list.sh
+fi
+
+# some essential scripts
+if test -n "${APT_GET}"; then
+    sudo ${APT_GET} install -y htop auditd fail2ban bootlogd
 fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
