@@ -18,10 +18,13 @@
 	 with start-time-millis = (get-internal-real-time)
 	 with timeout = (if (numberp wait) wait *nc-timeout-millis*)
 	 with i = 0
-	 as char = (read-char-no-hang stream)
+         with eof = nil
+	 as char = (handler-case
+                       (read-char-no-hang stream)
+                     (error () (setf eof t)))
 	 as time-elapsed = (- (get-internal-real-time) start-time-millis)
 	 as time-left = (- timeout time-elapsed)
-	 while (or char (> time-left 0)) do
+	 while (and (not eof) (or char (> time-left 0))) do
 	   (when char (setf (aref seq i) char) (incf i))
 	 finally (setf seq (subseq seq 0 i)))
       (usocket:socket-close socket))
