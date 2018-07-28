@@ -64,6 +64,16 @@ function passgen-allow-special	{
 }
 
 
+function passgen-pin	{
+    NAME=${1} && shift
+    LENGTH=""
+    LENGTH=${LENGTH:-4}
+    PIN=$(tr -dc 0-9 < /dev/urandom | head -c ${LENGTH})
+    echo ${PIN} | pass insert --echo ${NAME}
+    echo -n ${PIN} | xclip -i -selection clipboard
+    xclip -o -selection primary
+}
+
 function test_port	{
     HOST="${1}"
     PORT="${2}"
