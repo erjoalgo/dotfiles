@@ -29,7 +29,7 @@
       *persistent-alist-syms*)
 
 (defun url-launcher-get-browser-current-url ()
-  (mozrepl-firefox-get-url))
+  (chrome-get-url))
 
 (defun url-launcher-browser-new-tab (url)
   ;;(mozreplfirefoxnewtab url)
