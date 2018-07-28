@@ -65,6 +65,20 @@
 	do (sleep delay)
      do (mozrepl-send-command cmd)))
 
+(defparameter *chrome-url-port* 19615)
+
+(defun chrome-get-url ()
+  (let* ((get-payload "GET /tabs/current/url HTTP/1.1
+Host: localhost:19615
+User-Agent: nc
+Accept: */*
+
+
+")
+         (resp (nc *localhost* *chrome-url-port* get-payload :wait t))
+         (lines (cl-ppcre:split #\Newline resp)))
+    (car (last lines))))
+
 (defun mozrepl-firefox-get-url ()
   (let ((out (mozrepl-send-command "content.document.location.href"
 				   :wait t)))
