@@ -51,12 +51,18 @@ function genpasswd {
 
 function passgen	{
     NAME=${1} && shift
+    SPECIAL_FLAG=${SPECIAL_FLAG:--n}
     LENGTH=""
     LENGTH=${LENGTH:-14}
-    pass generate ${*} -c ${NAME} ${LENGTH}
+    pass generate ${SPECIAL_FLAG} ${*} -c ${NAME} ${LENGTH}
     xclip -o -selection clipboard | xclip -i -selection primary
     xclip -o -selection primary
 }
+
+function passgen-allow-special	{
+    SPECIAL_FLAG=" " passgen ${*}
+}
+
 
 function test_port	{
     HOST="${1}"
