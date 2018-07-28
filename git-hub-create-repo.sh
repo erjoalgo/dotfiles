@@ -36,6 +36,9 @@ PRIVATE=${PRIVATE:-false}
 
 # Accept: application/vnd.github.v3+json
 
+test -n "${DESCRIPTION}" || \
+    read  -p "enter description for ${REPO_NAME}: " DESCRIPTION
+
 DATA=$(cat <<EOF
 {
   "name": "${REPO_NAME}",
@@ -48,8 +51,6 @@ DATA=$(cat <<EOF
 EOF
 )
 
-test -n "${DESCRIPTION}" || \
-    read  -p "enter description for ${REPO_NAME}: " DESCRIPTION
 
 if test -n  "${GITHUB_TOKEN}"; then
     AUTH_OPT_KEY="-H"
