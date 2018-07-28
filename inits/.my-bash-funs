@@ -74,6 +74,10 @@ function passgen-pin	{
     xclip -o -selection primary
 }
 
+for PASS_CMD in passgen{,-allow-special,-pin}; do
+    complete -o filenames -o nospace -F _pass ${PASS_CMD}
+done
+
 function test_port	{
     HOST="${1}"
     PORT="${2}"
