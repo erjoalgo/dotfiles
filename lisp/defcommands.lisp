@@ -263,3 +263,6 @@ perform ocr on it, place ocr'd text into clipboard"
 (defcommand-xdotool-type "ernesto.alfonsogonzalez@ge.com")
 (defcommand-xdotool-type "erjoalgo@gmail.com")
 (defcommand-xdotool-type (get-x-selection) :name "clipboard")
+
+(defcommand echo-current-tab () ()
+  (echo (url-launcher-get-browser-current-url)))
