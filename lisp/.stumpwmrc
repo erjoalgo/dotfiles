@@ -61,7 +61,7 @@
 (defparameter *browser-name*
   (coalesce (string-trim '(#\newline)
 	       (run-shell-command
-		"basename $(which chromium chromium-browser chrome)" t))
+		"basename $(which chromium chromium-browser chrome google-chrome)" t))
             "chromium"))
 
 (load-files-verbose
