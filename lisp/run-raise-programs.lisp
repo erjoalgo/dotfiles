@@ -61,7 +61,8 @@
 		   "xterm" "XTerm" "Gnome-terminal"))
 
 (define-run-or-pull-program "emacs"
-    :pull-key "H-E")
+  :pull-key "H-E"
+  :classes (list "emacs" "GoogleEmacs"))
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
