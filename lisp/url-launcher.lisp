@@ -52,7 +52,8 @@
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
-     thereis (and (cl-ppcre:scan regexp url) opener)))
+     thereis (and (cl-ppcre:scan regexp url) opener)
+     finally (return #'url-launcher-browser-new-tab)))
 
 (define-stumpwm-type-for-completion-from-alist-key-only
   :launcher-url (persistent-alist-alist *launcher-persistent-alist*))
