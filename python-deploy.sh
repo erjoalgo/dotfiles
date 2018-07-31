@@ -1,10 +1,10 @@
 #!/bin/bash -x
 
 test -e setup.py || exit ${LINENO}
+PROJECT_NAME=$(python setup.py --name)
 sudo rm -rf build  dist *.egg-info
 python setup.py sdist
 VERSION=$(python setup.py --version) || exit ${LINENO}
-PROJECT_NAME=$(basename $(pwd))
 TARGZ=dist/${PROJECT_NAME}-${VERSION}.tar.gz
 test -e ${TARGZ} || exit ${LINENO}
 gpg --detach-sign -a ${TARGZ} || exit ${LINENO}
