@@ -146,8 +146,8 @@
 
 (defcommand search-engine-search
   (engine terms)
-  ((:search-engine "enter search engine: ")
-   (:string "enter search query: "))
+  ((:search-engine "search engine: ")
+   (:string "query: "))
 
   "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
 
