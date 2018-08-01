@@ -10,6 +10,7 @@ sudo apt-get install -y dirmngr || true
 ./installs/emacs-install.sh
 sudo apt-get install -y chromium zathura gnome-terminal
 sudo apt-get install -y eog
+sudo apt-get install -y wireless-tools wpa_supplicant expect
 
 
 
