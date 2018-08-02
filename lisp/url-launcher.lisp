@@ -33,6 +33,7 @@
 
 (defun url-launcher-browser-new-tab (url)
   ;;(mozreplfirefoxnewtab url)
+  ;; (echo (format nil "url is ~A" url))
   (SB-EXT:RUN-PROGRAM *browser-name*
 		      (list url)
 		      :search t
