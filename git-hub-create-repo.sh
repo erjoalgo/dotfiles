@@ -1,7 +1,8 @@
 #!/bin/bash -x
 
-REPO_NAME="${1}" && shift
-REPO_NAME=${REPO_NAME:-$(basename $(pwd))}
+set -euo pipefail
+
+REPO_NAME=${1:-$(basename $(pwd))}
 
 GITHUB_API="https://api.github.com"
 
@@ -36,7 +37,7 @@ PRIVATE=${PRIVATE:-false}
 
 # Accept: application/vnd.github.v3+json
 
-test -n "${DESCRIPTION}" || \
+test -n "${DESCRIPTION:-}" || \
     read  -p "enter description for ${REPO_NAME}: " DESCRIPTION
 
 DATA=$(cat <<EOF
@@ -52,11 +53,11 @@ EOF
 )
 
 
-if test -n  "${GITHUB_TOKEN}"; then
+if test -n "${GITHUB_TOKEN:-}"; then
     AUTH_OPT_KEY="-H"
     AUTH_OPT_VAL="Authorization: token ${GITHUB_TOKEN}"
 else
-    if test -z "${GITHUB_USERNAME}"; then
+    if test -z "${GITHUB_USERNAME:-}"; then
 	read  -p "enter github username: " GITHUB_USERNAME
     fi
     AUTH_OPT_KEY="-u"
