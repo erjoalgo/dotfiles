@@ -112,6 +112,11 @@
     (when (zerop (length (run-shell-command "pidof xscreensaver" t)))
       (run-shell-command "xscreensaver &" nil)))
 
+(let ((host-specific-startup-script
+        #P"~/.xsession"))
+  (when (probe-file host-specific-startup-script)
+    (run-shell-command (format nil "~A &" host-specific-startup-script) nil)))
+
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
 
