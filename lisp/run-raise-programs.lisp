@@ -53,10 +53,7 @@
 
 (define-run-or-pull-program "x-terminal-emulator"
     :raise-key "H-c"
-    :cmd (if (equal "" (run-shell-command "which roxterm" t))
-	     "xterm"
-	     ;; "gnome-terminal --hide-menubar"
-	     "roxterm")
+    :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal" t))
     :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
 		   "xterm" "XTerm" "Gnome-terminal"))
 
