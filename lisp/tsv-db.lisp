@@ -48,7 +48,7 @@
     (:single-tsv-file
      (with-open-file (out fn
 			  :if-does-not-exist :create
-			  :if-exists :append
+			  :if-exists :SUPERSEDE
 			  :direction :output)
        (format out "~A~A~A~%"
 	       key (coerce '(#\Tab) 'string) value)))
@@ -56,7 +56,7 @@
      (with-open-file (out (make-pathname :name key
 					 :defaults fn)
 			  :if-does-not-exist :create
-			  :if-exists :overwrite
+			  :if-exists :supersede
 			  :direction :output)
        (format out "~A" value)))))
 
