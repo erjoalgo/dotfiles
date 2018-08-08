@@ -36,3 +36,4 @@ EOF
 
 # TODO wifi-boot
 # TODO automate vimium installation
+echo success
