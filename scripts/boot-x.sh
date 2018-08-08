@@ -7,7 +7,10 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 sudo apt-get install -y dirmngr || true
 
 ./installs/install-stumpwm.sh
-./installs/emacs-install.sh
+if ! ./installs/emacs-install.sh; then
+  echo "warning: failed to build emacs from source"
+  which emacs
+fi
 sudo apt-get install -y chromium zathura gnome-terminal
 sudo apt-get install -y eog
 sudo apt-get install -y wireless-tools wpa_supplicant expect
