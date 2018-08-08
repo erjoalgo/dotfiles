@@ -13,7 +13,7 @@ if ! ./installs/emacs-install.sh; then
 fi
 sudo apt-get install -y chromium zathura gnome-terminal
 sudo apt-get install -y eog
-sudo apt-get install -y wireless-tools wpa_supplicant expect
+sudo apt-get install -y wireless-tools wpasupplicant expect
 
 
 
