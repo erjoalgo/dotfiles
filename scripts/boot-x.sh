@@ -35,5 +35,4 @@ EOF
 
 
 # TODO wifi-boot
-# TODO automate debian installer seed
 # TODO automate vimium installation
