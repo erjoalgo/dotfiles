@@ -72,8 +72,7 @@
   (echo (format nil "before len: ~A" (length (persistent-alist-alist palist))))
   (push (cons key value) (persistent-alist-alist palist))
   (echo (format nil "after len: ~A" (length (persistent-alist-alist palist))))
-  (tsv-add-entry palist
-		 key value))
+  (tsv-add-entry palist key value))
 
 (defun persistent-alist-get (palist key)
   (cdr (assoc key
