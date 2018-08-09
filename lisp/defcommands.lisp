@@ -20,21 +20,54 @@
     (when visible-browser-wins
       (send-fake-key (car visible-browser-wins) (kbd up-down-key)))))
 
+(defun battery-info ()
+  (let* ((devices (run-shell-command "upower -e" t))
+         (device (loop for device in (cl-ppcre:split #\Newline devices)
+                         thereis (and (cl-ppcre:scan "BAT|battery" device)
+                                      device)))
+         (info (run-shell-command (format nil "upower -i ~A" device) t)))
+    '((NATIVE-PATH . "BAT0")
+      (VENDOR . "SMP")
+      (MODEL . "DELL GPM0365")
+      (SERIAL . "376")
+      (|POWER SUPPLY| . "yes")
+      (|HAS HISTORY| . "yes")
+      (|HAS STATISTICS| . "yes")
+      (PRESENT . "yes")
+      (RECHARGEABLE . "yes")
+      (STATE . "charging")
+      (WARNING-LEVEL . "none")
+      (ENERGY . "17.8866 Wh")
+      (ENERGY-EMPTY . "0 Wh")
+      (ENERGY-FULL . "93.2748 Wh")
+      (ENERGY-FULL-DESIGN . "97.0026 Wh")
+      (ENERGY-RATE . "47.937 W")
+      (VOLTAGE . "11.952 V")
+      (|TIME TO FULL| . "1.6 hours")
+      (PERCENTAGE . "19%")
+      (CAPACITY . "96.157%")
+      (TECHNOLOGY . "lithium-ion")
+      (ICON-NAME . "'battery-low-charging-symbolic'"))
+    (loop for line in (cl-ppcre:split #\Newline info)
+          as kv = (cl-ppcre:split #\: line)
+          when (= 2 (length kv))
+            collect (cons (intern (string-upcase (trim-spaces (car kv))) :keyword)
+                          (trim-spaces (cadr kv))))))
+
+
 (defvar *time-format-international* "%a %e %b %k:%M:%S")
 (defcommand echo-date-battery () ()
   "echo date and battery status"
-  (let* (
-	 (output (run-shell-command "battery-info.sh" t))
-	 (percentage (extract-match "percentage:.*?([0-9][^%]*)%" output 1))
-	 (state (extract-match "state:[^a-z]*([a-z-]+)" output 1))
-					;(to-full (extract-match "time to (full|empty: *.+?)\\n" output 1))
-	 (time (time-format *time-format-international*))
-	 )
+  (let* ((info (battery-info))
+         (percentage (cdr (assoc :PERCENTAGE info)))
+         (state (cdr (assoc :STATE info)))
+         (time-to-full (cdr (assoc :|TIME TO FULL| info)))
+	 (time (time-format *time-format-international*)))
     (echo-string-list
      (current-screen)
      (list
       time
-      (format nil  "battery: ~A (~A)" percentage state )))))
+      (format nil  "battery: ~A (~A, ~A to full)" percentage state  time-to-full)))))
 
 (define-stumpwm-type-for-completion
     :win-class
