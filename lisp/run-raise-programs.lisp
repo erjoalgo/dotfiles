@@ -73,7 +73,7 @@
       (car)))
 
 (define-run-or-pull-program "android-studio"
-  :classes '("jetbrains-studio" "Spring Tool Suite")
+  :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
   :cmd (first-existing-command
         "eclipse"
         "android-studio"
