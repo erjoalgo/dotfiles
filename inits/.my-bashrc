@@ -37,7 +37,8 @@ source ~/.bash_aliases #should already be sourced by original bashrc
 source ~/.my-bash-funs #lnabs, findiregex, etc
 
 # bash completion on macos
-test -f $(brew --prefix)/etc/bash_completion &&  \
+which brew &&  \
+    test -f $(brew --prefix)/etc/bash_completion &&  \
     . $(brew --prefix)/etc/bash_completion
 
 #gnu scripts
