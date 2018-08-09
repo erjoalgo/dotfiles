@@ -15,10 +15,6 @@ if test -n "${APT_GET}"; then
    ${SUDOCMD} "${APT_GET} install -y git sudo curl python"
 fi
 
-# set up passwordless sudo
-LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
-${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers" || ${SUDOCMD} "tee -a /etc/sudoers <<< \"${LINE}\""
-
 # fetch my git repos
 GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
@@ -35,6 +31,18 @@ done
 GNU_SCRIPTS=${GIT_HOME}/erjoalgo-gnu-scripts
 cd ${GNU_SCRIPTS} && git pull --ff-only
 export PATH=$PATH:${GNU_SCRIPTS}
+
+which insert-text-block
+
+# set up passwordless sudo
+NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
+if test -d /etc/sudoers.d; then
+    # use sudoers.d if possible
+    ${SUDOCMD} "$(which insert-text-block) \#\ 9003681e-db65-4817-9bf0-c4329f0d261b-add-${USER}-sudo-nopasswd /etc/sudoers.d/nopasswd" \
+               <<< "${NOPASSWD_LINE}"
+elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
+    ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
+fi
 
 ADDBLOCK=${GNU_SCRIPTS}/insert-text-block
 # sudo ln -sf  /usr/local/bin
