@@ -7,6 +7,7 @@ export EDITOR='emacsclient'
 #bash prompt
 
 
+# https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
 COLORS=$(cat <<EOF
 Black	0;30
 Blue	0;34
