@@ -66,13 +66,19 @@
        (and (probe-file (parse-namestring file))
 	    file)))
 
+(defun first-existing-command (&rest commands)
+  "assume command has no spaces or funny characters"
+  (->> (run-shell-command (format nil "which ~{~A~^ ~}" commands) t)
+      (cl-ppcre:split #\Newline)
+      (car)))
+
 (define-run-or-pull-program "android-studio"
-    :classes '("jetbrains-studio" "Spring Tool Suite")
-    :cmd (first-existing-file
-	  "~/Downloads/android-studio/bin/studio.sh"
-	  "~/src/sts-bundle/sts-3.9.2.RELEASE/STS"
-	  )
-    :raise-key "H-r")
+  :classes '("jetbrains-studio" "Spring Tool Suite")
+  :cmd (first-existing-command
+        "eclipse"
+        "android-studio"
+        "STS")
+  :raise-key "H-r")
 
 (define-run-or-pull-program "zathura")
 
