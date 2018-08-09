@@ -17,8 +17,6 @@
     (loop for _ below 2 do
       (run-shell-command (format nil "xmodmap ~A" xmodmap-filename) t))))
 
-(xmodmap-load)
-
 (defun run-startup-scripts ()
   (loop for script in (append
                        '(#P"~/.xsession")
@@ -27,4 +25,22 @@
         do
            (run-shell-command (format nil "~A &" script) nil)))
 
-(run-startup-scripts)
+(defun xinitrc-was-run-p (&key (filename #P"/tmp/stumpwmrc.pid") write-p)
+  (let ((pid (sb-posix:getpid)))
+    (if (null write-p)
+        (when (probe-file filename)
+          (with-open-file (fh filename)
+            (let* ((line (read-line fh))
+                   (stored-pid (parse-integer line)))
+              (= pid stored-pid))
+            ))
+        (with-open-file (fh filename :direction :output
+                                     :if-does-not-exist :create
+                                     :if-exists :supersede)
+          (format fh "~D" pid)))))
+
+(unless (xinitrc-was-run-p)
+  (echo "running xinitrc commands...")
+  (xmodmap-load)
+  (run-startup-scripts)
+  (xinitrc-was-run-p :write-p t))
