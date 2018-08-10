@@ -61,13 +61,14 @@
   (let* ((info (battery-info))
          (percentage (cdr (assoc :PERCENTAGE info)))
          (state (cdr (assoc :STATE info)))
-         (time-to-full (cdr (assoc :|TIME TO FULL| info)))
+         (time-left (cdr (or (assoc :|TIME TO FULL| info)
+                             (assoc :|TIME TO EMPTY| info))))
 	 (time (time-format *time-format-international*)))
     (echo-string-list
      (current-screen)
      (list
       time
-      (format nil  "battery: ~A (~A, ~A to full)" percentage state  time-to-full)))))
+      (format nil  "battery: ~A (~A, ~A left)" percentage state  time-left)))))
 
 (define-stumpwm-type-for-completion
     :win-class
