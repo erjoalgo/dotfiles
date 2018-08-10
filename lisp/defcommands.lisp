@@ -68,7 +68,8 @@
      (current-screen)
      (list
       time
-      (format nil  "battery: ~A (~A, ~A left)" percentage state  time-left)))))
+      (format nil  "battery: ~A (~{~A~^, ~})" percentage
+              `(,state ,@(when time-left (list (concat time-left " left")))))))))
 
 (define-stumpwm-type-for-completion
     :win-class
