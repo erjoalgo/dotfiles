@@ -1,8 +1,7 @@
 {
-  "settingsVersion": "1.62.4",
+  "settingsVersion": "1.63.3",
   "exclusionRules": [
     {
-      "pattern": "https?://mail.google.com/*",
       "passKeys": ""
     }
   ],
