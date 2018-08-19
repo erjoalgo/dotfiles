@@ -40,7 +40,7 @@ args=vars(parser.parse_args())
 globals().update(args)
 
 stdin=sys.stdin.read()
-if not no_strip_newline and stdin[-1]=="\n":
+if not no_strip_newline and stdin and stdin[-1]=="\n":
     stdin=stdin[:-1]
 block="\n".join((line, stdin, line))
 if not filename.startswith("/dev/fd") and not os.path.exists(filename):
