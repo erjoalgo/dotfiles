@@ -34,7 +34,7 @@ RULE_FNAME=/etc/udev/rules.d/199-automount-usb-${ID_SERIAL_SHORT}.rules
 
 cat <<EOF | sudo tee ${RULE_FNAME}
 # auto-generated rule to mount device at mount point
-ACTION=="add", KERNEL=="sd[a-z][1-9]", SUBSYSTEM=="block", RUN+="$(which mount) ${MOUNT_OPTS:-} ${DEVNAME} ${MOUNT_POINT}"
+ACTION=="add", KERNEL=="sd[a-z][1-9]", SUBSYSTEM=="block", RUN+="$(which mount) ${MOUNT_OPTS:-} /dev/%k ${MOUNT_POINT}"
 EOF
 
 RELOAD=false
