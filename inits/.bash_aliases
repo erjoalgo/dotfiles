@@ -199,6 +199,8 @@ alias pip-install-user='pip install --user'
 # auto sudo
 alias service='sudo service'
 alias umount='sudo umount'
+# complete -F _umount_module umount
+complete -F _command umount
 alias blkid='sudo blkid'
 alias killall='sudo killall -v'
 
