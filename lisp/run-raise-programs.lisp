@@ -72,13 +72,18 @@
       (cl-ppcre:split #\Newline)
       (car)))
 
-(define-run-or-pull-program "android-studio"
-  :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
-  :cmd (first-existing-command
-        "eclipse"
-        "android-studio"
-        "STS")
-  :raise-key "H-r")
+(let ((eclipse-cmd
+        (first-existing-command
+         "eclipse"
+         "android-studio"
+         "STS")))
+
+  (when eclipse-cmd
+    (define-run-or-pull-program "android-studio"
+      :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
+      :cmd eclipse-cmd
+      :raise-key "H-r")))
+
 
 (define-run-or-pull-program "zathura")
 
