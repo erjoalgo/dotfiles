@@ -34,7 +34,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
      do (loop for class in classes
 	     ;;do (format t "setting class ~A to ~A~%" class top-copy)
 	   do (setf (gethash (string-downcase class)
-			     *per-window-bindings-class-to-map*) top-copy))))
+			     *per-window-bindings-class-to-map*)
+                    top-copy))))
 
 (defun per-window-bindings-reload-from-fn ()
   (load *per-window-binding-rules-fn*)
@@ -45,15 +46,18 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (stumpwm::per-window-bindings-reload-from-fn))
 
 
-(defvar *current-top-bindings* nil )
+(defvar *current-top-bindings* nil)
 
 (defun focus-window-bindings (b a)
   (declare (ignore a))
   ;;(setq ab (list a b))
-  (let* ((class-dest (and b (window-class b)))
-	 (bindings-dest (gethash (string-downcase class-dest)
-				 *per-window-bindings-class-to-map*))
-	 (curr-bindings (car *current-top-bindings*)))
+  (let* ((curr-bindings (car *current-top-bindings*))
+         class-dest bindings-dest)
+
+    (when b
+      (setf class-dest (window-class b)
+            bindings-dest (gethash (string-downcase class-dest)
+				   *per-window-bindings-class-to-map*)))
 
     (unless (eq curr-bindings bindings-dest)
       (when curr-bindings
