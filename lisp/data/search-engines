@@ -21,3 +21,4 @@ chrome	chrome://~A
 Moma	https://moma.corp.google.com/search?q=~A
 Who	https://moma.corp.google.com/person/~A
 Yaqs	https://yaqs.googleplex.com/eng?query=~A
+codesearch	https://cs.corp.google.com/?q=~A
