@@ -48,8 +48,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (defvar *current-top-bindings* nil)
 
-(defun focus-window-bindings (b a)
-  (declare (ignore a))
+(defun focus-window-bindings (&optional b a)
+  (declare (ignore a));; we don't care about the old window
   ;;(setq ab (list a b))
   (let* ((curr-bindings (car *current-top-bindings*))
          class-dest bindings-dest)
@@ -77,3 +77,9 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (per-window-bindings-reload-from-fn)
 (add-hook STUMPWM::*focus-window-hook* 'focus-window-bindings)
+
+(defun destroy-window-hook (win)
+  (focus-window-bindings nil win))
+
+(add-hook STUMPWM::*UNMAP-WINDOW-HOOK* 'unmap-window-hook)
+(add-hook STUMPWM:*destroy-window-hook* 'destroy-window-hook)
