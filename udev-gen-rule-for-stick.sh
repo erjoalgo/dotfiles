@@ -8,7 +8,7 @@ while getopts "d:m:o:h" OPT; do
         DEVNAME=${OPTARG}
         ;;
     m)
-        MOUNT_POINT=${OPTARG}
+        MOUNT_POINT_PARENT=${OPTARG}
         ;;
     o)
         MOUNT_OPTS="-o ${OPTARG}"
@@ -20,11 +20,15 @@ while getopts "d:m:o:h" OPT; do
     esac
 done
 
-test -n "${DEVNAME}" -a -n "${MOUNT_POINT}"
+test -n "${DEVNAME}" -a -n "${MOUNT_POINT_PARENT}"
 
 ID_SERIAL_SHORT=$(udevadm info -n ${DEVNAME} |  \
                       grep ID_SERIAL_SHORT |  \
                       cut -d= -f2)
+
+MOUNT_POINT="${MOUNT_POINT_PARENT}/${ID_SERIAL_SHORT}"
+
+mkdir -p ${MOUNT_POINT} || sudo mkdir -p ${MOUNT_POINT}
 
 RULE_FNAME=/etc/udev/rules.d/199-automount-usb-${ID_SERIAL_SHORT}.rules
 
