@@ -34,13 +34,12 @@
 	  as pull-p = (eq pull-or-raise-fun 'pull-window)
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
-	  as cmd-string = (eval cmd)
-	  as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd-string)
+	  as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd)
 	  append
 	    `(
 	      (defcommand ,cmd-name nil nil ,doc
 			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
-						 ,cmd-string ,pull-p ,all-screens))
+						 ,cmd ,pull-p ,all-screens))
 	      ,(unless (null key)
 		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
