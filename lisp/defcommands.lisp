@@ -54,6 +54,20 @@
             collect (cons (intern (string-upcase (trim-spaces (car kv))) :keyword)
                           (trim-spaces (cadr kv))))))
 
+(defun battery-info-check-notify-loop (&key
+                                         (percentage-thresh 20)
+                                         (interval-mins 10))
+  (loop
+    with MINS = 60
+    as info = (battery-info)
+    as percentage = (parse-integer (cdr (assoc :PERCENTAGE info))
+                                   :junk-allowed t)
+    as state = (cdr (assoc :STATE info))
+    when (and (equal state "discharging")
+              (<= percentage percentage-thresh))
+      do (echo (format nil "warning: battery discharging (~D%)" percentage))
+    do (sleep (* interval-mins MINS))))
+
 
 (defvar *time-format-international* "%a %e %b %k:%M:%S")
 (defcommand echo-date-battery () ()
