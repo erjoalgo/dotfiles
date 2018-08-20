@@ -30,18 +30,18 @@
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					      (pull-window ,pull-key))
 
-	  as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
-	  as pull-p = (eq pull-or-raise-fun 'pull-window)
-	  as cmd-name-string = (symbol-name cmd-name)
-	  as fun = pull-or-raise-fun
-	  as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd)
-	  append
-	    `(
-	      (defcommand ,cmd-name nil nil ,doc
-			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
-						 ,cmd ,pull-p ,all-screens))
-	      ,(unless (null key)
-		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
+	     as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
+	     as pull-p = (eq pull-or-raise-fun 'pull-window)
+	     as cmd-name-string = (symbol-name cmd-name)
+	     as fun = pull-or-raise-fun
+	     as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd)
+	     append
+	     `(
+	       (defcommand ,cmd-name nil nil ,doc
+			   (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
+						  ,cmd ,pull-p ,all-screens))
+	       ,(unless (null key)
+		  `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
 (define-run-or-pull-program "BROWSER"
   :cmd *browser-name*
@@ -51,10 +51,10 @@
   :all-screens t)
 
 (define-run-or-pull-program "x-terminal-emulator"
-    :raise-key "H-c"
-    :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal" t))
-    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
-		   "xterm" "XTerm" "Gnome-terminal"))
+  :raise-key "H-c"
+  :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal" t))
+  :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
+		 "xterm" "XTerm" "Gnome-terminal"))
 
 (define-run-or-pull-program "emacs"
   :pull-key "H-E"
@@ -62,14 +62,14 @@
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
-       (and (probe-file (parse-namestring file))
-	    file)))
+                          (and (probe-file (parse-namestring file))
+	                       file)))
 
 (defun first-existing-command (&rest commands)
   "assume command has no spaces or funny characters"
   (->> (run-shell-command (format nil "which ~{~A~^ ~}" commands) t)
-      (cl-ppcre:split #\Newline)
-      (car)))
+       (cl-ppcre:split #\Newline)
+       (car)))
 
 (let ((eclipse-cmd
         (first-existing-command
