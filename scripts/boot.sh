@@ -61,6 +61,7 @@ sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 mkdir -p ${HOME}/.config
 cd ~/git/erjoalgo-stumpwmrc/scripts/
 for SCRIPT in link-inits.sh\
+                  gen-git-config.sh \
 	      ;do
     ./${SCRIPT}
 done

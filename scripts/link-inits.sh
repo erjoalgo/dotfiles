@@ -38,7 +38,6 @@ for LINK in \
     .my-bash-profile \
     .my-startups.sh \
     .my-bash-completions \
-    .gitconfig \
     .tmux.conf \
     .xscreensaver \
     .Xdefaults \
