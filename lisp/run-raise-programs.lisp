@@ -30,9 +30,7 @@
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					      (pull-window ,pull-key))
 
-	  as cmd-name = (gentemp (format nil "auto-gen-~A-~A"
-					 (symbol-name pull-or-raise-fun)
-					 name))
+	  as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
 	  as pull-p = (eq pull-or-raise-fun 'pull-window)
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
@@ -46,10 +44,12 @@
 	      ,(unless (null key)
 		       `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
-(define-run-or-pull-program *browser-name*
-    :raise-key "H-f"
-    :pull-key "H-F"
-    :classes *browser-classes* :all-screens t)
+(define-run-or-pull-program "BROWSER"
+  :cmd *browser-name*
+  :raise-key "H-f"
+  :pull-key "H-F"
+  :classes *browser-classes*
+  :all-screens t)
 
 (define-run-or-pull-program "x-terminal-emulator"
     :raise-key "H-c"
