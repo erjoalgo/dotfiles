@@ -114,3 +114,18 @@
 
 (defun last-msg-print ()
   (screen-last-msg (current-screen)))
+
+(defun set-x-selection-all (contents)
+  (set-x-selection contents :primary)
+  (set-x-selection contents :secondary)
+  (set-x-selection contents :clipboard))
+
+(defmacro with-clipboard-contents (contents &body body)
+  (let ((old-selection-sym (gensym "old-selection")))
+    `(let ((,old-selection-sym (get-x-selection)))
+       (set-x-selection-all ,contents)
+       ;; (format t "setting selection to ~A~%" (get-x-selection :primary))
+       ;; (format t "setting selection to ~A~%" (get-x-selection :secondary))
+       ;; (format t "setting selection to ~A~%" (get-x-selection :clipboard))
+       ,@body
+       (set-x-selection-all ,old-selection-sym))))

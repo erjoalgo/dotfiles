@@ -49,7 +49,8 @@
     ;;(".*[.]pdf" "gv")
     ("(^https?://.*|.*[.]html.*).*" ,#'url-launcher-browser-new-tab)
     (".*[.](docx?|odt)$" "libreoffice")
-    ("about:config" ,#'mozrepl-firefox-new-tab)))
+    ("about:config" ,#'mozrepl-firefox-new-tab)
+    ("chrome://.*" ,#'chrome-open-internal-url)))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*

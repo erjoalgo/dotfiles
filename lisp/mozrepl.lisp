@@ -106,4 +106,15 @@ Accept: */*
   (send-meta-key (current-screen) (kbd "C-c"))
   ;;(sleep .5)
   (sleep .5)
-  (get-x-selection ))
+  (get-x-selection))
+
+(defun chrome-open-internal-url (&optional chrome-url)
+  (setf chrome-url (or chrome-url "chrome://extensions"))
+  (RAISE-WINDOW-BROWSER)
+  ; (format t "url is ~A~%" chrome-url)
+  ; (echo (format nil "url is ~A~%" chrome-url))
+  ; (sleep 1)
+  (with-clipboard-contents chrome-url
+    (xdotool "key Ctrl+t Ctrl+l Ctrl+v Return")
+    ; (sleep 1)
+    '(xdotool "key Return")))
