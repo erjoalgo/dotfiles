@@ -48,10 +48,11 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (defvar *current-top-bindings* nil)
 
-(defun focus-window-bindings (&optional b a)
-  (declare (ignore a));; we don't care about the old window
+(defun focus-window-bindings (&rest ignored)
+  (declare (ignore ignored));; ignore arguments sent by various hooks
   ;;(setq ab (list a b))
-  (let* ((curr-bindings (car *current-top-bindings*))
+  (let* ((b (screen-current-window (current-screen)))
+         (curr-bindings (car *current-top-bindings*))
          class-dest bindings-dest)
 
     (when b
