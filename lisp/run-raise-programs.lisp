@@ -47,8 +47,7 @@
   :cmd *browser-name*
   :raise-key "H-f"
   :pull-key "H-F"
-  :classes *browser-classes*
-  :all-screens t)
+  :classes *browser-classes*)
 
 (define-run-or-pull-program "x-terminal-emulator"
   :raise-key "H-c"
@@ -82,7 +81,6 @@
       :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
       :cmd eclipse-cmd
       :raise-key "H-r")))
-
 
 (define-run-or-pull-program "zathura")
 
