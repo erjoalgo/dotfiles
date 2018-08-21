@@ -156,7 +156,8 @@
 	do (gnewbg (format nil "F~D" i))
 	nconc
 	  `((,(format nil "H-F~D" i) ,(format nil "gselect ~D" i))
-	    (,(format nil "S-H-F~D" i) ,(format nil "gmove ~D" i))))
+	    ;; (,(format nil "S-H-F~D" i) ,(format nil "gmove ~D" i))))
+            ))
 
      '(("H-F1" "gselect Default")
        ("S-H-F1" "gmove Default"))))
