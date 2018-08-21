@@ -87,5 +87,14 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (declare (ignore destroyed))
   (update-window-bindings nil))
 
-(add-hook STUMPWM::*UNMAP-WINDOW-HOOK* 'unmap-window-hook)
 (add-hook STUMPWM:*destroy-window-hook* 'destroy-window-hook)
+
+;; STUMPWM:*focus-frame-hook* runs before (screen-current-window (current-screen)) is defined...
+;; so this won't work:
+;; (add-hook STUMPWM:*focus-frame-hook* 'focus-window-bindings)
+
+(defun focus-frame-hook (new old)
+  (declare (ignore old))
+  (update-window-bindings (frame-window new)))
+
+(add-hook STUMPWM:*focus-frame-hook* 'focus-frame-hook)
