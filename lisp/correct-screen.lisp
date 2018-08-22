@@ -13,22 +13,22 @@
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
   (loop
-     with lines = (cdr (ppcre:split #\Newline
-				    (run-shell-command "xrandr -q" t)))
-     with pop-line = (lambda () (ppcre:split " +" (pop lines)))
-     while lines
-     collect (destructuring-bind (id state . etc) (funcall pop-line)
-	       (declare (ignore etc))
-	       (let ((modes (loop
-			       while (ppcre:scan "^ +[0-9]+x[0-9]+" (car lines))
+    with lines = (cdr (ppcre:split #\Newline
+				   (run-shell-command "xrandr -q" t)))
+    with pop-line = (lambda () (ppcre:split " +" (pop lines)))
+    while lines
+    collect (destructuring-bind (id state . etc) (funcall pop-line)
+	      (declare (ignore etc))
+	      (let ((modes (loop
+			     while (ppcre:scan "^ +[0-9]+x[0-9]+" (car lines))
 			     collect (cadr (funcall pop-line))))
-		     (extra (loop
-			       while (ppcre:scan "^ +" (car lines))
-			       collect (funcall pop-line))))
-		 (make-xrandr-display :id id :state state
+		    (extra (loop
+			     while (ppcre:scan "^ +" (car lines))
+			     collect (funcall pop-line))))
+		(make-xrandr-display :id id :state state
 				     :modes (mapcar #'xrandr-parse-mode modes)
-				      :connected-p (equal state "connected")
-				      :extra extra)))))
+				     :connected-p (equal state "connected")
+				     :extra extra)))))
 
 (defun xrandr-display-prefs (&key (prefs-file #P"~/.xdisplays"))
   (when (probe-file prefs-file)
@@ -45,7 +45,7 @@
 	 (connected (remove-if-not 'xrandr-display-connected-p
 				   displays))
 	 (to-connect-ordered (if order (loop for ith in order
-					  collect (nth ith connected))
+					     collect (nth ith connected))
 				 connected))
 	 (to-disconnect (remove-if (lambda (display)
 				     (member display to-connect-ordered))
@@ -58,19 +58,19 @@
 	  to-disconnect)
     ;; connect displays in order
     (loop for display in to-connect-ordered
-       with pos-x = 0
+          with pos-x = 0
           with display-mode-prefs = (xrandr-display-prefs)
           as mode = (or (cdr (assoc (xrandr-display-id display) display-mode-prefs :test #'equal))
                         (car (xrandr-display-modes display)))
-       do (destructuring-bind (mode-width mode-height) mode
-	    (declare (ignore mode-height))
-	    (let* ((id (xrandr-display-id display))
-		   (mode-string (format nil "~{~a~^x~}" mode))
-		   (pos-string (format nil "~Dx0" pos-x))
-		   (cmd (format nil "xrandr --output ~A --mode ~A --pos ~A"
-				id mode-string pos-string )))
-	      (run-shell-command-print cmd))
-	    (incf pos-x mode-width)))))
+          do (destructuring-bind (mode-width mode-height) mode
+	       (declare (ignore mode-height))
+	       (let* ((id (xrandr-display-id display))
+		      (mode-string (format nil "~{~a~^x~}" mode))
+		      (pos-string (format nil "~Dx0" pos-x))
+		      (cmd (format nil "xrandr --output ~A --mode ~A --pos ~A"
+				   id mode-string pos-string )))
+	         (run-shell-command-print cmd))
+	       (incf pos-x mode-width)))))
 
 (defcommand correct-screen-prompt-display-order () ()
   "correct screen, prompting for display order"
