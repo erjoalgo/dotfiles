@@ -8,7 +8,7 @@ if ! test -e ${GITCONFIG}; then
     cat << EOF > ${GITCONFIG}
 [user]
 	email = ${USER}@$(hostname)
-	name = $(getent passwd $USER | cut -d: -f 5)
+	name = $(getent passwd $USER | cut -d: -f 5 | cut -d, -f1)
 
 [color]
   diff = auto
