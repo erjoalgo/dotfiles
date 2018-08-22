@@ -16,6 +16,7 @@ if test -n "${APT_GET}"; then
 fi
 
 # fetch my git repos
+EMAIL=erjoalgo@gmail.com
 GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 cd ${GIT_HOME}
@@ -26,6 +27,8 @@ for REPO in erjoalgo-stumpwmrc \
 		erjoalgo-vimfx-config \
 	    ; do
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
+    cd ${REPO}
+    git config user.email ${EMAIL}
 done
 
 GNU_SCRIPTS=${GIT_HOME}/erjoalgo-gnu-scripts
