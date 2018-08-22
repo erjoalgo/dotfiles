@@ -4,6 +4,12 @@
 
 (defstruct xrandr-display id state mode modes connected-p extra)
 
+(defun xrandr-parse-mode (mode)
+  (ppcre:register-groups-bind (w h)
+      ("([0-9]+)x([0-9]+)i?"
+       mode)
+    (mapcar 'parse-integer (list w h))))
+
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
   (loop
@@ -15,19 +21,24 @@
 	       (declare (ignore etc))
 	       (let ((modes (loop
 			       while (ppcre:scan "^ +[0-9]+x[0-9]+" (car lines))
-			       collect (cdr (funcall pop-line))))
+			     collect (cadr (funcall pop-line))))
 		     (extra (loop
 			       while (ppcre:scan "^ +" (car lines))
 			       collect (funcall pop-line))))
 		 (make-xrandr-display :id id :state state
-				      :modes (mapcar (lambda (mode)
-						       (ppcre:register-groups-bind (w h)
-							   ("([0-9]+)x([0-9]+)i?"
-							    (car mode))
-							 (mapcar 'parse-integer (list w h))))
-						     modes)
+				     :modes (mapcar #'xrandr-parse-mode modes)
 				      :connected-p (equal state "connected")
 				      :extra extra)))))
+
+(defun xrandr-display-prefs (&key (prefs-file #P"~/.xdisplays"))
+  (when (probe-file prefs-file)
+    (with-open-file (fh prefs-file
+                        :direction :input)
+      (loop as line = (read-line fh nil nil)
+            while line
+            collect (destructuring-bind (display mode)
+                        (cl-ppcre:split #\Tab line)
+                      (cons display (xrandr-parse-mode mode)))))))
 
 (defun correct-screen (&optional order)
   (let* ((displays (xrandr-displays))
@@ -48,7 +59,9 @@
     ;; connect displays in order
     (loop for display in to-connect-ordered
        with pos-x = 0
-       as mode = (car (xrandr-display-modes display))
+          with display-mode-prefs = (xrandr-display-prefs)
+          as mode = (or (cdr (assoc (xrandr-display-id display) display-mode-prefs :test #'equal))
+                        (car (xrandr-display-modes display)))
        do (destructuring-bind (mode-width mode-height) mode
 	    (declare (ignore mode-height))
 	    (let* ((id (xrandr-display-id display))
