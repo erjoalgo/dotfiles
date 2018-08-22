@@ -22,4 +22,6 @@ if ! test -e ${GITCONFIG}; then
   autosetupmerge = always
 
 EOF
+else
+    echo "WARNING: not overwriting ~/.gitconfig"
 fi
