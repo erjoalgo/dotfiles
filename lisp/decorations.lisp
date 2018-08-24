@@ -2,7 +2,6 @@
 (defparameter *font-size* 40)
 (set-font (format nil "-*-*-bold-r-*-*-~D-240-*-*-*-*-*-*"
 		  *font-size*))
-(set-font "-adobe-helvetica-medium-r-normal--100-240-*-*-*-*-*-*")
 (setq *message-window-gravity* :center)
 (setq *input-window-gravity* :center)
 (define-key *input-map* (kbd "C-v") 'input-yank-selection)
