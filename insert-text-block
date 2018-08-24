@@ -31,6 +31,8 @@ parser.add_argument("-b", "--begining_append",  action="store_true",
 parser.add_argument("-o", "--output", help = "specify a different output file")
 parser.add_argument("-n", "--no_strip_newline",  action="store_true",
                     help = "don't strip trailing newline from stdin")
+parser.add_argument("-N", "--skip_separating_line",  action="store_true",
+                    help = "skip adding a separating newline when file exists and is not empty")
 parser.add_argument("-p", "--parents", help = "make parent directories",
                     action="store_true")
 
@@ -64,6 +66,10 @@ middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] 
 if begining_append:
     middle.insert(0, block)
 else:
+    if not skip_separating_line and sum(map(len, middle)):
+        # add empty line
+        middle.append("")
+
     middle.append(block)
 
 new_text="\n".join(middle)
