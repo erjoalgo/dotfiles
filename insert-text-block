@@ -59,7 +59,7 @@ if output=="-":
 
 regexp="(?sm)^(.*?)((?:\n)?{0}.*{0}(?:\n)?)(.*)$".format(re.escape(line))
 match=re.match(regexp, orig_text)
-middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text]
+middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] if orig_text else []
 
 if begining_append:
     middle.insert(0, block)
