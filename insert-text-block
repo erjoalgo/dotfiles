@@ -59,20 +59,29 @@ output=output or filename
 if output=="-":
     output="/dev/stdout"
 
-regexp="(?sm)^(.*?)((?:\n)?{0}.*{0}(?:\n)?)(.*)$".format(re.escape(line))
+regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(line))
 match=re.match(regexp, orig_text)
+if match:
+  pre, post = match.group(1), match.group(3)
+else:
+  pre, post = orig_text, ""
+# pre, post refer to the original document before processing
+# before, after refer to the new document
+
 middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] if orig_text else []
 
 if begining_append:
-    middle.insert(0, block)
+    before, after = "", post
 else:
-    if not skip_separating_line and sum(map(len, middle)):
-        # add empty line
-        middle.append("")
+    before, after = pre, post
 
-    middle.append(block)
+if not skip_separating_line:
+    if before:
+        block = "\n" + block
+    if after:
+        block = block + "\n"
 
-new_text="\n".join(middle)
+new_text="\n".join(b for b in (before, block, after) if b)
 with open( output, "w") as fh:
     fh.write(new_text)
 
