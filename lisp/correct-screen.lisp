@@ -49,6 +49,7 @@
                         :direction :input)
       (loop as line = (read-line fh nil nil)
             while line
+            unless (equal "" line)
             collect (destructuring-bind (display mode)
                         (cl-ppcre:split #\Tab line)
                       (cons display (xrandr-parse-mode mode)))))))
