@@ -3,32 +3,45 @@
   (run-shell-command cmd collect-output-p))
 
 (defstruct xrandr-display id state mode modes connected-p extra)
+(defstruct xrandr-mode width height rates active-p preferred-p
+  resolution-string)
 
-(defun xrandr-parse-mode (mode)
-  (ppcre:register-groups-bind (w h)
-      ("([0-9]+)x([0-9]+)i?"
-       mode)
-    (mapcar 'parse-integer (list w h))))
+(defun xrandr-parse-mode (mode-line)
+  (ppcre:register-groups-bind
+   ((#'parse-integer w) (#'parse-integer h) rest)
+   ("^ *([0-9]+)x([0-9]+) *(.*)$" mode-line)
+   (declare (ignore rest))
+   (make-xrandr-mode
+    :width w
+    :height h
+    :resolution-string (format nil "~Dx~D" w h)
+    :rates (mapcar #'read-from-string
+                   (ppcre:all-matches-as-strings "[0-9]+[.][0-9]+" mode-line))
+    :preferred-p (not (null (ppcre:scan "[+]" mode-line)))
+    :active-p (not (null (ppcre:scan "[*]" mode-line))))))
 
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
   (loop
-    with lines = (cdr (ppcre:split #\Newline
-				   (run-shell-command "xrandr -q" t)))
-    with pop-line = (lambda () (ppcre:split " +" (pop lines)))
+    with lines = (cdr (ppcre:split #\Newline (run-shell-command "xrandr -q" t)))
+    with pop-line = (lambda (&optional no-split-p) (if no-split-p (pop lines)
+                                                       (ppcre:split " +" (pop lines))))
     while lines
     collect (destructuring-bind (id state . etc) (funcall pop-line)
 	      (declare (ignore etc))
 	      (let ((modes (loop
-			     while (ppcre:scan "^ +[0-9]+x[0-9]+" (car lines))
-			     collect (cadr (funcall pop-line))))
+                             as line = (car lines)
+			     while (ppcre:scan "^ +[0-9]+x[0-9]+" line)
+			     collect (xrandr-parse-mode (funcall pop-line t))))
 		    (extra (loop
 			     while (ppcre:scan "^ +" (car lines))
 			     collect (funcall pop-line))))
 		(make-xrandr-display :id id :state state
-				     :modes (mapcar #'xrandr-parse-mode modes)
+				     :modes modes
 				     :connected-p (equal state "connected")
-				     :extra extra)))))
+				     :extra extra
+                                     :mode (loop for mode in modes thereis
+                                                                   (and (xrandr-mode-active-p mode) mode)))))))
 
 (defun xrandr-display-prefs (&key (prefs-file #P"~/.xdisplays"))
   (when (probe-file prefs-file)
