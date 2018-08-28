@@ -1,0 +1,9 @@
+GNU_SCRIPTS="${HOME}/git/erjoalgo-gnu-scripts"
+
+export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin
+export LISP=sbcl
+export PYTHONSTARTUP=${HOME}/.pythonrc.py
+
+# Local Variables:
+# mode: shell-script
+# End:

@@ -35,7 +35,7 @@ for LINK in \
     .my-bash-funs \
     .xmodmap \
     .xinitrc \
-    .my-bash-profile \
+    .my-profile \
     .my-startups.sh \
     .my-bash-completions \
     .tmux.conf \

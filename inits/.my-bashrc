@@ -31,8 +31,6 @@ EOF
 
 export PS1="\[\033[${COLOR}m\]█\[\033[00m\]\[\033[0;34m\][\h][\$?]$ \[\033[00m\]"
 
-GNU_SCRIPTS="${HOME}/git/erjoalgo-gnu-scripts"
-
 source ~/.bash_aliases #should already be sourced by original bashrc
 source ~/.my-bash-funs #lnabs, findiregex, etc
 
@@ -41,21 +39,6 @@ which brew &&  \
     test -f $(brew --prefix)/etc/bash_completion &&  \
     . $(brew --prefix)/etc/bash_completion
 
-#gnu scripts
-export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin
-
-#lisp
-export LISP=sbcl
-
-#python
-export PYTHONSTARTUP=${HOME}/.pythonrc.py
-
-ORACLE_JAVA=/usr/lib/jvm/jdk-8-oracle-x64
-if test -z "${JAVA_HOME}" -a -d "${ORACLE_JAVA}"; then
-    export JAVA_HOME="${ORACLE_JAVA}"
-fi
-
-export PATH
 
 # don't put duplicate lines in the history.
 # See bash(1) for more options
