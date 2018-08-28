@@ -19,7 +19,7 @@
 
 (defun run-startup-scripts ()
   (loop for script in (append
-                       '(#P"~/.xsession")
+                       '(#P"~/.xsessionrc")
                        (directory #P"~/.stumpwmrc.d/scripts/on-startup/*.*"))
         do (format t "running script ~A~%" script)
         do
