@@ -86,6 +86,23 @@
 	         (run-shell-command-print cmd))
 	       (incf pos-x mode-width)))))
 
+(defcommand correct-screen-fix-display-prefs () ()
+  (loop with fixes = nil
+        with id-mode-prefs = (xrandr-display-prefs)
+        for display in (xrandr-displays) do
+          (with-slots (id mode state) display
+            (when (equal state "connected")
+              (let* ((id-mode-pref (assoc id id-mode-prefs :test #'equal))
+                     (mode-pref (cdr id-mode-pref)))
+                (when (and mode-pref (not (equal (xrandr-mode-resolution-string mode-pref)
+                                                 (xrandr-mode-resolution-string (xrandr-display-mode display)))))
+                  (push (format nil "--output ~A --mode ~A" id (xrandr-mode-resolution-string mode-pref))
+                        fixes)))))
+        finally (when fixes
+                  (let ((cmd (format nil "xrandr ~{~A~^ ~}" fixes)))
+                    (format t "running... ~A~%" fixes)
+                    (run-shell-command cmd)))))
+
 (defcommand correct-screen-prompt-display-order () ()
   "correct screen, prompting for display order"
   (let* ((displays (remove-if-not
