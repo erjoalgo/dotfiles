@@ -42,5 +42,6 @@
 (unless (xinitrc-was-run-p)
   (echo "running xinitrc commands...")
   (xmodmap-load)
-  (run-startup-scripts)
   (xinitrc-was-run-p :write-p t))
+
+(run-startup-scripts)
