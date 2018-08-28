@@ -49,7 +49,7 @@
   :pull-key "H-F"
   :classes *browser-classes*)
 
-(define-run-or-pull-program "x-terminal-emulator"
+(define-run-or-pull-program "X-TERMINAL-EMULATOR"
   :raise-key "H-c"
   :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal" t))
   :classes (list "X-terminal-emulator" "Roxterm" "roxterm"

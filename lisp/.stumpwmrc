@@ -83,6 +83,7 @@
  "swank-loader.lisp"
  "correct-screen.lisp"
  "brightness.lisp"
+ "startup-apps.lisp"
  )
 
 (defun list-regular-files (dir)
