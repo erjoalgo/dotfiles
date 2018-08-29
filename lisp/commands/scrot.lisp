@@ -20,7 +20,7 @@
   (ensure-directories-exist scrot-top)
   ;;TODO allow selecting region
   (unmap-message-window (current-screen))
-  (sleep 1)
+  ;; (sleep 1)
   (let* ((out-png-pathname (merge-pathnames
 			    (make-pathname :name name :type "png")
 			    scrot-top))
