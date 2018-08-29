@@ -1,23 +1,5 @@
 ;; (defpackage #:brightness)
 
-(defmacro -> (&rest forms)
-  (if (cadr forms)
-      ;;(destructuring-bind (first (a a-rest) . rest) forms
-      ;;`(-> a first a-rest ,@rest))
-      (destructuring-bind (first second . rest) forms
-	(destructuring-bind (a . a-rest) (if (atom second)
-					     (cons second nil)
-					   second)
-	  `(-> ,(apply 'list a first a-rest) ,@rest)))
-    (car forms)))
-
-(defmacro ->> (&rest forms)
-  (if (second forms)
-      (destructuring-bind (a b . cde) forms
-	(let ((b (if (atom b) (list b) b)))
-	  `(->> ,(nconc b (list a)) ,@cde)))
-    (first forms)))
-
 (defvar *actual-brightness-pathname*)
 (defvar *brightness-pathname*)
 (defvar *max-brightness-pathname*)
