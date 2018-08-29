@@ -125,13 +125,3 @@
                (>= (apply 'max order) (length displays)))
       (error "index out of bounds"))
     (correct-screen order)))
-
-'(when display-names
-  (if (null (cdr display-names))
-      (car display-names)
-      (let ((prompt (format nil "select display order: ~A~%"
-                            (apply 'join #\Newline display-names)))
-            (response (completing-read (current-screen)
-                                       prompt
-                                       display-names :require-match t)))
-        (cons (correct-screen-prompt-display-order)))))
