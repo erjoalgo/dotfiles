@@ -138,7 +138,7 @@
   "reload a persistent alist from its underlying file, message how many entries loaded"
   (let ((p-alist (symbol-value (intern alist-sym "STUMPWM"))))
     (persistent-alist-load p-alist)
-    (message "loaded ~D symbols" (length (persistent-alist-alist p-alist)))))
+    (message "loaded ~D symbols from ~A" (length (persistent-alist-alist p-alist)) alist-sym)))
 
 
 (define-stumpwm-type :symbol (input prompt)

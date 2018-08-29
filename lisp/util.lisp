@@ -114,3 +114,6 @@
 
 (defun last-msg-print ()
   (screen-last-msg (current-screen)))
+
+(defun expand-user (fn)
+  (cl-ppcre:regex-replace "^~/" fn (user-homedir-pathname)))
