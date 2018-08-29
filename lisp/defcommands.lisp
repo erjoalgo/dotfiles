@@ -157,19 +157,6 @@ be used to override the default window formatting."
   "echo window class"
   (message "window class: ~A" (window-class (current-window))))
 
-(defmacro defcommand-xdotool-type (text-form &key (sleep-time .5) name)
-  (setf name (or name text-form))
-  `(defcommand ,(intern (string-upcase (format nil "xdotool-type-~A" name)))
-       () ()
-     ,(format nil "autogen cmd to type '~A'" name)
-     (run-shell-command
-      ,(format nil "sleep ~D && xdotool type '~A'" sleep-time
-	       text-form))))
-
-(defcommand-xdotool-type "ernesto.alfonsogonzalez@ge.com")
-(defcommand-xdotool-type "erjoalgo@gmail.com")
-(defcommand-xdotool-type (get-x-selection) :name "clipboard")
-
 (defcommand echo-current-tab () ()
   (echo (url-launcher-get-browser-current-url)))
 

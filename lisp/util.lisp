@@ -94,9 +94,6 @@
             (setf *message-window-timer* nil))
     (progn (unmap-all-message-windows) (unmap-all-message-windows)))
 
-(defun xdotool (cmd)
-  (run-shell-command (format nil "xdotool ~A" cmd) t))
-
 (defun last-msgs ()
   (screen-last-msg (current-screen)))
 
