@@ -28,7 +28,7 @@
   (handler-case
       (progn
         (with-elapsed-time elapsed-time (load pathname)
-	  (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time)))
+          (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time)))
     (error (err)
       (message "error loading: ~A~%: '~A'" pathname err)
       (cons pathname err))))
@@ -41,7 +41,6 @@
 (defparameter browser-classes
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Tor Browser" "Google-chrome" "Firefox-esr"))
-
 
 (defparameter browser-name
   (or
@@ -101,7 +100,7 @@
   (progn
     (setf *init-errs* (remove-if #'null errs))
     (message "finished loading .stumpwmrc. ~D errors"
-	     (length *init-errs*))))
+             (length *init-errs*))))
 
 ;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html

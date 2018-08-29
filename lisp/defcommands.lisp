@@ -1,4 +1,3 @@
-
 (defvar *vocab-fn* (merge-pathnames "sensitive/vocab" STUMPWM-TOP))
 
 (defun is-browser-win (win)
@@ -70,6 +69,7 @@
 
 
 (defvar *time-format-international* "%a %e %b %k:%M:%S")
+
 (defcommand echo-date-battery () ()
   "echo date and battery status"
   (let* ((info (battery-info))
@@ -131,18 +131,12 @@
       (log-entry-timestamp word *vocab-fn*)
       (message "definition: ~a" definition))))
 
-
-
-
-
-
-
-(defcommand echo_pointer ()     ()
+(defcommand echo-pointer ()     ()
   "echo the mouse location"
   (echo (run-shell-command "xdotool getmouselocation" t)))
 
+(defvar magnifier-on nil)
 
-(defvar magnifier-on nil )
 (defcommand toggle-magnifier () ()
   "toogle magnifier on/off. requires the TODO program"
   (setf magnifier-on (not magnifier-on))
@@ -178,7 +172,6 @@ be used to override the default window formatting."
 (defcommand connect-internet () ()
   "connect to the internet via the wifi program"
   (echo "connecting to internet...")
-  ;;debian-mini$kill-wpa-supplicants.sh ; sleep 1 && wac
   (run-shell-command "wifi-connect"))
 
 

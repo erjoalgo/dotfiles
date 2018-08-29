@@ -5,10 +5,7 @@
 (defcommand type-string (s)
     ((:string ))
   "type a given string"
-  ;;(echo-format "times is ~D" times)
-  ;;(sleep .001)
   (xdotool (concat "type " s)))
-
 
 ;;(setq *commands-map* (make-sparse-keymap))
 (defvar *snippets-map*
