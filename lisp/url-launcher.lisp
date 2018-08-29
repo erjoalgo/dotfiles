@@ -161,16 +161,12 @@
 			*search-engine-persistent-alist* engine))))
 	  (message "no such engine: '~A'" engine)
 	(let* (
-	       ;;(args (escape-bash-single-quotes ))
-
 	       (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
 	       (query (uri-encode args))
 	       (url (format nil engine-fmt query)))
 	  (url-launcher-browser-new-tab url)
 	  (log-entry-timestamp (format nil "~A:~A" engine terms)
 			       *search-history-fn*))))))
-
-
 
 (defcommand reload-search-engines () ()
   "reload search engines from file"

@@ -1,8 +1,6 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
-;; (proclaim '(optimize debug))
-
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
 
@@ -100,7 +98,6 @@
 
 (defmacro alias (to fn)
   `(setf (fdefinition ',to) #',fn))
-
 (alias last-msg-show last-msg-print)
 (alias print-last-msg last-msg-print)
 

@@ -124,7 +124,7 @@
   "lookup a word in the dictionary (requires the dict package)"
   (let* (
 	 (definition
-	  (run-shell-command (format nil "dict ~a" word) t))
+	   (run-shell-command (format nil "dict ~a" word) t))
 	 (*suppress-echo-timeout* t); let me read the definition in peace
 	 )
     (when word
