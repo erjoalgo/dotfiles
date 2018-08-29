@@ -91,8 +91,10 @@
              errs))
 
   (dolist (directory-name load-extra-directories)
-    (dolist (pathname (list-directory
-                       (merge-pathnames directory-name STUMPWM-TOP)))
+    (dolist (pathname (directory
+                       (make-pathname :name :WILD
+                                      :directory (append (pathname-directory STUMPWM-TOP) (list directory-name))
+                                      :type "lisp")))
       (when (pathname-name pathname)
         ;; is file
         (push (load-safe pathname) errs))))
