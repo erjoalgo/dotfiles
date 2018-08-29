@@ -10,7 +10,7 @@ where each BINDING is a (KEY . FORM).
 these are read from a file *per-window-binding-rules-fn*" )
 
 (defvar *per-window-binding-rules-fn*
-  (STUMPWM::stumpwm-merger "per-window-bindings-rules.lisp")
+  (merge-pathnames "per-window-bindings-rules.lisp" STUMPWM-TOP)
   "file where *per-window-bindings-rules* should be reloaded.
 it contains lisp code which sets the *per-window-bindings-rules* value")
 
