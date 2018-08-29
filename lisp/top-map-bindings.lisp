@@ -90,18 +90,6 @@
 
       ;; ("H-g" "search-engine-search baidu")
       ("H-g" "search-engine-search ddg")
-      ("Scroll_Lock" "fnext")
-      ("H-a" "echo-date-battery")
-      ("H-w" "my-echo-windows")
-
-      ("H-k" "delete")
-      ("H-K" "kill")
-      ("H-;" "colon")
-      ("H-:" "eval")
-      ("H-x" "exec")
-      ("H-X" *commands-map*)
-      ("H-z" *commands-map*)
-      ("H-u" *utils-map*)
 
       ("H-m" *search-engine-map*)
       ("H-D" "cat-message-command ~/vocab")
