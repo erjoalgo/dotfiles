@@ -31,8 +31,8 @@
       (error "filename may not contain spaces: ~A" out-png))
 
     (let ((proc (SB-EXT:RUN-PROGRAM "shutter"
-                                    (append (list "-e" "-f" "-o" out-png "-n")
-                                            (unless fullscreen-p (list "-s")))
+                                    `("-e" "-f" "-o" ,out-png "-n"
+                                           ,@(unless fullscreen-p (list "-s")))
                                     :search t
                                     :output t
                                     :error t
