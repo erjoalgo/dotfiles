@@ -83,19 +83,11 @@
        "pkill magnifier")))
 
 ;;based on 'echo-windows'
-(defcommand my-echo-windows (&optional (fmt *window-format*) (group (current-group)) (windows (group-windows group))) (:rest)
-  "Display a list of managed windows. The optional argument @var{fmt} can
-be used to override the default window formatting."
-  (let* ((wins (sort1 windows '< :key 'window-number))
-         (highlight (position (group-current-window group) wins))
-         (names (mapcar (lambda (w)
-                          (format-expand *window-formatters* fmt w)) wins))
-	 (group-info (concat "group: " (group-name (current-group))))
-	 )
-    (if (null wins)
-        (echo-string-list (group-screen group) (list group-info "No Managed Windows"))
-        (echo-string-list (group-screen group) (cons group-info names)
-			  (and highlight (1+ highlight))))))
+(defcommand echo-windows-with-group () ()
+  (with-retained-messages :log
+    (message (concat "group: " (group-name (current-group))))
+    '(loop for i below 30 do (echo (format nil "~D" i)))
+    (echo-windows)))
 
 (defcommand connect-internet () ()
   "connect to the internet via the wifi program"
