@@ -45,7 +45,7 @@
     (set-x-selection out-png :clipboard)
     (when verbose
       (message "copied to cliboard: ~A" out-png))
-    out-png))
+    out-png-pathname))
 
 
 (defun image-fn-to-text (image-fn)
