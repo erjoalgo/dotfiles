@@ -76,21 +76,21 @@
                      filename
                      STUMPWM-TOP)))
 
-(defun list-regular-files (dir)
-  (remove-if-not (lambda (fn) (pathname-name fn)) (list-directory dir)))
-
-(defvar *load-path-extra*
-  (mapcar (lambda (rel) (merge-pathnames rel STUMPWM-TOP))
-	  (list "commands")))
-
-
-(dolist (extra-path *load-path-extra*)
-	   (dolist (extra-path-fn (list-regular-files extra-path))
-	     (load-files-verbose #'stumpwm-loader extra-path-fn)))
-
 
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
+
+(defvar load-extra-directories
+  '("commands"))
+
+'(dolist (directory-name load-extra-directories)
+  (dolist (pathname (list-directory
+                     (merge-pathnames directory-name STUMPWM-TOP)))
+    (when (pathname-name pathname)
+      ;; is file
+      (load-safe pathname))))
+
+;; (message "finished loading .stumpwmrc. ~D errors" (length *init-errs*))
 
 (defmacro alias (to fn)
   `(setf (fdefinition ',to) #',fn))
