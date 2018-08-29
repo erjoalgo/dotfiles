@@ -12,10 +12,10 @@
   (take-scrot name :fullscreen-p t))
 
 (defun take-scrot (name &key
-			  (fullscreen-p nil)
-			  (scrot-top *scrots-top*)
-			  (verbose t)
-			  (eog-scrot t)
+                          (fullscreen-p nil)
+                          (scrot-top *scrots-top*)
+                          (verbose t)
+                          (eog-scrot t)
                           (timeout-secs 15))
   "save a scrot to *scrots-top*"
   (ensure-directories-exist scrot-top)
@@ -23,20 +23,20 @@
   (unmap-message-window (current-screen))
   ;; (sleep 1)
   (let* ((out-png-pathname (merge-pathnames
-			    (make-pathname :name name :type "png")
-			    scrot-top))
-	 (out-png (namestring out-png-pathname)))
+                            (make-pathname :name name :type "png")
+                            scrot-top))
+         (out-png (namestring out-png-pathname)))
 
     (when (cl-ppcre:all-matches "\\s" out-png)
       (error "filename may not contain spaces: ~A" out-png))
 
     (let ((proc (SB-EXT:RUN-PROGRAM "shutter"
-			            (append (list "-e" "-f" "-o" out-png "-n")
-				            (unless fullscreen-p (list "-s")))
-			            :search t
-			            :output t
-			            :error t
-			            :wait nil)))
+                                    (append (list "-e" "-f" "-o" out-png "-n")
+                                            (unless fullscreen-p (list "-s")))
+                                    :search t
+                                    :output t
+                                    :error t
+                                    :wait nil)))
 
       (loop with start-time-secs = (GET-UNIVERSAL-TIME)
             as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
@@ -54,9 +54,9 @@
       ;;why does this crash the session
       (when eog-scrot
         (SB-EXT:RUN-PROGRAM "eog"
-			    (list out-png)
-			    :search t
-			    :wait nil))
+                            (list out-png)
+                            :search t
+                            :wait nil))
 
       (set-x-selection out-png :clipboard)
 
@@ -74,11 +74,11 @@
   "interactively prompt for a region of the screen, take a screenshot,
 perform ocr on it, place ocr'd text into clipboard"
   (let* ((ocr-name "last-ocr")
-	 (ocr-png-filename (take-scrot ocr-name
-				       :fullscreen-p nil
-				       :verbose nil
-				       :eog-scrot nil))
-	 (ocr-text (image-fn-to-text ocr-png-filename)))
+         (ocr-png-filename (take-scrot ocr-name
+                                       :fullscreen-p nil
+                                       :verbose nil
+                                       :eog-scrot nil))
+         (ocr-text (image-fn-to-text ocr-png-filename)))
     (set-x-selection ocr-text :clipboard)
     (message "copied ocr of length ~D to clipboard..."
-	     (length ocr-text))))
+             (length ocr-text))))
