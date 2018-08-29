@@ -116,4 +116,17 @@
       (destructuring-bind (a b . cde) forms
 	(let ((b (if (atom b) (list b) b)))
 	  `(->> ,(nconc b (list a)) ,@cde)))
-    (first forms)))
+      (first forms)))
+
+(defmacro define-stumpwm-type-from-wild-pathname
+    (type-name-sym wild-pathanme &key allow-nonexistent)
+  `(define-stumpwm-type ,type-name-sym (input prompt)
+     (or (argument-pop input)
+         (let ((selection (completing-read (current-screen)
+                                           prompt
+                                           (mapcar #'pathname-name
+                                                   (directory ,wild-pathanme))
+                                           :require-match ,(not allow-nonexistent))))
+           (when selection
+             (merge-pathnames selection ,wild-pathanme)))
+	 (throw 'error "Abort."))))
