@@ -65,7 +65,7 @@
     as state = (cdr (assoc :STATE info))
     when (and (equal state "discharging")
               (<= percentage percentage-thresh))
-      do (echo (format nil "warning: battery discharging (~D%)" percentage))
+      do (message-no-timeout (format nil "^1 warning: battery discharging (~D%)^*" percentage))
     do (sleep (* interval-mins MINS))))
 
 
