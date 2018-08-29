@@ -38,6 +38,8 @@
   (load fn))
 
 (defparameter STUMPWM-TOP
+  ;; TODO find current file, e.g. __file__
+  ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
   (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
 (defparameter *browser-classes*
