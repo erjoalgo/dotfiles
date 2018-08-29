@@ -90,7 +90,7 @@
     (echo-windows)))
 
 (defcommand connect-internet () ()
-  "connect to the internet via the wifi program"
+  "connect to the internet via the wifi-connect program"
   (echo "connecting to internet...")
   (run-shell-command "wifi-connect"))
 
