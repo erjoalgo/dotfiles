@@ -54,27 +54,32 @@
                  (run-shell-command "which chromium chromium-browser chrome google-chrome" t)))
    "chromium"))
 
-(load-files-verbose
- 'stumpwm-loader
- "xinitrc.lisp"
- "sensitive/sensitive.el"
- "decorations.lisp"
- "defcommands.lisp"
- "tsv-db.lisp"
- "mozrepl.lisp"
- "url-launcher.lisp"
+(defparameter load-list
+  '(
+    "util.lisp"
+    "xinitrc.lisp"
+    "sensitive/sensitive.el"
+    "decorations.lisp"
+    "defcommands.lisp"
+    "tsv-db.lisp"
+    "mozrepl.lisp"
+    "url-launcher.lisp"
 
- ;;in this order
- "run-raise-programs.lisp"
- "per-window-bindings.lisp"
- "top-map-bindings.lisp"
+    "run-raise-programs.lisp"
+    "per-window-bindings.lisp"
+    "top-map-bindings.lisp"
 
- "commands-map.lisp"
- "swank-loader.lisp"
- "correct-screen.lisp"
- "brightness.lisp"
- "startup-apps.lisp"
- )
+    "commands-map.lisp"
+    "swank-loader.lisp"
+    "correct-screen.lisp"
+    "brightness.lisp"
+    "startup-apps.lisp")
+
+  "defines components to load and their order")
+(loop for filename in load-list
+      do (load-safe (merge-pathnames
+                     filename
+                     STUMPWM-TOP)))
 
 (defun list-regular-files (dir)
   (remove-if-not (lambda (fn) (pathname-name fn)) (list-directory dir)))
