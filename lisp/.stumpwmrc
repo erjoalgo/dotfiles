@@ -20,7 +20,6 @@
          ,@body))))
 
 (defparameter *init-errs* nil )
-(defvar ex)
 (defun load-safe (pathname)
   "load file, trapping and recording errors"
   ;; (message "loading file: ~A..." pathname)

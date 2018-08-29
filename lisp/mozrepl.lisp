@@ -55,8 +55,7 @@
 	(current-screen)
 	(list "error with mozrepl input:"
 	      cmd
-	      out)
-	(setf STUMPWM::ex (cons cmd out)))
+	      out))
        (print out t)))))
 
 ;;no one uses this
