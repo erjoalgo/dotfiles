@@ -16,7 +16,8 @@
 
 (defun get-curr-volume ()
   (let* ((out (run-shell-command "amixer get Master" t))
-         (vol (extract-match "Playback.*?[[]([0-9]+)%]" out 1)))
+         (vol (ppcre:register-groups-bind (vol) ("Playback.*?[[]([0-9]+)%]" out)
+                vol)))
     vol))
 
 (defcommand volmute-toggle ()()

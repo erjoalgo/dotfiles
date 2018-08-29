@@ -37,19 +37,6 @@
      (t
       (apply 'error error-key :display display :error-key error-key key-vals))))
 
-(defun extract-match (regexp string i)
-  (multiple-value-bind (m res)
-      (ppcre::scan-to-strings regexp string)
-    (declare (ignore m))
-    (and res (aref res (1- i)))))
-
-;;this doesn't short-circuit
-
-
-(defun join (joiner strings)
-  (reduce (lambda (cum new) (concatenate 'string cum joiner new))
-	  strings))
-
 (defun subseq-minus (seq start &optional end)
   "allow negative indices"
   (let* ((len (length seq))
@@ -57,7 +44,6 @@
 	 (end (and end (mod end len))))
     (subseq seq start end)))
 
-;;silly
 (defvar *whitespace-char-list* '(#\Space #\Newline #\Backspace #\Tab
 				      #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
@@ -108,11 +94,10 @@
             (setf *message-window-timer* nil))
     (progn (unmap-all-message-windows) (unmap-all-message-windows)))
 
-
 (defun xdotool (cmd)
   (run-shell-command (format nil "xdotool ~A" cmd) t))
 
-(defun last-msg-print ()
+(defun last-msgs ()
   (screen-last-msg (current-screen)))
 
 (defun expand-user (fn)
