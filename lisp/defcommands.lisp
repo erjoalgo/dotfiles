@@ -1,5 +1,5 @@
 
-(defvar *vocab-fn* (stumpwm-merger "sensitive/vocab"))
+(defvar *vocab-fn* (merge-pathnames "sensitive/vocab" STUMPWM-TOP))
 
 (defun is-browser-win (win)
   (member (window-class win) *browser-classes* :test 'equal))

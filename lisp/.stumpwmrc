@@ -32,20 +32,6 @@
 (defparameter STUMPWM-TOP
   (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
-(defun expand-user (fn)
-  (cl-ppcre:regex-replace "^~/" fn (user-homedir-pathname)))
-
-(load-files-verbose
- 'load
- (merge-pathnames "util.lisp" STUMPWM-TOP))
-
-
-(defun stumpwm-merger (rel)
-  (merge-pathnames rel STUMPWM-TOP))
-
-(defun stumpwm-loader (fn)
-  (load (stumpwm-merger fn)))
-
 (defparameter *browser-classes*
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Chromium-browser" "Tor Browser" "Google-chrome" "Firefox-esr"))
