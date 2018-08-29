@@ -108,32 +108,34 @@ when the value is :log, the latest message goes to the bottom as in a log file")
 (defvar load-extra-directories
   '("commands"))
 
-(defparameter *init-errs* nil )
+(defparameter *init-errs* nil)
 
-(let ((_ (message ""))
-      (*retain-messages-p* t)
-      errs)
+(with-retained-messages t
+  (let (errs)
+    (loop
+      for filename in load-list
+      do
+         (push (load-safe (merge-pathnames
+                           filename
+                           STUMPWM-TOP))
+               errs))
 
-  (loop
-    for filename in load-list
-    do
-       (push (load-safe (merge-pathnames
-                         filename
-                         STUMPWM-TOP))
-             errs))
+    (dolist (directory-name load-extra-directories)
+      (dolist (pathname (directory
+                         (make-pathname
+                          :name :WILD
+                          :directory (append
+                                      (pathname-directory STUMPWM-TOP)
+                                      (list directory-name))
+                          :type "lisp")))
+        (when (pathname-name pathname)
+          ;; is file
+          (push (load-safe pathname) errs))))
 
-  (dolist (directory-name load-extra-directories)
-    (dolist (pathname (directory
-                       (make-pathname :name :WILD
-                                      :directory (append (pathname-directory STUMPWM-TOP) (list directory-name))
-                                      :type "lisp")))
-      (when (pathname-name pathname)
-        ;; is file
-        (push (load-safe pathname) errs))))
-  (progn
-    (setf *init-errs* (remove-if #'null errs))
-    (message "finished loading .stumpwmrc. ~D errors"
-             (length *init-errs*))))
+    (progn
+      (setf *init-errs* (remove-if #'null errs))
+      (message "finished loading .stumpwmrc. ~D errors"
+               (length *init-errs*)))))
 
 ;;manual
 ;;https://stumpwm.github.io/git/stumpwm-git_16.html
