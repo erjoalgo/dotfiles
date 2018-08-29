@@ -190,8 +190,7 @@
 		      used-letters)
 	      (define-key *search-engine-map* kbd
 		(format nil "search-engine-search ~A" eng))
-	      (push letter used-letters))))
-  (display-bindings-for-keymaps nil *search-engine-map*))
+	      (push letter used-letters)))))
 
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
