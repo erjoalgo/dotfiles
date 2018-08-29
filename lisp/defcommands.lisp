@@ -2,7 +2,7 @@
 (defvar *vocab-fn* (merge-pathnames "sensitive/vocab" STUMPWM-TOP))
 
 (defun is-browser-win (win)
-  (member (window-class win) *browser-classes* :test 'equal))
+  (member (window-class win) browser-classes :test 'equal))
 
 (defcommand other-frame-scroll-browser (up-down-key)
     ((:rest "key: "))

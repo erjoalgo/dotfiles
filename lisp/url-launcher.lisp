@@ -34,7 +34,7 @@
 (defun url-launcher-browser-new-tab (url)
   ;;(mozreplfirefoxnewtab url)
   ;; (echo (format nil "url is ~A" url))
-  (SB-EXT:RUN-PROGRAM *browser-name*
+  (SB-EXT:RUN-PROGRAM browser-name
 		      (list url)
 		      :search t
 		      :wait nil
@@ -201,7 +201,7 @@
 
 
 
-(dolist (class *browser-classes*)
+(dolist (class browser-classes)
   (push `(:class ,class) stumpwm:*deny-raise-request*))
 
 (setf *suppress-deny-messages* t)

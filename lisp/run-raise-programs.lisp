@@ -44,10 +44,10 @@
 		  `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
 (define-run-or-pull-program "BROWSER"
-  :cmd *browser-name*
+  :cmd browser-name
   :raise-key "H-f"
   :pull-key "H-F"
-  :classes *browser-classes*)
+  :classes browser-classes)
 
 (define-run-or-pull-program "X-TERMINAL-EMULATOR"
   :raise-key "H-c"
