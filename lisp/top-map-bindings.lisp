@@ -174,7 +174,8 @@
  '(
    ("a" "rotate-screen left")
    ("d" "rotate-screen right")
-   ("w" "rotate-screen normal")))
+   ("w" "rotate-screen normal")
+   ("s" "rotate-screen inverted")))
 
 (define-key-bindings
     *special-chars-map*
