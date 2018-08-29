@@ -31,7 +31,7 @@
   (handler-case
       (progn
         (with-elapsed-time elapsed-time (load pathname)
-	  (message "successful load of ~A" pathname)))
+	  (message "loaded ~A in ~Dms" pathname elapsed-time)))
     (error (err)
       (message "error loading: ~A~%: '~A'" pathname err)
       (push (cons pathname err) *init-errs*))))
