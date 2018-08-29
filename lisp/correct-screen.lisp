@@ -76,15 +76,13 @@
           with display-mode-prefs = (xrandr-display-prefs)
           as mode = (or (cdr (assoc (xrandr-display-id display) display-mode-prefs :test #'equal))
                         (car (xrandr-display-modes display)))
-          do (destructuring-bind (mode-width mode-height) mode
-               (declare (ignore mode-height))
-               (let* ((id (xrandr-display-id display))
-                      (mode-string (format nil "~{~a~^x~}" mode))
-                      (pos-string (format nil "~Dx0" pos-x))
-                      (cmd (format nil "xrandr --output ~A --mode ~A --pos ~A"
-                                   id mode-string pos-string )))
-                 (run-shell-command-print cmd))
-               (incf pos-x mode-width)))))
+          do (let* ((id (xrandr-display-id display))
+                    (mode-string (xrandr-mode-resolution-string mode))
+                    (pos-string (format nil "~Dx0" pos-x))
+                    (cmd (format nil "xrandr --output ~A --mode ~A --pos ~A"
+                                 id mode-string pos-string )))
+               (run-shell-command-print cmd)
+               (incf pos-x (xrandr-mode-width mode))))))
 
 (defcommand correct-screen-fix-display-prefs () ()
   (loop with fixes = nil
