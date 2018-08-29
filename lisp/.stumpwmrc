@@ -22,7 +22,6 @@
        (let ((,elapsed-time-var (- (get-internal-real-time) ,start-time-sym)))
          ,@body))))
 
-(defparameter *init-errs* nil )
 (defun load-safe (pathname)
   "load file, trapping and recording errors"
   ;; (message "loading file: ~A..." pathname)
@@ -74,34 +73,33 @@
 
   "defines components to load and their order")
 
-(message "")
-(loop
-  with *retain-messages-p* = t
-  with errs = nil
-  for filename in load-list
-  as err = (load-safe (merge-pathnames
-                       filename
-                       STUMPWM-TOP))
-  when err do (push err errs)
-    finally (progn
-              (message "finished loading .stumpwmrc. ~D errors"
-	               (length errs))
-              (setf *init-errs* errs)))
-
-
-
-
 (defvar load-extra-directories
   '("commands"))
 
-'(dolist (directory-name load-extra-directories)
-  (dolist (pathname (list-directory
-                     (merge-pathnames directory-name STUMPWM-TOP)))
-    (when (pathname-name pathname)
-      ;; is file
-      (load-safe pathname))))
+(defparameter *init-errs* nil )
 
-;; (message "finished loading .stumpwmrc. ~D errors" (length *init-errs*))
+(let ((_ (message ""))
+      (*retain-messages-p* t)
+      errs)
+
+  (loop
+    for filename in load-list
+    do
+       (push (load-safe (merge-pathnames
+                         filename
+                         STUMPWM-TOP))
+             errs))
+
+  (dolist (directory-name load-extra-directories)
+    (dolist (pathname (list-directory
+                       (merge-pathnames directory-name STUMPWM-TOP)))
+      (when (pathname-name pathname)
+        ;; is file
+        (push (load-safe pathname) errs))))
+  (progn
+    (setf *init-errs* (remove-if #'null errs))
+    (message "finished loading .stumpwmrc. ~D errors"
+	     (length *init-errs*))))
 
 (defmacro alias (to fn)
   `(setf (fdefinition ',to) #',fn))
