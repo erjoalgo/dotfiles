@@ -1,120 +1,31 @@
-;(setq buttons-root "/home/ernesto/Projects/button_images")
-(defun coerce-array-to-list (in-array)
-   (map 'list
-           #'identity
-           (make-array (array-total-size in-array)
-                             :element-type (array-element-type in-array)
-                             :displaced-to in-array)))
+(defparameter BUTTONS-ROOT
+  (merge-pathnames "data/button-imgs/" STUMPWM-TOP))
 
+(define-stumpwm-type-from-wild-pathname :button-pathname
+    (merge-pathnames (make-pathname :type "png" :name :WILD) BUTTONS-ROOT)
+  :allow-nonexistent t)
 
+(defcommand click-button (button-pathname) ((:button-pathname "enter button image: "))
+  (message "button image is ~A" button-pathname))
 
+(defcommand define-button  (button-pathname) ((:button-pathname "enter button image: "))
+  (let* ((name (pathname-name button-pathname))
+	 (parent-dir (make-pathname :name nil :type nil :defaults button-pathname)))
 
+    (unless (probe-file parent-dir)
+      ;; (setf ex (sb-posix:stat #P"/home/ejalfonso/git/erjoalgo-stumpwmrc/lisp/"))
+      ;; (SB-MOP:CLASS-DIRECT-SLOTS (class-of ex))
+      ;; (sb-posix:stat-mode ex)
+      (format t "making buttons directory: ~A~%" parent-dir)
+      (sb-posix:mkdir parent-dir 16877))
 
-(setq buttons-root (merge-pathnames "logs/button_images/"
-				    (user-homedir-pathname)))
+    (setf button-pathname
+          (take-scrot name
+                      :fullscreen-p nil
+                      :scrot-top parent-dir
+                      :verbose nil
+                      :eog-scrot nil))
 
-(defun click-button (parent name)
-  (run-shell-command (format nil "subimage_coords.py -c ~A ~A" parent name))
-  )
-(defcommand click-fema-next () ()
-  (click-button "fema" "fema_next.png")
-  ;(run-shell-command "xdotool click 1")
-  ;(scrot_fema)
-  (run-shell-command "xdotool mousemove 500 500")
-  )
-(defcommand click-fema-prev () ()
-  (click-button "fema" "fema_prev.png"))
-
-
-
-(defcommand askpa ()
-    ()(echo (ask-parents)))
-(defun joindirs (&rest dirs)
-  (if (cdr dirs)
-      (progn
-	(format nil "~A/~A" (car dirs) (apply 'joindirs (cdr dirs)))
-	)
-      (car dirs))
-  )
-(defun ask-parents ()
-  (let* (parents newparent done)
-    (loop
-      (setq newparent (read-one-line (current-screen) "enter next parent: "))
-      (if (equal (length newparent) 0)
-	  (return)
-	  (setq parents (cons newparent parents)))
-      )
-    (reverse parents)))
-
-'(defun sub-scrot (fn &optional eog)
-  (let* (
-	 (a (echo "place mouse in top left, then press enter"))
-	 (a (read-one-char (current-screen)))
-	 ;(a (run-shell-command "xdotool mousemove 1 1"))
-	 (mousea (get-mouse-coords))
-	 (a (echo "place mouse in bottom right, then press enter"))
-	 (a (read-one-char (current-screen)))
-	 ;(a (run-shell-command "xdotool mousemove 1279 799"))
-	 (mouseb (get-mouse-coords))
-	 (x (nth 0 mousea))
-	 (y (nth 1 mousea))
-	 (w (- (nth 0 mouseb) (nth 0 mousea)))
-	 (h (- (nth 1 mouseb) (nth 1 mousea)))
-	 ;(cmd (format nil "shutter -s ~D,~D,~D,~D -o ~A -e" x y w h "hola"))
-	 (cmd (format nil "shutter -s ~D,~D,~D,~D -o ~A -e &" x y w h fn))
-	 (echo cmd)
-	 )
-    (hide-message-windows)
-    (run-shell-command cmd t)
-    (when eog
-      (run-shell-command (format nil  "eog '~A'" fn) nil ))))
-
-(setq scrots_top (merge-pathnames "pictures/scrots/" (user-homedir-pathname))
-      subscrots_top (merge-pathnames "subs" scrots_top))
-
-(defcommand take-scrot () ()
-  (let* (
-	 (fn (read-one-line (current-screen) "enter name for scrot: "))
-	 (full_fn (concat scrots_top fn ".png"))
-	 )
-    (if (not (probe-file scrots_top))
-	(run-shell-command (format nil "mkdir -p ~A" scrots_top)))
-    (hide-message-windows)
-    (run-shell-command (format nil "scrot ~A" full_fn))
-    )
-  )
-
-(defcommand take-subscrot () ()
-  (let* (
-	 (fn (read-one-line (current-screen) "enter name for subscrot: "))
-	 ;(fn "test")
-	 (full_fn (concat subscrots_top fn ".png"))
-	 )
-    (sub-scrot full_fn t)
-    )
-  )
-(defcommand define-button  () ()
-  (let* (
-	 (name (read-one-line (current-screen) "enter name for this button: "))
-	 ;(name "a")
-	 (parents (ask-parents))
-	 ;(parents '("fema" "group1"))
-	 ;(a (echo "hola"))
-	 (button_fn  (eval `(joindirs ,buttons-root ,@parents ,name)))
-	 ;(a (echo "hola2"))
-	 (dirname (directory-namestring button_fn))
-	 (mkdircmd (concat "mkdir -p " dirname))
-	 ;(a (echo "hola3"))
-	 )
-    (echo dirname)
-    (echo button_fn)
-    (when (not (probe-file dirname))
-	       ;(read-one-line (current-screen) (format nil "~A doesn't exist. create it?" dirname))
-      (echo (format nil "making dir: ~A" dirname))
-      (echo (run-shell-command mkdircmd t))
-      )
-    ;(echo cmd)
-    ;(banish)
-    (run-shell-command "xdotool mousemove 0 0")
-    (sub-scrot button_fn t)
-  ))
+    (unless (and button-pathname
+                 (probe-file button-pathname))
+      (error "scrot ~A was not created" button-pathname))))
