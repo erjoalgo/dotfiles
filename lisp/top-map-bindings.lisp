@@ -62,7 +62,7 @@
       ;;("H-p" "raise-pidgin")
       ("Scroll_Lock" "fnext")
       ("H-a" "echo-date-battery")
-      ("H-w" "my-echo-windows")
+      ("H-w" "echo-windows-with-group")
 
       ("H-k" "delete")
       ("H-K" "kill")
