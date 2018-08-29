@@ -25,6 +25,12 @@
         do
            (run-shell-command (format nil "~A &" script) nil)))
 
+(defun start-screensaver ()
+  (if (zerop (length (run-shell-command "which xscreensaver" t)))
+      (error "xscreensaver not installed")
+      (when (zerop (length (run-shell-command "pidof xscreensaver" t)))
+        (run-shell-command "xscreensaver &" nil))))
 
 (xmodmap-load)
 (run-startup-scripts)
+(start-screensaver)
