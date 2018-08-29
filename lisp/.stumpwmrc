@@ -12,21 +12,16 @@
 
 (defparameter *init-errs* nil )
 (defvar ex)
-(defun load-files-verbose (loader-fun &rest fns)
-  (loop for fn in fns
-	as str = (if (pathnamep fn) (namestring fn) fn)
-
-	do
-	(echo-format "loading file: ~A..." str)
-	(handler-case
-	 (progn
-	   (funcall loader-fun fn)
-	   (echo-format "successful load of ~A" str))
-	 (error (err)
-		(setq *init-errs*
-		      (cons (echo-format "error loading: ~A~%: '~A'" fn err)
-			    *init-errs*))))))
-
+(defun load-safe (pathname)
+  "load file, trapping and recording errors"
+  ;; (message "loading file: ~A..." pathname)
+  (handler-case
+      (progn
+        (load pathname)
+	  (message "successful load of ~A" pathname))
+    (error (err)
+      (message "error loading: ~A~%: '~A'" pathname err)
+      (push (cons pathname err) *init-errs*))))
 
 (defcommand load-cmd (fn)
     ((:shell "Enter file to load: "))
