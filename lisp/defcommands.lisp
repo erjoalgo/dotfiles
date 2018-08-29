@@ -315,3 +315,22 @@ perform ocr on it, place ocr'd text into clipboard"
 
 (defcommand echo-current-tab () ()
   (echo (url-launcher-get-browser-current-url)))
+
+(define-stumpwm-type :lisp-source-file (input prompt)
+  (or (argument-pop input)
+      (let ((basename
+              (completing-read (current-screen)
+                       (or "prompt: " "enter lisp file: ")
+                       (mapcar #'pathname-name
+                               (directory (merge-pathnames (make-pathname :type "lisp" :name :WILD) STUMPWM-TOP)))
+                       :require-match t)))
+        (merge-pathnames (make-pathname :name basename
+                                        :type "lisp")
+                         STUMPWM-TOP))
+      (throw 'error "Abort.")))
+
+(defcommand load-file (pathname) ((:lisp-source-file "enter lisp file to load: " ))
+  "load a file"
+  (in-package :stumpwm)
+  (when pathname
+    (load-safe pathname)))

@@ -31,12 +31,6 @@
       (echo-append (format nil "error loading: ~A~%: '~A'" pathname err))
       (push (cons pathname err) *init-errs*))))
 
-(defcommand load-cmd (fn)
-    ((:shell "Enter file to load: "))
-  "load a file"
-  (echo (format nil "loading ~A" fn))
-  (load fn))
-
 (defparameter STUMPWM-TOP
   ;; TODO find current file, e.g. __file__
   ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
@@ -76,6 +70,7 @@
     "startup-apps.lisp")
 
   "defines components to load and their order")
+
 (loop for filename in load-list
       do (load-safe (merge-pathnames
                      filename
@@ -93,16 +88,6 @@
 	   (dolist (extra-path-fn (list-regular-files extra-path))
 	     (load-files-verbose #'stumpwm-loader extra-path-fn)))
 
-(defcommand load-some-file (&optional fn) ((:string nil ))
-  "load a file"
-  (in-package :stumpwm)
-  (let* ((fn (or fn (completing-read (current-screen)
-		   "enter stumpwm file to load (completing read): "
-		   ;;(regular-file-lister (namestring STUMPWM-TOP))
-		   (mapcar 'file-namestring (list-regular-files STUMPWM-TOP)) ))))
-    (if fn
-	(load-files-verbose 'stumpwm-loader fn)
-	(echo "nothing to load"))))
 
 (message "finished loading .stumpwmrc. ~D errors"
 	 (length *init-errs*))
