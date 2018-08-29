@@ -25,23 +25,6 @@
         do
            (run-shell-command (format nil "~A &" script) nil)))
 
-(defun xinitrc-was-run-p (&key (filename #P"/tmp/stumpwmrc.pid") write-p)
-  (let ((pid (sb-posix:getpid)))
-    (if (null write-p)
-        (when (probe-file filename)
-          (with-open-file (fh filename)
-            (let* ((line (read-line fh))
-                   (stored-pid (parse-integer line)))
-              (= pid stored-pid))
-            ))
-        (with-open-file (fh filename :direction :output
-                                     :if-does-not-exist :create
-                                     :if-exists :supersede)
-          (format fh "~D" pid)))))
 
-(unless (xinitrc-was-run-p)
-  (echo "running xinitrc commands...")
-  (xmodmap-load)
-  (xinitrc-was-run-p :write-p t))
-
+(xmodmap-load)
 (run-startup-scripts)
