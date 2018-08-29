@@ -32,7 +32,7 @@
 	  (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time)))
     (error (err)
       (message "error loading: ~A~%: '~A'" pathname err)
-      (push (cons pathname err) *init-errs*))))
+      (cons pathname err))))
 
 (defparameter STUMPWM-TOP
   ;; TODO find current file, e.g. __file__
@@ -74,15 +74,22 @@
 
   "defines components to load and their order")
 
-(let ((*retain-messages-p* t))
-  (loop for filename in load-list
-      do (load-safe (merge-pathnames
-                     filename
-                     STUMPWM-TOP))))
+(message "")
+(loop
+  with *retain-messages-p* = t
+  with errs = nil
+  for filename in load-list
+  as err = (load-safe (merge-pathnames
+                       filename
+                       STUMPWM-TOP))
+  when err do (push err errs)
+    finally (progn
+              (message "finished loading .stumpwmrc. ~D errors"
+	               (length errs))
+              (setf *init-errs* errs)))
 
 
-(message "finished loading .stumpwmrc. ~D errors"
-	 (length *init-errs*))
+
 
 (defvar load-extra-directories
   '("commands"))
