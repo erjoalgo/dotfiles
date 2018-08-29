@@ -51,20 +51,6 @@
 	      win-class))
 	   (screen-windows (current-screen)))))
 
-(define-stumpwm-type-for-completion
-    :xrandr-rot
-    '("left" "right" "normal" "inverted"))
-
-(defcommand rotate-screen (orientation)
-    ((:xrandr-rot "enter xrandr orientation: "))
-  "rotate screen"
-  (let ((cmd (format nil
-		     "xrandr --output VGA1 --orientation ~A"
-		     orientation)))
-    (run-shell-command cmd t)
-    cmd))
-
-
 (defcommand move-window-toggle () ()
   "move window to next monitor (display)"
   (move-window  (if (neighbour :right (tile-group-current-frame (current-group))
@@ -95,15 +81,6 @@
    (if (not magnifier-on)
        "magnifier -vm -z 5"
        "pkill magnifier")))
-
-
-
-(defcommand invert-screen () ()
-  "invert screen"
-  (run-shell-command "xcalib -a -i"))
-
-
-
 
 ;;based on 'echo-windows'
 (defcommand my-echo-windows (&optional (fmt *window-format*) (group (current-group)) (windows (group-windows group))) (:rest)

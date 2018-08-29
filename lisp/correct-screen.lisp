@@ -125,3 +125,20 @@
                (>= (apply 'max order) (length displays)))
       (error "index out of bounds"))
     (correct-screen order)))
+
+(define-stumpwm-type-for-completion
+    :xrandr-rot
+    '("left" "right" "normal" "inverted"))
+
+(defcommand rotate-screen (orientation)
+    ((:xrandr-rot "enter xrandr orientation: "))
+  "rotate screen"
+  (let ((cmd (format nil
+		     "xrandr --output VGA1 --orientation ~A"
+		     orientation)))
+    (run-shell-command cmd t)
+    cmd))
+
+(defcommand invert-screen () ()
+  "invert screen"
+  (run-shell-command "xcalib -a -i"))
