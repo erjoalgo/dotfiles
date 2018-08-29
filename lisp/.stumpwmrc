@@ -3,17 +3,50 @@
 
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
-
 (defparameter *retain-messages-p* nil
-  "when non-nil, retain old messages in addition to new one")
+  "when non-nil, retain old messages in addition to new one.
+when the value is :log, the latest message goes to the bottom as in a log file")
 
-(defun message (fmt &rest args)
-  "rewrite message to support option to retain older messages"
-  (let ((msg (apply 'format nil fmt args)))
-    (if *retain-messages-p*
-        (echo-string-list (current-screen)
-                          (cons msg (screen-current-msg (current-screen))))
-        (echo-string (current-screen) msg))))
+(defmacro with-retained-messages (order &body body)
+  `(progn
+     (setf (screen-current-msg (current-screen)) nil)
+     (let ((*retain-messages-p* ,order))
+       ,@body)))
+
+;; rewrite of echo-string-list to support retaining messages
+(defun echo-string-list (screen strings &rest highlights)
+  "Draw each string in l in the screen's message window. HIGHLIGHT is
+  the nth entry to highlight."
+  (when strings
+    (when *retain-messages-p*
+      (setf strings
+            (if (eq :log *retain-messages-p*)
+                (append (screen-current-msg screen) strings)
+                (append strings (screen-current-msg screen)))))
+    (unless *executing-stumpwm-command*
+      (multiple-value-bind (width height)
+          (rendered-size strings (screen-message-cc screen))
+        (setup-message-window screen width height)
+        (render-strings (screen-message-cc screen)
+                        *message-window-padding*
+                        *message-window-y-padding*
+                        strings
+                        highlights))
+      (setf (screen-current-msg screen)
+            strings
+            (screen-current-msg-highlights screen)
+            highlights)
+      ;; Set a timer to hide the message after a number of seconds
+      (if *suppress-echo-timeout*
+          ;; any left over timers need to be canceled.
+          (when (timer-p *message-window-timer*)
+            (cancel-timer *message-window-timer*)
+            (setf *message-window-timer* nil))
+          (reset-message-window-timer)))
+    (push-last-message screen strings highlights)
+    (xlib:display-finish-output *display*)
+    (dformat 5 "Outputting a message:~%~{        ~a~%~}" strings)
+    (apply 'run-hook-with-args *message-hook* strings)))
 
 (defmacro with-elapsed-time (elapsed-time-var form &body body)
   (let ((start-time-sym (gensym "start-time")))
