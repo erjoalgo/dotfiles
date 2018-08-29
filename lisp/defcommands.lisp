@@ -206,15 +206,6 @@ be used to override the default window formatting."
   "echo window class"
   (message "window class: ~A" (window-class (current-window))))
 
-'(defcommand send-keys (&rest keys) ((:key-seq "enter keys"))
-  "send the specified keys into the current screen"
-  (echo keys)
-  '(mapcar (lambda (key) (send-meta-key (current-screen) (kbd key)))
-    keys))
-'(define-key *top-map* (kbd "F12") "SEND-KEYS TAB END RET" )
-
-
-
 (defmacro defcommand-xdotool-type (text-form &key (sleep-time .5) name)
   (setf name (or name text-form))
   `(defcommand ,(intern (string-upcase (format nil "xdotool-type-~A" name)))
