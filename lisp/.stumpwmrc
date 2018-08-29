@@ -6,6 +6,13 @@
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
 
+(defmacro with-elapsed-time (elapsed-time-var form &body body)
+  (let ((start-time-sym (gensym "start-time")))
+    `(let ((,start-time-sym (get-internal-real-time)))
+       ,form
+       (let ((,elapsed-time-var (- (get-internal-real-time) ,start-time-sym)))
+         ,@body))))
+
 (defparameter *init-errs* nil )
 (defvar ex)
 (defun load-safe (pathname)
@@ -13,8 +20,8 @@
   ;; (message "loading file: ~A..." pathname)
   (handler-case
       (progn
-        (load pathname)
-	  (message "successful load of ~A" pathname))
+        (with-elapsed-time elapsed-time (load pathname)
+	  (message "successful load of ~A" pathname)))
     (error (err)
       (message "error loading: ~A~%: '~A'" pathname err)
       (push (cons pathname err) *init-errs*))))
