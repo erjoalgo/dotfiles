@@ -168,6 +168,12 @@
 	  (log-entry-timestamp (format nil "~A:~A" engine terms)
 			       *search-history-fn*))))))
 
+(defparameter DEFAULT-SEARCH-ENGINE "ddg")
+
+(defcommand search-engine-search-clipboard () ()
+  "search the clipboard contents"
+  (search-engine-search DEFAULT-SEARCH-ENGINE (get-x-selection )))
+
 (defcommand reload-search-engines () ()
   "reload search engines from file"
   (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*")
