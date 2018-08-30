@@ -20,10 +20,10 @@
      (let ((contents (file-string fn))
 	   (regexp '(:sequence
 		     :MULTI-LINE-MODE-P
-		     :START-ANCHOR;^
-		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Tab));[^\t]*
-		     #\Tab;\t
-		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Newline));[^\n]*
+		     :START-ANCHOR ; ^
+		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Tab)) ; [^\t]*
+		     #\Tab ; \t
+		     (:GREEDY-REPETITION 0 nil (:INVERTED-CHAR-CLASS  #\Newline)) ; [^\n]*
 		     :END-ANCHOR))
 	   matches)
        (setf matches (ppcre::all-matches-as-strings regexp contents))
