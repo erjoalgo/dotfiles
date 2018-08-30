@@ -92,12 +92,12 @@ when the value is :log, the latest message goes to the bottom as in a log file")
     "tsv-db.lisp"
     "mozrepl.lisp"
     "url-launcher.lisp"
+    "text-shortcuts.lisp"
 
     "run-raise-programs.lisp"
     "per-window-bindings.lisp"
     "top-map-bindings.lisp"
 
-    "commands-map.lisp"
     "swank-loader.lisp"
     "correct-screen.lisp"
     "brightness.lisp"

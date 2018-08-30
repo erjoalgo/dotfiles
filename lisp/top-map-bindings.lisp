@@ -131,6 +131,7 @@
       ("H-F9" "voldown")
       ("H-F10" "volup")
       ("H-SPC" "speak-key")
+      ("H-t" *text-shortcuts-map*)
       )
 
   ;;not efficient nor necessary but only run at initialization
