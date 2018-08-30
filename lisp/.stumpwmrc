@@ -110,6 +110,8 @@ when the value is :log, the latest message goes to the bottom as in a log file")
 
 (defparameter *init-errs* nil)
 
+;; disable *startup-message* to see retained messages
+(setf *startup-message* nil)
 (with-retained-messages t
   (let (errs)
     (loop
