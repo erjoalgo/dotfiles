@@ -16,10 +16,8 @@
   ;;TODO sane path handling
   (make-persistent-alist
    :fn
-   (make-pathname
-    :directory (append (pathname-directory STUMPWM-TOP)
-		       '("data" "url-launcher-urls"))
-    :defaults (user-homedir-pathname))
+   (merge-pathnames "data/url-launcher-urls"
+                    (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
    :fs-type :directory))
 
 (persistent-alist-load-if-exists
@@ -106,10 +104,8 @@
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
   (make-persistent-alist
-   :fn (make-pathname
-	:directory (append (pathname-directory STUMPWM-TOP)
-			   '("data" "search-engines"))
-	:defaults (user-homedir-pathname))
+   :fn (merge-pathnames "data/search-engines"
+                          (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
    :fs-type :single-tsv-file))
 
 (persistent-alist-load-if-exists *search-engine-persistent-alist*)

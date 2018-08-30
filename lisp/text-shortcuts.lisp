@@ -23,7 +23,8 @@
 (define-key *text-shortcuts-map* (kbd "H-t") "type-shortcut")
 
 (defparameter TEXT-SHORTCUTS-PATHNAME
-  (merge-pathnames "data/text-shortcuts" STUMPWM-TOP))
+  (merge-pathnames "data/text-shortcuts"
+                   (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
 
 (defun text-shortcuts-load (&key (pathname TEXT-SHORTCUTS-PATHNAME))
   (setf *text-shortcuts*

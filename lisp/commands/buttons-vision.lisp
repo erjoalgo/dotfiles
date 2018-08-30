@@ -1,5 +1,6 @@
 (defparameter BUTTONS-ROOT
-  (merge-pathnames "data/button-imgs/" STUMPWM-TOP))
+  (merge-pathnames "data/button-imgs/"
+                   (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
 
 (define-stumpwm-type-from-wild-pathname :button-pathname
     (merge-pathnames (make-pathname :type "png" :name :WILD) BUTTONS-ROOT)
