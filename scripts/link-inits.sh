@@ -40,6 +40,7 @@ for LINK in \
     .my-bash-completions \
     .tmux.conf \
     .xscreensaver \
+    .gdbinit \
     .Xdefaults \
     ; do \
 
