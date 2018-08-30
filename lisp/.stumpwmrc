@@ -86,7 +86,6 @@ when the value is :log, the latest message goes to the bottom as in a log file")
   '(
     "util.lisp"
     "xinitrc.lisp"
-    "sensitive/sensitive.el"
     "decorations.lisp"
     "defcommands.lisp"
     "tsv-db.lisp"
