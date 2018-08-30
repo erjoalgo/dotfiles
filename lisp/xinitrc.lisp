@@ -25,11 +25,24 @@
         do
            (run-shell-command (format nil "~A &" script) nil)))
 
+(defvar *screensaver-proc* nil)
+(defparameter *screensaver-lock-time-mins* 1)
+
 (defun start-screensaver ()
-  (if (zerop (length (run-shell-command "which xscreensaver" t)))
-      (error "xscreensaver not installed")
-      (when (zerop (length (run-shell-command "pidof xscreensaver" t)))
-        (run-shell-command "xscreensaver &" nil))))
+  (unless (and (which "xsecurelock")
+               (which "xautolock"))
+    (error "xsecurelock, xautolock not installed"))
+  (unless (and *screensaver-proc*
+               (eq :RUNNING (slot-value *screensaver-proc* 'SB-IMPL::%STATUS)))
+    (setf *screensaver-proc*
+          ;; "xautolock -time 1 -locker xsecurelock"
+          (SB-EXT:RUN-PROGRAM "xautolock"
+                              (list "-time" (write-to-string *screensaver-lock-time-mins*)
+                                    "-locker" "xsecurelock")
+                              :search t
+                              :output t
+                              :error t
+                              :wait nil))))
 
 (xmodmap-load)
 (run-startup-scripts)
