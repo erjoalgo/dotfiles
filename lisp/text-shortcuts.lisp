@@ -26,7 +26,8 @@
   (make-psym
    :pathnames (list (merge-pathnames "data/*/text-shortcuts"
                                      (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
-   :driver psym-lines-list-driver))
+   :driver psym-lines-list-driver
+   :short-description "text shortcuts"))
 
 (psym-load *text-shortcuts-alist*)
 
