@@ -57,6 +57,21 @@ when the value is :log, the latest message goes to the bottom as in a log file")
 	(setf data (subseq data 0 n)))
       data)))
 
+(defun machine-get-uuid ()
+  (let ((fstab (file-string #P"/etc/fstab")))
+    (cl-ppcre:register-groups-bind
+        (root-device-name root)
+        ("(?m)^([^	 ]+)[ 	]+(/)[	 ]+" fstab)
+      (declare (ignore root))
+      (assert fstab)
+      (let* ((cmd (format nil "lsblk ~A -o uuid" root-device-name))
+             (lsblk-out (run-shell-command cmd t))
+             (uuid (second (cl-ppcre:split #\Newline lsblk-out))))
+        (assert uuid)
+        uuid))))
+
+(defparameter MACHINE-UUID (machine-get-uuid))
+
 (defmacro with-elapsed-time (elapsed-time-var form &body body)
   (let ((start-time-sym (gensym "start-time")))
     `(let ((,start-time-sym (get-internal-real-time)))
