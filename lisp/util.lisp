@@ -1,12 +1,3 @@
-(defun file-string (path)
-  (with-open-file (stream path)
-    (let* ((n-estimate (file-length stream))
-	  (data (make-string n-estimate))
-	  (n (read-sequence data stream)))
-      (unless (= n n-estimate)
-	(setf data (subseq data 0 n)))
-      data)))
-
 (defun deep-copy-map (source-map)
   (let ((new-map (make-sparse-keymap)))
     (dolist (binding (kmap-bindings source-map))
