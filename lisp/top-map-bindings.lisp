@@ -196,6 +196,3 @@
 
 (pop-top-map)
 (set-prefix-key (kbd "F19"))
-
-
-(reload-search-engines)

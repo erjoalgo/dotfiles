@@ -89,6 +89,8 @@ when the value is :log, the latest message goes to the bottom as in a log file")
     "decorations.lisp"
     "defcommands.lisp"
     "mozrepl.lisp"
+    "psym.lisp"
+
     "url-launcher.lisp"
     "text-shortcuts.lisp"
 
