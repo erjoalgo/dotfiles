@@ -59,7 +59,7 @@ when the value is :log, the latest message goes to the bottom as in a log file")
 
 (defun ensure-directory-exists (pathname)
   (unless (probe-file pathname)
-    (SB-POSIX:MKDIR pathname 0755)))
+    (SB-POSIX:MKDIR pathname #o775)))
 
 (defun machine-get-uuid ()
   (let ((fstab (file-string #P"/etc/fstab")))
