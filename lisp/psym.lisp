@@ -67,7 +67,6 @@
                          (cons (pathname-name pathname-record) (file-string pathname-record)))
 
    :serialize-record (lambda (pathname-top record)
-                       (setf ex record)
                        (destructuring-bind (key . value) record
                          (with-open-file (fh (make-pathname :name key
                                                             :defaults pathname-top)
@@ -115,7 +114,6 @@
 
 (defun alist-get (key alist)
   (let ((key-value (assoc key alist  :test 'equal)))
-    (setf ex (cons key alist))
     (if (not key-value)
 	(error "no such key: '~a'" key)
 	key-value)))
