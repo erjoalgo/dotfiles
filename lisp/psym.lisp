@@ -7,7 +7,9 @@
 (defstruct psym
   records
   pathnames
-  driver)
+  driver
+  short-description
+  )
 
 (defun psym-concrete-pathnames (psym)
   (loop for pathname-possibly-wild in (psym-pathnames psym)
@@ -22,7 +24,8 @@
         finally
            (progn
              (when verbose
-               (message "loaded ~D records" (length records)))
+               (message "loaded ~D ~A" (length records)
+                        (or (psym-short-description psym) "records")))
              (setf (psym-records psym) records))))
 
 (defun psym-add (psym record &optional pathname)
