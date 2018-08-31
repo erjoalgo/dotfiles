@@ -95,6 +95,9 @@ when the value is :log, the latest message goes to the bottom as in a log file")
   ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
   (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
+(defparameter DATA-TOP
+  (truename (merge-pathnames "../data" STUMPWM-TOP)))
+
 (defparameter browser-classes
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
     "Tor Browser" "Google-chrome" "Firefox-esr"))
