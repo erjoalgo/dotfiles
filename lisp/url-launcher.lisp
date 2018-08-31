@@ -6,9 +6,13 @@
    #:uri-encode
    ))
 
-(defvar *search-history-fn*
+(defparameter *search-history-fn*
   ;;todo should be in sensitive
-  (merge-pathnames "search-history" (user-homedir-pathname)))
+  (merge-pathnames (make-pathname
+                    :directory '(:RELATIVE "private")
+                    :name MACHINE-UUID
+                    :type "search-history")
+                   DATA-TOP))
 
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
