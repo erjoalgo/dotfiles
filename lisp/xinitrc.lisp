@@ -44,6 +44,11 @@
                               :error t
                               :wait nil))))
 
-(xmodmap-load)
-(run-startup-scripts)
-(start-screensaver)
+(with-elapsed-time ms (xmodmap-load)
+  (message "xmodmap load took ~D ms" ms))
+
+(with-elapsed-time ms (run-startup-scripts)
+  (message "startup shell scripts took ~D ms" ms))
+
+(with-elapsed-time ms (start-screensaver)
+  (message "screensaver load took ~D ms" ms))
