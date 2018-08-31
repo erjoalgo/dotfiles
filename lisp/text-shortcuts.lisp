@@ -21,6 +21,7 @@
 
 (defvar *text-shortcuts-map* (make-sparse-keymap))
 (define-key *text-shortcuts-map* (kbd "H-t") "type-shortcut")
+(define-key *text-shortcuts-map* (kbd "H-T") "text-shortcut-add")
 
 (defparameter *text-shortcuts-alist*
   (make-psym
