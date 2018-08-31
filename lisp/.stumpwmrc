@@ -88,7 +88,6 @@ when the value is :log, the latest message goes to the bottom as in a log file")
     "xinitrc.lisp"
     "decorations.lisp"
     "defcommands.lisp"
-    "tsv-db.lisp"
     "mozrepl.lisp"
     "url-launcher.lisp"
     "text-shortcuts.lisp"

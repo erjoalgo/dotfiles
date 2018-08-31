@@ -4,8 +4,7 @@
    #:launcher-append-url
    #:search-engine-search
    #:uri-encode
-   )
-  (:use #:tsv-db))
+   ))
 
 (defvar *search-history-fn*
   ;;todo should be in sensitive
@@ -13,18 +12,14 @@
 
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
-  ;;TODO sane path handling
-  (make-persistent-alist
-   :fn
-   (merge-pathnames "data/url-launcher-urls"
-                    (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
-   :fs-type :directory))
+  (make-psym
+   :pathnames (list (merge-pathnames "data/*/url-launcher-urls"
+                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
+   :driver psym-dir-alist-driver))
 
-(persistent-alist-load-if-exists
- *launcher-persistent-alist*)
+(psym-load *launcher-persistent-alist*)
 
-(push '*launcher-persistent-alist*
-      *persistent-alist-syms*)
+(push '*launcher-persistent-alist* *persistent-alist-syms*)
 
 (defun url-launcher-get-browser-current-url ()
   (chrome-get-url))
@@ -54,15 +49,14 @@
      thereis (and (cl-ppcre:scan regexp url) opener)
      finally (return #'url-launcher-browser-new-tab)))
 
-(define-stumpwm-type-for-completion-from-alist-key-only
-  :launcher-url (persistent-alist-alist *launcher-persistent-alist*))
+(define-stumpwm-type-with-completion
+    :launcher-url (alist (psym-records *launcher-persistent-alist*))
+  :sel-form (key (alist-get key alist)))
 
-(defcommand launch-url (launcher-key) ((:launcher-url "enter url key: "))
+(defcommand launch-url (launcher-key-value) ((:launcher-url "enter url key: "))
   "do a completing read of stored keys, then launch url"
-  (let ((url
-	 (persistent-alist-get
-			*launcher-persistent-alist* launcher-key)))
-    ;(message "got url: ~A ~A" url launcher-key)
+  (destructuring-bind (key . url) launcher-key-value
+    (declare (ignore key))
     (when url
       (let* ((url (expand-user url))
 	     (opener (url-command url)))
@@ -73,13 +67,13 @@
 	      (run-shell-command (format nil "~A ~A" opener url))
 	      ;;TODO why this causes hang
 	      '(SB-EXT:RUN-PROGRAM opener  (list url)
-				;;TODO output to tmp?
-				:search t
-				:wait nil
-				:output t
-				:error t
-				:input t)
-		   nil ))
+		;;TODO output to tmp?
+		:search t
+		:wait nil
+		:output t
+		:error t
+		:input t)
+	      nil ))
 	;;log to different file? or at least add tags
 	(log-entry-timestamp url *search-history-fn*)))))
 
@@ -96,19 +90,21 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
-	(persistent-alist-push *launcher-persistent-alist*
-			       key url)
+        (psym-add *launcher-persistent-alist* (cons key url)
+                  ;; TODO select public or private...
+                  )
 	;;(setq *launcher-alist* (cons key url))
 	(echo (format nil "added: ~A" url)))))
 
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
-  (make-persistent-alist
-   :fn (merge-pathnames "data/search-engines"
-                          (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
-   :fs-type :single-tsv-file))
+  (make-psym
+   :pathnames (list (merge-pathnames "data/*/search-engines"
+                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
+   :driver psym-tsv-alist-driver))
 
-(persistent-alist-load-if-exists *search-engine-persistent-alist*)
+(psym-load *search-engine-persistent-alist*)
+
 (push '*search-engine-persistent-alist* *persistent-alist-syms*)
 
 (defun uri-encode (search-terms)
@@ -138,31 +134,31 @@
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
 
-(define-stumpwm-type-for-completion-from-alist
-  :search-engine (persistent-alist-alist *search-engine-persistent-alist*))
+(define-stumpwm-type-with-completion
+    :search-engine (alist (psym-records *search-engine-persistent-alist*))
+  :sel-form (key (alist-get key alist)))
 
 (defcommand search-engine-search
-  (engine terms)
-  ((:search-engine "search engine: ")
-   (:string "query: "))
+    (engine terms)
+    ((:search-engine "search engine: ")
+     (:string "query: "))
 
   "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
 
-  (let (engine-fmt)
-    (when (and engine terms)
-      (if (not (setf engine-fmt
-		     ;;ugly but this is to allow "search-engine-search ddg" command
-		     (if (consp engine) (cadr engine)
-		       (persistent-alist-get
-			*search-engine-persistent-alist* engine))))
-	  (message "no such engine: '~A'" engine)
-	(let* (
-	       (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
-	       (query (uri-encode args))
-	       (url (format nil engine-fmt query)))
-	  (url-launcher-browser-new-tab url)
-	  (log-entry-timestamp (format nil "~A:~A" engine terms)
-			       *search-history-fn*))))))
+  (when (and engine terms)
+    (let ((engine-fmt
+            (if (consp engine)
+                (cadr engine)
+                (cdr (alist-get engine (psym-records *search-engine-persistent-alist*))))))
+      (if (not engine-fmt)
+	  (error "no such engine: '~A'" engine)
+	  (let* (
+	         (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
+	         (query (uri-encode args))
+	         (url (format nil engine-fmt query)))
+	    (url-launcher-browser-new-tab url)
+	    (log-entry-timestamp (format nil "~A:~A" engine terms)
+			         *search-history-fn*))))))
 
 (defparameter DEFAULT-SEARCH-ENGINE "ddg")
 
@@ -172,23 +168,28 @@
 
 (defcommand reload-search-engines () ()
   "reload search engines from file"
-  (reload-persistent-alist "*SEARCH-ENGINE-PERSISTENT-ALIST*")
+  (psym-load *SEARCH-ENGINE-PERSISTENT-ALIST*)
   (loop
-     with used-letters = nil
-     for (eng . fmt) in
-       (reverse (persistent-alist-alist *SEARCH-ENGINE-PERSISTENT-ALIST*))
-     as letter = (loop for letter across eng
-		    unless (member letter used-letters :test 'eql)
-		    return letter)
-     as kbd = (kbd (format nil "~A" letter))
-     do (if (not letter)
-	    (warn "unable to find a letter for engine ~A" eng)
-	    (progn
-	      (format t "mapping ~A to ~A. used: ~A~%" eng letter
-		      used-letters)
-	      (define-key *search-engine-map* kbd
-		(format nil "search-engine-search ~A" eng))
-	      (push letter used-letters)))))
+    with used-letters = nil
+    for (eng . fmt) in
+                    (reverse (psym-records *SEARCH-ENGINE-PERSISTENT-ALIST*))
+    as letter = (loop for letter across eng
+		      unless (member letter used-letters :test 'eql)
+		        return letter)
+    do (if (not letter)
+           (warn "unable to find a letter for engine ~A" eng)
+           (progn
+	     (format t "mapping ~A to ~A. used: ~A~%" eng letter
+		     used-letters)
+	     (define-key *search-engine-map* (kbd (format nil "~A" letter))
+	       (format nil "search-engine-search ~A" eng))
+	     (push letter used-letters)))))
+
+'(define-stumpwm-type-with-completion
+    :psym (psym-list *persistent-alist-syms*))
+
+'(defcommand psym-reload (psym) ((:psym "enter psym: "))
+  (psym-load psym))
 
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO

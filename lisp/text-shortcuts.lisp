@@ -22,23 +22,20 @@
 (defvar *text-shortcuts-map* (make-sparse-keymap))
 (define-key *text-shortcuts-map* (kbd "H-t") "type-shortcut")
 
-(defparameter TEXT-SHORTCUTS-PATHNAME
-  (merge-pathnames "data/text-shortcuts"
-                   (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
+(defparameter *text-shortcuts-alist*
+  (make-psym
+   :pathnames (list (merge-pathnames "data/*/text-shortcuts"
+                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
+   :driver psym-lines-list-driver))
 
-(defun text-shortcuts-load (&key (pathname TEXT-SHORTCUTS-PATHNAME))
-  (setf *text-shortcuts*
-        (when (probe-file pathname)
-          (ppcre:split #\Newline (file-string pathname))))
-  (message "loaded ~D text shortcuts" (length *text-shortcuts*)))
+(psym-load *text-shortcuts-alist*)
 
-(defcommand text-shortcuts-add (shortcut &key (pathname TEXT-SHORTCUTS-PATHNAME))
+(define-stumpwm-type-with-completion
+    :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
+
+(define-stumpwm-type-with-completion
+    :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
+
+(defcommand text-shortcut-add (shortcut)
     ((:string "enter text shortcut to add: "))
-  (with-open-file (fh pathname
-                      :direction :output
-                      :if-exists :append
-                      :if-does-not-exist :create)
-    (format fh "~A~%" shortcut))
-  (push shortcut *text-shortcuts*))
-
-(text-shortcuts-load)
+  (psym-add *text-shortcuts-alist* shortcut))
