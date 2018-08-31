@@ -182,12 +182,6 @@
 	       (format nil "search-engine-search ~A" eng))
 	     (push letter used-letters)))))
 
-(defvar *persistent-alist-syms* nil )
-(push '*launcher-persistent-alist* *persistent-alist-syms*)
-(push '*search-engine-persistent-alist* *persistent-alist-syms*)
-(define-stumpwm-type-with-completion :psym (psym-list *persistent-alist-syms*))
-(defcommand psym-reload (psym) ((:psym "enter psym: ")) (psym-load psym))
-
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
   ;;automatically find the best key for a set of named commands
