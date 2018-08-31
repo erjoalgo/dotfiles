@@ -2,11 +2,11 @@
 
 set -euo pipefail
 
+sudo apt-get install -y libxmu-dev libpam-dev xautolock
+
 if command -v xsecurelock; then
     exit 0
 fi
-
-sudo apt-get install -y libxmu-dev libpam-dev xautolock
 
 URL=https://github.com/google/xsecurelock
 
