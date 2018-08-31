@@ -14,12 +14,9 @@
                     :type "search-history")
                    DATA-TOP))
 
-(defun ensure-parent-directory-exists (pathname)
-  (let* ((parent (uiop:pathname-parent-directory-pathname pathname)))
-    (unless (probe-file parent)
-      (SB-POSIX:MKDIR parent 0755))))
-
-(ensure-parent-directory-exists *search-history-fn*)
+(ensure-directory-exists
+ (uiop:pathname-parent-directory-pathname
+  *search-history-fn*))
 
 ;;; Launcher
 (defparameter *launcher-persistent-alist*

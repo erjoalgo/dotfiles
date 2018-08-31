@@ -6,6 +6,8 @@
     (merge-pathnames (make-pathname :type "png" :name :WILD) BUTTONS-ROOT)
   :allow-nonexistent t)
 
+(ensure-directory-exists BUTTONS-ROOT)
+
 (defcommand click-button (button-pathname) ((:button-pathname "enter button image: "))
   (message "button image is ~A" button-pathname))
 
