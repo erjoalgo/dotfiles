@@ -39,7 +39,7 @@ EOF
 
 RELOAD=false
 
-for UDEV_CONFIG in $(find / -name systemd-udevd.service -type f 2>/dev/null); do
+for UDEV_CONFIG in $(find /etc /lib -name systemd-udevd.service -type f 2>/dev/null); do
     if ! grep '^MountFlags=shared' ${UDEV_CONFIG}; then
         echo "warning: need to update ${UDEV_CONFIG} to MontFlags=slave"
         sudo sed -e '/^MountFlags=/d' ${UDEV_CONFIG}
