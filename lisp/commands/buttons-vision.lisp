@@ -14,12 +14,8 @@
   (let* ((name (pathname-name button-pathname))
 	 (parent-dir (make-pathname :name nil :type nil :defaults button-pathname)))
 
-    (unless (probe-file parent-dir)
-      ;; (setf ex (sb-posix:stat #P"/home/ejalfonso/git/erjoalgo-stumpwmrc/lisp/"))
-      ;; (SB-MOP:CLASS-DIRECT-SLOTS (class-of ex))
-      ;; (sb-posix:stat-mode ex)
-      (format t "making buttons directory: ~A~%" parent-dir)
-      (sb-posix:mkdir parent-dir 16877))
+    (ensure-directory-exists BUTTONS-ROOT)
+    (ensure-directory-exists parent-dir)
 
     (setf button-pathname
           (take-scrot name
