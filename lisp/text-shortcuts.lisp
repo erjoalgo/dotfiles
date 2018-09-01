@@ -41,7 +41,7 @@
 
 (define-stumpwm-type-pathname
     :text-shortcut-pathname
-  (psym-concrete-pathnames *text-shortcuts-alist*))
+  (psym-concrete-pathnames *text-shortcuts-alist* :include-nonexistent t))
 
 (defcommand text-shortcut-add (shortcut pathname)
     ((:string "enter text shortcut to add: ")
