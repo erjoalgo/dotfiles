@@ -205,5 +205,3 @@
   (push `(:class ,class) stumpwm:*deny-raise-request*))
 
 (setf *suppress-deny-messages* t)
-
-(search-engines-install-to-map)

@@ -196,3 +196,6 @@
 
 (pop-top-map)
 (set-prefix-key (kbd "F19"))
+
+;; TODO reorder all this
+(search-engines-install-to-map)
