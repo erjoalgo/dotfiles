@@ -11,7 +11,7 @@ if ! ./installs/emacs-install.sh; then
   echo "warning: failed to build emacs from source"
   which emacs
 fi
-sudo apt-get install -y chromium zathura gnome-terminal pass
+sudo apt-get install -y chromium zathura gnome-terminal pass keynav
 sudo apt-get install -y eog
 sudo apt-get install -y wireless-tools wpasupplicant expect
 
