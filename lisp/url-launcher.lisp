@@ -8,11 +8,8 @@
 
 (defparameter *search-history-fn*
   ;;todo should be in sensitive
-  (merge-pathnames (make-pathname
-                    :directory '(:RELATIVE "private")
-                    :name MACHINE-UUID
-                    :type "search-history")
-                   DATA-TOP))
+  (merge-pathnames "private-data-one-way/search-history"
+                   (user-homedir-pathname)))
 
 (ensure-directory-exists
  (uiop:pathname-parent-directory-pathname
@@ -22,7 +19,11 @@
 (defparameter *launcher-persistent-alist*
   (make-psym
    :pathnames (list (merge-pathnames "*/url-launcher-urls/"
-                                     DATA-TOP))
+                                     DATA-TOP)
+                    (merge-pathnames "private-data/url-launcher-urls/"
+                                     (user-homedir-pathname))
+                    (merge-pathnames "private-data-one-way/url-launcher-urls"
+                                     (user-homedir-pathname)))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"))
 
@@ -108,7 +109,11 @@
 (defparameter *search-engine-persistent-alist*
   (make-psym
    :pathnames (list (merge-pathnames "data/*/search-engines"
-                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP)))
+                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
+                    (merge-pathnames "private-data/search-engines"
+                                     (user-homedir-pathname))
+                    (merge-pathnames "private-data-one-way/search-engines"
+                                     (user-homedir-pathname)))
    :driver psym-tsv-alist-driver
    :short-description "search engines"
    ))
