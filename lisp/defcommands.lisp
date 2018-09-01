@@ -84,9 +84,8 @@
 
 ;;based on 'echo-windows'
 (defcommand echo-windows-with-group () ()
-  (with-retained-messages :log
+  (with-retained-messages t
     (message (concat "group: " (group-name (current-group))))
-    '(loop for i below 30 do (echo (format nil "~D" i)))
     (echo-windows)))
 
 (defcommand connect-internet () ()
