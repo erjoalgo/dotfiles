@@ -35,7 +35,12 @@
 (define-stumpwm-type-with-completion
     :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
 
+(define-stumpwm-type-pathname
+    :text-shortcut-pathname
+  (psym-concrete-pathnames *text-shortcuts-alist*))
 
-(defcommand text-shortcut-add (shortcut)
-    ((:string "enter text shortcut to add: "))
-  (psym-add *text-shortcuts-alist* shortcut))
+(defcommand text-shortcut-add (shortcut pathname)
+    ((:string "enter text shortcut to add: ")
+     (:text-shortcut-pathname "select classification: "))
+  (psym-add *text-shortcuts-alist* shortcut pathname))
+
