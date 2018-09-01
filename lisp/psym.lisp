@@ -1,3 +1,5 @@
+;; TODO clos
+
 (defstruct psym-driver
   list-serialized-records ;; pathname => '(serialized1, serialized2 ...)
   deserialize-record   ;; serialized => record
