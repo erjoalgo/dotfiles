@@ -122,7 +122,7 @@
              (merge-pathnames selection ,wild-pathanme)))
 	 (throw 'error "Abort."))))
 
-(defun which (program-name)
+'(defun which (program-name)
   (loop
     with program-pathname = (pathname program-name)
     for path-directory in (ppcre:split #\: (getenv "PATH"))
@@ -131,10 +131,15 @@
                              (make-pathname :name :WILD
                                             :type :WILD
                                             :defaults (pathname-as-directory path-directory)))
-            ;; do (format t "~A~%" (list pathname (pathname-name pathname) (pathname-type pathname)))
               thereis (and
                        (pathname-name (probe-file pathname)) ;; regular file
                        (PATHNAME-IS-EXECUTABLE-P pathname)   ;; executable
                        (equal (pathname-name pathname) (pathname-name program-pathname)) ;;name matches
                        (equal (pathname-type pathname) (pathname-type program-pathname)) ;;extension matches, if any
                        pathname))))
+
+(defun which (program-name)
+  (let* ((cmd (format nil "which ~A" program-name))
+         (out (run-shell-command cmd t))
+         (trimmed (trim-spaces out)))
+    (unless (zerop (length trimmed)) trimmed)))
