@@ -21,7 +21,7 @@
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
   (make-psym
-   :pathnames (list (merge-pathnames "*/url-launcher-urls"
+   :pathnames (list (merge-pathnames "*/url-launcher-urls/"
                                      DATA-TOP))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"
