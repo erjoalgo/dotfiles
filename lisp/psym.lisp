@@ -117,3 +117,10 @@
     (if (not key-value)
 	(error "no such key: '~a'" key)
 	key-value)))
+
+(defun select-pathname (pathnames &key (prompt "select pathname: ")
+                                    (require-match t))
+  (let ((sel (completing-read (current-screen) prompt
+                              (mapcar #'namestring pathnames)
+                              :require-match require-match)))
+    (pathname sel)))
