@@ -35,8 +35,6 @@
 (define-stumpwm-type-with-completion
     :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
 
-(define-stumpwm-type-with-completion
-    :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
 
 (defcommand text-shortcut-add (shortcut)
     ((:string "enter text shortcut to add: "))

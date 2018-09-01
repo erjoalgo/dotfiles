@@ -140,3 +140,9 @@
                                :require-match require-match))
          (sel-namestring (concat prefix sel)))
     (pathname sel-namestring)))
+
+(defmacro define-stumpwm-type-pathname (type-name pathnames-form)
+  `(define-stumpwm-type ,type-name (input prompt)
+     (or (argument-pop input)
+         (select-pathname ,pathnames-form :prompt prompt)
+         (throw 'error "Abort."))))
