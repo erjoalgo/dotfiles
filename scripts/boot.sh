@@ -75,8 +75,12 @@ done
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 
-insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-profile'  \
-  ${HOME}/.profile <<< "source ${HOME}/.my-profile"
+for SHADOWER in ~/.profile ~/.bash_profile ~/.bash_login; do
+    if test -e $SHADOWER; then
+	insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-profile'  \
+		          ${SHADOWER} <<< "source ${HOME}/.my-profile"
+    fi
+done
 
 sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc" || true
 # set GRUB timeout to zero
