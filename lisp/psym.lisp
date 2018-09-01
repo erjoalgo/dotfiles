@@ -51,8 +51,10 @@
      :list-serialized-records #'file-to-lines
      :deserialize-record (lambda (line)
                            ;; tab used below
-                           (ppcre:register-groups-bind (key val) ("^([^	]+)	(.*)$" line)
-                             (cons key val)))
+                           (or
+                            (ppcre:register-groups-bind (key val) ("^([^	]+)	(.*)$" line)
+                              (cons key val))
+                            (error "non-tsv line")))
      ;; tab used below
      :serialize-record (lambda (pathname record)
                          (destructuring-bind (key . value) record
