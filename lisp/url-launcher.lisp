@@ -115,8 +115,7 @@
                     (merge-pathnames "private-data-one-way/search-engines"
                                      (user-homedir-pathname)))
    :driver psym-tsv-alist-driver
-   :short-description "search engines"
-   ))
+   :short-description "search engines"))
 
 (psym-load *search-engine-persistent-alist*)
 
