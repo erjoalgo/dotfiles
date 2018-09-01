@@ -84,7 +84,7 @@
 
 ;;based on 'echo-windows'
 (defcommand echo-windows-with-group () ()
-  (with-retained-messages t
+  (with-message-queuing t
     (message (concat "group: " (group-name (current-group))))
     (echo-windows)))
 
