@@ -11,23 +11,25 @@
 
 (defun init-brightness ()
   (flet ((find-pathname (filename)
-	   (->>
-	    (format nil "find /sys/devices -name ~A"
-		    filename)
-	    run-shell-command-t
-	    (cl-ppcre:split #\Newline)
-	    car
-	    trim-spaces
-	    pathname)))
-    (setf *actual-brightness-pathname*
-	  (find-pathname "actual_brightness")
-	  *max-brightness-pathname*
-	  (make-pathname :name "max_brightness" :defaults
-			 *actual-brightness-pathname*)
-	  *brightness-pathname*
-	  (make-pathname :name "brightness" :defaults
-			 *actual-brightness-pathname*)
-	  *max-brightness* (read-brightness *max-brightness-pathname*))))
+           (let* ((cmd (format nil "find /sys/devices -name ~A" filename))
+                  (out (run-shell-command cmd t))
+                  (lines (cl-ppcre:split #\Newline out))
+                  (pathname-as-string (car lines)))
+             (when pathname-as-string
+               (pathname (trim-spaces pathname-as-string))))))
+
+    (let ((actual-brightness-pathname (find-pathname "actual_brightness")))
+      (if (null actual-brightness-pathname)
+          (warn "brightness pathnames not found")
+          (setf *actual-brightness-pathname* actual-brightness-pathname
+
+	        *max-brightness-pathname* (make-pathname :name "max_brightness" :defaults
+			                                 *actual-brightness-pathname*)
+
+	        *brightness-pathname* (make-pathname :name "brightness" :defaults
+			                             *actual-brightness-pathname*)
+
+	        *max-brightness* (read-brightness *max-brightness-pathname*))))))
 
 (defun read-brightness (pathname)
   (-> pathname
