@@ -13,9 +13,12 @@
   short-description
   )
 
-(defun psym-concrete-pathnames (psym)
+(defun psym-concrete-pathnames (psym &key include-nonexistent)
   (loop for pathname-possibly-wild in (psym-pathnames psym)
-        append (directory pathname-possibly-wild)))
+     append (if (WILD-PATHNAME-P pathname-possibly-wild)
+                (directory pathname-possibly-wild)
+                (when (or include-nonexistent (probe-file pathname-possibly-wild))
+                  (list pathname-possibly-wild)))))
 
 (defun psym-load (psym &key (verbose t))
   (loop for pathname in (psym-concrete-pathnames psym)
