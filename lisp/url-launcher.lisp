@@ -175,7 +175,7 @@
   "search the clipboard contents"
   (search-engine-search DEFAULT-SEARCH-ENGINE (get-x-selection )))
 
-(defcommand reload-search-engines () ()
+(defcommand search-engines-install-to-map () ()
   "reload search engines from file"
   (psym-load *SEARCH-ENGINE-PERSISTENT-ALIST*)
   (loop
@@ -205,3 +205,5 @@
   (push `(:class ,class) stumpwm:*deny-raise-request*))
 
 (setf *suppress-deny-messages* t)
+
+(search-engines-install-to-map)
