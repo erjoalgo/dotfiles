@@ -185,8 +185,7 @@
   (psym-load *SEARCH-ENGINE-PERSISTENT-ALIST*)
   (loop
     with used-letters = nil
-    for (eng . fmt) in
-                    (reverse (psym-records *SEARCH-ENGINE-PERSISTENT-ALIST*))
+    for (eng . fmt) in (psym-records *SEARCH-ENGINE-PERSISTENT-ALIST*)
     as letter = (loop for letter across eng
 		      unless (member letter used-letters :test 'eql)
 		        return letter)
