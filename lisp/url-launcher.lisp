@@ -13,7 +13,7 @@
 
 (ensure-directory-exists
  (uiop:pathname-parent-directory-pathname
-  *search-history-fn*))
+  (uiop:ensure-directory-pathname *search-history-fn*)))
 
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
