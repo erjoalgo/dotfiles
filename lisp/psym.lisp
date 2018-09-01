@@ -63,8 +63,10 @@
 (defparameter psym-dir-alist-driver
   (make-psym-driver
    :list-serialized-records (lambda (pathname-top)
-                              (directory (make-pathname :name :WILD
-                                                        :defaults pathname-top)))
+                              (remove-if-not
+                               (lambda (pathname) (pathname-name (probe-file pathname)))
+                               (directory (make-pathname :name :WILD
+                                                         :defaults pathname-top))))
    :deserialize-record (lambda (pathname-record)
                          (cons (pathname-name pathname-record) (file-string pathname-record)))
 
