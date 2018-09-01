@@ -178,6 +178,8 @@
   "search the clipboard contents"
   (search-engine-search DEFAULT-SEARCH-ENGINE (get-x-selection )))
 
+(defcommand-alias engsearch search-engine-search)
+
 (defcommand search-engines-install-to-map () ()
   "reload search engines from file"
   (psym-load *SEARCH-ENGINE-PERSISTENT-ALIST*)
@@ -194,7 +196,7 @@
 	     (format t "mapping ~A to ~A. used: ~A~%" eng letter
 		     used-letters)
 	     (define-key *search-engine-map* (kbd (format nil "~A" letter))
-	       (format nil "search-engine-search ~A" eng))
+	       (format nil "engsearch ~A" eng))
 	     (push letter used-letters)))))
 
 (defun define-key-auto-from-commands-into-keymap ()
