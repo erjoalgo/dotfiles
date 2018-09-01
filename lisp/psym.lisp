@@ -118,9 +118,25 @@
 	(error "no such key: '~a'" key)
 	key-value)))
 
+(defun common-prefix (strings)
+  (loop with prefix = (car strings)
+        for string in (cdr strings)
+        as ln = (loop for c across prefix
+                      for cc across string
+                      for i from 0
+                      while (eq c cc)
+                      finally (return i))
+        when (not (= ln (length prefix)))
+          do (setf prefix (subseq prefix 0 ln))
+        finally (return prefix)))
+
 (defun select-pathname (pathnames &key (prompt "select pathname: ")
                                     (require-match t))
-  (let ((sel (completing-read (current-screen) prompt
-                              (mapcar #'namestring pathnames)
-                              :require-match require-match)))
-    (pathname sel)))
+  (let* ((namestrings (mapcar #'namestring pathnames))
+         (prefix (common-prefix namestrings))
+         (sel (completing-read (current-screen) prompt
+                               (mapcar (lambda (namestring) (subseq namestring (length prefix)))
+                                       namestrings)
+                               :require-match require-match))
+         (sel-namestring (concat prefix sel)))
+    (pathname sel-namestring)))
