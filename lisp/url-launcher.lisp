@@ -24,8 +24,7 @@
    :pathnames (list (merge-pathnames "*/url-launcher-urls/"
                                      DATA-TOP))
    :driver psym-dir-alist-driver
-   :short-description "launcher urls"
-   ))
+   :short-description "launcher urls"))
 
 (psym-load *launcher-persistent-alist*)
 
