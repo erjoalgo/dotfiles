@@ -52,9 +52,10 @@ function genpasswd {
 function passgen	{
     NAME=${1} && shift
     SPECIAL_FLAG=${SPECIAL_FLAG:--n}
+    NOPROMPT_FLAG=${NOPROMPT_FLAG:-}
     LENGTH=""
     LENGTH=${LENGTH:-14}
-    pass generate ${SPECIAL_FLAG} ${*} -c ${NAME} ${LENGTH}
+    pass generate ${SPECIAL_FLAG} ${NOPROMPT_FLAG} ${*} -c ${NAME} ${LENGTH}
     xclip -o -selection clipboard | xclip -i -selection primary
     xclip -o -selection primary
 }
