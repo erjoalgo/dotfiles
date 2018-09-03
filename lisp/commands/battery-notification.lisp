@@ -34,7 +34,7 @@
 
 (defun battery-info-check-notify-loop (&key
                                          (percentage-thresh 20)
-                                         (interval-mins 10))
+                                         (interval-mins 5))
   (loop
     with MINS = 60
     as info = (battery-info)
