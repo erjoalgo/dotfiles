@@ -71,7 +71,7 @@ else:
 middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] if orig_text else []
 
 if begining_append:
-    before, after = "", post
+    before, after = "", "\n".join((pre, post))
 else:
     before, after = pre, post
 
