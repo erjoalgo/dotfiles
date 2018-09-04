@@ -14,7 +14,7 @@ unison -dontchmod -perms 0  \
     # '(ediff-merge-files-with-ancestor "CURRENT1" "CURRENT2" "CURRENTARCH" nil "NEW")'
 
 
-ROOT_DEVICE_PATH=$(sed "s/ 	/ /g" /etc/fstab | grep ' / ' | cut -f1 -d' ')
+ROOT_DEVICE_PATH=$(sed "s/[ 	][ 	]*/ /g" /etc/fstab | grep ' / ' | cut -f1 -d' ')
 MACHINE_UUID=$(lsblk ${ROOT_DEVICE_PATH} -o uuid | tail -1)
 
 MNT_ONE_WAY=${MNT}/machines/${MACHINE_UUID}
