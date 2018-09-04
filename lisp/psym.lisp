@@ -20,12 +20,18 @@
                 (when (or include-nonexistent (probe-file pathname-possibly-wild))
                   (list pathname-possibly-wild)))))
 
+(defmacro wrap-safe (form err-sym error-form)
+  `(handler-case
+       ,form
+     (error (,err-sym) ,error-form)))
+
 (defun psym-load (psym &key (verbose t))
   (loop for pathname in (psym-concrete-pathnames psym)
         with list-serialized = (psym-driver-list-serialized-records (psym-driver psym))
         with deserialize-fun = (psym-driver-deserialize-record (psym-driver psym))
-        as serialized = (funcall list-serialized pathname)
-        append (mapcar deserialize-fun serialized) into records
+        as serialized = (wrap-safe (funcall list-serialized pathname) err (warn "error listing ~A: ~A" pathname err))
+        append (wrap-safe (mapcar deserialize-fun serialized) err (warn "error loading records from ~A (~A): ~A" serialized pathname err))
+          into records
         finally
            (progn
              (when verbose
