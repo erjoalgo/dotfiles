@@ -8,7 +8,13 @@ MNT=${HOME}/.usb-drive-symlink
 # MOUNT_LINE=$(sudo mount | grep -F "${REALPATH}")
 # PARTITION=$(grep -o "^[^ 	]*" <<< "${MOUNT_LINE}")
 
-PARTITION=$(findmnt -n -o SOURCE --target ${MNT})
+for PART in $(findmnt -n -o SOURCE --target ${MNT}); do
+    if test -e ${PART}; then
+        PARTITION=${PART}
+        break
+    fi
+done
+
 
 BLOCK_DEVICE="/dev/$(lsblk -no pkname ${PARTITION})"
 
