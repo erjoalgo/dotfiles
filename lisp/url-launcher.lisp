@@ -22,7 +22,7 @@
                                      DATA-TOP)
                     (merge-pathnames "private-data/url-launcher-urls/"
                                      (user-homedir-pathname))
-                    (merge-pathnames "private-data-one-way/url-launcher-urls"
+                    (merge-pathnames "private-data-one-way/url-launcher-urls/"
                                      (user-homedir-pathname)))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"))
