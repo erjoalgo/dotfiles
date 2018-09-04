@@ -53,8 +53,6 @@ safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
 safe_ln "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 safe_ln "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
-safe_ln "${HOME}/git/url-launcher-urls" \
-        "${HOME}/git/erjoalgo-stumpwmrc/data/private/"
 
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
