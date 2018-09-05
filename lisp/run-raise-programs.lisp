@@ -55,9 +55,12 @@
   :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
 		 "xterm" "XTerm" "Gnome-terminal"))
 
+(defparameter emacs-classes
+  (list "emacs" "GoogleEmacs"))
+
 (define-run-or-pull-program "emacs"
   :pull-key "H-E"
-  :classes (list "emacs" "GoogleEmacs"))
+  :classes emacs-classes)
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
