@@ -369,3 +369,43 @@ function git-filter-branch-rewrite-path-sed    {
   mv $GIT_INDEX_FILE.new $GIT_INDEX_FILE
 ' HEAD
 }
+
+function git5-start-single {
+    local OPTIND
+    USAGE=false
+    while getopts "n:g:h" OPT; do
+        case ${OPT} in
+            n)
+                NAME=${OPTARG}
+                echo "name is ${NAME}"
+                G3PATH=${G3PATH:-experimental/users/${USER}/git/${NAME}}
+                ;;
+            g)
+                G3PATH=${OPTARG}
+                NAME=${NAME:-$(basename "${G3PATH}")}
+                ;;
+            h)
+                USAGE=true
+                exit 0
+                ;;
+        esac
+    done
+
+    if test true = "${USAGE}" -o -z "${G3PATH}" -o -z "${NAME}"; then
+        echo "usage: git5-start-repo [-g GOOGLE3_RELATIVE_PATH] [-n NAME]"
+        return
+    fi
+
+
+    TOP=${HOME}/git/${NAME}
+    if test -d ${TOP}; then
+        echo "warn: ${TOP} already exists..."
+    else
+        mkdir -p ${TOP}
+    fi
+
+    prodcertstatus || prodaccess
+    cd ${TOP}
+    test -e READONLY || git5 start ${NAME} ${G3PATH} --import-empty
+    cd ${TOP}/google3/${G3PATH}
+}
