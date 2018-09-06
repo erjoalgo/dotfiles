@@ -213,6 +213,10 @@ alias httpd="python -m SimpleHTTPServer"
 
 #
 alias git5-browse-cl='google-chrome $(git5 export |& grep -oP "http://cl/[0-9]+")'
+alias blb='blaze build'
+alias blr='blaze run'
+alias blt='blaze test'
+
 # Local Variables:
 # mode: sh
 # End:
