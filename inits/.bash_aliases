@@ -211,6 +211,8 @@ alias echo-pings='sudo tcpdump ip proto \\icmp'
 alias gen-cert="openssl req  -nodes -new -x509  -keyout server.key -out server.cert"
 alias httpd="python -m SimpleHTTPServer"
 
+#
+alias git5-browse-cl='google-chrome $(git5 export |& grep -oP "http://cl/[0-9]+")'
 # Local Variables:
 # mode: sh
 # End:
