@@ -143,3 +143,6 @@
          (out (run-shell-command cmd t))
          (trimmed (trim-spaces out)))
     (unless (zerop (length trimmed)) trimmed)))
+
+(defun window-pid (win)
+  (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))

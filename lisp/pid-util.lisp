@@ -1,6 +1,3 @@
-(defun window-pid (win)
-  (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))
-
 (defmacro case-string (keyform &body cases)
   `(cond ,@(loop for (case-key . case-body) in cases
      collect `((string= ,keyform ,case-key)
