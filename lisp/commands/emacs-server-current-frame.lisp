@@ -12,7 +12,8 @@
 (declaim (optimize (debug 3) (speed 0)))
 
 (defun focus-frame-signal-current-emacs (&optional new-group old-group)
-  (let* ((windows (group-windows (current-group)))
+  (declare (ignore old-group))
+  (let* ((windows (group-windows new-group))
          (emacs-wins
            (remove-if-not (lambda (win)
                             (window-class-matches (window-class win)
