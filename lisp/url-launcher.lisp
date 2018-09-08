@@ -192,8 +192,6 @@
     do (if (not letter)
            (warn "unable to find a letter for engine ~A" eng)
            (progn
-	     (format t "mapping ~A to ~A. used: ~A~%" eng letter
-		     used-letters)
 	     (define-key *search-engine-map* (kbd (format nil "~A" letter))
 	       (format nil "engsearch ~A" eng))
 	     (push letter used-letters)))))
