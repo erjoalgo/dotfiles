@@ -48,7 +48,7 @@ function check_lagging	{
 
     TAGS=""
     REMOTE=$(git config branch.${BRANCH}.remote)
-    if test -z "${REMOTE}"; then
+    if test -z "${REMOTE}" -o "${REMOTE}" = '.'; then
 	TAGS+=" ${BROWN_ORANGE}NO-REMOTE${NC}"
     else
 	if test 0 -eq $(git branch -r --contains ${BRANCH} | wc -l); then
