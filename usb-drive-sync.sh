@@ -2,12 +2,13 @@
 
 set -euo pipefail
 
+UNISON_OPTS=${*}
 MNT=${HOME}/.usb-drive-symlink
 
 HOME_TWO_WAY=${HOME}/private-data
 mkdir -p ${HOME_TWO_WAY}
 unison -dontchmod -perms 0  \
-           -batch \
+       ${UNISON_OPTS} \
            ${MNT}/sync-two-ways ${HOME_TWO_WAY}
 
 # -merge = Name *.org -> emacsclient --eval  \
