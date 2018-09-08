@@ -59,8 +59,9 @@
   (list "emacs" "GoogleEmacs"))
 
 (define-run-or-pull-program "emacs"
-  :pull-key "H-E"
-  :classes emacs-classes)
+    :pull-key "H-E"
+    ;; :cmd "emacsclient --create-frame"
+    :classes emacs-classes)
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
