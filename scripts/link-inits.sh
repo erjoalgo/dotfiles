@@ -42,6 +42,7 @@ for LINK in \
     .xscreensaver \
     .gdbinit \
     .Xdefaults \
+    .vimrc \
     ; do \
 
     safe_ln "${INITS_TOP}/${LINK}" "${HOME}/"
