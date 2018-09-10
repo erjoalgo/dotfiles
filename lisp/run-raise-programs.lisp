@@ -88,6 +88,10 @@
 
 (define-run-or-pull-program "zathura")
 
+(define-run-or-pull-program "vncviewer")
+
+
+
 ;; Warning: these bindings affect the *top-map*, which is
 ;; later deep-copied onto other per-window bindings.
 ;; Changes won't take effect on existing deep-copies of
