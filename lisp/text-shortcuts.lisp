@@ -25,12 +25,8 @@
 
 (defparameter *text-shortcuts-alist*
   (make-psym
-   :pathnames (list (merge-pathnames "data/*/text-shortcuts"
-                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
-                    (merge-pathnames "private-data/text-shortcuts"
-                                     (user-homedir-pathname))
-                    (merge-pathnames "private-data-one-way/text-shortcuts"
-                                     (user-homedir-pathname)))
+   :pathnames (loop for data-dir in DATA-DIRS
+                 collect (merge-pathnames "text-shortcuts" data-dir))
    :driver psym-lines-list-driver
    :short-description "text shortcuts"))
 

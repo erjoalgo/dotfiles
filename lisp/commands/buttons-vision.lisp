@@ -1,5 +1,5 @@
 (defparameter BUTTONS-ROOT
-  (merge-pathnames "private-data/button-imgs/" (user-homedir-pathname)))
+  (merge-pathnames "button-imgs" DATA-PRIVATE))
 
 (define-stumpwm-type-from-wild-pathname :button-pathname
     (merge-pathnames (make-pathname :type "png" :name :WILD) BUTTONS-ROOT)

@@ -7,9 +7,7 @@
    ))
 
 (defparameter *search-history-fn*
-  ;;todo should be in sensitive
-  (merge-pathnames "private-data-one-way/search-history"
-                   (user-homedir-pathname)))
+  (merge-pathnames "search-history" DATA-PRIVATE-ONE-WAY))
 
 (ensure-directory-exists
  (uiop:pathname-parent-directory-pathname
@@ -18,17 +16,12 @@
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
   (make-psym
-   :pathnames (list (merge-pathnames "*/url-launcher-urls/"
-                                     DATA-TOP)
-                    (merge-pathnames "private-data/url-launcher-urls/"
-                                     (user-homedir-pathname))
-                    (merge-pathnames "private-data-one-way/url-launcher-urls/"
-                                     (user-homedir-pathname)))
+   :pathnames (loop for data-dir in DATA-DIRS
+                 collect (merge-pathnames "url-launcher-urls" data-dir))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"))
 
 (psym-load *launcher-persistent-alist*)
-
 
 (defun url-launcher-get-browser-current-url ()
   (chrome-get-url))
@@ -108,12 +101,8 @@
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
   (make-psym
-   :pathnames (list (merge-pathnames "data/*/search-engines"
-                                     (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
-                    (merge-pathnames "private-data/search-engines"
-                                     (user-homedir-pathname))
-                    (merge-pathnames "private-data-one-way/search-engines"
-                                     (user-homedir-pathname)))
+   :pathnames (loop for data-dir in DATA-DIRS
+                 collect (merge-pathnames "search-engines" data-dir))
    :driver psym-tsv-alist-driver
    :short-description "search engines"))
 

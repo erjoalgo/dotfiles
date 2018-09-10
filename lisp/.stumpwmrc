@@ -62,8 +62,17 @@
   ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
   (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
-(defparameter DATA-TOP
-  (truename (merge-pathnames "../data" STUMPWM-TOP)))
+(defparameter DATA-PRIVATE
+  (merge-pathnames "private-data/stumpwm/" (user-homedir-pathname)))
+
+(defparameter DATA-PRIVATE-ONE-WAY
+  (merge-pathnames "private-data-one-way/stumpwm/" (user-homedir-pathname)))
+
+(defparameter DATA-DIRS
+  (list
+   (merge-pathnames "data/*/" (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
+   DATA-PRIVATE
+   DATA-PRIVATE-ONE-WAY))
 
 (defparameter browser-classes
   '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
