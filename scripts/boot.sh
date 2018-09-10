@@ -114,4 +114,8 @@ insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-u
 30 10 * * * bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
 EOF
 
+insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config'  \
+                  ~/.ssh/config <<EOF
+Include ~/private-data/configs/ssh-config
+EOF
 echo "success"
