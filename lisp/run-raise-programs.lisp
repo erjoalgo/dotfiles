@@ -60,6 +60,7 @@
 
 (define-run-or-pull-program "emacs"
     :pull-key "H-E"
+    ;; :cmd "~/git/emacs/src/emacs"
     ;; :cmd "emacsclient --create-frame"
     :classes emacs-classes)
 
