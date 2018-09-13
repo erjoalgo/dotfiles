@@ -386,7 +386,6 @@ function git5-start-single {
                 ;;
             h)
                 USAGE=true
-                exit 0
                 ;;
         esac
     done
