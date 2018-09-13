@@ -18,6 +18,12 @@
   "take a full-screen screen shot"
   (take-scrot name :fullscreen-p t))
 
+(defcommand scrot-cmd-full-screen-anon () ()
+  "take a full-screen anonymous screen shot"
+  (take-scrot (time-format *scrot-date-format*)
+              :fullscreen-p t
+              :eog-scrot nil))
+
 (defun take-scrot (name &key
                           (fullscreen-p nil)
                           (scrot-top *scrots-top*)

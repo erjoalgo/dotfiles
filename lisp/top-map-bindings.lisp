@@ -164,7 +164,7 @@
    ("w" "connect-internet")
    ("h" *help-map*)
    ("s" "scrot-cmd-anon" )
-   ("S" "scrot-cmd" )
+   ("S" "scrot-cmd-full-screen-anon" )
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
    ("K" "spell-clipboard" )
