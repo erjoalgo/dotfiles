@@ -90,6 +90,7 @@ f cursorzoom 200 200
 ### Drag examples
 # Start drag holding the left mouse button
 ctrl+space drag 1
+r drag 1
 ctrl+s drag 1
 # Start drag holding middle mouse + control and shift
 #w drag 2 ctrl+shift
