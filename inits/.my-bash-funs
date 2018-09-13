@@ -380,7 +380,7 @@ function git5-start-single {
                 echo "name is ${NAME}"
                 G3PATH=${G3PATH:-experimental/users/${USER}/git/${NAME}}
                 ;;
-            g)
+            d)
                 G3PATH=${OPTARG}
                 NAME=${NAME:-$(basename "${G3PATH}")}
                 ;;
@@ -391,7 +391,7 @@ function git5-start-single {
     done
 
     if test true = "${USAGE}" -o -z "${G3PATH}" -o -z "${NAME}"; then
-        echo "usage: git5-start-repo [-g GOOGLE3_RELATIVE_PATH] [-n NAME]"
+        echo "usage: git5-start-repo [-d GOOGLE3_RELATIVE_PATH] [-n NAME]"
         return
     fi
 
