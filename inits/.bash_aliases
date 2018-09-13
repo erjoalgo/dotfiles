@@ -93,6 +93,7 @@ alias gsd='git stash drop'
 alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gsh='git stash'
+alias grvh='git revert HEAD'
 
 # never used
 # alias gm='git commit'
