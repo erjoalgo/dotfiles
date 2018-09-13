@@ -373,7 +373,7 @@ function git-filter-branch-rewrite-path-sed    {
 function git5-start-single {
     local OPTIND
     USAGE=false
-    while getopts "n:g:h" OPT; do
+    while getopts "n:d:h" OPT; do
         case ${OPT} in
             n)
                 NAME=${OPTARG}
