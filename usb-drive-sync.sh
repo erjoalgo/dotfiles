@@ -3,15 +3,16 @@
 set -euo pipefail
 
 UNISON_OPTS=${*}
-
 MNT=${HOME}/.usb-drive-symlink
+
 HOME_TWO_WAY=${HOME}/private-data
+MNT_TWO_WAY=${MNT}/sync-two-ways
 
 mkdir -p ${HOME_TWO_WAY}
 
 unison -dontchmod -perms 0  \
        ${UNISON_OPTS} \
-       ${MNT}/sync-two-ways ${HOME_TWO_WAY}
+       ${MNT_TWO_WAY} ${HOME_TWO_WAY}
 
 # -merge = Name *.org -> emacsclient --eval  \
     # '(ediff-merge-files-with-ancestor "CURRENT1" "CURRENT2" "CURRENTARCH" nil "NEW")'
