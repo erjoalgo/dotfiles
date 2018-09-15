@@ -293,23 +293,55 @@ function grvv	{
 __git_complete grvv _git_pull
 
 function ssh-copy-id-to-user	{
-    if test $# -le 3; then
-	echo "usage: ssh-copy-id-to-user <SSH_USER> <SSH_HOST> <SSH_PORT> <REMOTE_USER_1> [<REMOTE_USER_2> ...]"
-	return 1
-    fi
+  local OPTIND
+  USAGE=false
+  while getopts "u:n:p:i:o:h" OPT; do
+    case ${OPT} in
+      u)
+        SSH_LOGIN_USER=${OPTARG}
+        ;;
+      n)
+        SSH_HOSTNAME=${OPTARG}
+        ;;
+      i)
+        IDENTITY_FILE=${OPTARG}
+        ;;
+      o)
+        # extra ssh opts
+        SSH_OPTS=${OPTARG}
+        ;;
+      h)
+        USAGE=true
+        ;;
+    esac
+  done
 
-    SSH_USER=${1} && shift
-    SSH_HOST=${1} && shift
-    SSH_PORT=${1} && shift
-    # LOCAL_USER=${1} && shift
-    for REMOTE_USER in $*; do
-	echo "adding key to user ${REMOTE_USER}"
-	ssh  \
-	    "-o StrictHostKeyChecking no"\
-	    "-o UserKnownHostsFile /dev/null" \
-	    "-o StrictHostKeyChecking no" \
-	    -p${SSH_PORT} ${SSH_USER}@${SSH_HOST}  \
-	    "sudo -u ${REMOTE_USER} bash -s"<<EOF
+  SSH_LOGIN_USER=${SSH_LOGIN_USER:-${USER}}
+  IDENTITY_FILE=${IDENTITY_FILE:-${HOME}/.ssh/id_rsa.pub}
+
+  shift $((OPTIND - 1))
+
+  if test ${USAGE} = true -o -z "${SSH_HOSTNAME}"; then
+    echo "usage: ssh-copy-id-to-user [-u SSH_LOGIN_USER] [-o ssh_extra_opts] \
+-n SSH_HOSTNAME [-i IDENTITY_FILE] [CP_DEST_USER...]"
+    return 1
+  fi
+
+  if test ${#*} -eq 0; then
+    CP_DEST_USERS=${SSH_LOGIN_USER}
+  else
+    CP_DEST_USERS=${*}
+  fi
+
+  if ! grep "[.]pub\|[.]pem" <<< "${IDENTITY_FILE}" || ! test -e ${IDENTITY_FILE}; then
+    echo "bad identity file: ${IDENTITY_FILE}"
+    return 1
+  fi
+
+  SSH_CMD="ssh ${SSH_OPTS} ${SSH_LOGIN_USER}@${SSH_HOSTNAME}"
+  for REMOTE_USER in $CP_DEST_USERS; do
+    echo "adding to user ${REMOTE_USER} the key ${IDENTITY_FILE} via ${SSH_CMD}"
+    ${SSH_CMD} "sudo -u ${REMOTE_USER} bash -s" <<EOF
 set -ex
 cd
 mkdir -p .ssh
@@ -317,11 +349,10 @@ cd .ssh
 touch authorized_keys
 chmod 644 authorized_keys
 tee -a authorized_keys <<EOFF
-$(cat ~/.ssh/id_rsa.pub)
+$(cat ${IDENTITY_FILE})
 EOFF
 EOF
-    done
-    set +x
+  done
 }
 
 function git-remote-exists	{
