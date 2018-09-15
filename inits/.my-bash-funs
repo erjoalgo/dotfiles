@@ -93,6 +93,15 @@ function test-port	{
     exec 6<>/dev/tcp/"${HOST}/${PORT}"
 }
 
+function beep-on-success {
+    until ${*}; do
+        sleep 1
+    done
+    beep
+    beep
+    beep
+}
+
 function straceall {
     set -x
     NAME="${1}"
