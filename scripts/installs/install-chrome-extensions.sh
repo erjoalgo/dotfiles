@@ -11,18 +11,21 @@ CHROME_WEBSTORE_URL="https://clients2.google.com/service/update2/crx"
 for DIR in  \
   /opt/google/chrome/ \
   /usr/share/google-chrome/ \
+  ${HOME}/.config/chromium \
+  ${HOME}/.config/google-chrome \
   ; do
   if test -d ${DIR}; then
     echo "found chrom* directory: ${DIR}"
+    test -w ${DIR} && SUDOOPT="" || SUDOOPT="sudo"
     TOP=${DIR}/extensions
-    sudo mkdir -p ${TOP}
+    ${SUDOOPT} mkdir -p ${TOP}
     for URL in ${EXT_URLS}; do
       EXTID=$(basename ${URL} | cut -d'?' -f1)
       cd ${TOP}
       FILENAME=${EXTID}.json
       if ! test -e ${FILENAME}; then
         echo "installing ${EXTID} onto $(pwd)"
-        cat <<EOF | sudo tee ${FILENAME}
+        cat <<EOF | ${SUDOOPT} tee ${FILENAME}
 {
   "external_update_url": "${CHROME_WEBSTORE_URL}"
 }
