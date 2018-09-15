@@ -75,7 +75,12 @@ function passgen-pin	{
     xclip -o -selection primary
 }
 
-for PASS_CMD in passgen{,-allow-special,-pin}; do
+function pass-show-xs	{
+  PASS_PATH=${1} && shift
+  pass show ${PASS_PATH} | xs
+}
+
+for PASS_CMD in passgen{,-allow-special,-pin} pass-show-xs; do
     complete -o filenames -o nospace -F _pass ${PASS_CMD}
 done
 
