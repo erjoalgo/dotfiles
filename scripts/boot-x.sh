@@ -25,6 +25,8 @@ sudo $(which insert-text-block) '# 37561c4f-5b87-4252-9724-6eed90ee3943-fix-stre
 needs_root_rights=yes
 EOF
 
+which update-config-file-key-value
+
 sudo $(which update-config-file-key-value) \
   -f /etc/systemd/logind.conf  \
   -k HandlePowerKey -v ignore
