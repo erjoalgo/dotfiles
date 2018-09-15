@@ -10,7 +10,7 @@ MNT_TWO_WAY=${MNT}/sync-two-ways
 
 mkdir -p ${HOME_TWO_WAY}
 
-unison -dontchmod -perms 0  \
+unison -fat\
        ${UNISON_OPTS} \
        ${MNT_TWO_WAY} ${HOME_TWO_WAY}
 
