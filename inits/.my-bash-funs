@@ -84,7 +84,7 @@ for PASS_CMD in passgen{,-allow-special,-pin} pass-show-xs; do
     complete -o filenames -o nospace -F _pass ${PASS_CMD}
 done
 
-function test_port	{
+function test-port	{
     HOST="${1}"
     PORT="${2}"
     # http://stackoverflow.com/questions/9609130/quick-way-to-find-if-a-port-is-open-on-linux
