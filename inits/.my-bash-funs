@@ -442,3 +442,7 @@ function git5-start-single {
     test -e READONLY || git5 start ${NAME} ${G3PATH} --import-empty
     cd ${TOP}/google3/${G3PATH}
 }
+
+function PATH-append {
+  export PATH=${PATH}:${1}
+}
