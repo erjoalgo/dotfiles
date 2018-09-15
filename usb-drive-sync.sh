@@ -27,7 +27,7 @@ ROOT_DEVICE_PATH=$(sed -E "s/[ 	]+/ /g" /etc/fstab | grep ' / ' | cut -f1 -d' ')
 
 MACHINE_UUID=$(lsblk ${ROOT_DEVICE_PATH} -o uuid | tail -1)
 
-MNT_ONE_WAY=${MNT}/machines/${MACHINE_UUID}
+MNT_ONE_WAY=${MNT}/sync-one-way/${MACHINE_UUID}
 
 mkdir -p ${MNT_ONE_WAY}
 mkdir -p ${HOME}/private-data-one-way
