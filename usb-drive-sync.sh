@@ -23,7 +23,7 @@ unison -dontchmod -perms 0  \
            ${UNISON_OPTS} \
            ${MNT}/public-data ${HOME}/public-data
 
-ROOT_DEVICE_PATH=$(sed "s/[ 	][ 	]*/ /g" /etc/fstab | grep ' / ' | cut -f1 -d' ')
+ROOT_DEVICE_PATH=$(sed -E "s/[ 	]+/ /g" /etc/fstab | grep ' / ' | cut -f1 -d' ')
 
 MACHINE_UUID=$(lsblk ${ROOT_DEVICE_PATH} -o uuid | tail -1)
 
