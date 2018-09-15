@@ -1,0 +1,40 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "h:k:v:c:f:" OPT; do
+  case ${OPT} in
+    k)
+      KEY=${OPTARG}
+      ;;
+    v)
+      VALUE=${OPTARG}
+      ;;
+    c)
+      COMMENT_START=${OPTARG}
+      ;;
+    f)
+      FILENAME=${OPTARG}
+      ;;
+    h)
+      less $0
+
+      exit 0
+      ;;
+  esac
+done
+
+COMMENT_START=${COMMENT_START:-"# "}
+
+# comment out existing assignments
+sed -i \
+  -e "s/^${KEY}[ 	]*=/${COMMENT_START}\\0/g" \
+  ${FILENAME}
+
+echo ${PATH}
+insert-text-block "# 19ce3832-8fba-4795-ba66-c617c8da8624-update-${KEY}-value"  \
+  ${FILENAME} <<< "${KEY}=${VALUE}"
+
+# Local Variables:
+# compile-command: "sudo ./update-config-file-key-value.sh -f /etc/systemd/logind.conf -k HandlePowerKey -v poweroff"
+# End:
