@@ -14,9 +14,13 @@ unison -fat\
        ${UNISON_OPTS} \
        ${MNT_TWO_WAY} ${HOME_TWO_WAY}
 
-# -merge = Name *.org -> emacsclient --eval  \
-    # '(ediff-merge-files-with-ancestor "CURRENT1" "CURRENT2" "CURRENTARCH" nil "NEW")'
-
+# -ignore 'Path *'
+# -path 'Name *.prf' \
+# hard-code default.prf for now
+unison -fat  \
+  ${UNISON_OPTS} \
+  ${MNT_TWO_WAY}/configs/.unison-default.prf  \
+  ${HOME}/.unison/default.prf
 
 mkdir -p ${HOME}/public-data
 unison -dontchmod -perms 0  \
