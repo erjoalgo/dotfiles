@@ -11,6 +11,7 @@ CHROME_WEBSTORE_URL="https://clients2.google.com/service/update2/crx"
 for DIR in  \
   /opt/google/chrome/ \
   /usr/share/google-chrome/ \
+  /usr/share/chromium/ \
   ${HOME}/.config/chromium \
   ${HOME}/.config/google-chrome \
   ; do
