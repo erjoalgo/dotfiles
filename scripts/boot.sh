@@ -38,6 +38,7 @@ cd ${GNU_SCRIPTS} && git pull --ff-only
 export PATH=$PATH:${GNU_SCRIPTS}
 
 which insert-text-block
+sudo ln -s $(which insert-text-block) /usr/bin
 
 # set up passwordless sudo
 NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
