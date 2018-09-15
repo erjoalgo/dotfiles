@@ -35,5 +35,5 @@ EOF
 done
 
 # Local Variables:
-# compile-command: "./install-chrome-extensions.sh < ../../data/public/chrome-extensions.txt"
+# compile-command: "./install-chrome-extensions.sh < ../../data/public/chrome-extension-urls.txt"
 # End:
