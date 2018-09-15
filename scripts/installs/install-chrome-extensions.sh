@@ -4,7 +4,7 @@ set -euo pipefail
 
 # read from stdin
 echo "reading tab-separated extension ids from stdin..."
-EXTIDS=$(cut -f1)
+EXT_URLS=$(cat)
 CHROME_WEBSTORE_URL="https://clients2.google.com/service/update2/crx"
 
 # TODO add macos dirs
@@ -16,7 +16,8 @@ for DIR in  \
     echo "found chrom* directory: ${DIR}"
     TOP=${DIR}/extensions
     sudo mkdir -p ${TOP}
-    for EXTID in ${EXTIDS}; do
+    for URL in ${EXT_URLS}; do
+      EXTID=$(basename ${URL} | cut -d'?' -f1)
       cd ${TOP}
       FILENAME=${EXTID}.json
       if ! test -e ${FILENAME}; then
