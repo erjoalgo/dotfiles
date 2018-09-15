@@ -12,8 +12,6 @@ for DIR in  \
   /opt/google/chrome/ \
   /usr/share/google-chrome/ \
   /usr/share/chromium/ \
-  # ${HOME}/.config/chromium \
-  # ${HOME}/.config/google-chrome \
   ; do
   if test -d ${DIR}; then
     echo "found chrom* directory: ${DIR}"
