@@ -24,7 +24,7 @@ for DIR in  \
         echo "installing ${EXTID} onto $(pwd)"
         cat <<EOF | sudo tee ${FILENAME}
 {
-    "external_update_url": "${CHROME_WEBSTORE_URL}"
+  "external_update_url": "${CHROME_WEBSTORE_URL}"
 }
 EOF
       else
