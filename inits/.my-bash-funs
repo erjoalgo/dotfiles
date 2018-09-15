@@ -344,10 +344,8 @@ function ssh-copy-id-to-user	{
     ${SSH_CMD} "sudo -u ${REMOTE_USER} bash -s" <<EOF
 set -ex
 cd
-mkdir -p .ssh
-cd .ssh
-touch authorized_keys
-chmod 644 authorized_keys
+mkdir -p .ssh && cd .ssh
+touch authorized_keys && chmod 644 authorized_keys
 tee -a authorized_keys <<EOFF
 $(cat ${IDENTITY_FILE})
 EOFF
