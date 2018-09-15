@@ -9,7 +9,8 @@
 
 (defcommand type-clipbpard () ()
   "type the clipboard contents"
-  (type-string (get-x-selection)))
+  (type-string (get-x-selection))
+  (message "done"))
 
 (defvar *text-shortcuts* nil)
 
