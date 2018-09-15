@@ -23,6 +23,11 @@ sudo $(which insert-text-block) '# 37561c4f-5b87-4252-9724-6eed90ee3943-fix-stre
 needs_root_rights=yes
 EOF
 
+sudo $(which update-config-file-key-value) \
+  -f /etc/systemd/logind.conf  \
+  -k HandlePowerKey -v ignore
+
+sudo service systemd-logind restart
 
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=851810
 sudo $(which insert-text-block) '# ed74222e-d8c2-4920-a450-fa17d93e7650-fix-xcalib-broken'  \
