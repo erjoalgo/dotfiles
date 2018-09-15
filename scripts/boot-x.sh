@@ -17,6 +17,8 @@ sudo apt-get install -y wireless-tools wpasupplicant expect
 
 ./installs/install-xsecurelock.sh
 
+./installs/install-chrome-extensions.sh < chrome-extensions.tsv
+
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=856351
 sudo $(which insert-text-block) '# 37561c4f-5b87-4252-9724-6eed90ee3943-fix-stretch-X-issue'  \
                   /etc/X11/Xwrapper.config<<EOF
