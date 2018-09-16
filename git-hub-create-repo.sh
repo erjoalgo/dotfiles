@@ -54,21 +54,18 @@ EOF
 
 
 if test -n "${GITHUB_TOKEN:-}"; then
-    AUTH_OPT_KEY="-H"
-    AUTH_OPT_VAL="Authorization: token ${GITHUB_TOKEN}"
+    AUTH_OPT_KEY_VAL="-H 'Authorization: token ${GITHUB_TOKEN}'"
 else
     if test -z "${GITHUB_USERNAME:-}"; then
 	read  -p "enter github username: " GITHUB_USERNAME
     fi
-    AUTH_OPT_KEY="-u"
-    AUTH_OPT_VAL="${GITHUB_USERNAME}"
+    AUTH_OPT_KEY_VAL="-u ${GITHUB_USERNAME}"
 fi
-
 
 RESP=$(curl -s "${GITHUB_API}/user/repos" \
      -H "Content-Type: application/json" \
      -H "Accept: application/vnd.github.v3+json" \
-     ${AUTH_OPT_KEY} "${AUTH_OPT_VAL}" \
+     ${AUTH_OPT_KEY_VAL} \
      --data "${DATA}")
 
 python -c "import json, sys; print(sys.stdin)" <<< "${RESP}"
