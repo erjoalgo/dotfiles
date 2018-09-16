@@ -55,6 +55,9 @@ EOF
 
 if test -n "${GITHUB_TOKEN:-}"; then
     AUTH_OPT_KEY_VAL="-H 'Authorization: token ${GITHUB_TOKEN}'"
+elif test -e ${HOME}/.netrc && grep -F "$(basename ${GITHUB_API})" ${HOME}/.netrc; then
+    echo "using netrc..." >&2
+    AUTH_OPT_KEY_VAL="-n"
 else
     if test -z "${GITHUB_USERNAME:-}"; then
 	read  -p "enter github username: " GITHUB_USERNAME
