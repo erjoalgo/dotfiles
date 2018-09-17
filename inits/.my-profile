@@ -4,6 +4,7 @@ export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin
 export LISP=sbcl
 export PYTHONSTARTUP=${HOME}/.pythonrc.py
 export LESS="-Q -R"
+export XSECURELOCK_WANT_FIRST_KEYPRESS=1
 # Local Variables:
 # mode: shell-script
 # End:
