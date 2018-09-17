@@ -39,6 +39,8 @@
           (SB-EXT:RUN-PROGRAM "xautolock"
                               (list "-time" (write-to-string *screensaver-lock-time-mins*)
                                     "-locker" "xsecurelock")
+                              :environment (cons "XSECURELOCK_WANT_FIRST_KEYPRESS=1"
+                                                 (sb-ext:posix-environ))
                               :search t
                               :output t
                               :error t
