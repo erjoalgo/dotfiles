@@ -168,6 +168,7 @@
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
    ("K" "spell-clipboard" )
+   ("H-e" "echo-current-tab" )
    ))
 
 
