@@ -17,7 +17,7 @@
 (defparameter *launcher-persistent-alist*
   (make-psym
    :pathnames (loop for data-dir in DATA-DIRS
-                 collect (merge-pathnames "url-launcher-urls" data-dir))
+                 collect (merge-pathnames "url-launcher-urls/" data-dir))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"))
 
