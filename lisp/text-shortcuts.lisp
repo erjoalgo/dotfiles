@@ -17,6 +17,10 @@
   (type-string (get-x-selection))
   (message "done"))
 
+(defcommand type-clipbpard-slow () ()
+  "type a given string, slowly"
+  (type-string (get-x-selection) :delay-millis 1000))
+
 (defvar *text-shortcuts* nil)
 
 (define-stumpwm-type-for-completion :text-shortcut *text-shortcuts*)
