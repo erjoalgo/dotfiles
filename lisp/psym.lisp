@@ -29,8 +29,12 @@
   (loop for pathname in (psym-concrete-pathnames psym)
         with list-serialized = (psym-driver-list-serialized-records (psym-driver psym))
         with deserialize-fun = (psym-driver-deserialize-record (psym-driver psym))
-        as serialized = (wrap-safe (funcall list-serialized pathname) err (warn "error listing ~A: ~A" pathname err))
-        append (wrap-safe (mapcar deserialize-fun serialized) err (warn "error loading records from ~A (~A): ~A" serialized pathname err))
+        as serialized = (wrap-safe
+                         (funcall list-serialized pathname)
+                         err (warn "error listing ~A: ~A" pathname err))
+        append (wrap-safe (mapcar deserialize-fun serialized) err
+                          (warn "error loading records from ~A (~A): ~A"
+                                serialized pathname err))
           into records
         finally
            (progn
