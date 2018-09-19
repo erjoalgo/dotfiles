@@ -1,11 +1,15 @@
-(defun xdotool (cmd)
-  (run-shell-command (format nil "xdotool ~A" cmd) t))
+(defun xdotool (cmds)
+  (sb-ext:run-program "xdotool" cmds
+                      :wait nil
+                      :search t))
 
 (defcommand type-string (string)
     ((:string "paste string to type: "))
   "type a given string. some browser forms disallow copy-pasting"
   (unmap-all-message-windows)
-  (xdotool (concat "type " string)))
+  (xdotool
+   `("type"
+       ,string)))
 
 (defcommand type-clipbpard () ()
   "type the clipboard contents"
