@@ -3,12 +3,13 @@
                       :wait nil
                       :search t))
 
-(defcommand type-string (string)
+(defcommand type-string (string &key delay-millis)
     ((:string "paste string to type: "))
   "type a given string. some browser forms disallow copy-pasting"
   (unmap-all-message-windows)
   (xdotool
    `("type"
+       ,@(when delay-millis `(,(format nil "--delay ~D " delay-millis)))
        ,string)))
 
 (defcommand type-clipbpard () ()
