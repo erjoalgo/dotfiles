@@ -160,7 +160,7 @@
    ("M" "echo_pointer")
    ("m" "toggle-magnifier")
    ("r" *screen-rotation-map*)
-   ("c" *special-characters-map*)
+   ("c" *special-chars-map*)
    ("w" "connect-internet")
    ("h" *help-map*)
    ("s" "scrot-cmd-anon" )
