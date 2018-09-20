@@ -14,7 +14,7 @@ function org-cleanup {
 A=${1} && shift
 B=${1} && shift
 
-diff ${*} <(org-cleanup ${A}) <(org-cleanup ${B})
+diff ${*} <(org-cleanup ${A} | sort) <(org-cleanup ${B} | sort)
 
 # Local Variables:
 # mode: sh
