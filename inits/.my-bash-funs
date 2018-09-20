@@ -466,7 +466,6 @@ function post-command-notify {
   # xprop -id ${WINDOWID}
   # emacsclient -e '(stumpwm-visible-window-pids)'
 
-  # if ! echo "$(emacsclient -e '(stumpwm-visible-window-pids)')" | grep -F "${PPID}" >/dev/null; then
   if ! [[ "$(emacsclient -e '(stumpwm-visible-window-pids)')" = *"${PPID}"* ]] ; then
     # window is not visible
     stumpwm-msg ${MSG}
