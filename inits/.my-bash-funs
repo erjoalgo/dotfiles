@@ -456,3 +456,24 @@ function git5-start-single {
 function PATH-append {
   export PATH=${PATH}:${1}
 }
+
+function post-command-notify {
+  RET=$?
+  history -a
+  # green or red
+  test ${RET} = 0 && MSG="^2Process completed" || MSG="^1Process erred"
+
+  # xprop -id ${WINDOWID}
+  # emacsclient -e '(stumpwm-visible-window-pids)'
+
+  # if ! echo "$(emacsclient -e '(stumpwm-visible-window-pids)')" | grep -F "${PPID}" >/dev/null; then
+  if ! [[ "$(emacsclient -e '(stumpwm-visible-window-pids)')" = *"${PPID}"* ]] ; then
+    # window is not visible
+    stumpwm-msg ${MSG}
+  fi
+}
+
+if command -v emacsclient >/dev/null \
+  && command -v stumpwm >/dev/null; then
+  PROMPT_COMMAND=post-command-notify
+fi
