@@ -3,4 +3,4 @@ set completion-ignore-case on
 set completion-query-items -1
 set page-completions off
 set mark-symlinked-directories on
-set bell-style visible
+set bell-style audible
