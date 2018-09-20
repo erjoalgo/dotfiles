@@ -169,6 +169,7 @@
    ("k" "speak-string" )
    ("K" "spell-clipboard" )
    ("H-e" "echo-current-tab" )
+   ("H-l" "run-shell-command xsecurelock" )
    ))
 
 
