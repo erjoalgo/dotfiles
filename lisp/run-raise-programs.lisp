@@ -1,3 +1,32 @@
+(defvar pid-original-group-alist nil
+  "An alist (PID . (GROUP . TIMESTAMP)) that records
+the group/workspace in which a process was originally started")
+
+(defvar raise-window-in-original-group-secs nil
+  "If non-nil, any window from a process originally
+started in group A that is raised in group B
+is moved back to group A if its process
+was started less than RAISE-WINDOW-IN-ORIGINAL-GROUP-SECS
+seconds ago")
+(setf raise-window-in-original-group-secs 10)
+
+(defun raise-window-in-original-group (new-win)
+  (setf orig pid-original-group-alist)
+  (setf pid-original-group-alist
+        (loop with now = (GET-UNIVERSAL-TIME)
+           for entry in pid-original-group-alist
+           as keep = (destructuring-bind (pid . (group . timestamp))
+                         entry
+                       (when (and raise-window-in-original-group-secs
+                                  (< (- now timestamp) raise-window-in-original-group-secs))
+                         (if (= (window-pid new-win) pid)
+                             (progn (move-window-to-group new-win group)
+                                    nil);; remove it from the list
+                             (progn t))))
+           if keep collect entry)))
+
+(add-hook stumpwm:*new-window-hook* #'raise-window-in-original-group)
+
 (defun raise-pull-or-run-win (win-classes command &optional pull-p all-screens)
   (let* ((win-list (if all-screens (screen-windows (current-screen))
 		       (group-windows (current-group))))
@@ -16,7 +45,16 @@
 	       (focus-all cand-no-curr))
 	(unless (and curr-win
 		     (funcall win-matches curr-win))
-	  (run-shell-command command)))))
+	  (let ((proc
+                 ;; this creates an extra shell whose pid doesn't match window pid
+                 ;; (run-shell-command command)
+                 (run-prog command :args nil
+                           :wait nil
+                           :search t)))
+            (when raise-window-in-original-group-secs
+              (push (cons (sb-ext:process-pid proc)
+                          (cons (current-group) (GET-UNIVERSAL-TIME)))
+                    pid-original-group-alist)))))))
 
 (defmacro define-run-or-pull-program (name
 				      &key
