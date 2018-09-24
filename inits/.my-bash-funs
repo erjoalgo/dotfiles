@@ -457,25 +457,32 @@ function PATH-append {
   export PATH=${PATH}:${1}
 }
 
-function post-command-notify {
-  RET=$?
-  history -a
-  # green or red
-  test ${RET} = 0 && MSG="^2Process completed" || MSG="^1Process erred"
+function stumpwm-maybe-notify-last-command {
+    RET=${1} && shift
+    CMD=${1} && shift
 
-  # xprop -id ${WINDOWID}
-  # emacsclient -e '(stumpwm-visible-window-pids)'
+    # green or red
+    test ${RET} = 0 && MSG="^2Process completed" || MSG="^1Process erred"
 
-  if [[ -n "${WINDOWID}" &&  \
-    ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]] ; then
-    # window is not visible
-    stumpwm-msg ${MSG}
-  fi
+    # xprop -id ${WINDOWID}
+    if [[ -n "${WINDOWID}" &&  \
+              ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]] ; then
+        # window is not visible
+        stumpwm-msg ${MSG} ${CMD}
+    fi
+}
+
+function post-command-maybe-notify {
+    RET=$?
+    CMD=$(fc -ln -0)
+    history -a
+    stumpwm-maybe-notify-last-command ${RET} "${CMD}" &> /dev/null &
+    disown %- # silence shell job status
 }
 
 if command -v emacsclient >/dev/null \
   && command -v stumpwm >/dev/null; then
-  PROMPT_COMMAND=post-command-notify
+  PROMPT_COMMAND=post-command-maybe-notify
 fi
 
 function jar-to-classes {
