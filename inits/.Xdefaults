@@ -1,6 +1,12 @@
 xterm*eightBitInput: false
 XTerm*selectToClipboard: true
-xterm*font:     *-Monospace-*-*-*-20-*
-xterm*loginShell: trueXTerm.vt100.translations: #override \n\
+! xterm*font:     *-fixed-*-*-*-25-*
+! xterm*font:  15x20
+! xterm*font:     *-Monospace-*-*-*-50-*
+xterm*font: "--clean--*---*---*---*-*"
+xterm*faceSize:     40
+xterm*fontSize:     40
+xterm*loginShell: true
+XTerm.vt100.translations: #override \n\
   Ctrl <Key> minus: smaller-vt-font() \n\
   Ctrl <Key> plus: larger-vt-font()
