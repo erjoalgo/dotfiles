@@ -215,7 +215,6 @@ alias httpd="python -m SimpleHTTPServer"
 
 alias gpg-list-keys-long-format='gpg --list-keys --keyid-format long'
 #
-alias git5-browse-cl='google-chrome $(git5 export |& grep -oP "http://cl/[0-9]+")'
 alias blb='blaze build'
 alias blr='blaze run'
 alias blt='blaze test'
