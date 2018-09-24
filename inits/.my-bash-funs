@@ -477,3 +477,11 @@ if command -v emacsclient >/dev/null \
   && command -v stumpwm >/dev/null; then
   PROMPT_COMMAND=post-command-notify
 fi
+
+function jar-to-classes {
+    for JAR in ${*}; do
+        for CLASS in $(jar -tf ${JAR}); do
+            echo ${JAR} "-\>" ${CLASS}
+        done
+    done
+}
