@@ -24,18 +24,18 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (setf *per-window-bindings-class-to-map*
 	(make-hash-table :test 'equal))
   (loop for (classes . bindings) in rules
-        as top-copy = (deep-copy-map STUMPWM::*top-map*)
-        do (loop for (key form) in bindings
-	         as defcmd-form = `(defcommand-annon ,form)
-	         as cmd-name = (eval defcmd-form)
-	         ;;do (print defcmd-form)
-	         do
-	            (define-key top-copy (kbd key) cmd-name))
-        do (loop for class in classes
-	         ;;do (format t "setting class ~A to ~A~%" class top-copy)
-	         do (setf (gethash (string-downcase class)
-			           *per-window-bindings-class-to-map*)
-                          top-copy))))
+     as top-copy = (deep-copy-map STUMPWM::*top-map*)
+     do (loop for (key form) in bindings
+	   as defcmd-form = `(defcommand-annon ,form)
+	   as cmd-name = (eval defcmd-form)
+	   ;;do (print defcmd-form)
+	   do
+	     (define-key top-copy (kbd key) cmd-name))
+     do (loop for class in classes
+	   ;;do (format t "setting class ~A to ~A~%" class top-copy)
+	   do (setf (gethash (string-downcase class)
+			     *per-window-bindings-class-to-map*)
+                    top-copy))))
 
 (defun per-window-bindings-reload-from-fn ()
   (load *per-window-binding-rules-fn*)
@@ -67,8 +67,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
       (unless (eq curr-bindings bindings-dest)
         (when verbose
           (push (format nil "changing bindings from ~A to ~A..."
-                   (when (current-window) (window-class (current-window)))
-                   class-dest)
+                        (when (current-window) (window-class (current-window)))
+                        class-dest)
                 dbg))
         (when curr-bindings
           (when verbose
