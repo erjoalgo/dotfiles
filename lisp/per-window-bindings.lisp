@@ -48,23 +48,38 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (defvar *current-top-bindings* nil)
 
+(defvar dbg nil)
+
 (defun update-window-bindings (curr-win)
-  (let* ((b curr-win)
-         (curr-bindings (car *current-top-bindings*))
-         class-dest bindings-dest)
+  (let ((verbose t))
+    (when verbose
+      (push (format nil "update-window-bindings invoked on curr: ~A"
+                    (when curr-win (window-class curr-win)))
+            dbg))
+    (let* ((curr-bindings (car *current-top-bindings*))
+           class-dest bindings-dest)
 
-    (when b
-      (setf class-dest (window-class b)
-            bindings-dest (gethash (string-downcase class-dest)
-				   *per-window-bindings-class-to-map*)))
+      (when curr-win
+        (setf class-dest (window-class curr-win)
+              bindings-dest (gethash (string-downcase class-dest)
+                                     *per-window-bindings-class-to-map*)))
 
-    (unless (eq curr-bindings bindings-dest)
-      (when curr-bindings
-	(pop-top-map)
-	(pop *current-top-bindings*))
-      (when bindings-dest
-	(push-top-map bindings-dest)
-	(push bindings-dest *current-top-bindings*)))))
+      (unless (eq curr-bindings bindings-dest)
+        (when verbose
+          (push (format nil "changing bindings from ~A to ~A..."
+                   (when (current-window) (window-class (current-window)))
+                   class-dest)
+                dbg))
+        (when curr-bindings
+          (when verbose
+            (push (format nil "popping old bindings")
+                  dbg))
+          (pop-top-map)
+          (pop *current-top-bindings*))
+        (when bindings-dest
+          (when verbose (push (format nil "pushing ~A" class-dest) dbg))
+          (push-top-map bindings-dest)
+          (push bindings-dest *current-top-bindings*))))))
 
 (defmacro defcommand-annon  (&rest forms)
   (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
