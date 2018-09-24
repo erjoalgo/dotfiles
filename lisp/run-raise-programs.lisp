@@ -68,30 +68,30 @@ seconds ago")
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					      (pull-window ,pull-key))
 
-	     as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
-	     as pull-p = (eq pull-or-raise-fun 'pull-window)
-	     as cmd-name-string = (symbol-name cmd-name)
-	     as fun = pull-or-raise-fun
-	     as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd)
-	     append
-	     `(
-	       (defcommand ,cmd-name nil nil ,doc
-			   (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
-						  ,cmd ,pull-p ,all-screens))
-	       ,(unless (null key)
-		  `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
+	  as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
+	  as pull-p = (eq pull-or-raise-fun 'pull-window)
+	  as cmd-name-string = (symbol-name cmd-name)
+	  as fun = pull-or-raise-fun
+	  as doc = (format nil "autogen ~A '~A'" (if pull-p "pull" "raise") cmd)
+	  append
+	    `(
+	      (defcommand ,cmd-name nil nil ,doc
+			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
+						 ,cmd ,pull-p ,all-screens))
+	      ,(unless (null key)
+		 `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
 
 (define-run-or-pull-program "BROWSER"
-  :cmd browser-name
-  :raise-key "H-f"
-  :pull-key "H-F"
-  :classes browser-classes)
+    :cmd browser-name
+    :raise-key "H-f"
+    :pull-key "H-F"
+    :classes browser-classes)
 
 (define-run-or-pull-program "X-TERMINAL-EMULATOR"
-  :raise-key "H-c"
-  :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal | head -1" t))
-  :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
-		 "xterm" "XTerm" "Gnome-terminal"))
+    :raise-key "H-c"
+    :cmd (trim-spaces (run-shell-command "which roxterm xterm gnome-terminal | head -1" t))
+    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
+		   "xterm" "XTerm" "Gnome-terminal"))
 
 (defparameter emacs-classes
   (list "emacs" "GoogleEmacs"))
@@ -104,8 +104,8 @@ seconds ago")
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
-                          (and (probe-file (parse-namestring file))
-	                       file)))
+       (and (probe-file (parse-namestring file))
+	    file)))
 
 (defun first-existing-command (&rest commands)
   "assume command has no spaces or funny characters"
@@ -114,16 +114,16 @@ seconds ago")
        (car)))
 
 (let ((eclipse-cmd
-        (first-existing-command
-         "eclipse"
-         "android-studio"
-         "STS")))
+       (first-existing-command
+        "eclipse"
+        "android-studio"
+        "STS")))
 
   (when eclipse-cmd
     (define-run-or-pull-program "android-studio"
-      :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
-      :cmd eclipse-cmd
-      :raise-key "H-r")))
+        :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
+        :cmd eclipse-cmd
+        :raise-key "H-r")))
 
 (define-run-or-pull-program "zathura")
 
