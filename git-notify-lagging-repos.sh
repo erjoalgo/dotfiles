@@ -53,7 +53,7 @@ function check_lagging	{
     else
 	if test 0 -eq $(git branch -r --contains ${BRANCH} | wc -l); then
 	    CNT=$(git log ${REMOTE}/${BRANCH}..HEAD --oneline | wc -l)
-	    TAGS+=" ${LIGHT_RED}${CNT}-UNPUBLISHED${NC}"
+	    TAGS+=" ${LIGHT_RED}${CNT}-NOTPUBLISHED${NC}"
 	fi
 	if test "${FETCH}" = true; then
 	    git fetch ${REMOTE}
@@ -64,7 +64,7 @@ function check_lagging	{
 	fi
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
-	TAGS+=" ${YELLOW}UNCOMMITED${NC}"
+	TAGS+=" ${YELLOW}NOTCOMMITED${NC}"
     fi
 
     STASH_CNT=$(git stash list | wc -l)
