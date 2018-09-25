@@ -55,7 +55,7 @@ shopt -s checkwinsize
 
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
 {
-  LAGGING=$(git-notify-lagging-repos.sh ${HOME}/git/* | grep "UNPUBLISHED")
+  LAGGING=$(git-notify-lagging-repos.sh ${HOME}/git/* | grep "NOTPUBLISHED")
   printf '%s' "${LAGGING%%A}"
 } &
 disown %-
