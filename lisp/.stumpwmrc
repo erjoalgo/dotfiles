@@ -109,7 +109,7 @@
   "defines components to load and their order")
 
 (defvar load-extra-directories
-  '("commands"))
+  '("commands" "experimental"))
 
 (defparameter *init-errs* nil)
 
