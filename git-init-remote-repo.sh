@@ -56,15 +56,15 @@ EOF
 REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO}"
 echo ${REMOTE_URL}
 ORIGIN_NAME=origin
-for NAME in origin origin-${SSH_USERHOST} origin-${SSH_USERHOST}-${RANDOM}; do
-    ORIGIN_NAME=${NAME}
+for NAME in origin ${SSH_USERHOST} ${SSH_USERHOST}-${RANDOM}; do
+    REMOTE_NAME=${NAME}
     if test "$(git config --get remote.${NAME}.url)" = "${REMOTE_URL}"; then
 	break
-    elif git remote add ${ORIGIN_NAME} ${REMOTE_URL}; then
+    elif git remote add ${REMOTE_NAME} ${REMOTE_URL}; then
 	break
     fi
 done
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-git fetch ${ORIGIN_NAME}
-git branch --set-upstream-to=${ORIGIN_NAME}/${BRANCH}
+git fetch ${REMOTE_NAME}
+git branch --set-upstream-to=${REMOTE_NAME}/${BRANCH}
