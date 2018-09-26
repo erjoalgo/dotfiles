@@ -152,3 +152,43 @@
      for slot in (sb-mop:class-slots class)
      as slot-name = (slot-value slot 'sb-pcl::name)
      collect (list slot-name (slot-value obj slot-name))))
+
+(defmacro eval-async (&body form)
+  `(sb-thread:make-thread
+    (lambda () ,@form)))
+
+(defun run-command-retcode-output (command &optional args)
+  (let (proc string)
+    (setf string (with-output-to-string (out)
+                   (setf proc
+                         (sb-ext:run-program
+                          command args
+                          :wait t
+                          :output out
+                          :search t))))
+    (values (sb-ext:process-exit-code proc)
+            string)))
+
+;; TODO optional
+(defmacro run-command-async (command args (retcode-sym output-sym)
+                             on-success on-error)
+  `(eval-async
+     (multiple-value-bind (,retcode-sym ,output-sym)
+         (run-command-retcode-output ,command ,args)
+       (if (zerop ,retcode-sym)
+           ,on-success
+           ,on-error))))
+
+'(run-command-async "bash"
+                     '("-c" "sleep 1; false;") (ret out)
+                     (message "success!")
+                     (message "err: ~A ~A" ret out))
+
+(defun run-command-async-notify (command &optional args)
+  (run-command-async command args (ret out)
+                     (message (format nil "^2success of '~A ~{~A~^~}'^*"
+                                      command args))
+                     (message
+                      (format nil "^1non-zero exit of '~A ~{~A~^ ~}': ~~A ~~A^*"
+                              command args)
+                      ret out)))
