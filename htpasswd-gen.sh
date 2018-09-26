@@ -1,6 +1,26 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
+
+USAGE=false
+HTPASSWD_FILE=""
+
+while getopts "hf:" OPT; do
+    case ${OPT} in
+    f)
+        HTPASSWD_FILE=${OPTARG}
+        ;;
+    h)
+        USAGE=true
+        ;;
+    esac
+done
+
+if test ${USAGE} = true -o -z "${HTPASSWD_FILE}"; then
+    echo "usage: $(basename ${0}) -f HTPASSWD_FILE [ USER...  ]"
+    exit 1
+fi
+
 function genpasswd {
     local l=$1;
     [ "$l" == "" ] && l=16;
