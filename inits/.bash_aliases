@@ -151,6 +151,7 @@ alias spsi='sudo python setup.py install'
 #meta
 alias .a='source ~/.bash_aliases && source ~/.my-bash-funs'
 alias .brc='source ~/.bashrc'
+alias .t='tmux source ~/.tmux.conf'
 alias aa='aliasadd.py'
 
 #misc programs
