@@ -108,3 +108,16 @@
   (in-package :stumpwm)
   (when pathname
     (load-safe pathname)))
+
+
+(defcommand byzanz-record (name duration)
+    ((:string " recording name: ")
+     (:number "recording duration in seconds: "))
+  (let ((recording-pathname
+          (merge-pathnames (make-pathname
+                            :name name
+                            :type "gif")
+                           *scrots-top*)))
+    (run-command-async-notify
+     "byzanz-record"
+     (list "-d" duration recording-pathname))))
