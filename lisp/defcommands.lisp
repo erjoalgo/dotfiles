@@ -90,7 +90,7 @@
 
 (defcommand connect-internet () ()
   "connect to the internet via the wifi-connect program"
-  (echo "connecting to internet...")
+  (echo "connecting to the internet...")
   (run-command-async-notify "wifi-connect"))
 
 (defcommand echo-window-class () ()
