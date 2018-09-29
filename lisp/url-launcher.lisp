@@ -167,6 +167,7 @@
   "search the clipboard contents"
   (search-engine-search DEFAULT-SEARCH-ENGINE (get-x-selection )))
 
+;; make command name shorter to make help-map (?) more useful
 (defcommand-alias engsearch search-engine-search)
 
 (defcommand search-engines-install-to-map () ()
