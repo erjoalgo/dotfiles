@@ -19,7 +19,7 @@ while getopts "hu:d:g:" OPT; do
             GPG_KEY_ID=${OPTARG}
             ;;
         h)
-            less $0
+            usage
             exit 0
             ;;
     esac
