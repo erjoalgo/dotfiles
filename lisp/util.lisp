@@ -186,7 +186,7 @@
 
 (defun run-command-async-notify (command &optional args)
   (run-command-async command (mapcar 'prin1-to-string args) (ret out)
-                     (message (format nil "^2success of '~A ~{~A~^~}'^*"
+                     (message (format nil "^2success of '~A ~{~A~^ ~}'^*"
                                       command args))
                      (message
                       (format nil "^1non-zero exit of '~A ~{~A~^ ~}': ~~A ~~A^*"
