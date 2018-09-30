@@ -424,6 +424,10 @@ function path-append {
   export PATH=${PATH}:${1}
 }
 
+function path-ls {
+  tr ':' '\n' <<< "${PATH}" | less
+}
+
 function stumpwm-maybe-notify-last-command {
     RET=${1} && shift
     CMD=${1} && shift
