@@ -420,7 +420,7 @@ function git-filter-branch-rewrite-path-sed    {
 ' HEAD
 }
 
-function PATH-append {
+function path-append {
   export PATH=${PATH}:${1}
 }
 
