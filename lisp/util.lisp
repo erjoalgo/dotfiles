@@ -185,7 +185,7 @@
                      (message "err: ~A ~A" ret out))
 
 (defun run-command-async-notify (command &optional args)
-  (run-command-async command (mapcar 'prin1-to-string args) (ret out)
+  (run-command-async command (mapcar 'princ-to-string args) (ret out)
                      (message (format nil "^2success of '~A ~{~A~^ ~}'^*"
                                       command args))
                      (message
