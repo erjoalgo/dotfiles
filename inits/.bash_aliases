@@ -220,6 +220,8 @@ alias blb='blaze build'
 alias blr='blaze run'
 alias blt='blaze test'
 
+alias nvm-install-latest='nvm install --latest-npm'
+
 # Local Variables:
 # mode: sh
 # End:
