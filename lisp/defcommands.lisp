@@ -93,6 +93,10 @@
   (echo "connecting to the internet...")
   (run-command-async-notify "wifi-connect"))
 
+(defcommand connect-internet-check () ()
+  "check access to google.com"
+  (run-command-async-notify "ping" '("-c" "3" "google.com")))
+
 (defcommand echo-window-class () ()
   "echo window class"
   (message "window class: ~A" (window-class (current-window))))

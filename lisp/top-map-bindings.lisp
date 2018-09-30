@@ -162,6 +162,7 @@
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
    ("w" "connect-internet")
+   ("W" "connect-internet-check")
    ("h" *help-map*)
    ("s" "scrot-cmd-anon" )
    ("S" "scrot-cmd-full-screen-anon" )
