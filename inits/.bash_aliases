@@ -184,8 +184,8 @@ alias echolastcmd="fc -ln -1 | xsel --clipboard"
 alias javafmt-pr='git filter-branch -f --tree-filter "javafmt ." origin/master..HEAD'
 alias cat-id-rsa-pub-xs='cat ~/.ssh/id_rsa.pub | xs'
 alias ssh-ecdsa-fingerprint='ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key.pub'
-alias ssh-ecdsa-fingerprint-md5='ecdsa-fingerprint -Emd5'
-alias ssh-ecdsa-fingerprint-sha256='ecdsa-fingerprint -Esha256'
+alias ssh-ecdsa-fingerprint-md5='ssh-ecdsa-fingerprint -Emd5'
+alias ssh-ecdsa-fingerprint-sha256='ssh-ecdsa-fingerprint -Esha256'
 alias ssh-ecdsa-fingerprint-sha256-old-ssh="awk '{print \$2}' /etc/ssh/ssh_host_ecdsa_key.pub | base64 -d | sha256sum -b | awk '{print \$1}' | xxd -r -p | base64"
 alias pem-sha256='openssl x509 -noout -fingerprint -sha256 -in'
 
