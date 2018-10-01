@@ -3,17 +3,20 @@
 set -euo pipefail
 
 function usage {
-    echo "${FUNCNAME[0]} -u URL [-d INSTALL_DIR] [ -d GPG_KEY_ID ]"
+    echo "${FUNCNAME[0]} -u URL [-d INSTALL_DIR] [ -g GPG_KEY_ID ] [ -D DNAME  ]"
 }
 
 GPG_KEY_ID=""
-while getopts "hu:d:g:" OPT; do
+while getopts "hu:d:g:D:" OPT; do
     case ${OPT} in
         u)
             URL=${OPTARG}
             ;;
         d)
             INSTALL_DIR=${OPTARG}
+            ;;
+        D)
+            DNAME=${OPTARG}
             ;;
         g)
             GPG_KEY_ID=${OPTARG}
@@ -41,7 +44,7 @@ mkdir -p ~/src && cd ~/src
 test -f ${FNAME} || wget ${URL}
 test -f ${FNAME}.sig || wget ${URL}.sig
 
-DNAME=$(basename ${FNAME} ${EXT})
+DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
     if test -n "${GPG_KEY_ID}"; then
