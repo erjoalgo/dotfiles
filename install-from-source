@@ -27,6 +27,7 @@ while getopts "hu:d:g:D:" OPT; do
             ;;
     esac
 done
+
 INSTALL_DIR=${INSTALL_DIR:-/usr/local}
 
 if ! test -n "${URL}"; then
@@ -47,10 +48,12 @@ test -f ${FNAME}.sig || wget ${URL}.sig
 DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
-    if test -n "${GPG_KEY_ID}"; then
-        gpg --recv-keys "${GPG_KEY_ID}"
+    if test SKIP != ${GPG_KEY_ID}; then
+        if test -n "${GPG_KEY_ID}"; then
+            gpg --recv-keys "${GPG_KEY_ID}"
+        fi
+        gpg --verify ${FNAME}{.sig,}
     fi
-    gpg --verify ${FNAME}{.sig,}
     sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
 fi
 
