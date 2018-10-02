@@ -4,33 +4,16 @@ set -euo pipefail
 
 # URL=http://gnu.mirrors.pair.com/gnu/emacs/emacs-25.2.tar.gz
 # URL=http://gnu.mirrors.hoobly.com/emacs/emacs-25.2.tar.gz
-URL=http://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.xz
+# URL=http://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.xz
+
+URL=https://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz
 EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
 
 VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
-if emacs --version | grep -F "${VERSION}"; then
+if false && emacs --version | grep -F "${VERSION}"; then
     echo emacs ${VERSION} already installed
     exit 0
 fi
-
-FNAME=$(basename ${URL})
-mkdir -p ~/src && cd ~/src
-
-test -f ${FNAME} || wget ${URL}
-test -f ${FNAME}.sig || wget ${URL}.sig
-
-# gpg --recv-keys BE216115
-
-INSTALL_DIR=/usr/local
-DNAME=$(basename ${FNAME} ${EXT})
-
-if ! test -d ${INSTALL_DIR}/${DNAME}; then
-    gpg --recv-keys 7C207910
-    # 28D3 BED8 51FD F3AB 57FE F93C 2335 87A4 7C20 7910
-    gpg --verify ${FNAME}{.sig,}
-    sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
-fi
-cd ${INSTALL_DIR}/${DNAME}
 
 if command -v yum; then
     sudo yum install -y yum-utils rpm-build
@@ -53,6 +36,4 @@ elif command -v apt-get; then
     sudo apt-get install -y uuid-runtime || true
 fi
 
-./configure && \
-    make &&  \
-    sudo make install
+install-from-source -u ${URL} -g 7C207910
