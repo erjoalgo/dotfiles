@@ -189,6 +189,6 @@
                      (message (format nil "^2success of '~A ~{~A~^ ~}'^*"
                                       command args))
                      (message
-                      (format nil "^1non-zero exit of '~A ~{~A~^ ~}': ~~A ~~A^*"
+                      (format nil "^1non-zero exit: ~~A of '~A ~{~A~^ ~}': ~~A^*"
                               command args)
                       ret out)))
