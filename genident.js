@@ -1,43 +1,81 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
+const minimist = require('minimist');
 
 var ARGV_START = 2;
-var args = process.argv.slice(ARGV_START);
 
-var username = args[0];
-var size = parseInt(args.length>=2? args[1]: 150);
+let args = minimist(process.argv.slice(2), {
+    alias: {
+      h: 'help',
+      t: "text",
+      s: "size",
+      o: "output",
+      f: "identfun",
+        // v: 'version'
+    },
+  default: {
+    size: 150,
+    identfun: "identicon_gen"
+  }
+});
 
-console.log( "username is: "+username );
-console.log( "size is: "+size );
+var text, size, output_sans_ext, identfun;
 
-if (username == null) {
-  console.log( process.argv );
-  throw "username must be defined";
+var IDENT_FUNS = [["identicon_gen", identicon_gen],
+                  ["jdenticon_gen", jdenticon_gen]];
+
+function usage (  ) {
+  console.log( "args: " );
+  for (var k in args) {
+    console.log( k+": "+args[k] );
+  }
+  console.log( "" );
+
+  console.log( "usage: genident.js [-h] -t text [-s size] [-f output]" );
+  // TODO package...
+  console.log( "" );
+  console.log( "$ npm install -g minimist identicon jdenticon" );
+  console.log( "$ apt-get install libcairo2-dev libjpeg8-dev "+
+               "libpango1.0-dev libgif-dev build-essential g++" );
 }
 
-var out_dir = "./outs";
-function maybe_mkdir ( directory ) {
-  if (!fs.existsSync(directory)){
-    fs.mkdirSync(directory, 0744);
+
+if (args.help) {
+  usage();
+  process.exit(0);
+} else if (args.text == null) {
+  usage();
+  throw "must provide text to encode";
+} else  {
+  var fun_idx = IDENT_FUNS.map(function(name_fun){return name_fun[0];}).indexOf(args.identfun);
+  if (fun_idx == -1) {
+    usage();
+    throw "unknown ident function: "+args.identfun
+  } else  {
+    identfun = IDENT_FUNS[fun_idx][1];
+    text = args.text;
+    size = parseInt(args.size);
+    output_sans_ext = args.output || text;
   }
 }
-maybe_mkdir(out_dir);
 
-function jdenticon_gen ( val, size, output_directory ) {
+
+function jdenticon_gen ( val, size, output_filename_sans_ext ) {
   var jdenticon = require("jdenticon");
-  var output_filename = path.join(output_directory, val+".png");
+  var output_filename = output_filename_sans_ext+".png";
   size = 200;
   var png = jdenticon.toPng(val, size);
   fs.writeFileSync(output_filename, png);
   return output_filename;
 }
 
-function identicon_gen ( val, size, output_directory ) {
+function identicon_gen ( val, size, output_filename_sans_ext ) {
   var identicon = require('identicon');
   // Asynchronous API
 
+  // npm install -g minimist identicon jdenticon
   // https://www.npmjs.com/package/identicon
   // apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 
@@ -45,33 +83,15 @@ function identicon_gen ( val, size, output_directory ) {
   // wget -q -O /tmp/libpng12.deb http://mirrors.kernel.org/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1_amd64.deb   && sudo dpkg -i /tmp/libpng12.deb   && rm /tmp/libpng12.deb
 
   // Synchronous API
-  var output_filename = path.join(output_directory, val+".png");
+  var output_filename = output_filename_sans_ext+".png";
   var buffer = identicon.generateSync({ id: val, size: size});
   fs.writeFileSync(output_filename, buffer);
   return output_filename;
-
-  /*
-  identicon.generate({ id: val, size: size }, function(err, buffer) {
-    if (err) throw err;
-    fs.writeFileSync(output_filename, buffer);
-    });
-  */
 }
 
-var funs = [identicon_gen, jdenticon_gen];
 
-for (var i = 0; i<funs.length; i++) {
-  var fun = funs[i];
-  var fun_name = fun.name;
-  try  {
-    var dir = path.join(out_dir, fun_name);
-    maybe_mkdir(dir);
-    var output_filename = fun(username, size, dir);
-    console.log( "wrote to "+output_filename);
-  }catch (e) {
-    console.log( fun_name+" error: ", e );
-  }
-}
+var output_filename = identfun(text, size, output_sans_ext);
+console.log( "wrote to "+output_filename);
 
 // Local Variables:
 // compile-command: "./genident.js ejalfonso 500"
