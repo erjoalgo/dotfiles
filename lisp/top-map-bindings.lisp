@@ -169,9 +169,9 @@
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
    ("K" "spell-clipboard" )
-   ("H-e" "echo-current-tab" )
    ("H-l" "run-shell-command xsecurelock" )
-   ))
+   ;; ("H-e" "echo-current-tab" )
+   ("H-e" "emacs-killusr2")))
 
 
 (define-key-bindings *screen-rotation-map*

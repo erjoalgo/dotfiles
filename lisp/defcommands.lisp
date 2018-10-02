@@ -125,3 +125,9 @@
     (run-command-async-notify
      "byzanz-record"
      (list "-d" duration recording-pathname))))
+
+(defcommand emacs-killusr2 () ()
+  "invoke this command to debug an emacs hang/freeze"
+  (run-command-async-notify
+   "pkill"
+   (list "-SIGUSR2" "emacs")))
