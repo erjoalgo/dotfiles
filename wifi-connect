@@ -116,10 +116,16 @@ case ${COUNT} in
 	;;
     *)
 	if test -z "${ESSID}"; then
-	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) <(sort <<< "${ESSIDS}") | tee /tmp/common-essids)
-	    if test -z "${ASK_ESSID}" -a 1 -eq $(wc -l <<< "${COMM}") -a -n "${COMM}"; then
-		ESSID="${COMM}"
-	    else
+	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) \
+                        <(sort <<< "${ESSIDS}") \
+                       | tee /tmp/common-essids)
+            COMM_LEN=$(wc -l <<< "${COMM}")
+            if test -z "${COMM}"; then
+                COMM_LEN=0
+                message -e "no essids available"
+	    elif test "${ASK_ESSID}" = never -o ${COMM_LEN} -eq 1; then
+		ESSID=$(head -1 <<< "${COMM}")
+            else
 		OLDIFS=$IFS
 		IFS=$'\n'
 		select ESSID in ${ESSIDS}; do
