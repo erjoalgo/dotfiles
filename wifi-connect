@@ -28,6 +28,11 @@ while getopts "ohp:e:m:aE:i:" OPT; do
 	    # flag to prompt for essid, even if matching entry exists
 	    ASK_ESSID="true"
 	    ;;
+	A)
+	    # don't prompt for essid, when there are multiple matches
+	    # required when connecting to a hidden essid
+	    ASK_ESSID="never"
+	    ;;
 	E)
 	    # sets the network's encryption
 	    # required when connecting to a hidden essid
