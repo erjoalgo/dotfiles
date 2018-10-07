@@ -119,19 +119,20 @@ case ${COUNT} in
 	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) \
                         <(sort <<< "${ESSIDS}") \
                        | tee /tmp/common-essids)
-            COMM_LEN=$(wc -l <<< "${COMM}")
-            if test -z "${COMM}"; then
-                COMM_LEN=0
-                message -e "no essids available"
-	    elif test "${ASK_ESSID}" = never -o ${COMM_LEN} -eq 1; then
+            test -n "${COMM}" && COMM_LEN=$(wc -l <<< "${COMM}") || COMM_LEN=0
+            if test ${ASK_ESSID} != true -a ${COMM_LEN} = 1 \
+                    -o "${ASK_ESSID}" = never -a ${COMM_LEN} -ge 1; then
 		ESSID=$(head -1 <<< "${COMM}")
-            else
+            elif test "${ASK_ESSID}" != never; then
 		OLDIFS=$IFS
 		IFS=$'\n'
 		select ESSID in ${ESSIDS}; do
 		    break
 		done
 		IFS=$OLDIFS
+            else
+                echo "no known essids"
+                exit 1
 	    fi
 	elif ! grep -F "${ESSID}" <<< "${ESSIDS}"; then
 	     message -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
