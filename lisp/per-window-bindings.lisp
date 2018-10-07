@@ -52,8 +52,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (defun update-window-bindings (curr-win)
   (let (msgs)
-    (push (format nil "update-window-bindings invoked on curr: ~A"
-                  (when curr-win (window-class curr-win)))
+    (push (format nil "update-window-bindings invoked on curr: ~A (~A)"
+                  curr-win (when curr-win (window-class curr-win)))
           msgs)
     (let* ((curr-bindings (car *current-top-bindings*))
            class-dest bindings-dest)
@@ -70,6 +70,16 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                         (when (current-window) (window-class (current-window)))
                         class-dest)
                 msgs)
+          (when (or (and (null class-dest)
+                         (current-window)
+                         (or
+                          (member (string-downcase
+                                   (window-class (current-window)))
+                                  (mapcar 'string-downcase browser-classes))
+                          (equal "Chromium" (window-class (current-window)))))
+                    (member "changing bindings from Chromium to NIL..." msgs
+                            :test 'equal))
+            (message "changing from browser to nil?"))
         (when curr-bindings
             (push (format nil "popping old bindings") msgs)
           (pop-top-map)
