@@ -90,6 +90,16 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
           (push bindings-dest *current-top-bindings*))))
     (push (cons (GET-UNIVERSAL-TIME) msgs) dbg)))
 
+' (loop for entry in (reverse dbg)
+            with last = nil
+            when (and (consp entry)
+                      (numberp (car entry))) do
+                      (when last
+                        (format t "~As: ~{~A~^~%    ~}~%"
+                                (- (car entry) last)
+                                (reverse (cdr entry))))
+                      (setf last (car entry)))
+
 (defmacro defcommand-annon  (&rest forms)
   (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
 	 (docstring (format nil "~A. contents: ~A" name forms))
