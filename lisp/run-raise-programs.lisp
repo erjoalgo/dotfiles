@@ -27,7 +27,7 @@ seconds ago")
                                    (progn t))))
                  if keep collect entry)))))
 
-(add-hook stumpwm:*new-window-hook* #'raise-window-in-original-group)
+(add-hook stumpwm:*new-window-hook* 'raise-window-in-original-group)
 
 (defun raise-pull-or-run-win (win-classes command &optional pull-p all-screens)
   (let* ((win-list (if all-screens (screen-windows (current-screen))
