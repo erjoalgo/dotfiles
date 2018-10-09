@@ -11,7 +11,9 @@ seconds ago")
 (setf raise-window-in-original-group-secs 10)
 
 (defun raise-window-in-original-group (new-win)
-  (setf orig pid-original-group-alist)
+  (let ((new-win-pid (window-pid new-win)))
+    (if (not new-win-pid)
+        (warn "unable to locate pid for window: ~A" new-win)
   (setf pid-original-group-alist
         (loop with now = (GET-UNIVERSAL-TIME)
            for entry in pid-original-group-alist
@@ -19,11 +21,11 @@ seconds ago")
                          entry
                        (when (and raise-window-in-original-group-secs
                                   (< (- now timestamp) raise-window-in-original-group-secs))
-                         (if (= (window-pid new-win) pid)
+                         (if (= new-win-pid pid)
                              (progn (move-window-to-group new-win group)
                                     nil);; remove it from the list
                              (progn t))))
-           if keep collect entry)))
+           if keep collect entry)))))
 
 (add-hook stumpwm:*new-window-hook* #'raise-window-in-original-group)
 
