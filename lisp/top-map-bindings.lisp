@@ -168,7 +168,7 @@
    ("S" "scrot-cmd-full-screen-anon" )
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
-   ("K" "spell-clipboard" )
+   ("l" "spell-clipboard" )
    ("H-l" "run-shell-command xsecurelock" )
    ;; ("H-e" "echo-current-tab" )
    ("H-e" "emacs-killusr2")))
