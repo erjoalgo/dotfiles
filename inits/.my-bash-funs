@@ -463,3 +463,9 @@ function jar-to-classes {
         done
     done
 }
+
+function keynav-restart {
+  pkill keynav
+  keynav &
+  disown %- # silence shell job status
+}
