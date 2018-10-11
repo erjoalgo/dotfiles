@@ -49,6 +49,8 @@ for LINK in \
 
 done
 
+mkdir -p ${HOME}/.config
+
 safe_ln "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
 safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
 safe_ln "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
