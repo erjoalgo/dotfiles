@@ -32,7 +32,6 @@ for LINK in \
     .pythonrc.py \
     .inputrc \
     .my-bashrc \
-    .my-bash-funs \
     .xmodmap \
     .xinitrc \
     .my-profile \
@@ -50,12 +49,14 @@ for LINK in \
 done
 
 mkdir -p ${HOME}/.config
+mkdir -p ${HOME}/.bash-funs
 
 safe_ln "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
 safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
 safe_ln "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 safe_ln "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
+safe_ln "${INITS_TOP}/.my-bash-funs" "${HOME}/.bash-funs/"
 
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
