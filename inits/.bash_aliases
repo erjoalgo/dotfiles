@@ -11,6 +11,7 @@ alias l='less -R'
 alias c='cat'
 alias gi='grep -i'
 alias gol='grep -o'
+alias grepc='grep --color=always'
 if command -v xsel > /dev/null; then
     alias xs='xsel -ib'
 else
