@@ -147,15 +147,6 @@
 (defun window-pid (win)
   (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))
 
-(defun describe-obj (obj)
-  (loop with class = (class-of obj)
-     for slot in (sb-mop:class-slots class)
-     as slot-name = (slot-value slot 'sb-pcl::name)
-     as slot-value = (if (SLOT-BOUNDP obj slot-name)
-                         (slot-value obj slot-name)
-                         :UNBOUND)
-     collect (list slot-name slot-value)))
-
 (defmacro eval-async (&body form)
   `(sb-thread:make-thread
     (lambda () ,@form)))
