@@ -242,10 +242,12 @@ function git-review-pull-request	{
 
 function pid-listening-at	{
     LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${1}[^0-9]")
-    PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
-    echo -e "${LINE}\n" 1>&2
-    ps -fp ${PID} -w 30 1>&2
-    echo ${PID}
+    if test -n "${LINE}"; then
+        PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
+        echo -e "${LINE}\n" 1>&2
+        xargs -L1 ps -w30 -fp <<< "${PID}"  1>&2
+        echo ${PID}
+    fi
 }
 
 function git-browse-remote	{
