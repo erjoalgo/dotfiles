@@ -471,3 +471,7 @@ function keynav-restart {
   keynav &
   disown %- # silence shell job status
 }
+
+function git-revert-HEAD {
+    git revert ${1:-HEAD}
+}
