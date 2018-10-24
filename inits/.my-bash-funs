@@ -481,3 +481,9 @@ function asdf-add-to-link-farm {
     LINK_FARM=${LINK_FARM:-"${HOME}/.asd-link-farm/"}
     ln -sf $(realpath ${PROJECT_DIRECTORY}) ${LINK_FARM}
 }
+
+function asdf-system-installed-p {
+    SYSTEM=${1} && shift
+    sbcl --eval "(ql:quickload '${SYSTEM})" --non-interactive
+}
+
