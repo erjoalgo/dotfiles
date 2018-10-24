@@ -79,7 +79,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                           (equal "Chromium" (window-class (current-window)))))
                     (member "changing bindings from Chromium to NIL..." msgs
                             :test 'equal))
-            (message "changing from browser to nil?"))
+            (message "changing from browser to nil?")
+            (return-from update-window-bindings))
         (when curr-bindings
             (push (format nil "popping old bindings") msgs)
           (pop-top-map)
