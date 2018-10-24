@@ -149,7 +149,7 @@ alias spsi='sudo python setup.py install'
 
 
 #meta
-alias .a='source ~/.bash_aliases && source ~/.bash-funs/*'
+alias .a='source ~/.bash_aliases && source $(find -L ~/.bash-funs/ -type f)'
 alias .brc='source ~/.bashrc'
 alias .t='tmux source ~/.tmux.conf'
 alias aa='aliasadd.py'
