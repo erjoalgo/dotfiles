@@ -13,6 +13,8 @@ POST_RECEVE_HOOK=${BARE_TOP}/hooks/post-receive
 touch ${POST_RECEVE_HOOK}
 chmod +x ${POST_RECEVE_HOOK}
 
+which mutt
+
 insert-text-block '# 2aa53a0f-71aa-4092-a377-436ed09dacb5-send-post-receive-email-notications'  \
                   ${POST_RECEVE_HOOK}<<EOF
 SUBJECT=\$(git log --pretty=oneline --abbrev-commit)
