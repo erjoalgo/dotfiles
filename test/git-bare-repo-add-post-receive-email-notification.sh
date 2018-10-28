@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-EMAILS=${1:-erjoalgo@gmail.com}
+EMAILS=${*:-erjoalgo@gmail.com}
 
 BARE=/tmp/git-bare-notif-test.git
 mkdir -p ${BARE}
