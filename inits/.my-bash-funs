@@ -436,9 +436,11 @@ function current-shell-window-visible-p {
     ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]]
 }
 
+_NOTIFY_LAST_COMMAND_THRESH_SECS=1
 function stumpwm-maybe-notify-last-command {
     RET=${1} && shift
     CMD=${1} && shift
+    ELAPSED_TIME_SECS=${1} && shift
 
     if test ${RET} = 0; then
       MSG="Process completed successfully"
@@ -447,25 +449,30 @@ function stumpwm-maybe-notify-last-command {
       MSG="Process erred"
       COLOR="red"
     fi
-
-    if current-shell-window-visible-p; then
-        # window is not visible
-        # CMD has a leading tab
+    if test $ELAPSED_TIME_SECS -gt ${_NOTIFY_LAST_COMMAND_THRESH_SECS} ; then
+        # enough time has elapsed, send a notification
         notify-send-stumpwm -m "${MSG}: $(cut -f2 <<< ${CMD})" -c ${COLOR}
     fi
+}
+
+function _command-start-time-set-maybe {
+  _COMMAND_START_TIME=${_COMMAND_START_TIME:-${SECONDS}}
 }
 
 function post-command-maybe-notify {
     RET=$?
     CMD=$(fc -ln -0)
+    ELAPSED_TIME_SECS=$(expr ${SECONDS} - ${_COMMAND_START_TIME:-${SECONDS}})
+    unset _COMMAND_START_TIME
     history -a
-    stumpwm-maybe-notify-last-command ${RET} "${CMD}" &> /dev/null &
+    stumpwm-maybe-notify-last-command ${RET} "${CMD}" ${ELAPSED_TIME_SECS} &> /dev/null &
     disown %- # silence shell job status
 }
 
 if command -v notify-send-stumpwm >/dev/null \
   && command -v stumpwm >/dev/null; then
   PROMPT_COMMAND=post-command-maybe-notify
+  trap '_command-start-time-set-maybe' DEBUG
 fi
 
 function jar-to-classes {
