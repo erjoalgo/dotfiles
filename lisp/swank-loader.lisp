@@ -26,7 +26,8 @@
 (ql:quickload "usocket")
 (defun socket-listening-p (host port)
   (handler-case (usocket:socket-connect host port)
-    (error (ex) nil)))
+    (USOCKET:CONNECTION-REFUSED-ERROR (ex)
+      (declare (ignore ex)) nil)))
 
 (if (socket-listening-p "127.0.0.1" *swank-port*)
     (warn "already listening on ~A. skipping swank..." *swank-port*)
