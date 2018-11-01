@@ -222,6 +222,12 @@ alias blt='blaze test'
 
 alias nvm-install-stable='nvm install stable && nvm alias default node'
 
+alias ..2='cd ../..'
+alias ..3='cd ../../..'
+alias ..4='cd ../../../..'
+alias ..5='cd ../../../../..'
+# alias ..6='cd ../../../../../..'
+
 # Local Variables:
 # mode: sh
 # End:
