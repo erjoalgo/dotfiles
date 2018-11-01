@@ -451,7 +451,8 @@ function stumpwm-maybe-notify-last-command {
     fi
     if test $ELAPSED_TIME_SECS -gt ${_NOTIFY_LAST_COMMAND_THRESH_SECS} ; then
         # enough time has elapsed, send a notification
-        notify-send-stumpwm -m "${MSG}: $(cut -f2 <<< ${CMD})" -c ${COLOR}
+        # remove leading tab from CMD
+        notify-send-stumpwm -m "${MSG}: $(cut -f2- <<< ${CMD})" -c ${COLOR}
     fi
 }
 
