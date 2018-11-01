@@ -440,12 +440,17 @@ function stumpwm-maybe-notify-last-command {
     RET=${1} && shift
     CMD=${1} && shift
 
-    # green or red
-    test ${RET} = 0 && MSG="^2Process completed" || MSG="^1Process erred"
+    if test ${RET} = 0; then
+      MSG="Process completed successfully"
+      COLOR="green"
+    else
+      MSG="Process erred"
+      COLOR="red"
+    fi
 
     if current-shell-window-visible-p; then
         # window is not visible
-        stumpwm-msg ${MSG} ${CMD}
+        notify-send-stumpwm -m "${MSG}: $CMD" -c ${COLOR}
     fi
 }
 
@@ -457,7 +462,7 @@ function post-command-maybe-notify {
     disown %- # silence shell job status
 }
 
-if command -v emacsclient >/dev/null \
+if command -v notify-send-stumpwm >/dev/null \
   && command -v stumpwm >/dev/null; then
   PROMPT_COMMAND=post-command-maybe-notify
 fi
