@@ -430,6 +430,12 @@ function path-ls {
   tr ':' '\n' <<< "${PATH}" | less
 }
 
+function current-shell-window-visible-p {
+  #  TODO make this more robust
+  [[ -n "${WINDOWID}" &&  \
+    ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]]
+}
+
 function stumpwm-maybe-notify-last-command {
     RET=${1} && shift
     CMD=${1} && shift
@@ -437,9 +443,7 @@ function stumpwm-maybe-notify-last-command {
     # green or red
     test ${RET} = 0 && MSG="^2Process completed" || MSG="^1Process erred"
 
-    # xprop -id ${WINDOWID}
-    if [[ -n "${WINDOWID}" &&  \
-              ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]] ; then
+    if current-shell-window-visible-p; then
         # window is not visible
         stumpwm-msg ${MSG} ${CMD}
     fi
