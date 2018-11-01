@@ -504,4 +504,3 @@ function asdf-system-installed-p {
     SYSTEM=${1} && shift
     sbcl --eval "(ql:quickload '${SYSTEM})" --non-interactive
 }
-
