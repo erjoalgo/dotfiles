@@ -450,7 +450,8 @@ function stumpwm-maybe-notify-last-command {
 
     if current-shell-window-visible-p; then
         # window is not visible
-        notify-send-stumpwm -m "${MSG}: $CMD" -c ${COLOR}
+        # CMD has a leading tab
+        notify-send-stumpwm -m "${MSG}: $(cut -f2 <<< ${CMD})" -c ${COLOR}
     fi
 }
 
