@@ -436,7 +436,7 @@ function current-shell-window-visible-p {
     ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]]
 }
 
-_NOTIFY_LAST_COMMAND_THRESH_SECS=1
+_NOTIFY_LAST_COMMAND_THRESH_SECS=10
 function stumpwm-maybe-notify-last-command {
     RET=${1} && shift
     CMD=${1} && shift
