@@ -46,3 +46,6 @@
   (message-socket-listen (lambda (lines)
                            (echo-string-list (current-screen) lines))
                          :port port))
+
+;; should be idempotent
+(messages-listen)
