@@ -1,7 +1,6 @@
-GNU_SCRIPTS="${HOME}/git/erjoalgo-gnu-scripts"
-STUMPWM_SCRIPTS="${HOME}/git/erjoalgo-stumpwmrc/scripts/bin"
+SCRIPTS="${HOME}/git/erjoalgo-stumpwmrc/scripts/bin"
 
-export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${GNU_SCRIPTS}:${HOME}/.local/bin:${STUMPWM_SCRIPTS}
+export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${HOME}/.local/bin:${SCRIPTS}
 export LISP=sbcl
 export PYTHONSTARTUP=${HOME}/.pythonrc.py
 export LESS="-Q -R"

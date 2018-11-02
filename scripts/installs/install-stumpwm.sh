@@ -24,7 +24,8 @@ if ! test -f "${QL_SETUP}"; then
     rm quicklisp.lisp{,.asc}
 fi
 
-ADDBLOCK=${HOME}/git/erjoalgo-gnu-scripts/insert-text-block
+ADDBLOCK=$(which insert-text-block ||  \
+               echo ${HOME}/git/erjoalgo-stumpwmrc/scripts/bin/insert-text-block)
 
 SBCLRC="${HOME}/.sbclrc"
 if test ! -e "${SBCLRC}"; then
@@ -77,7 +78,6 @@ fi
 
 
 # autologin to stumpwm on tty1
-ADDBLOCK=${HOME}/git/erjoalgo-gnu-scripts/insert-text-block
 AUTOLOGIN_CONF="/etc/systemd/system/getty@tty1.service.d/autologin.conf"
 sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
 sudo ${ADDBLOCK} '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \

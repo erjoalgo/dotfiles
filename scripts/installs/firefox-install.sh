@@ -49,7 +49,8 @@ EOF
 # add content type handlers
 #   mailto => emacsmail
 
-EMACSMAIL_EXE="${HOME}/git/erjoalgo-gnu-scripts/emacsmail"
+EMACSMAIL_EXE=$(which emacsmail)
+
 xmlstarlet ed -L -S \
 	   -a "/RDF:RDF/RDF:Description[last()]" -t elem -n "RDF:Description"  \
 	   -a '$prev' -t attr -n RDF:about -v "urn:scheme:externalApplication:mailto" \

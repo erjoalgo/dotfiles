@@ -5,7 +5,7 @@
 
 # instead of sending mail, simply output those 'ahead' repos
 # let cron send the mail automatically
-# 30  7	* * *	root	~ealfonso/git/erjoalgo-gnu-scripts/git-notify.sh ~ealfonso/git/*
+# 30  7	* * *	root	git-notify-lagging-repos.sh ~ealfonso/git/*
 
 # echo "git-notify called with args: $0 $*, PATH: $PATH, USER: $(whoami)"  \
 #     | sudo tee /var/log/git-notify

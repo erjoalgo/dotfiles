@@ -21,7 +21,6 @@ GIT_NAME="Ernesto Alfonso"
 GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 for REPO in erjoalgo-stumpwmrc \
-		erjoalgo-gnu-scripts \
 		dotemacs \
 		erjoalgo-firefox-addons \
 		erjoalgo-vimfx-config \
@@ -33,9 +32,9 @@ for REPO in erjoalgo-stumpwmrc \
     git config user.email ${GIT_EMAIL}
 done
 
-GNU_SCRIPTS=${GIT_HOME}/erjoalgo-gnu-scripts
-cd ${GNU_SCRIPTS} && git pull --ff-only
-export PATH=$PATH:${GNU_SCRIPTS}
+# no realpath on macos...
+SCRIPTS_BIN=$(pwd)/../scripts/bin
+export PATH=$PATH:${SCRIPTS_BIN}
 
 which insert-text-block
 sudo ln -fs $(which insert-text-block) /usr/bin
@@ -51,7 +50,6 @@ elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
     ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
 fi
 
-ADDBLOCK=${GNU_SCRIPTS}/insert-text-block
 # sudo ln -sf  /usr/local/bin
 # sudo which insert-text-block
 
@@ -111,7 +109,7 @@ fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
     <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
-30 10 * * * bash -c '~/git/erjoalgo-gnu-scripts/git-notify-lagging-repos.sh ~/git/*'
+30 10 * * * bash -c '${SCRIPTS_BIN}/git-notify-lagging-repos.sh ~/git/*'
 EOF
 
 insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config'  \
