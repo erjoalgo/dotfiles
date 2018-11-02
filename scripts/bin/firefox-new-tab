@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# depends on mozrepl
+WAIT_FLAG_CHAR=q
+if lsb_release -i | grep CentOS >/dev/null; then
+    WAIT_FLAG_CHAR=w
+fi
+
+echo "gBrowser.selectedTab = gBrowser.addTab(\"$*\");"\
+    | nc localhost 4242 -${WAIT_FLAG_CHAR}1> /dev/null 2>&1
+
+# Local Variables:
+# mode: sh
+# End:

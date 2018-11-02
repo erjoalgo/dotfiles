@@ -1,0 +1,68 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+function usage {
+    echo "${FUNCNAME[0]} -u URL [-d INSTALL_DIR] [ -g GPG_KEY_ID ] [ -D DNAME  ]"
+}
+
+GPG_KEY_ID=""
+while getopts "hu:d:g:D:" OPT; do
+    case ${OPT} in
+        u)
+            URL=${OPTARG}
+            ;;
+        d)
+            INSTALL_DIR=${OPTARG}
+            ;;
+        D)
+            DNAME=${OPTARG}
+            ;;
+        g)
+            GPG_KEY_ID=${OPTARG}
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+INSTALL_DIR=${INSTALL_DIR:-/usr/local}
+
+if ! test -n "${URL}"; then
+    usage
+    exit 1
+fi
+
+grep tar <<< "${URL}"
+EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
+
+
+FNAME=$(basename ${URL})
+mkdir -p ~/src && cd ~/src
+
+test -f ${FNAME} || wget ${URL}
+test -f ${FNAME}.sig || wget ${URL}.sig
+
+DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
+
+if ! test -d ${INSTALL_DIR}/${DNAME}; then
+    if test SKIP != ${GPG_KEY_ID}; then
+        if test -n "${GPG_KEY_ID}"; then
+            gpg --recv-keys "${GPG_KEY_ID}"
+        fi
+        gpg --verify ${FNAME}{.sig,}
+    fi
+    sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
+fi
+
+cd ${INSTALL_DIR}/${DNAME}
+
+sudo ./configure
+sudo make
+sudo make install
+
+# Local Variables:
+# mode: sh
+# End:

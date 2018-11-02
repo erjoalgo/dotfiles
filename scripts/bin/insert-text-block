@@ -1,0 +1,91 @@
+#!/usr/bin/python
+
+# insert-text-block ---
+
+# Copyright (C) 2018 Ernesto Alfonso <erjoalgo@gmail.com>
+
+# Author: Ernesto Alfonso <erjoalgo@gmail.com>
+
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+from __future__ import print_function
+import sys, argparse, re, os
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("line", help = "universally unique line")
+parser.add_argument("filename", help = "input/output file")
+parser.add_argument("-b", "--begining_append",  action="store_true",
+                    help = "preppend instead of append")
+parser.add_argument("-o", "--output", help = "specify a different output file")
+parser.add_argument("-n", "--no_strip_newline",  action="store_true",
+                    help = "don't strip trailing newline from stdin")
+parser.add_argument("-N", "--skip_separating_line",  action="store_true",
+                    help = "skip adding a separating newline when file exists and is not empty")
+parser.add_argument("-p", "--parents", help = "make parent directories",
+                    action="store_true")
+
+args=vars(parser.parse_args())
+globals().update(args)
+
+stdin=sys.stdin.read()
+if not no_strip_newline and stdin[-1]=="\n":
+    stdin=stdin[:-1]
+block="\n".join((line, stdin, line))
+if not filename.startswith("/dev/fd") and not os.path.exists(filename):
+    if parents:
+        def mkparent(path):
+            if not os.path.exists(path):
+                mkparent(os.path.dirname(path))
+                os.mkdir(path)
+        mkparent(os.path.dirname(filename))
+
+    with open( filename, "w") as fh:
+        pass
+# assert(os.path.exists(filename))
+orig_text=open(filename).read()
+output=output or filename
+if output=="-":
+    output="/dev/stdout"
+
+regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(line))
+match=re.match(regexp, orig_text)
+if match:
+  pre, post = match.group(1), match.group(3)
+else:
+  pre, post = orig_text, ""
+# pre, post refer to the original document before processing
+# before, after refer to the new document
+
+middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] if orig_text else []
+
+if begining_append:
+    before, after = "", "\n".join((pre, post))
+else:
+    before, after = pre, post
+
+if not skip_separating_line:
+    if before:
+        block = "\n" + block
+    if after:
+        block = block + "\n"
+
+new_text="\n".join(b for b in (before, block, after) if b)
+with open( output, "w") as fh:
+    fh.write(new_text)
+
+# Local Variables:
+# mode: python
+# compile-command: "./text-block '# 07b37c2c-a63f-11e7-94e3-cff9e57fa83f' test -b  <<< \"$(echo -e 'LINEA\\nLINEB')\""
+# End:

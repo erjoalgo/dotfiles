@@ -1,0 +1,16 @@
+#!/bin/bash -x
+set -euo pipefail
+
+GIT_CLONE_DIR=${GIT_CLONE_DIR:-$HOME/git}
+mkdir -p ${GIT_CLONE_DIR}
+
+for URL in ${*}; do
+    cd ${GIT_CLONE_DIR}
+    BASE=$(basename ${URL} .git)
+    test -d ${BASE} || git clone ${URL}
+    cd ${BASE} && git pull --ff-only
+done
+
+# Local Variables:
+# mode: sh
+# End:

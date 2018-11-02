@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -euo pipefail
+function org-cleanup {
+    FILENAME=${1}
+    sed  \
+        -e 's/[*]//g' \
+        -e 's/TODO\|DONE//g' \
+        -e 's/^ *//g' \
+        -e 's/ *$//g' \
+        ${FILENAME} | sort
+}
+
+A=${1} && shift
+B=${1} && shift
+
+diff ${*} <(org-cleanup ${A} | sort) <(org-cleanup ${B} | sort)
+
+# Local Variables:
+# mode: sh
+# End:
