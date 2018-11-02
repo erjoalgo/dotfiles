@@ -22,8 +22,6 @@ GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 for REPO in erjoalgo-stumpwmrc \
 		dotemacs \
-		erjoalgo-firefox-addons \
-		erjoalgo-vimfx-config \
 	    ; do
     cd ${GIT_HOME}
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
