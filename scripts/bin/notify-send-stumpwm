@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -euo pipefail
+
+function usage {
+  echo "notify-send -m <MESSAGE> [ -c <COLOR> ] [ -p <PORT> ]"
+}
+
+while getopts "m:c:p:h" OPT; do
+  case ${OPT} in
+    m)
+      MESSAGE=${OPTARG}
+      ;;
+    c)
+      COLOR=${OPTARG}
+      ;;
+    p)
+      PORT=${OPTARG}
+      ;;
+    H)
+      # accept messages from an ssh session via reverse tunnel
+      HOST=${OPTARG}
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+  esac
+done
+
+HOST="localhost"
+PORT=${PORT:-1959}
+COLOR=${COLOR:-}
+
+PAYLOAD=${MESSAGE}
+
+declare -A COLORS
+COLORS=([black]=0 [red]=1 [green]=2 [yellow]=3 [blue]=4 [magenta]=5 [cyan]=6 [white]=7)
+if test -n "${COLOR}"; then
+  IDX=${COLORS[${COLOR}]}
+  if test -n "${IDX}"; then
+    PAYLOAD="^${IDX}${PAYLOAD}^*"
+  else
+    echo "WARN: unknown color ${COLOR}" >&2
+  fi
+fi
+
+(exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-)
+
+
+# Local Variables:
+# mode: sh
+# compile-command: "./notify-send -m 'hello world' -c green"
+# End:
