@@ -47,5 +47,12 @@
                            (echo-string-list (current-screen) lines))
                          :port port))
 
-;; should be idempotent
-(messages-listen)
+
+(defvar *message-socket-listener-thread* nil)
+
+(when (and *message-socket-listener-thread*
+           (sb-thread:thread-alive-p *message-socket-listener-thread*))
+  (sb-thread:terminate-thread *message-socket-listener-thread*))
+
+(setf *message-socket-listener-thread*
+      (sb-thread:make-thread 'messages-listen))
