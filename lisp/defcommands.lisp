@@ -131,3 +131,13 @@
   (run-command-async-notify
    "pkill"
    (list "-SIGUSR2" "emacs")))
+
+(defcommand path-append-directory (directory)
+    ;; ((:directory "enter directory to append to the path: "))
+    ((:string "enter directory to append to the path: "))
+  (assert (truename directory))
+  (sb-posix:setenv "PATH"
+                   (concatenate 'string (sb-posix:getenv "PATH") ":" directory)
+                   1)
+  (echo-string-list (current-screen)
+   (ppcre:split #\: (sb-posix:getenv "PATH"))))
