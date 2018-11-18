@@ -16,6 +16,16 @@ while getopts "ohp:P:e:m:aAE:i:t:" OPT; do
             PASS="${OPTARG}"
             OVERWRITE="true"
             ;;
+        P)
+            # a plaintext file with several passwords to try
+            # implies OVERWRITE=true since we don't know the password
+            PASS_CANDS_FILE=$(realpath "${OPTARG}")
+            OVERWRITE="true"
+            if ! test -e "${PASS_CANDS_FILE}"; then
+                exit "no such file: ${PASS_CANDS_FILE}"
+            fi
+            ;;
+
         m)
             # one-character flag to be passed to macchanger
             MACCHANGE_OPT="${OPTARG}"
@@ -175,14 +185,21 @@ case "${ENC}" in
         fi
 
 
-        if test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
+
+        if test -n "${PASS_CANDS_FILE}"; then
+            PASS_CANDS=$(cat "${PASS_CANDS_FILE}")
+        elif test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
             if test -z "${PASS}"; then
                 read -p "enter password for ${ESSID}: " PASS
+                PASS_CANDS="${PASS}"
             fi
-            wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
         fi
 
-        expect -df - <<EOF
+        # TODO allow spaces
+        CONNECTED=""
+        for PASS in ${PASS_CANDS}; do
+            wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
+            expect -df - <<EOF
 set timeout -1
 spawn sudo wpa_supplicant -i ${IFACE} -c "${ESSID}" -D nl80211,wext &
 # expect "Established DTLS connection"
@@ -203,8 +220,15 @@ expect {
 }
 
 EOF
-        if test 0 != $?; then
-            echo "error: wrong key?" && exit 1
+            if test 0 = $?; then
+                CONNECTED=true
+                break
+            fi
+        done
+
+        if test "${CONNECTED}" != true; then
+            echo "error: wrong key?"
+            exit 1
         fi
 
         # sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
