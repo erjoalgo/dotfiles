@@ -93,6 +93,7 @@ fi
 for I in $(seq ${TRIES}); do
     FAILED=""
     IWLIST_OUT=$(sudo iw dev ${IFACE} scan |& tee ${SCAN_RESULTS_FN})
+    # IWLIST_OUT=$(cat ${SCAN_RESULTS_FN})
     if test 0 -ne $?; then
         message "failed to scan"
         FAILED=true
