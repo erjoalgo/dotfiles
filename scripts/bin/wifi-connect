@@ -165,7 +165,7 @@ case "${ENC}" in
 	    wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
 	fi
 
-	cat <<EOF | expect -df -
+	expect -df - <<EOF
 set timeout -1
 spawn sudo wpa_supplicant -i ${IFACE} -c "${ESSID}" -D nl80211,wext &
 # expect "Established DTLS connection"
