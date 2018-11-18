@@ -171,11 +171,25 @@ spawn sudo wpa_supplicant -i ${IFACE} -c "${ESSID}" -D nl80211,wext &
 # expect "Established DTLS connection"
 # expect -re "CTRL-EVENT-CONNECTED - Connection to 00:1a:1e:87:3c:01 completed"
 # expect -re "CTRL-EVENT-CONNECTED - Connection to [0-9a-z:]+ completed"
-expect -re "CTRL-EVENT-CONNECTED - Connection to .* completed"
-disconnect
-exit
+expect {
+
+"CTRL-EVENT-CONNECTED" {
+       send -- "success\r"
+       if {[fork]!=0} exit
+       disconnect
+}
+
+"WRONG_KEY" {
+       send -- "wrong key\r"
+       exit 1
+}
+}
 
 EOF
+        if test 0 != $?; then
+            echo "error: wrong key?" && exit 1
+        fi
+
 	# sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
 	# sleep 10
 
