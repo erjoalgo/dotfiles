@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "ohp:e:m:aAE:i:" OPT; do
+while getopts "ohp:P:e:m:aAE:i:t:" OPT; do
     case ${OPT} in
         o)
             # flag to disregard any existing password
@@ -37,6 +37,9 @@ while getopts "ohp:e:m:aAE:i:" OPT; do
             # sets the network's encryption
             # required when connecting to a hidden essid
             ENC="${OPTARG}"
+            ;;
+        t)
+            TRIES=${OPTARG}
             ;;
         h)
             less $0
@@ -79,7 +82,7 @@ sudo ifconfig ${IFACE} up
 
 SCAN_RESULTS_FN=/tmp/wifi-scan-results
 
-TRIES=7
+TRIES=${TRIES:-7}
 if test -n "${ENC}" -a -n "${ESSID}"; then
     # no need to scan, we know the ESSID and the encyrption
     # need to skip scan to not err when connecting to hidden essid
