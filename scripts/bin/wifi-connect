@@ -119,6 +119,7 @@ case ${COUNT} in
 	    COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) \
                         <(sort <<< "${ESSIDS}") \
                        | tee /tmp/common-essids)
+            echo "known essids: ${COMM}"
             test -n "${COMM}" && COMM_LEN=$(wc -l <<< "${COMM}") || COMM_LEN=0
             if test "${ASK_ESSID}" != true -a ${COMM_LEN} = 1 \
                     -o "${ASK_ESSID}" = never -a ${COMM_LEN} -ge 1; then
