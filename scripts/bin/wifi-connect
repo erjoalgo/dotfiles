@@ -218,6 +218,13 @@ expect {
        close
        exit 1
 }
+
+"Invalid configuration line" {
+       exec sudo kill [exp_pid]
+       close
+       exit 1
+}
+
 }
 
 EOF
