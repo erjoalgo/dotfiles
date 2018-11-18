@@ -142,9 +142,11 @@ esac
 
 message "selected ${ESSID}"
 
-ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
-	 | sed 's/.*Encryption key:\(.*\)/\1/')}
+# ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
+# 	 | sed 's/.*Encryption key:\(.*\)/\1/')}
 
+ENC=off
+ENC=on
 
 sudo pkill -e wpa_supplicant
 sudo pkill -e dhclient
