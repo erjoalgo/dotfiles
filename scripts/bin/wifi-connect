@@ -154,6 +154,7 @@ case ${COUNT} in
         fi
 esac
 
+test -n "${ESSID}"
 message "selected ${ESSID}"
 
 # ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
