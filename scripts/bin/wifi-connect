@@ -120,7 +120,7 @@ case ${COUNT} in
                         <(sort <<< "${ESSIDS}") \
                        | tee /tmp/common-essids)
             test -n "${COMM}" && COMM_LEN=$(wc -l <<< "${COMM}") || COMM_LEN=0
-            if test ${ASK_ESSID} != true -a ${COMM_LEN} = 1 \
+            if test "${ASK_ESSID}" != true -a ${COMM_LEN} = 1 \
                     -o "${ASK_ESSID}" = never -a ${COMM_LEN} -ge 1; then
 		ESSID=$(head -1 <<< "${COMM}")
             elif test "${ASK_ESSID}" != never; then
