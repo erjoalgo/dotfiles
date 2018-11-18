@@ -90,17 +90,27 @@ if test -n "${ENC}" -a -n "${ESSID}"; then
     ESSIDS="${ESSID}"
 fi
 
-for i in $(seq ${TRIES}); do
+for I in $(seq ${TRIES}); do
+    FAILED=""
     IWLIST_OUT=$(sudo iw dev ${IFACE} scan |& tee ${SCAN_RESULTS_FN})
-    ESSIDS=$(grep "^        SSID" <<< "${IWLIST_OUT}" | sed 's/.*SSID: \(.*\).*/\1/g')
-    if test 0 -ne $? || test -z "${ESSIDS}"; then
-        if test $i -eq ${TRIES}; then
-            message "couldn't scan for wireless networks or no networks available" && exit ${LINENO}
-        else
-            message "retrying scan..." && sleep 1
-        fi
+    if test 0 -ne $?; then
+        message "failed to scan"
+        FAILED=true
     else
+        ESSIDS=$(grep "^	SSID" <<< "${IWLIST_OUT}" | sed 's/.*SSID: \(.*\).*/\1/g')
+        if test 0 -ne $? || test -z "${ESSIDS}"; then
+            message "failed to read essids"
+            FAILED=true
+        fi
+    fi
+
+    if test "${FAILED}" != true; then
         break
+    elif test $I -eq ${TRIES}; then
+        echo "maximum retries exceeded."
+        exit 1
+    else
+        message "retrying scan (${I}/${TRIES})..." && sleep 1
     fi
 done
 
