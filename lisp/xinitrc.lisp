@@ -35,20 +35,20 @@
 (defun start-screensaver ()
   (let ((lock-program (screen-lock-program)))
     (unless (and lock-program
-               (which "xautolock"))
-    (error "xsecurelock, xautolock not installed"))
-  (unless (and *screensaver-proc*
-               (eq :RUNNING (slot-value *screensaver-proc* 'SB-IMPL::%STATUS)))
-    (setf *screensaver-proc*
-          ;; "xautolock -time 1 -locker xsecurelock"
-          (SB-EXT:RUN-PROGRAM "xautolock"
-                              (list "-time" (write-to-string *screensaver-lock-time-mins*)
+                 (which "xautolock"))
+      (error "xsecurelock, xautolock not installed"))
+    (unless (and *screensaver-proc*
+                 (eq :RUNNING (slot-value *screensaver-proc* 'SB-IMPL::%STATUS)))
+      (setf *screensaver-proc*
+            ;; "xautolock -time 1 -locker xsecurelock"
+            (SB-EXT:RUN-PROGRAM "xautolock"
+                                (list "-time" (write-to-string *screensaver-lock-time-mins*)
                                       "-locker" lock-program)
-                              :environment (cons "XSECURELOCK_WANT_FIRST_KEYPRESS=1"
-                                                 (sb-ext:posix-environ))
-                              :search t
-                              :output t
-                              :error t
+                                :environment (cons "XSECURELOCK_WANT_FIRST_KEYPRESS=1"
+                                                   (sb-ext:posix-environ))
+                                :search t
+                                :output t
+                                :error t
                                 :wait nil)))))
 
 
