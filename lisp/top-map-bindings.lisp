@@ -169,7 +169,7 @@
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
    ("l" "spell-clipboard" )
-   ("H-l" "run-shell-command xsecurelock" )
+   ("H-l" "screen-lock" )
    ;; ("H-e" "echo-current-tab" )
    ("H-e" "emacs-killusr2")))
 

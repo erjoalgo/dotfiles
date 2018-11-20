@@ -28,8 +28,13 @@
 (defvar *screensaver-proc* nil)
 (defparameter *screensaver-lock-time-mins* 15)
 
+(defun screen-lock-program ()
+  (or (which "xsecurelock.sh")
+      (which "xsecurelock")))
+
 (defun start-screensaver ()
-  (unless (and (which "xsecurelock")
+  (let ((lock-program (screen-lock-program)))
+    (unless (and lock-program
                (which "xautolock"))
     (error "xsecurelock, xautolock not installed"))
   (unless (and *screensaver-proc*
@@ -38,13 +43,14 @@
           ;; "xautolock -time 1 -locker xsecurelock"
           (SB-EXT:RUN-PROGRAM "xautolock"
                               (list "-time" (write-to-string *screensaver-lock-time-mins*)
-                                    "-locker" "xsecurelock")
+                                      "-locker" lock-program)
                               :environment (cons "XSECURELOCK_WANT_FIRST_KEYPRESS=1"
                                                  (sb-ext:posix-environ))
                               :search t
                               :output t
                               :error t
-                              :wait nil))))
+                                :wait nil)))))
+
 
 (with-elapsed-time ms (xmodmap-load)
   (message "xmodmap load took ~D ms" ms))
