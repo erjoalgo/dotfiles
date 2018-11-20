@@ -75,8 +75,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                          (or
                           (member (string-downcase
                                    (window-class (current-window)))
-                                  (mapcar 'string-downcase browser-classes))
-                          (equal "Chromium" (window-class (current-window)))))
+                                  browser-classes
+                                  :test #'equal :key #'string-downcase)))
                     (member "changing bindings from Chromium to NIL..." msgs
                             :test 'equal))
             (message "changing from browser to nil?")
