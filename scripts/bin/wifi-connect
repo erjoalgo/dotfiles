@@ -193,12 +193,17 @@ case "${ENC}" in
                 read -p "enter password for ${ESSID}: " PASS
             fi
             PASS_CANDS="${PASS}"
+        else
+            SKIP_WPA_PASSPHRASE=true
+            PASS_CANDS="dummy"
         fi
 
         # TODO allow spaces
         CONNECTED=""
         for PASS in ${PASS_CANDS}; do
-            wpa_passphrase "${ESSID}" "${PASS}" | sudo tee "${ESSID}"
+            if test "${SKIP_WPA_PASSPHRASE}" != true; then
+                wpa_passphrase "${ESSID}" "${PASS}" | tee "${ESSID}"
+            fi
             expect -df - <<EOF
 set timeout -1
 spawn sudo wpa_supplicant -i ${IFACE} -c "${ESSID}" -D nl80211,wext &
