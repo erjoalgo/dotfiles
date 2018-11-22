@@ -25,11 +25,18 @@
   (if (null *vol-muted*)
       (progn
         (setq *vol-muted* (get-curr-volume))
-        (run-shell-command "amixer set Master 0%"))
+        (run-shell-command "amixer set Master 0%")
+        (message "muted"))
       (progn (run-shell-command (format nil
                                         "amixer set Master ~A%"
-                                        *vol-muted*))
+                                        *vol-muted*)
+                                (message "unmuted: ~A" *vol-muted*))
              (setf *vol-muted* nil))))
 
-(defcommand volup ()() "volume up" (volchange t *VOLSTEP* ))
-(defcommand voldown ()() "volume down" (volchange nil *VOLSTEP*))
+(defcommand volup ()() "volume up"
+            (volchange t *VOLSTEP*)
+            (message "volup"))
+
+(defcommand voldown ()() "volume down"
+            (volchange nil *VOLSTEP*)
+            (message "voldown"))
