@@ -191,8 +191,8 @@ case "${ENC}" in
         elif test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
             if test -z "${PASS}"; then
                 read -p "enter password for ${ESSID}: " PASS
-                PASS_CANDS="${PASS}"
             fi
+            PASS_CANDS="${PASS}"
         fi
 
         # TODO allow spaces
