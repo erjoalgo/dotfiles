@@ -15,7 +15,7 @@ while getopts "m:c:p:h" OPT; do
       COLOR=${OPTARG}
       ;;
     p)
-      PORT=${OPTARG}
+      NOTIFY_SEND_STUMPWM_PORT=${OPTARG}
       ;;
     H)
       # accept messages from an ssh session via reverse tunnel
@@ -29,7 +29,7 @@ while getopts "m:c:p:h" OPT; do
 done
 
 HOST="localhost"
-PORT=${PORT:-1959}
+PORT=${NOTIFY_SEND_STUMPWM_PORT:-1959}
 COLOR=${COLOR:-}
 
 PAYLOAD=${MESSAGE}
