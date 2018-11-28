@@ -53,6 +53,7 @@ alias grv='git remote -vv'
 alias gitresetsoft='git reset --soft HEAD~1'
 alias grh='git reset HEAD'
 alias gb='git branch'
+__git_complete gb _git_branch
 alias gmbs='git-merge-base-show'
 __git_complete gmb _git_diff
 #bash completion will do the rest below
