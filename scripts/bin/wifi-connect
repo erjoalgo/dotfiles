@@ -170,8 +170,16 @@ message "selected ${ESSID}"
 # ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
     #          | sed 's/.*Encryption key:\(.*\)/\1/')}
 
-ENC=off
-ENC=on
+if test -s "${ESSID}"; then
+    ENC=on
+elif test -f "${ESSID}"; then
+    ENC=off
+else
+    echo "select ecryption type: "
+    select ENC in on off; do
+        break
+    done
+fi
 
 sudo pkill -e wpa_supplicant
 sudo pkill -e dhclient
