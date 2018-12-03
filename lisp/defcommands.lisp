@@ -8,13 +8,13 @@
   "scroll up/down the browser which is on another, visible frame"
   (let* ((curr-win (current-window))
 	 (visible-browser-wins
-	  (remove-if-not
-	   (lambda (win)
-	     (and
-	      (not (eq win curr-win))
-	      (window-visible-p win)
-	      (is-browser-win win)))
-	   (screen-windows (current-screen)))))
+	   (remove-if-not
+	    (lambda (win)
+	      (and
+	       (not (eq win curr-win))
+	       (window-visible-p win)
+	       (is-browser-win win)))
+	    (screen-windows (current-screen)))))
 
     (when visible-browser-wins
       (send-fake-key (car visible-browser-wins) (kbd up-down-key)))))
@@ -120,9 +120,9 @@
   (let* ((name (or name
                    (time-format *scrot-date-format*)))
          (recording-pathname
-          (merge-pathnames (make-pathname
-                            :name name
-                            :type "gif")
+           (merge-pathnames (make-pathname
+                             :name name
+                             :type "gif")
                             *scrots-top*))
          (duration-args
            (if duration (list "-d" duration)
@@ -158,7 +158,7 @@
                    (concatenate 'string (sb-posix:getenv "PATH") ":" directory)
                    1)
   (echo-string-list (current-screen)
-   (ppcre:split #\: (sb-posix:getenv "PATH"))))
+                    (ppcre:split #\: (sb-posix:getenv "PATH"))))
 
 (defcommand screen-lock () ()
   (run-shell-command (screen-lock-program)))
