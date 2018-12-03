@@ -141,3 +141,6 @@
                    1)
   (echo-string-list (current-screen)
    (ppcre:split #\: (sb-posix:getenv "PATH"))))
+
+(defcommand screen-lock () ()
+  (run-shell-command (screen-lock-program)))
