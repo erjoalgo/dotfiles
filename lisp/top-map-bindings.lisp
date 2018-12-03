@@ -171,6 +171,7 @@
    ("l" "spell-clipboard" )
    ("H-l" "screen-lock" )
    ;; ("H-e" "echo-current-tab" )
+   ("H-t" "tmp")
    ("H-e" "emacs-killusr2")))
 
 
