@@ -117,14 +117,32 @@
 (defcommand byzanz-record (name duration)
     ((:string " recording name: ")
      (:number "recording duration in seconds: "))
-  (let ((recording-pathname
+  (let* ((name (or name
+                   (time-format *scrot-date-format*)))
+         (recording-pathname
           (merge-pathnames (make-pathname
                             :name name
                             :type "gif")
-                           *scrots-top*)))
+                            *scrots-top*))
+         (duration-args
+           (if duration (list "-d" duration)
+               (list "-e"
+                     (format nil "nc -l ~A ~D"
+                             "-p" ;; not always the same
+                             byzanz-recording-control-port)))))
+    (set-x-selection (namestring recording-pathname) :clipboard)
     (run-command-async-notify
      "byzanz-record"
-     (list "-d" duration recording-pathname))))
+     `(,@duration-args ,recording-pathname))))
+
+(defvar byzanz-recording-control-port 17909)
+
+(defcommand byzanz-record-auto () ()
+  (byzanz-record nil nil))
+
+(defcommand byzanz-record-auto-stop () ()
+  (message "stopping byzanz recording...")
+  (nc "localhost" byzanz-recording-control-port "1"))
 
 (defcommand emacs-killusr2 () ()
   "invoke this command to debug an emacs hang/freeze"

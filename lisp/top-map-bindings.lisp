@@ -171,8 +171,10 @@
    ("l" "spell-clipboard" )
    ("H-l" "screen-lock" )
    ;; ("H-e" "echo-current-tab" )
+   ("H-e" "emacs-killusr2")
    ("H-t" "tmp")
-   ("H-e" "emacs-killusr2")))
+   ("H-b" "byzanz-record-auto")
+   ("H-B" "byzanz-record-auto-stop")))
 
 
 (define-key-bindings *screen-rotation-map*
