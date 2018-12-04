@@ -63,7 +63,11 @@ alias gmmma-gpom='git add -A . && gmmma && gpom'
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
 alias gcp='VISUAL=vi git commit -p'
+alias gcpa='VISUAL=vi git commit -p --amend'
+alias gcpan='VISUAL=vi git commit -p --amend --no-edit'
 __git_complete gcp _git_commit
+__git_complete gcpa _git_commit
+__git_complete gcpan _git_commit
 alias gpff='git pull --ff-only'
 __git_complete gpff _git_pull
 alias gfr='git fetch && git rebase'
