@@ -116,8 +116,8 @@ Include ~/private-data/configs/ssh-config
 EOF
 
 if ! ssh -G google.com; then
-    insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config'
-    ~/.ssh/config -b <<EOF
+    insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config' \
+                      ~/.ssh/config -b <<EOF
 # Include ~/private-data/configs/ssh-config disabled...
 EOF
 fi
