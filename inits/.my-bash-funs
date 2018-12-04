@@ -305,7 +305,8 @@ function grvv	{
 __git_complete grvv _git_pull
 
 function ssh-copy-id-to-user	{
-  local OPTIND
+  local OPTIND REMOTE_PRIVILEGED_USER SSH_USER_HOST_PORT  \
+    IDENTITY_FILE SSH_OPTS USAGE
   USAGE=false
   while getopts "u:t:p:i:o:h" OPT; do
     case ${OPT} in
