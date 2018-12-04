@@ -221,10 +221,6 @@ alias httpd="python -m SimpleHTTPServer"
 
 alias gpg-list-keys-long-format='gpg --list-keys --keyid-format long'
 #
-alias blb='blaze build'
-alias blr='blaze run'
-alias blt='blaze test'
-
 alias nvm-install-stable='nvm install stable && nvm alias default node'
 
 alias ..2='cd ../..'
