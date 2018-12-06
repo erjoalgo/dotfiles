@@ -229,6 +229,7 @@ alias ..4='cd ../../../..'
 alias ..5='cd ../../../../..'
 # alias ..6='cd ../../../../../..'
 
+alias with-vi-editor='EDITOR=vi VISUAL=vi'
 # Local Variables:
 # mode: sh
 # End:
