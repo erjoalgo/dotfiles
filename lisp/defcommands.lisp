@@ -139,7 +139,11 @@
 (defvar byzanz-recording-control-port 17909)
 
 (defcommand byzanz-record-auto () ()
-  (byzanz-record nil nil))
+  (handler-case (byzanz-record-auto-stop)
+    (USOCKET:CONNECTION-REFUSED-ERROR (_ex)
+      (declare (ignore _ex))
+      ;; no recording in progress. start a new one...
+      (byzanz-record nil nil))))
 
 (defcommand byzanz-record-auto-stop () ()
   (message "stopping byzanz recording...")
