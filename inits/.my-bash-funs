@@ -159,7 +159,8 @@ function apt_rdepends_r_installed	{
 }
 
 function git-delete-merged-branches	{
-    git branch --merged | g -v '^[*]\|master' | xargs -L 1 git branch -d
+    BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+    git branch --merged | grep -vF "${BRANCH}" | xargs -L 1 git branch -d
 }
 
 function git-push-current-branch	{
