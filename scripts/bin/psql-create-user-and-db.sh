@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "d:u:t:Dh" OPT; do
+while getopts "d:u:t:Dhb" OPT; do
     case ${OPT} in
     d)
         DBNAME=${OPTARG}
@@ -15,6 +15,9 @@ while getopts "d:u:t:Dh" OPT; do
         ;;
     D)
         DROP=true
+        ;;
+    b)
+        BATCH=true
         ;;
     h)
         less $0
@@ -37,7 +40,12 @@ if test -n "${DROP}"; then
     # todo not implemented
     exit 1
 else
-    read -p "enter psql password for ${USER}: " -s PASS
+    if test -z "${BATCH:-}"; then
+        read -p "enter psql password for ${USER}: " -s PASS
+    else
+        PASS=$(cat)
+    fi
+
     sudo -u postgres psql <<EOF
 CREATE USER ${USER} WITH PASSWORD '${PASS}';
 CREATE DATABASE ${DBNAME} OWNER ${USER};
