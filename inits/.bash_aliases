@@ -14,8 +14,10 @@ alias gol='grep -o'
 alias grepc='grep --color=always'
 if command -v xsel > /dev/null; then
     alias xs='xsel -ib'
-else
+elif command -v pbcoby; then
     alias xs='pbcopy'
+else
+    alias xs='cat'
 fi
 alias pd='pushd .'
 alias ppd='popd'
