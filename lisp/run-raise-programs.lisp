@@ -91,8 +91,10 @@ seconds ago")
 
 (define-run-or-pull-program "X-TERMINAL-EMULATOR"
     :raise-key "H-c"
-    :cmd (trim-spaces (run-shell-command "which roxterm gnome-terminal xterm | head -1" t))
-    :classes (list "X-terminal-emulator" "Roxterm" "roxterm"
+    :cmd (trim-spaces
+          (run-shell-command
+           "which konsole roxterm gnome-terminal xterm | head -1" t))
+    :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
 		   "xterm" "XTerm" "Gnome-terminal"))
 
 (defparameter emacs-classes
