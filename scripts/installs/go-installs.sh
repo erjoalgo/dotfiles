@@ -31,8 +31,6 @@ fi
 GOPATH=/usr/share/gopath
 sudo $(which insert-text-block) '# 387b6046-a715-11e7-b87e-2be468b96d0a-set-default-gopath'  \
 		  /etc/bash.bashrc <<EOF
-export GOPATH=$GOPATH
-export PATH=\$PATH:\$GOPATH/bin
 EOF
 
 GOPATH=${HOME}/src/go
@@ -45,7 +43,7 @@ EOF
 
 
 sudo $(which insert-text-block) '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
-		  /etc/environment <<< "GOPATH=$GOPATH"
+		  /etc/environment <<< "GOPATH=$GOPATH\n"
 
 GOEXE=${GOROOT}/bin/go
 export GOPATH
