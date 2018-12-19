@@ -15,3 +15,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 EOF
 done
+
+cat<<EOF
+NVM installed. Now run:
+
+
+source ${HOME}/.profile;
+nvm install stable
+nvm alias default node
+npm --version
+EOF
