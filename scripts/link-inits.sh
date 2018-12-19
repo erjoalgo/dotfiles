@@ -58,6 +58,8 @@ safe_ln "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
 safe_ln "${INITS_TOP}/.my-bash-funs" "${HOME}/.bash-funs/"
 
+# KONSOLE_PROFILES="${HOME}/.local/share/konsole/"
+# mkdir -p ${KONSOLE_PROFILES}
 safe_ln "${INITS_TOP}/konsole" "${HOME}/.local/share/"
 safe_ln "${INITS_TOP}/konsolerc" "${HOME}/.config/"
 
