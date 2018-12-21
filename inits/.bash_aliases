@@ -72,6 +72,8 @@ __git_complete gcpa _git_commit
 __git_complete gcpan _git_commit
 alias gpff='git pull --ff-only'
 __git_complete gpff _git_pull
+alias gmff='git merge --ff-only'
+__git_complete gmff _git_merge
 alias gfr='git fetch && git rebase'
 __git_complete gfr _git_rebase
 alias gkt='git checkout'
