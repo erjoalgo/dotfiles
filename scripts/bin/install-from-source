@@ -36,7 +36,7 @@ if ! test -n "${URL}"; then
 fi
 
 grep tar <<< "${URL}"
-EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
+EXT=$(grep -o "[.]tar.[gx]z$" <<< "${URL}")
 
 
 FNAME=$(basename ${URL})
