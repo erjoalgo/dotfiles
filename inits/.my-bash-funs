@@ -498,12 +498,6 @@ function git-revert-HEAD {
     git revert ${1:-HEAD}
 }
 
-function asdf-add-to-link-farm {
-    PROJECT_DIRECTORY=${1} && shift
-    LINK_FARM=${LINK_FARM:-"${HOME}/.asd-link-farm/"}
-    ln -sf $(realpath ${PROJECT_DIRECTORY}) ${LINK_FARM}
-}
-
 function asdf-system-installed-p {
     SYSTEM=${1} && shift
     sbcl --eval "(ql:quickload '${SYSTEM})" --non-interactive

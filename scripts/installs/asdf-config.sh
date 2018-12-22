@@ -19,3 +19,12 @@ insert-text-block ';; 8fa697e3-0a47-4d17-be60-83cef7b8e3ce-add-default-asdf-link
 ;; mode: lisp
 ;; End:
 EOF
+
+
+for ASDF_PROJECT_DIRECTORY in ${*}; do
+    ln -sf $(realpath ${ASDF_PROJECT_DIRECTORY}) ${LINK_FARM}
+done
+
+# Local Variables:
+# mode: sh
+# End:
