@@ -11,6 +11,15 @@ if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
     SUDOCMD="sudo bash -c"
 fi
 
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+SCRIPTS_BIN=$(pwd)/../scripts/bin
+export PATH=$PATH:${SCRIPTS_BIN}
+
+which insert-text-block
+sudo ln -fs $(which insert-text-block) /usr/bin
+
+
 if test -n "${APT_GET}"; then
    ${SUDOCMD} "${APT_GET} install -y git sudo curl python"
 fi
@@ -29,13 +38,6 @@ for REPO in erjoalgo-stumpwmrc \
     git config user.name "${GIT_NAME}"
     git config user.email ${GIT_EMAIL}
 done
-
-# no realpath on macos...
-SCRIPTS_BIN=$(pwd)/../scripts/bin
-export PATH=$PATH:${SCRIPTS_BIN}
-
-which insert-text-block
-sudo ln -fs $(which insert-text-block) /usr/bin
 
 # set up passwordless sudo
 NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
