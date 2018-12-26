@@ -34,6 +34,12 @@
   (do-external-symbols (sym pkg)
     (unexport sym pkg)))
 
+(defun sort-by (list pred &rest args)
+  (apply #'sort list (lambda (a b)
+                       (< (funcall pred a)
+                          (funcall pred b)))
+         args))
+
 ;; (defpackage stumpwm (:use :cl))
 ;; (defun message (&rest args))
 
