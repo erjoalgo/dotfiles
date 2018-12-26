@@ -104,7 +104,8 @@ sudo apt-get update
 
 # some essential scripts
 if test -n "${APT_GET}"; then
-    sudo ${APT_GET} install -y htop auditd fail2ban bootlogd unison
+    sudo ${APT_GET} install -y htop auditd fail2ban unison
+    sudo ${APT_GET} install -y bootlogd || true
 fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
