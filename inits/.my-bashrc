@@ -32,7 +32,9 @@ EOF
 export PS1="\[\033[${COLOR}m\]█\[\033[00m\]\[\033[0;34m\][\h][\$?]$ \[\033[00m\]"
 
 source ~/.bash_aliases #should already be sourced by original bashrc
-source ~/.my-bash-funs #lnabs, findiregex, etc
+for SRC in $(find -L ~/.bash-funs/ -type f); do
+    source $SRC;
+done
 
 # bash completion on macos
 which brew &&  \
