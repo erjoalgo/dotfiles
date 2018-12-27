@@ -15,7 +15,7 @@ while getopts "m:c:p:h" OPT; do
       COLOR=${OPTARG}
       ;;
     p)
-      NOTIFY_SEND_STUMPWM_PORT=${OPTARG}
+      NOTIFY_SEND_STUMPWM_PORTS=${OPTARG}
       ;;
     H)
       # accept messages from an ssh session via reverse tunnel
@@ -29,7 +29,8 @@ while getopts "m:c:p:h" OPT; do
 done
 
 HOST="localhost"
-PORT=${NOTIFY_SEND_STUMPWM_PORT:-1959}
+# also send to remote client(s) connected via ssh
+NOTIFY_SEND_STUMPWM_PORTS=${NOTIFY_SEND_STUMPWM_PORTS:-1959,1960,1961,1962}
 COLOR=${COLOR:-}
 
 PAYLOAD=${MESSAGE}
@@ -45,7 +46,10 @@ if test -n "${COLOR}"; then
   fi
 fi
 
-(exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-)
+for PORT in $(sed "s/,/ /g" <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
+  echo "${PORT}"
+  (exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-)
+done
 
 
 # Local Variables:
