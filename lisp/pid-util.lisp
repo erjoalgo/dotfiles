@@ -25,3 +25,8 @@
     ;;(format t "cmd ~A, kw ~A, out: ~A ~A~%" cmd proc-state-string trimmed kw)
     (or (cdr (assoc kw process-state-codes-alist))
 	(error "unknown state ~A" proc-state-string))))
+
+(defun kill-process (pid signal)
+  (let ((cmd (format nil "kill -~A ~D" signal pid)))
+    (message cmd)
+    (run-shell-command cmd)))
