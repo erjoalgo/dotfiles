@@ -172,6 +172,7 @@
    ("H-l" "screen-lock" )
    ;; ("H-e" "echo-current-tab" )
    ("H-e" "emacs-killusr2")
+   ("z" "window-sleep-toggle")
    ("H-t" "tmp")
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")))
