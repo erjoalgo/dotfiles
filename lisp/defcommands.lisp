@@ -172,6 +172,6 @@
   (let* ((win (current-window))
          (pid (window-pid win))
          (state (process-state pid))
-         (signal (if (eq :STOPPED state)
+         (signal (if (member state '(:STOPPED :DEBBUGGER))
                      "CONT" "STOP")))
     (kill-process pid signal)))

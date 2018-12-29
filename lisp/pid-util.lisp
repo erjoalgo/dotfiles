@@ -4,7 +4,7 @@
 	       ,@case-body))))
 
 
-(defvar process-state-codes-alist
+(defparameter process-state-codes-alist
   '((:D . :UNINTERRUPTIBLE);    uninterruptible sleep (usually IO);
     (:R . :RUNNING);    running or runnable (on run queue);
     (:S . :SLEEP);    interruptible sleep (waiting for an event to complete);
@@ -12,9 +12,9 @@
     (:W . :PAGING);    paging (not valid since the 2.6.xx kernel);
     (:X . :DEAD);    dead (should never be seen);
     (:Z . :DEFUNCT);    defunct ("zombie"); process, terminated but not reaped by  its parent
+    (:|t| . :DEBBUGGER);    (lowe-case t) stopped by debugger during the tracing
     )
-  "map process codes as returned by 'ps -o state=' to a keyword"
-  )
+  "map process codes as returned by 'ps -o state=' to a keyword")
 
 
 (defun process-state (pid)
