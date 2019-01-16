@@ -17,7 +17,7 @@ SCRIPTS_BIN=$(pwd)/../scripts/bin
 export PATH=$PATH:${SCRIPTS_BIN}
 
 which insert-text-block
-sudo ln -fs $(which insert-text-block) /usr/bin
+${SUDOCMD} "ln -fs $(which insert-text-block) /usr/bin"
 
 
 if test -n "${APT_GET}"; then
