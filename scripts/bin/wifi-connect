@@ -74,7 +74,7 @@ then
 fi
 
 
-IFACE=${IFACE:-$(ifconfig -a | grep -Po '^wlan[0-9]|wlp[^:]*' | head -1)}
+IFACE=${IFACE:-$(ip link | grep -Po '^wlan[0-9]|wlp[^:]*' | head -1)}
 
 if test 0 -ne $? || test -z ${IFACE}; then
     message "wireless iface not found" && exit ${LINENO}
@@ -84,11 +84,11 @@ if test -n "${MACCHANGE_OPT}"; then
     if ! command -v macchanger &> /dev/null; then
         message "macchanger not installed" && exit ${LINENO}
     fi
-    sudo ifconfig ${IFACE} down || exit ${LINENO}
+    sudo ip link set ${IFACE} down || exit ${LINENO}
     sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" #|| exit ${LINENO}
 fi
 
-sudo ifconfig ${IFACE} up
+sudo ip link set ${IFACE} up
 
 SCAN_RESULTS_FN=/tmp/wifi-scan-results
 
