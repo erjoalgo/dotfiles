@@ -13,7 +13,7 @@ if ! ./installs/emacs-install.sh; then
 fi
 sudo apt-get install -y chromium zathura konsole gnome-terminal pass keynav
 sudo apt-get install -y eog shutter
-sudo apt-get install -y wireless-tools wpasupplicant expect
+sudo apt-get install -y wireless-tools wpasupplicant expect iw net-tools
 
 ./installs/install-xsecurelock.sh
 
