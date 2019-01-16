@@ -50,7 +50,8 @@ DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
     if test SKIP != ${GPG_KEY_ID}; then
         if test -n "${GPG_KEY_ID}"; then
-            gpg --recv-keys "${GPG_KEY_ID}"
+            gpg --recv-keys "${GPG_KEY_ID}" || \
+                gpg --keyserver keyserver.ubuntu.com --recv-keys "${GPG_KEY_ID}"
         fi
         gpg --verify ${FNAME}{.sig,}
     fi
