@@ -112,6 +112,7 @@ insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-u
 30 10 * * * bash -c '${SCRIPTS_BIN}/git-notify-lagging-repos.sh ~/git/*'
 EOF
 
+mkdir -p ${HOME}/.ssh
 insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config' \
                   ~/.ssh/config -b <<EOF
 Include ~/private-data/configs/ssh-config
