@@ -13,6 +13,9 @@ while getopts "d:m:o:h" OPT; do
     o)
         MOUNT_OPTS="-o ${OPTARG}"
         ;;
+    l)
+        SYMLINK=${OPTARG}
+        ;;
     h)
         less $0
         exit 0
@@ -58,6 +61,10 @@ fi
 
 
 echo "successfully wrote rule ${RULE_FNAME}"
+
+if test -n "${SYMLINK:-}"; then
+    ln -sf "${MOUNT_POINT}" "${SYMLINK}"
+fi
 
 # Local Variables:
 # compile-command: "./write-udevrule-for-stick.sh -d /dev/sda1 -m /mnt/ -o umask=000"
