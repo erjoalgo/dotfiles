@@ -31,7 +31,7 @@ if command -v yum; then
     sudo yum install -y gnutls gnutls-utils
     sudo yum install -y hunspell{,-es}
 elif command -v apt-get; then
-    sudo apt-get build-dep -y emacs24
+    sudo apt-get build-dep -y emacs
     sudo apt-get install -y aspell-es emacs-goodies-el
     sudo apt-get install -y uuid-runtime || true
 fi
