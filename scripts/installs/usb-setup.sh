@@ -10,8 +10,9 @@ sudo blkid
 
 read -p "enter partition block path: " DEVNAME
 
-udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask= -m ${HOME}/mnt
+SYMLINK=${HOME}/.usb-drive-symlink
+udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask= -m ${HOME}/mnt \
+                           -l ${SYMLINK}
 
-MNT=${HOME}/.usb-drive-symlink
 
 # ln -s ${MNT}
