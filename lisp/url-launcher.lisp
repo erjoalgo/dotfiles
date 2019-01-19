@@ -3,8 +3,7 @@
    #:launch-url
    #:launcher-append-url
    #:search-engine-search
-   #:uri-encode
-   ))
+   #:uri-encode))
 
 (defparameter *search-history-fn*
   (merge-pathnames "search-history" DATA-PRIVATE-ONE-WAY))
