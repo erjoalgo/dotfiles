@@ -10,7 +10,8 @@
 
 (ensure-directory-exists
  (uiop:pathname-parent-directory-pathname
-  (uiop:ensure-directory-pathname *search-history-fn*)))
+  (uiop:ensure-directory-pathname *search-history-fn*))
+ :max-parents 2)
 
 ;;; Launcher
 (defparameter *launcher-persistent-alist*
