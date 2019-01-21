@@ -511,9 +511,29 @@ function pidof-ls-open-files  {
 }
 
 function test-passwd  {
-    USR=${1} && shift
-    ETCSHADOW=${1:-/etc/shadow} && shift
-    read -p"enter password for ${USER}: " PASSWD
+    while getopts "hu:e:p:" OPT; do
+        case ${OPT} in
+            u)
+                USR=${OPTARG}
+                ;;
+            e)
+                ETCSHADOW=${OPTARG}
+                ;;
+            p)
+                PASSWD=${OPTARG}
+                ;;
+            h)
+                less $0
+                exit 0
+                ;;
+        esac
+    done
+
+    USR=${USR:-${USER}}
+    ETCSHADOW=${ETCSHADOW:-/etc/shadow}
+    if test -z "${PASSWD}"; then
+        read -p"enter password for ${USER}: " PASSWD
+    fi
 
     SHADOW=$(sudo grep -F ${USR} ${ETCSHADOW} | cut -d: -f2)
     ALGO=$(cut -d\$ -f2  <<< "${SHADOW}")
