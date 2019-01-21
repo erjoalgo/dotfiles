@@ -7,6 +7,7 @@ add mod3 = Hyper_L
 add mod4 = Super_L
 add control = Control_L
 add mod1 = Alt_L
+add Control = Control_L
 
 keycode 65 = space underscore
 !keycode 22 = BackSpace
@@ -14,8 +15,8 @@ keycode 119 = BackSpace dead_acute
 
 keycode 105 = Hyper_L
 
-!keycode 110 = Control_L
-!keycode 115 = Control_L
+keycode 110 = Control_L
+keycode 115 = Control_L
 
 keycode 9 = grave asciitilde
 keycode 151 = Escape Escape Escape
