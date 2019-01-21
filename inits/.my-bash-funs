@@ -509,3 +509,24 @@ function pidof-ls-open-files  {
     ls -l /proc/${PID}/fd
   done
 }
+
+function test-passwd  {
+    USR=${1} && shift
+    ETCSHADOW=${1:-/etc/shadow} && shift
+    read -p"enter password for ${USER}: " PASSWD
+
+    SHADOW=$(sudo grep -F ${USR} ${ETCSHADOW} | cut -d: -f2)
+    ALGO=$(cut -d\$ -f2  <<< "${SHADOW}")
+    SALT=$(cut -d\$ -f3 <<< "${SHADOW}")
+    # HASH_EXPECTED=$(cut -d\$ -f4 <<< "${SHADOW}")
+
+    case ${ALGO} in
+        6)
+            HASH_ACTUAL=$(mkpasswd -m sha-512 "${PASSWD}" "${SALT}")
+            ;;
+        *)
+            HASH_ACTUAL=$(openssl passwd -${ALGO} -salt "${SALT}"  <<< "${PASSWD}")
+            ;;
+    esac
+    test "${HASH_ACTUAL}" = "${SHADOW}"
+}
