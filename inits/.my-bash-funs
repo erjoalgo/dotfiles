@@ -532,7 +532,7 @@ function test-passwd  {
     USR=${USR:-${USER}}
     ETCSHADOW=${ETCSHADOW:-/etc/shadow}
     if test -z "${PASSWD}"; then
-        read -p"enter password for ${USER}: " PASSWD
+        read -sp"enter password for ${USER}: " PASSWD
     fi
 
     SHADOW=$(sudo grep -F ${USR} ${ETCSHADOW} | cut -d: -f2)
