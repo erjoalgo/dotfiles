@@ -90,6 +90,7 @@
     "util.lisp"
     "xinitrc.lisp"
     "decorations.lisp"
+    "pid-util.lisp"
     "defcommands.lisp"
     "mozrepl.lisp"
     "psym.lisp"
