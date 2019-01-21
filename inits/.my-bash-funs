@@ -538,7 +538,6 @@ function test-passwd  {
     SHADOW=$(sudo grep -F ${USR} ${ETCSHADOW} | cut -d: -f2)
     ALGO=$(cut -d\$ -f2  <<< "${SHADOW}")
     SALT=$(cut -d\$ -f3 <<< "${SHADOW}")
-    # HASH_EXPECTED=$(cut -d\$ -f4 <<< "${SHADOW}")
 
     case ${ALGO} in
         6)
