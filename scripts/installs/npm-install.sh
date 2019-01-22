@@ -9,7 +9,7 @@ if ! test -e "${NVM_SH}"; then
 
     for PROFILE_FILE in \
         /etc/profile.d/node-env.sh \
-            ${HOME}/.my-profile \
+            ${HOME}/.profile-env \
         ; do
         test -w ${PROFILE_FILE} && SUDOOPT="" || SUDOOPT="sudo"
         ${SUDOOPT} $(which insert-text-block) \

@@ -12,7 +12,7 @@ BINDIR=/usr/local/sbin/
 sudo cp -p "${SANDBOX_BIN}" "${BINDIR}/chrome-devel-sandbox"
 
 insert-text-block '# 23c70cf5-1d79-4890-a78a-0715db0251bf-add-chrome-devel-sandbox-envvar'  \
-                  ${HOME}/.my-profile <<EOF
+                  ${HOME}/.profile-env <<EOF
 export CHROME_DEVEL_SANDBOX=${BINDIR}/chrome-devel-sandbox
 EOF
 

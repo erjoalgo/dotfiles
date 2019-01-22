@@ -5,6 +5,10 @@ export LISP=sbcl
 export PYTHONSTARTUP=${HOME}/.pythonrc.py
 export LESS="-Q -R"
 export XSECURELOCK_WANT_FIRST_KEYPRESS=1
+
+PROFILE_ENV=${HOME}/.profile-env
+test -e "${PROFILE_ENV}" && source "${PROFILE_ENV}"
+
 # Local Variables:
 # mode: shell-script
 # End:
