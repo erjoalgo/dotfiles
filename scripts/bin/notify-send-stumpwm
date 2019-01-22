@@ -46,10 +46,15 @@ if test -n "${COLOR}"; then
   fi
 fi
 
+EXIT_CODE=1
 for PORT in $(sed "s/,/ /g" <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
   echo "${PORT}"
-  (exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-)
+  if (exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-); then
+    EXIT_CODE=0
+  fi
 done
+
+exit "${EXIT_CODE}"
 
 
 # Local Variables:
