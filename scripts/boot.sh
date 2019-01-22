@@ -78,7 +78,12 @@ XSESSIONRC=${HOME}/.xsessionrc
 touch ${XSESSIONRC}
 # lightdm does not source ~/.profile
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=636108
-for SHADOWER in ~/.profile ~/.bash_profile ~/.bash_login ${XSESSIONRC}; do
+for SHADOWER in ~/.profile  \
+                    ~/.bash_profile \
+                    ~/.bash_login \
+                    ${XSESSIONRC} \
+                    ~/.bashrc \
+                ; do
     if test -e $SHADOWER; then
 	insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-profile'  \
 		          -b ${SHADOWER} <<< "source ${HOME}/.my-profile"
