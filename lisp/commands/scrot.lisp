@@ -43,9 +43,13 @@
     (when (cl-ppcre:all-matches "\\s" out-png)
       (error "filename may not contain spaces: ~A" out-png))
 
-    (let ((proc (SB-EXT:RUN-PROGRAM "shutter"
-                                    `("-e" "-f" "-o" ,out-png "-n"
-                                           ,@(unless fullscreen-p (list "-s")))
+    (multiple-value-bind (program args)
+        (if fullscreen-p
+            (values "scrot" (list out-png))
+            (values "shutter"
+                    `("-e" "-f" "-o" ,out-png "-n" "-s")))
+    (let ((proc (SB-EXT:RUN-PROGRAM program
+                                    args
                                     :search t
                                     :output t
                                     :error t
@@ -76,7 +80,7 @@
       (when verbose
         (message "copied to cliboard: ~A" out-png))
 
-      out-png-pathname)))
+      out-png-pathname))))
 
 
 (defun image-fn-to-text (image-fn)
