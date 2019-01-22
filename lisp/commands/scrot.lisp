@@ -48,39 +48,39 @@
             (values "scrot" (list out-png))
             (values "shutter"
                     `("-e" "-f" "-o" ,out-png "-n" "-s")))
-    (let ((proc (SB-EXT:RUN-PROGRAM program
-                                    args
-                                    :search t
-                                    :output t
-                                    :error t
-                                    :wait nil)))
+      (let ((proc (SB-EXT:RUN-PROGRAM program
+                                      args
+                                      :search t
+                                      :output t
+                                      :error t
+                                      :wait nil)))
 
-      (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-            as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
-            as elapsed-secs = (- (get-universal-time) start-time-secs)
-            as timeout-p = (> elapsed-secs timeout-secs)
-            while (not (or done-p timeout-p)) do
-              (sleep 1)
-            finally
-               (if (not (and done-p
-                             (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
-                   (error "scrot command failed: ~A"
-                          (if (not done-p) "timeout"
-                              "non-zero exit status"))))
+        (loop with start-time-secs = (GET-UNIVERSAL-TIME)
+           as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
+           as elapsed-secs = (- (get-universal-time) start-time-secs)
+           as timeout-p = (> elapsed-secs timeout-secs)
+           while (not (or done-p timeout-p)) do
+             (sleep 1)
+           finally
+             (if (not (and done-p
+                           (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
+                 (error "scrot command failed: ~A"
+                        (if (not done-p) "timeout"
+                            "non-zero exit status"))))
 
-      ;;why does this crash the session
-      (when eog-scrot
-        (SB-EXT:RUN-PROGRAM "eog"
-                            (list out-png)
-                            :search t
-                            :wait nil))
+        ;;why does this crash the session
+        (when eog-scrot
+          (SB-EXT:RUN-PROGRAM "eog"
+                              (list out-png)
+                              :search t
+                              :wait nil))
 
-      (set-x-selection out-png :clipboard)
+        (set-x-selection out-png :clipboard)
 
-      (when verbose
-        (message "copied to cliboard: ~A" out-png))
+        (when verbose
+          (message "copied to cliboard: ~A" out-png))
 
-      out-png-pathname))))
+        out-png-pathname))))
 
 
 (defun image-fn-to-text (image-fn)
