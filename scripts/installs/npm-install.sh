@@ -6,8 +6,7 @@ test -d .nvm || git clone https://github.com/creationix/nvm.git .nvm
 
 for PROFILE_FILE in \
     /etc/profile.d/node-env.sh \
-        ${HOME}/.profile \
-        ${HOME}/.bash_profile \
+        ${HOME}/.my-profile \
     ; do
     test -w ${PROFILE_FILE} && SUDOOPT="" || SUDOOPT="sudo"
     ${SUDOOPT} $(which insert-text-block) \

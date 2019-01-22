@@ -38,7 +38,7 @@ EOF
 GOPATH=${HOME}/src/go
 mkdir -p ${GOPATH}
 insert-text-block '# a7095f2e-b531-4f1e-9fd6-ea4e404f19f2-add-user-gopath'  \
-		  ~/.bashrc <<EOF
+		  ~/.my-profile <<EOF
 export GOPATH=$GOPATH
 export PATH=\$PATH:\$GOPATH/bin:${GOROOT}/bin
 EOF
