@@ -23,12 +23,14 @@ EOF
     source "${NVM_SH}"
 fi
 
+if ! command -v npm; then
+    nvm install stable
+    nvm alias default node
+    npm --version
+fi
+
 cat<<EOF
-NVM installed. Now run:
+NVM has been installed and added to profile. Now run:
 
-
-source ${HOME}/.profile;
-nvm install stable
-nvm alias default node
-npm --version
+source ${NVM_SH}
 EOF
