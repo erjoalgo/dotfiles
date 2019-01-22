@@ -241,7 +241,7 @@ function git-review-pull-request	{
     fi
 }
 
-function pid-listening-at	{
+function pid-listening-at-port	{
     LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${1}[^0-9]")
     if test -n "${LINE}"; then
         PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
@@ -249,6 +249,11 @@ function pid-listening-at	{
         xargs -L1 ps -w30 -fp <<< "${PID}"  1>&2
         echo ${PID}
     fi
+}
+
+function pid-listening-on-ports  {
+  PID=${1} && shift
+  sudo lsof -Pan -p ${PID} -i
 }
 
 function git-browse-remote	{
