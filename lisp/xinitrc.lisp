@@ -12,8 +12,12 @@
                  as pathname = (merge-pathnames (pathname cand) xmodmap-dir)
                    thereis (and (probe-file pathname)
                                 pathname)))
-         )
+         (host-specific-script (make-pathname :type "sh"
+                                              :name hostname
+                                              :defaults xmodmap-dir)))
     (assert xmodmap-filename)
+    (when (probe-file host-specific-script)
+      (run-shell-command (format nil "bash ~A" host-specific-script)))
     (loop for _ below 2 do
       (run-shell-command (format nil "xmodmap ~A" xmodmap-filename) t))))
 
