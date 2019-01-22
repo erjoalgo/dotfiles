@@ -101,6 +101,10 @@
   "echo window class"
   (message "window class: ~A" (window-class (current-window))))
 
+(defcommand echo-window-pid () ()
+  "echo window class"
+  (message "window pid: ~A" (window-pid (current-window))))
+
 (defcommand echo-current-tab () ()
   (echo (url-launcher-get-browser-current-url)))
 
