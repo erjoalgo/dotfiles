@@ -139,17 +139,22 @@
 
 
 
-(define-key-bindings (all-top-maps)
-    (append
-     (loop for i from 2 upto 6
-	do (gnewbg (format nil "F~D" i))
-	nconc
-	  `((,(format nil "H-F~D" i) ,(format nil "gselect ~D" i))
-	    ;; (,(format nil "S-H-F~D" i) ,(format nil "gmove ~D" i))))
-            ))
-
-     '(("H-F1" "gselect Default")
-       ("S-H-F1" "gmove Default"))))
+(macrolet
+    ((defselgroup (i name)
+       `(defcommand ,(intern name) () ()
+          (-> (1- ,i)
+              (nth (sort-groups (current-screen)))
+              (gselect))))
+     (def-gselect-keys (from to)
+       `(define-key-bindings (all-top-maps)
+            (list
+             ,@(loop for i from from upto to
+                     as name = (format nil "gselect-~D" i)
+	             collect
+	             `(progn
+                        (defselgroup ,i ,name)
+                        (list ,(format nil "H-F~D" i) ,name)))))))
+  (def-gselect-keys 1 6))
 
 
 (define-key-bindings
