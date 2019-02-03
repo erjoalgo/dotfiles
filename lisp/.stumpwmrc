@@ -3,6 +3,8 @@
 
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
+(ql:quickload "usocket")
+
 (defun file-string (path)
   (with-open-file (stream path)
     (let* ((n-estimate (file-length stream))
