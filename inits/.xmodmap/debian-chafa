@@ -27,6 +27,9 @@ keycode 37 = Control_L
 keycode 64 = Alt_L
 keycode 246 =
 
+keycode 112 = F1
+keycode 117 = F2
+
 ! Local Variables:
 ! compile-command: "xmodmap debian-chafa"
 ! End:
