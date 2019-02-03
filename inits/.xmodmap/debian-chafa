@@ -7,7 +7,6 @@ add mod3 = Hyper_L
 add mod4 = Super_L
 add control = Control_L
 add mod1 = Alt_L
-add Control = Control_L
 
 keycode 65 = space underscore
 keycode 22 = BackSpace dead_acute
