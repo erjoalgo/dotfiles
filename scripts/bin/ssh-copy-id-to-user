@@ -48,11 +48,10 @@ if ! grep "[.]pub\|[.]pem" <<< "${IDENTITY_FILE}" || ! test -e ${IDENTITY_FILE};
     return 1
 fi
 
-SSH_CMD="ssh ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
-
+SSH_CMD="ssh -tt ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
 for REMOTE_USER in $CP_DEST_USERS; do
     echo "as ${REMOTE_PRIVILEGED_USER}, adding to user ${REMOTE_USER} the key ${IDENTITY_FILE}"
-    ${SSH_CMD} "sudo -u ${REMOTE_PRIVILEGED_USER} bash -s" <<EOF
+    ${SSH_CMD} "su ${REMOTE_PRIVILEGED_USER} -c 'bash -s'" <<EOF
 set -euxo pipefail
 id -u ${REMOTE_USER}
 pwd
