@@ -4,6 +4,7 @@ set -euo pipefail
 
 USAGE=false
 SSH_OPTS=${SSH_OPTS:-}
+REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-'$(whoami)'}
 
 while getopts "u:t:p:i:o:h" OPT; do
     case ${OPT} in
