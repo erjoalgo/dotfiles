@@ -45,7 +45,7 @@ test -f ${FNAME} || wget ${URL}
 DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
 
 if ! test -d ${INSTALL_DIR}/${DNAME}; then
-    if test SKIP != ${GPG_KEY_ID}; then
+    if test "SKIP" != ${GPG_KEY_ID}; then
         test -f ${FNAME}.sig || wget ${URL}.sig
         if test -n "${GPG_KEY_ID}"; then
             gpg --recv-keys "${GPG_KEY_ID}" || \
