@@ -11,9 +11,6 @@ while getopts "u:t:p:i:o:h" OPT; do
         p)
             REMOTE_PRIVILEGED_USER=${OPTARG}
             ;;
-        t)
-            SSH_USER_HOST_PORT=${OPTARG}
-            ;;
         i)
             IDENTITY_FILE=${OPTARG}
             ;;
@@ -31,11 +28,13 @@ REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-${USER}}
 IDENTITY_FILE=${IDENTITY_FILE:-${HOME}/.ssh/id_rsa.pub}
 
 
-if test ${USAGE} = true -o -z "${SSH_USER_HOST_PORT:-}"; then
+if test ${USAGE} = true -o -z "${1:-}"; then
     echo "usage: ssh-copy-id-to-user [-p REMOTE_PRIVILEGED_USER] [-o ssh_extra_opts] \
 -t SSH_USER_HOST_PORT [-i IDENTITY_FILE] [CP_DEST_USER...]"
     exit 1
 fi
+
+SSH_USER_HOST_PORT=${1} && shift
 
 if test ${#*} -eq 0; then
     CP_DEST_USERS=${REMOTE_PRIVILEGED_USER}
