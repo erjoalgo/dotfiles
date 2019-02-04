@@ -135,4 +135,6 @@ if ! ssh -G google.com; then
 EOF
 fi
 
+chmod 600 ~/.ssh/config
+
 echo "success"
