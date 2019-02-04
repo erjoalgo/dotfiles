@@ -30,7 +30,6 @@ done
 REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-${USER}}
 IDENTITY_FILE=${IDENTITY_FILE:-${HOME}/.ssh/id_rsa.pub}
 
-shift $((OPTIND - 1))
 
 if test ${USAGE} = true -o -z "${SSH_USER_HOST_PORT:-}"; then
     echo "usage: ssh-copy-id-to-user [-p REMOTE_PRIVILEGED_USER] [-o ssh_extra_opts] \
