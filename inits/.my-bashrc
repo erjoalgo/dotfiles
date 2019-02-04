@@ -37,10 +37,9 @@ for SRC in $(find -L ~/.bash-funs/ -type f); do
 done
 
 # bash completion on macos
-which brew &&  \
-    test -f $(brew --prefix)/etc/bash_completion &&  \
+if which brew > /dev/null 2>&1 && test -f $(brew --prefix)/etc/bash_completion; then
     . $(brew --prefix)/etc/bash_completion
-
+fi
 
 # don't put duplicate lines in the history.
 # See bash(1) for more options

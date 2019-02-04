@@ -414,7 +414,7 @@ if command -v notify-send-stumpwm >/dev/null \
   PROMPT_COMMAND=post-command-maybe-notify
   trap '_command-start-time-set-maybe' DEBUG
 else
-  echo "WARN: not enabling notifications"
+  1>&2 echo "WARN: not enabling notifications"
 fi
 
 function jar-to-classes {
