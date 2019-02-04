@@ -50,7 +50,7 @@ fi
 
 SSH_CMD="ssh -tt ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
 for REMOTE_USER in $CP_DEST_USERS; do
-    echo "as ${REMOTE_PRIVILEGED_USER}, adding to user ${REMOTE_USER} the key ${IDENTITY_FILE}"
+    echo "as remote ${REMOTE_PRIVILEGED_USER}, adding to remote user ${REMOTE_USER} the local key ${IDENTITY_FILE}"
     ${SSH_CMD} "su ${REMOTE_PRIVILEGED_USER} -c 'bash -s'" <<EOF
 set -euxo pipefail
 id -u ${REMOTE_USER}
