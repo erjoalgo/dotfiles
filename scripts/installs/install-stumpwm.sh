@@ -89,3 +89,16 @@ EOF
 
 sudo ${APT_GET} install -y xdotool
 which nc || sudo ${APT_GET} install -y net-tools
+
+XSESSION_ENTRY=/usr/share/xsessions/stumpwm.desktop
+
+if test -d $(dirname "${XSESSION_ENTRY}"); then
+   cat << EOF | sudo tee "${XSESSION_ENTRY}"
+[Desktop Entry]
+Encoding=UTF-8
+Name=stumpwm
+Comment=stumpwm
+Exec=/usr/local/bin/stumpwm
+Type=Application
+EOF
+fi
