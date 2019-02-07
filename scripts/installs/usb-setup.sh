@@ -2,13 +2,27 @@
 
 set -euo pipefail
 
-sudo blkid
+while getopts "hd:" OPT; do
+    case ${OPT} in
+    d)
+        DEVNAME=${OPTARG}
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
 
-read -p "insert usb disk..."
+if test -z "${DEVNAME:-}"; then
+    sudo blkid
+    read -p "insert usb disk..."
+    sudo blkid
+    read -p "enter partition block path: " DEVNAME
+    test -e "${DEVNAME}"
+fi
 
-sudo blkid
 
-read -p "enter partition block path: " DEVNAME
 
 SYMLINK=${HOME}/.usb-drive-symlink
 udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000  \
