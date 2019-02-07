@@ -240,6 +240,9 @@ alias ..5='cd ../../../../..'
 # alias ..6='cd ../../../../../..'
 
 alias with-vi-editor='EDITOR=vi VISUAL=vi'
+
+alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
+
 # Local Variables:
 # mode: sh
 # End:
