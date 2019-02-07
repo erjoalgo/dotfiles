@@ -29,8 +29,10 @@
     (assert xmodmap-filename)
     (when (probe-file host-specific-script)
       (run-shell-command (format nil "bash ~A" host-specific-script)))
-    (loop for _ below 2 do
-      (run-shell-command (format nil "xmodmap ~A" xmodmap-filename) t))))
+    (loop for _ below 4
+          as cmd = (format nil "xmodmap -verbose ~A" xmodmap-filename)
+          do (run-shell-command cmd t)
+          do (sleep .5))))
 
 (defun run-startup-scripts ()
   (loop for script in (append
