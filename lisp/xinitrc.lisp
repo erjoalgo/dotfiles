@@ -75,6 +75,7 @@
 
 (unless (fboundp 'run-shell-command)
   (defun run-shell-command (cmd &optional sync)
+    (declare (ignore sync))
     (with-output-to-string (s)
       (sb-ext:run-program "bash"
                           (list "-c" cmd)
