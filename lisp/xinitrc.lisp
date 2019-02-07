@@ -1,20 +1,31 @@
 ;; things that used to be run by .xinitrc
 
-(defun xmodmap-load ()
-  (let ((xmodmap-pke "/tmp/xmodmap.pke"))
-    (unless (probe-file xmodmap-pke)
-      (run-shell-command (format nil "xmodmap -pke > ~A" xmodmap-pke) t)))
-
-  (let* ((hostname (trim-spaces (run-shell-command "hostname" t)))
-         (xmodmap-dir #P"~/.xmodmap/")
-         (xmodmap-filename
+(defun xmodmap-locate-file (&key
+                              (hostname
+                               (trim-spaces (run-shell-command "hostname" t)))
+                              (xmodmap-dir #P"~/.xmodmap/"))
+  (let* ((xmodmap-filename
            (loop for cand in (list hostname "default")
-                 as pathname = (merge-pathnames (pathname cand) xmodmap-dir)
+                 as pathname = (make-pathname
+                                :name cand
+                                :type "xmodmap"
+                                :defaults
+                                xmodmap-dir)
+                 do (format t "xinitrc: value of pathname: ~A~%" pathname)
                    thereis (and (probe-file pathname)
                                 pathname)))
          (host-specific-script (make-pathname :type "sh"
                                               :name hostname
                                               :defaults xmodmap-dir)))
+    (values xmodmap-filename host-specific-script)))
+
+(defun xmodmap-load ()
+  (let ((xmodmap-pke "/tmp/xmodmap.pke"))
+    (unless (probe-file xmodmap-pke)
+      (run-shell-command (format nil "xmodmap -pke > ~A" xmodmap-pke) t)))
+
+  (multiple-value-bind (xmodmap-filename host-specific-script)
+      (xmodmap-locate-file)
     (assert xmodmap-filename)
     (when (probe-file host-specific-script)
       (run-shell-command (format nil "bash ~A" host-specific-script)))
@@ -55,6 +66,29 @@
                                 :error t
                                 :wait nil)))))
 
+(unless (fboundp 'with-elapsed-time)
+  (defmacro with-elapsed-time (var timed-form post-form)
+    (declare (ignore var post-form))
+    timed-form))
+
+(unless (fboundp 'run-shell-command)
+  (defun run-shell-command (cmd &optional sync)
+    (with-output-to-string (s)
+      (sb-ext:run-program "bash"
+                          (list "-c" cmd)
+                          :search t
+                          :wait t
+                          :output s)
+      s)))
+
+(unless (fboundp 'trim-spaces)
+  (defun trim-spaces (str)
+    (string-trim '(#\space #\tab #\newline) str)))
+
+(unless (fboundp 'which)
+  (defun which (program)
+    (trim-spaces (run-shell-command
+                  (format nil "which ~A" program)))))
 
 (with-elapsed-time ms (xmodmap-load)
   (message "xmodmap load took ~D ms" ms))
