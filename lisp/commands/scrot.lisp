@@ -29,7 +29,7 @@
                           (scrot-top *scrots-top*)
                           (verbose t)
                           (eog-scrot t)
-                          (timeout-secs 15))
+                          (timeout-secs 20))
   "save a scrot to *scrots-top*"
   (ensure-directories-exist scrot-top)
   ;;TODO allow selecting region
