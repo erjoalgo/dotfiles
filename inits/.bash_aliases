@@ -242,6 +242,7 @@ alias ..5='cd ../../../../..'
 alias with-vi-editor='EDITOR=vi VISUAL=vi'
 
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
+alias xdotool-press-capslock='xdotool key Caps_Lock'
 
 # Local Variables:
 # mode: sh
