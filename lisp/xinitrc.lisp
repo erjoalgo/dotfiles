@@ -4,7 +4,6 @@
                               (hostname
                                (trim-spaces (run-shell-command "hostname" t)))
                               (xmodmap-dir #P"~/.xmodmap/"))
-  (format t "xinitrc: value of hostname: ~A~%" hostname)
   (let* ((xmodmap-filename
            (loop for cand in (list hostname "default")
                  as pathname = (make-pathname
@@ -32,7 +31,6 @@
       (run-shell-command (format nil "bash ~A" host-specific-script)))
     (loop for _ below 4
           as cmd = (format nil "xmodmap -verbose ~A" xmodmap-filename)
-          do (format t "xinitrc: value of cmd: ~A~%" cmd)
           do (run-shell-command cmd t)
           do (sleep .5))))
 
