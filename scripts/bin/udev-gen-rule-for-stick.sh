@@ -62,7 +62,7 @@ fi
 
 echo "successfully wrote rule ${RULE_FNAME}"
 
-if test -n "${SYMLINK:-}"; then
+if test -n "${SYMLINK:-}" -a ! -d "${SYMLINK}"; then
     ln -sf "${MOUNT_POINT}" "${SYMLINK}"
 fi
 
