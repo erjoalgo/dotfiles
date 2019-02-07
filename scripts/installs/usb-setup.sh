@@ -26,6 +26,18 @@ SYMLINK=${HOME}/.usb-drive-symlink
 
 udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000 -m ${HOME}/mnt -l ${SYMLINK}
 
+for SECRET in \
+    .password-store \
+    .gnupg; do
 
+    DEST="${HOME}/${SECRET}"
+    SRC="${SYMLINK}/nosync/${SECRET}"
 
-# ln -s ${MNT}
+    if test -d "${DEST}"; then
+        echo "skipping exiting ${DEST}"
+    elif ! test -d "${SRC}"; then
+        echo "warning: missing secret at ${SRC}"
+    else
+        ln -s  "${SRC}" "${DEST}"
+    fi
+done
