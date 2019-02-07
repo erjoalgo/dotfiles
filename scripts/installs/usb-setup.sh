@@ -22,12 +22,10 @@ if test -z "${DEVNAME:-}"; then
     test -e "${DEVNAME}"
 fi
 
-
-
 SYMLINK=${HOME}/.usb-drive-symlink
-udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000  \
-                           -m ${HOME}/mnt \
-                           -l ${SYMLINK}
+
+udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000 -m ${HOME}/mnt -l ${SYMLINK}
+
 
 
 # ln -s ${MNT}
