@@ -261,7 +261,7 @@ function git-browse-remote	{
     URL=$(git config --get "remote.${REMOTE}.url" |  \
 	      sed -e 's|:|/|g' -e 's|^\(ssh///\)\?git@|https://|')
     echo ${URL}
-    firefox-new-tab "${URL}"
+    x-www-browser "${URL}"
 }
 # completion with remotes
 __git_complete git-browse-remote _git_pull
