@@ -44,6 +44,16 @@ EndSection
 EOF
 
 
+X_BROWSER=$(which chromium google-chrome-stable google-chrome firefox 2>/dev/null |  \
+  head -1) || true
+
+if which "${X_BROWSER}" && which update-alternatives; then
+  sudo update-alternatives --install $(which x-www-browser)  \
+    x-www-browser ${X_BROWSER} 200
+  sudo update-alternatives --set x-www-browser ${X_BROWSER}
+  # sudo update-alternatives --config x-www-browser
+fi
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success

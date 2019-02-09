@@ -54,11 +54,6 @@ fi
 
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
-# set firefox-new-tab.sh as browse command
-FIREFOX_NEW_TAB=$(which firefox-new-tab)
-sudo update-alternatives --install $(which x-www-browser) \
-     x-www-browser ${FIREFOX_NEW_TAB} 200 || true
-sudo update-alternatives --set x-www-browser ${FIREFOX_NEW_TAB} || true
 
 # link inits
 cd ~/git/erjoalgo-stumpwmrc/scripts/
