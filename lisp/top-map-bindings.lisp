@@ -39,13 +39,6 @@
     (all-top-maps)
     `(
       ("XF86PowerOff" "echo power pressed root!")
-      ;;volume
-      ("KP_Multiply" "run-shell-command volup")
-      ("XF86AudioLowerVolume" "voldown")
-      ("XF86AudioRaiseVolume" "volup")
-      ("H-F9" "voldown")
-      ("H-F10" "volup")
-
       ;;brightness
       ;;emergency dimming
       ("XF86MonBrightnessDown" "brightness-down")
@@ -127,9 +120,13 @@
       ("M-H-3" "hsplit")
       ("M-H-q" "remove")
 
-      ("H-F8" "volmute-toggle")
-      ("H-F9" "voldown")
-      ("H-F10" "volup")
+      ;;volume
+      ("XF86AudioLowerVolume" "vol-down")
+      ("XF86AudioRaiseVolume" "vol-up")
+
+      ("H-F8" "vol-mute-toggle")
+      ("H-F9" "vol-down")
+      ("H-F10" "vol-up")
       ("H-SPC" "speak-key")
       ("H-t" *text-shortcuts-map*)
 
