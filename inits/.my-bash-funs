@@ -446,3 +446,10 @@ function pidof-ls-open-files  {
     ls -l /proc/${PID}/fd
   done
 }
+
+function strace-cmd  {
+  OUT=${OUT:-/tmp/strace-out.log}
+  strace -f ${*} |& tee ${OUT}
+  echo "wrote to ${OUT}"
+  less ${OUT}
+}
