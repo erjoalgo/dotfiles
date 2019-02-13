@@ -132,7 +132,9 @@
       ("H-F10" "volup")
       ("H-SPC" "speak-key")
       ("H-t" *text-shortcuts-map*)
-      )
+
+      ("H-N" "gnext")
+      ("H-P" "gprev"))
 
   ;;not efficient nor necessary but only run at initialization
   )
