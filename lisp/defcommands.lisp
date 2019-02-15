@@ -121,6 +121,7 @@
 (defcommand byzanz-record (name duration)
     ((:string " recording name: ")
      (:number "recording duration in seconds: "))
+  (assert (which "byzanz-record"))
   (let* ((name (or name
                    (time-format *scrot-date-format*)))
          (recording-pathname
