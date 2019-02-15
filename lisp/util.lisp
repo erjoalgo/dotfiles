@@ -186,3 +186,20 @@
                       (format nil "^1non-zero exit: ~~A of '~A ~{~A~^ ~}': ~~A^*"
                               command args)
                       ret out)))
+
+(defun message-wrapped (fmt &rest args)
+  (let* ((text (apply #'format nil fmt args))
+         (screen (current-screen))
+         (pixels-per-char (text-line-width
+                          (screen-font screen) "a"
+                          :translate #'translate-id))
+         (pixels-per-line (screen-width screen))
+         (chars-per-line (floor pixels-per-line pixels-per-char)))
+    (assert (> chars-per-line 0))
+    (loop with len = (length text)
+          with idx = 0
+          while (< idx len)
+          as new-idx = (+ idx chars-per-line)
+          collect (subseq text idx (min len new-idx)) into chunks
+          do (setf idx new-idx)
+          finally (echo-string-list screen chunks))))
