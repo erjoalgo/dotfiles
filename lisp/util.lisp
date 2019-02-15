@@ -180,11 +180,11 @@
 
 (defun run-command-async-notify (command &optional args)
   (run-command-async command (mapcar 'princ-to-string args) (ret out)
-                     (message (format nil "^2success of '~A ~{~A~^ ~}'^*"
-                                      command args))
-                     (message
-                      (format nil "^1non-zero exit: ~~A of '~A ~{~A~^ ~}': ~~A^*"
-                              command args)
+                     (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
+                                      command args)
+                     (message-wrapped
+                      "^1non-zero exit: ~~A of '~A ~{~A~^ ~}': ~~A^*"
+                      command args
                       ret out)))
 
 (defun message-wrapped (fmt &rest args)
