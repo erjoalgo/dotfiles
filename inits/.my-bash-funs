@@ -453,3 +453,5 @@ function strace-cmd  {
   echo "wrote to ${OUT}"
   less ${OUT}
 }
+
+complete -F _command strace-cmd
