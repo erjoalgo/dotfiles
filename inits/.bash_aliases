@@ -243,6 +243,8 @@ alias with-vi-editor='EDITOR=vi VISUAL=vi'
 
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
 alias xdotool-press-capslock='xdotool key Caps_Lock'
+alias mic-check="arecord -vvv -f dat /dev/null"
+
 
 # Local Variables:
 # mode: sh
