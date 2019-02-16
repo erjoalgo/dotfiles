@@ -44,7 +44,7 @@
 (defun messages-listen (&key (port 1959))
   "Continuously listen on a socket for incoming messages and echo them visually."
   (message-socket-listen (lambda (lines)
-                           (echo-string-list (current-screen) lines))
+                           (message-wrapped "~{~A~^~%~}" lines))
                          :port port))
 
 
