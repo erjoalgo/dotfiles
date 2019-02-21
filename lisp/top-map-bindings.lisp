@@ -141,14 +141,16 @@
 (macrolet
     ((defselgroup (i name)
        `(defcommand ,(intern name) () ()
-          (-> (1- ,i)
-              (nth (sort-groups (current-screen)))
-              (gselect))))
+          (if (>= (1- ,i) (length (sort-groups (current-screen))))
+              (gnew (format nil "F~D" ,i))
+              (->
+               (nth (1- ,i) (sort-groups (current-screen)))
+               (gselect)))))
      (def-gselect-keys (from to)
        `(define-key-bindings (all-top-maps)
             (list
              ,@(loop for i from from upto to
-                     as name = (format nil "gselect-~D" i)
+                     as name = (format nil "gselect-F~D" i)
 	             collect
 	             `(progn
                         (defselgroup ,i ,name)
