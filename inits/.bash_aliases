@@ -246,6 +246,11 @@ alias xdotool-press-capslock='xdotool key Caps_Lock'
 alias mic-check="arecord -vvv -f dat /dev/null"
 
 
+# tmux
+alias tml='tmux list-sessions'
+# alias tma='tmux attach'
+alias tma='tmux attach -dt'
+
 # Local Variables:
 # mode: sh
 # End:
