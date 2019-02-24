@@ -1,0 +1,39 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+TIMEOUT_SECS=${TIMEOUT_SECS:-10}
+INTERVAL_SECS=${INTERVAL_SECS:-5}
+
+HOST=${HOST:-google.com}
+
+TRIES=3
+
+ARGS="-mA"
+
+while true; do
+    RECONNECT=true
+    for _ in $(seq "${TRIES}"); do
+        if timeout "${TIMEOUT_SECS}" ping -c3 ${HOST} ||  \
+                timeout "${TIMEOUT_SECS}" curl ${HOST}; then
+            RECONNECT=false
+            break
+        fi
+    done
+
+    if test "${RECONNECT}" = true; then
+        while true; do
+            notify-send-stumpwm -m "reconnecing..." -cred
+            if wifi-connect ${ARGS}; then
+                break
+            fi
+        done
+        notify-send-stumpwm -m "reconnected" -cgreen
+    fi
+
+    sleep ${INTERVAL_SECS}
+done
+
+# Local Variables:
+# mode: sh-mode
+# End:
