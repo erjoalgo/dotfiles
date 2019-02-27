@@ -17,14 +17,16 @@ function find-dir  {
 }
 
 DIR=$(find-dir)
-if ! test -d ${DIR}; then
+
+if ! test -d "${DIR}"; then
     test -e ${BASE} || wget "${URL}"
     test -e ${BASE}
     tar -C ~/src/ -axvf ${BASE}
     DIR=$(find-dir)
-    test -d ${DIR}
 fi
 
-cd ${DIR}
+test -d "${DIR}"
+
+cd "${DIR}"
 
 ./install.sh
