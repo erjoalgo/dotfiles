@@ -29,4 +29,4 @@ test -d "${DIR}"
 
 cd "${DIR}"
 
-./install.sh
+sudo ./install.sh
