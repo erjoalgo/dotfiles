@@ -244,12 +244,7 @@ alias with-vi-editor='EDITOR=vi VISUAL=vi'
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
 alias xdotool-press-capslock='xdotool key Caps_Lock'
 alias mic-check="arecord -vvv -f dat /dev/null"
-
-
-# tmux
-alias tml='tmux list-sessions'
-# alias tma='tmux attach'
-alias tma='tmux attach -dt'
+alias tma='tmux-attach'
 
 # Local Variables:
 # mode: sh

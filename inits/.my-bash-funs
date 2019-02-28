@@ -455,3 +455,12 @@ function strace-cmd  {
 }
 
 complete -F _command strace-cmd
+
+function tmux-attach  {
+  CNT=$(tmux list-sessions | tee /dev/stderr | wc -l)
+  select SESSNO in $(seq ${CNT});
+  do
+    tmux attach -t ${SESSNO}
+  break
+  done
+}
