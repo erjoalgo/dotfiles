@@ -30,3 +30,4 @@ test -d "${DIR}"
 cd "${DIR}"
 
 sudo ./install.sh
+sudo apt-get install -y make rlwrap
