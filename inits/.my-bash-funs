@@ -457,11 +457,11 @@ function strace-cmd  {
 complete -F _command strace-cmd
 
 function tmux-attach  {
-  SESS=$(tmux list-sessions | tee /dev/stderr | cut -f1 -d:)
-  echo
-  select SESSNO in $SESS
-  do
-    tmux attach -t ${SESSNO}
+  IFS_OLD=$IFS
+  IFS=$'\n'
+  select SESSNO in $(tmux list-sessions); do
+    IFS=$IFS_OLD
+    tmux attach -t $(cut -f1 -d: <<< "${SESSNO}")
   break
   done
 }
