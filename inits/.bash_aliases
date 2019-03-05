@@ -242,6 +242,7 @@ alias ..5='cd ../../../../..'
 alias with-vi-editor='EDITOR=vi VISUAL=vi'
 complete -F _command with-vi-editor
 alias wve='with-vi-editor'
+complete -F _command wve
 
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
 alias xdotool-press-capslock='xdotool key Caps_Lock'
