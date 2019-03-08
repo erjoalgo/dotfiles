@@ -158,7 +158,7 @@ else
     complete -F _command affexact
     alias dpkgl='repoquery -l'
 fi
-    
+
 alias spsi='sudo python setup.py install'
 
 
