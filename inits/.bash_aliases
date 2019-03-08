@@ -244,6 +244,9 @@ complete -F _command with-vi-editor
 alias wve='with-vi-editor'
 complete -F _command wve
 
+alias wte='EDITOR=true VISUAL=true'
+complete -F _command wte
+
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
 alias xdotool-press-capslock='xdotool key Caps_Lock'
 alias mic-check="arecord -vvv -f dat /dev/null"
