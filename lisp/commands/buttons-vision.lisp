@@ -19,7 +19,7 @@
 
     (setf button-pathname
           (take-scrot name
-                      :fullscreen-p nil
+                      :selection :interactive
                       :scrot-top parent-dir
                       :verbose nil
                       :eog-scrot nil))
