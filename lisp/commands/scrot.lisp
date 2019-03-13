@@ -119,3 +119,19 @@ perform ocr on it, place ocr'd text into clipboard"
     (set-x-selection ocr-text :clipboard)
     (message "copied ocr of length ~D to clipboard..."
              (length ocr-text))))
+
+(define-stumpwm-type :point (input prompt)
+  (declare (ignore input))
+  (read-one-line
+   (current-screen)
+   (concat prompt "(Return to continue): "))
+  (multiple-value-bind (x y win)
+      (xlib:global-pointer-position *display*)
+    (declare (ignore win))
+    (cons x y)))
+
+(defcommand record-box (x y)
+    ((:point "place pointer on upper-left corner: ")
+     (:point "place pointer on lower-right corner: "))
+  (message "X: ~A, Y: ~A" x y)
+  (list x y))
