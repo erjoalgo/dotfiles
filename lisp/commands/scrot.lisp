@@ -47,9 +47,9 @@
          (args (append (list out-png)
                        (case selection
                          (:interactive
-                          (echo "select a box in the screen...")
-                          (sleep .5)
-                          (unmap-message-window (current-screen))
+                          ;; (message "select a box in the screen...")
+                          ;; (sleep .5)
+                          ;; (unmap-all-message-windows)
                           '("-s"))
                          (:fullscreen nil)
                          (:window '("-u"))
