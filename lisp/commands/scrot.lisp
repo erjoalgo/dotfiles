@@ -11,7 +11,7 @@
 (defcommand scrot-cmd-anon () ()
   "take an anonymous non-full-screen screen shot. select box interactively"
   (take-scrot (time-format *scrot-date-format*)
-              :display-scrot nil))
+              :show t))
 
 (defcommand scrot-cmd-full-screen (name)
     ((:string "enter name for scrot: "))
@@ -22,15 +22,22 @@
   "take a full-screen anonymous screen shot"
   (take-scrot (time-format *scrot-date-format*)
               :selection :fullscreen
-              :display-scrot nil))
+              :show t))
 
-(defun take-scrot (name &key
-                          (selection :interactive)
-                          box
-                          (scrot-top *scrots-top*)
-                          (verbose t)
-                          (display-scrot t)
-                          (timeout-secs 20))
+(defun mouse-available-p ()
+  (remove-if-not (lambda (pathname)
+                   (ppcre:scan "mouse" (pathname-name pathname)))
+                 (directory #P"/dev/input/*")))
+
+(defun take-scrot (name
+                   &rest args
+                   &key
+                     (selection :interactive)
+                     box
+                     (scrot-top *scrots-top*)
+                     (verbose t)
+                     (show t)
+                     (timeout-secs 20))
   "save a scrot to *scrots-top*"
   (ensure-directories-exist scrot-top)
   ;;TODO allow selecting region
@@ -50,11 +57,19 @@
                           ;; (message "select a box in the screen...")
                           ;; (sleep .5)
                           ;; (unmap-all-message-windows)
-                          '("-s"))
+                          (if (mouse-available-p)
+                              '("-s")
+                              (progn
+                                (echo "scrot will resume after two clicks at the box edges...")
+                                (return-from take-scrot (setf *record-box-and-funcall-state*
+                                                              (list
+                                                               (lambda (box)
+                                                                 (apply #'take-scrot name :selection box args))))))))
                          (:fullscreen nil)
                          (:window '("-u"))
                          (t
-                          (setf box selection)))))
+                          (setf box selection)
+                          nil))))
          (proc (SB-EXT:RUN-PROGRAM program
                                    args
                                    :search t
@@ -75,21 +90,21 @@
                         (if (not done-p) "timeout"
                             "non-zero exit status"))))
 
-        (when box
-          (destructuring-bind ((x1 y1) (x2 y2)) box
-            ;; (apply #'append box)
-            ;; convert "$imagePath" -crop ${width}x${height}+${left}+${top} "$imagePath"
-            (let ((width (abs (- x2 x1)))
-                  (height (abs (- y2 y1))))
-              (list "mogrify" out-png "-crop"
-                    (format nil "~Dx~D+~D-~D"
-                            width
-                            height
-                            x1 y1)
-                    out-png))))
+    (when box
+      (destructuring-bind ((x1 . y1) (x2 . y2)) box
+        (let* ((width (abs (- x2 x1)))
+               (height (abs (- y2 y1)))
+               (crop-spec (format nil "~Dx~D+~D+~D"
+                                  width
+                                  height
+                                  (min x1 x2) (min y1 y2)))
+               (cmd "mogrify")
+               (args (list "-crop" crop-spec out-png)))
+          (message "scrot: ~A ~{~A~^ ~}~%" cmd args)
+          (run-command-sync-notify-on-error cmd args))))
 
         ;;why does this crash the session
-        (when display-scrot
+        (when show
           (SB-EXT:RUN-PROGRAM "eog"
                               (list out-png)
                               :search t
@@ -114,7 +129,7 @@ perform ocr on it, place ocr'd text into clipboard"
          (ocr-png-filename (take-scrot ocr-name
                                        :selection :interactive
                                        :verbose nil
-                                       :display-scrot nil))
+                                       :show nil))
          (ocr-text (image-fn-to-text ocr-png-filename)))
     (set-x-selection ocr-text :clipboard)
     (message "copied ocr of length ~D to clipboard..."
@@ -130,8 +145,29 @@ perform ocr on it, place ocr'd text into clipboard"
     (declare (ignore win))
     (cons x y)))
 
-(defcommand record-box (x y)
-    ((:point "place pointer on upper-left corner: ")
-     (:point "place pointer on lower-right corner: "))
-  (message "X: ~A, Y: ~A" x y)
-  (list x y))
+(defvar *record-box-and-funcall-state*
+  "Internal to record-box-and-funcall")
+
+(defun record-box-and-funcall (&optional screen code x y)
+  (declare (ignore screen code))
+  (let ((p (cons x y)))
+    (message "~A" p)
+    (case (length *record-box-and-funcall-state*)
+      (0 nil)
+      (1 (push p *record-box-and-funcall-state*)
+       (echo "one more click..."))
+      (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
+           (message "running ~A ~A ~A" fn p1 p)
+           (setf *record-box-and-funcall-state* nil)
+           (funcall fn (list p1 p))))
+      (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*)))))
+
+
+(defun grab-pointer-position ()
+  (multiple-value-bind (x y win)
+      (xlib:global-pointer-position *display*)
+    (declare (ignore win))
+    (cons x y)))
+
+
+(add-hook *click-hook* 'record-box-and-funcall)
