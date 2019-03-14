@@ -36,15 +36,18 @@
                                          (percentage-thresh 20)
                                          (interval-mins 5))
   (loop
-    with MINS = 60
-    as info = (battery-info)
-    as percentage = (parse-integer (cdr (assoc :PERCENTAGE info))
-                                   :junk-allowed t)
-    as state = (cdr (assoc :STATE info))
-    when (and (equal state "discharging")
-              (<= percentage percentage-thresh))
-      do (message-no-timeout (format nil "^1 warning: battery discharging (~D%)^*" percentage))
-    do (sleep (* interval-mins MINS))))
+     with MINS = 60
+     do
+       (let* ((info (battery-info))
+              (state  (cdr (assoc :STATE info)))
+              (percentage-string  (cdr (assoc :PERCENTAGE info))))
+         (if (or (null percentage-string) (null state))
+             (warn "unable to get battery info")
+             (let ((percentage (parse-integer percentage-string :junk-allowed t)))
+               (when (and (equal state "discharging")
+                          (<= percentage percentage-thresh))
+                 (message-no-timeout (format nil "^1 warning: battery discharging (~D%)^*" percentage))))))
+     do (sleep (* interval-mins MINS))))
 
 (defvar *battery-notification-thread* nil)
 
