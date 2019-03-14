@@ -163,6 +163,13 @@
     (values (sb-ext:process-exit-code proc)
             string)))
 
+(defun run-command-sync-notify-on-error (command args)
+  (multiple-value-bind (retcode output)
+      (run-command-retcode-output command args)
+    (unless (zerop retcode)
+      (message-wrapped "error: ~A ~A failed with ~A: ~A"
+                       command args (zerop retcode) output))))
+
 ;; TODO optional
 (defmacro run-command-async (command args (retcode-sym output-sym)
                              on-success on-error)
