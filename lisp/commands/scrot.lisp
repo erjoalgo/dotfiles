@@ -146,6 +146,7 @@ perform ocr on it, place ocr'd text into clipboard"
     (cons x y)))
 
 (defvar *record-box-and-funcall-state*
+  nil
   "Internal to record-box-and-funcall")
 
 (defun record-box-and-funcall (&optional screen code x y)
