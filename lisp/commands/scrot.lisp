@@ -151,17 +151,17 @@ perform ocr on it, place ocr'd text into clipboard"
 
 (defun record-box-and-funcall (&optional screen code x y)
   (declare (ignore screen code))
-  (let ((p (cons x y)))
-    (message "~A" p)
-    (case (length *record-box-and-funcall-state*)
-      (0 nil)
-      (1 (push p *record-box-and-funcall-state*)
-       (echo "one more click..."))
-      (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
-           (message "running ~A ~A ~A" fn p1 p)
-           (setf *record-box-and-funcall-state* nil)
-           (funcall fn (list p1 p))))
-      (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*)))))
+  (when *record-box-and-funcall-state*
+    (let ((p (cons x y)))
+      (message "~A" p)
+      (case (length *record-box-and-funcall-state*)
+        (1 (push p *record-box-and-funcall-state*)
+           (echo "one more click..."))
+        (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
+             (message "running ~A ~A ~A" fn p1 p)
+             (setf *record-box-and-funcall-state* nil)
+             (funcall fn (list p1 p))))
+        (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*))))))
 
 
 (defun grab-pointer-position ()
