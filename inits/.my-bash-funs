@@ -469,3 +469,12 @@ function tmux-attach  {
   done
 fi
 }
+
+function gitignore-dirlocals  {
+  pushd .
+  cdgittop
+  echo '**/.dir-locals.el' >> .gitignore
+  git add -f .gitignore
+  git commit -m "autocommit: ignore .dir-locals.el"
+  popd
+}
