@@ -457,11 +457,15 @@ function strace-cmd  {
 complete -F _command strace-cmd
 
 function tmux-attach  {
-  IFS_OLD=$IFS
-  IFS=$'\n'
+  if test 1 = $(tmux list-session | wc -l); then
+     tmux attach
+  else
+     IFS_OLD=$IFS
+     IFS=$'\n'
   select SESSNO in $(tmux list-sessions); do
     IFS=$IFS_OLD
     tmux attach -t $(cut -f1 -d: <<< "${SESSNO}")
   break
   done
+fi
 }
