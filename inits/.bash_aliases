@@ -1,3 +1,6 @@
+
+
+
 #shortcuts
 alias cdrealpath='pwd; cd $(realpath .); pwd'
 alias cdpushd='pushd .; cd'
