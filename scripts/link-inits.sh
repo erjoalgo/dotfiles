@@ -49,14 +49,14 @@ for LINK in \
 done
 
 mkdir -p ${HOME}/.config
-mkdir -p ${HOME}/.bash-funs
+mkdir -p ${HOME}/.bash-fns
 
 safe_ln "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
 safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
 safe_ln "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 safe_ln "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
-safe_ln "${INITS_TOP}/.my-bash-funs" "${HOME}/.bash-funs/"
+safe_ln "${INITS_TOP}/.my-bash-fns" "${HOME}/.bash-fns/"
 
 safe_ln "${INITS_TOP}/konsole" "${HOME}/.local/share/"
 safe_ln "${INITS_TOP}/konsolerc" "${HOME}/.config/"
