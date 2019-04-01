@@ -41,9 +41,11 @@ GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 mkdir -p ${HOME}/bin
 
-for REPO in erjoalgo-stumpwmrc \
-		dotemacs \
-	    ; do
+for REPO in  \
+    erjoalgo-stumpwmrc \
+	dotemacs \
+        githost \
+    ; do
     cd ${GIT_HOME}
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
     cd ${REPO}
@@ -92,9 +94,10 @@ sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
 
 # link inits
 cd ~/git/erjoalgo-stumpwmrc/scripts/
-for SCRIPT in link-inits.sh\
-                  gen-git-config.sh \
-	      ;do
+for SCRIPT in  \
+    link-inits.sh\
+        gen-git-config.sh \
+    ;do
     ./${SCRIPT}
 done
 
