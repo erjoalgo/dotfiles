@@ -26,6 +26,12 @@ SYMLINK=${HOME}/.usb-drive-symlink
 
 udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000 -m ${HOME}/mnt -l ${SYMLINK}
 
+PARTITION=${DEVNAME}1
+
+if ! mount | grep "^${PARTITION}"; then
+    sudo mount -o umask=000 ${PARTITION} ${SYMLINK}
+fi
+
 for SECRET in \
     .password-store \
     .gnupg; do
