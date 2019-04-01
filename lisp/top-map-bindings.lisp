@@ -172,6 +172,7 @@
    ("h" *help-map*)
    ("s" "scrot-cmd-anon" )
    ("S" "scrot-cmd-full-screen-anon" )
+   ("n" "run-shell-command snipit")
    ("o" "ocr-scrot-clipboard" )
    ("k" "speak-string" )
    ("l" "spell-clipboard" )
