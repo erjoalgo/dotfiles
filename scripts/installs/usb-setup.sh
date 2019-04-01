@@ -33,11 +33,15 @@ for SECRET in \
     DEST="${HOME}/${SECRET}"
     SRC="${SYMLINK}/nosync/${SECRET}"
 
-    if test -d "${DEST}"; then
-        echo "skipping exiting ${DEST}"
-    elif ! test -d "${SRC}"; then
+    if test -d "${DEST}" -a ! -L "${DEST}"; then
+        CMD="mv ${DEST} ${DEST}.bak"
+        read -p "${CMD}: "
+        ${CMD}
+    fi
+
+    if ! test -d "${SRC}"; then
         echo "warning: missing secret at ${SRC}"
     else
-        ln -s  "${SRC}" "${DEST}"
+        ln -sfT "${SRC}" "${DEST}"
     fi
 done
