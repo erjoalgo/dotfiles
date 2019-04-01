@@ -2,9 +2,19 @@
 
 set -xeuo pipefail
 
-test 0 -ne "${EUID}"
+while getopts "h0" OPT; do
+    case ${OPT} in
+    0)
+        LOWBANDWITH=true
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
 
-# get sudo, git and curl
+
 APT_GET=$(which apt-get yum 2>/dev/null) || true
 SUDOCMD="su -c"
 if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
@@ -12,7 +22,16 @@ if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
 fi
 
 if test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y git sudo curl python"
+   ${SUDOCMD} "${APT_GET} install -y git sudo curl"
+fi
+
+if which apt-get; then
+    sudo apt-get install -y apt-file
+    sudo apt-file update
+    if ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
+        sudo ./update-sources-list.sh
+        sudo apt-get update
+    fi
 fi
 
 # fetch my git repos
@@ -49,9 +68,25 @@ elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
     ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
 fi
 
-# sudo ln -sf  /usr/local/bin
-# sudo which insert-text-block
+if test -n "${LOWBANDWITH:-}"; then
+    # this is on a laptop
+    ${SUDOCMD} "${APT_GET} install -y wireless-tools links"
+    if lspci -nn | grep -i "Intel.*Wireless"; then
+        ${SUDOCMD} "${APT_GET} install firmware-iwlwifi"
+    else
+        echo "unknown wireless card"
+        exit 1
+    fi
+    wifi-connect
+    links google.com
+    curl google.com
+    echo "completed low-bandwith install"
+    exit 0
+fi
 
+test 0 -ne "${EUID}"
+
+${SUDOCMD} "${APT_GET} install -y python python-setuptools python-pip"
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
 
@@ -93,16 +128,6 @@ if test -e ${GRUB_FILE} &&  \
 fi
 
 mkdir -p ${HOME}/src
-
-if which apt-get; then
-  sudo apt-get install -y apt-file
-  sudo apt-file update
-  sudo apt-get update
-fi
-
-if which apt-get && grep cdrom /etc/apt/sources.list; then
-    sudo ./update-sources-list.sh
-fi
 
 # some essential scripts
 if test -n "${APT_GET}"; then
