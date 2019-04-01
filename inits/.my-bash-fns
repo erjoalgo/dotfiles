@@ -478,3 +478,11 @@ function gitignore-dirlocals  {
   git commit -m "autocommit: ignore .dir-locals.el"
   popd
 }
+
+function emacs-attach-loop  {
+  echo "use 'C-x #' to detach from an emacs session"
+  for PID in $(pidof emacs); do
+    kill -SIGUSR1 "${PID}"
+    emacsclient -c
+  done
+}
