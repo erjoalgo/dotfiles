@@ -4,7 +4,8 @@ set -euo pipefail
 
 USAGE=false
 SSH_OPTS=${SSH_OPTS:-}
-REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-'$(whoami)'}
+REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-${USER}}
+IDENTITY_FILE=${IDENTITY_FILE:-${HOME}/.ssh/id_rsa.pub}
 
 while getopts "u:t:p:i:o:h" OPT; do
     case ${OPT} in
@@ -23,9 +24,6 @@ while getopts "u:t:p:i:o:h" OPT; do
             ;;
     esac
 done
-
-REMOTE_PRIVILEGED_USER=${REMOTE_PRIVILEGED_USER:-${USER}}
-IDENTITY_FILE=${IDENTITY_FILE:-${HOME}/.ssh/id_rsa.pub}
 
 
 if test ${USAGE} = true -o -z "${1:-}"; then
