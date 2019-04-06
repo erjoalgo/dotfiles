@@ -28,6 +28,7 @@ while getopts "u:t:p:i:o:h" OPT; do
     esac
 done
 
+shift $((OPTIND -1))
 
 if test ${USAGE} = true -o -z "${1:-}"; then
     echo "usage: ssh-copy-id-to-user [-p REMOTE_PRIVILEGED_USER] [-o ssh_extra_opts] \
