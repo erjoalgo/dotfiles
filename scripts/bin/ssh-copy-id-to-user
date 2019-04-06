@@ -19,6 +19,9 @@ while getopts "u:t:p:i:o:h" OPT; do
             # extra ssh opts
             SSH_OPTS=${OPTARG}
             ;;
+        t)
+            SSH_USER_HOST_PORT=${OPTARG}
+            ;;
         h)
             USAGE=true
             ;;
@@ -31,8 +34,6 @@ if test ${USAGE} = true -o -z "${1:-}"; then
 -t SSH_USER_HOST_PORT [-i IDENTITY_FILE] [CP_DEST_USER...]"
     exit 1
 fi
-
-SSH_USER_HOST_PORT=${1} && shift
 
 if test ${#*} -eq 0; then
     CP_DEST_USERS=${REMOTE_PRIVILEGED_USER}
