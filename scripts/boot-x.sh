@@ -12,7 +12,7 @@ if ! ./installs/emacs-install.sh; then
   which emacs
 fi
 sudo apt-get install -y chromium zathura konsole gnome-terminal pass keynav
-sudo apt-get install -y eog shutter
+sudo apt-get install -y eog scrot
 sudo apt-get install -y wireless-tools wpasupplicant expect iw net-tools
 sudo apt-get install -y libxcomposite-dev
 
