@@ -48,8 +48,13 @@ if ! grep "[.]pub\|[.]pem" <<< "${IDENTITY_FILE}" || ! test -e ${IDENTITY_FILE};
 fi
 
 SSH_CMD="ssh -tt ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
+
+
 for REMOTE_USER in $CP_DEST_USERS; do
-    echo "as remote ${REMOTE_PRIVILEGED_USER}, adding to remote user ${REMOTE_USER} the local key ${IDENTITY_FILE}"
+    cat<<EOF
+As remote ${REMOTE_PRIVILEGED_USER}, adding to remote user ${REMOTE_USER}
+the local key ${IDENTITY_FILE}
+EOF
     if test "${REMOTE_PRIVILEGED_USER}" = "${REMOTE_USER}"; then
         SU_OPT="bash -c"
     else
