@@ -88,8 +88,7 @@ NC='\033[0m' # No Color
 # https://stackoverflow.com/questions/5947742/
 
 ORIGPWD=$(pwd)
-while test $# -gt 0; do
+for REPO in ${*}; do
     cd "${ORIGPWD}"
-    REPO=${1} && shift
     check_lagging "${REPO}"
 done
