@@ -44,7 +44,7 @@ fi
 
 if ! grep "[.]pub\|[.]pem" <<< "${IDENTITY_FILE}" || ! test -e ${IDENTITY_FILE}; then
     echo "bad identity file: ${IDENTITY_FILE}"
-    return 1
+    exit 1
 fi
 
 SSH_CMD="ssh -tt ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
