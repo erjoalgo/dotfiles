@@ -3,7 +3,11 @@
 
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
+;; TODO asdf
+
 (ql:quickload "usocket")
+(ql:quickload "hunchentoot")
+(ql:quickload "babel")
 
 (defun file-string (path)
   (with-open-file (stream path)
@@ -107,7 +111,8 @@
     "swank-loader.lisp"
     "correct-screen.lisp"
     "brightness.lisp"
-    "startup-apps.lisp")
+    "startup-apps.lisp"
+    "x-service.lisp")
 
   "defines components to load and their order")
 
