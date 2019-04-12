@@ -6,13 +6,15 @@ function usage {
   echo "notify-send -m <MESSAGE> [ -c <COLOR> ] [ -p <PORT> ]"
 }
 
+COLOR_HEADER_OPT=""
+
 while getopts "m:c:p:h" OPT; do
   case ${OPT} in
     m)
       MESSAGE=${OPTARG}
       ;;
     c)
-      COLOR=${OPTARG}
+      COLOR_HEADER_OPT="-H STUMPWM-MESSAGE-COLOR:${OPTARG}"
       ;;
     p)
       NOTIFY_SEND_STUMPWM_PORTS=${OPTARG}
@@ -31,33 +33,18 @@ done
 HOST="localhost"
 # also send to remote client(s) connected via ssh
 NOTIFY_SEND_STUMPWM_PORTS=${NOTIFY_SEND_STUMPWM_PORTS:-1959,1960,1961,1962}
-COLOR=${COLOR:-}
-
-PAYLOAD=${MESSAGE}
-
-declare -A COLORS
-COLORS=([black]=0 [red]=1 [green]=2 [yellow]=3 [blue]=4 [magenta]=5 [cyan]=6 [white]=7)
-if test -n "${COLOR}"; then
-  IDX=${COLORS[${COLOR}]}
-  if test -n "${IDX}"; then
-    PAYLOAD="^${IDX}${PAYLOAD}^*"
-  else
-    echo "WARN: unknown color ${COLOR}" >&2
-  fi
-fi
 
 EXIT_CODE=1
-for PORT in $(sed "s/,/ /g" <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
-  echo "${PORT}"
-  if (exec 3<>/dev/tcp/${HOST}/${PORT}; echo "${PAYLOAD}" >&3; exec 3<&-); then
-    EXIT_CODE=0
-  fi
+for PORT in $(tr ',' ' ' <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
+    curl "${HOST}:${PORT}/notify" -d "${MESSAGE}" \
+         ${COLOR_HEADER_OPT} 2> /dev/null \
+          && EXIT_CODE=0
 done
 
-exit "${EXIT_CODE}"
+exit ${EXIT_CODE}
 
 
 # Local Variables:
 # mode: sh
-# compile-command: "./notify-send -m 'hello world' -c green"
+# compile-command: "./notify-send-stumpwm -m 'hello world' -c green"
 # End:
