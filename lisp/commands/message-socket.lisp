@@ -19,7 +19,9 @@
              (not shutdown-if-exists))
         server
         (progn
-          (when server (usocket:socket-close server))
+          (when server
+            (usocket:socket-close server)
+            (usocket:socket-shutdown server))
           (setf (cdr entry)
                 (usocket:socket-listen host port :reuse-address t))))))
 
