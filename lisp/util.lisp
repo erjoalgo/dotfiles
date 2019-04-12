@@ -171,19 +171,28 @@
                        command args (zerop retcode) output))))
 
 ;; TODO optional
-(defmacro run-command-async (command args (retcode-sym output-sym)
-                             on-success on-error)
-  `(eval-async
-     (multiple-value-bind (,retcode-sym ,output-sym)
-         (run-command-retcode-output ,command ,args)
-       (if (zerop ,retcode-sym)
-           ,on-success
-           ,on-error))))
-
-'(run-command-async "bash"
-                     '("-c" "sleep 1; false;") (ret out)
-                     (message "success!")
-                     (message "err: ~A ~A" ret out))
+(defmacro run-command-async (command
+                             &optional
+                               args
+                               retcode-output
+                               on-success on-error)
+  (destructuring-bind (retcode-sym output-sym) retcode-output
+    (setf retcode-sym (or retcode-sym (gensym "retcode-"))
+          output-sym (or output-sym (gensym "output-")))
+    `(eval-async
+       (multiple-value-bind (,retcode-sym ,output-sym)
+           (run-command-retcode-output ,command ,args)
+         (if (zerop ,retcode-sym)
+             ,(or on-success
+                  `(message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
+                                    ;; TODO eval command only once
+                                    ,command ,args))
+             ,(or on-error
+                  `(message-wrapped
+                    "^1non-zero exit: ~A of '~A ~{~A~^ ~}': ~A^*"
+                    ,retcode-sym
+                    ,command ,args
+                    ,output-sym)))))))
 
 (defun run-command-async-notify (command &optional args)
   (run-command-async command (mapcar 'princ-to-string args) (ret out)
