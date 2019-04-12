@@ -458,7 +458,7 @@ complete -F _command strace-cmd
 
 function tmux-attach  {
   if test 1 = $(tmux list-session | wc -l); then
-     tmux attach
+     tmux attach -d
   else
      IFS_OLD=$IFS
      IFS=$'\n'
