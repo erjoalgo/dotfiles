@@ -486,3 +486,9 @@ function emacs-attach-loop  {
     emacsclient -c
   done
 }
+
+function ec-which {
+  PROGRAMS=${1} && shift
+  emacsclient -n $(which ${PROGRAMS})
+}
+complete -F _command ec-which
