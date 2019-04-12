@@ -158,7 +158,7 @@ perform ocr on it, place ocr'd text into clipboard"
         (1 (push p *record-box-and-funcall-state*)
            (echo "one more click..."))
         (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
-             (message "running ~A ~A ~A" fn p1 p)
+             (unmap-all-message-windows)
              (setf *record-box-and-funcall-state* nil)
              (funcall fn (list p1 p))))
         (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*))))))
