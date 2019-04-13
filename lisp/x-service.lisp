@@ -66,7 +66,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (when color
     (setf text (message-colorize text color)))
   (message-wrapped "~A" text)
-  "OK"))
+  ""))
 
 ;; (defalias url-browse url-launcher-browser-new-tab)
 
@@ -75,7 +75,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (let ((url (hunchentoot-post-data)))
     (format t "x-service: value of url: ~A~%" url)
     (url-launcher-browser-new-tab url)
-    "OK"))
+    ""))
 
 (define-regexp-route clipboard-handler ("/clipboard")
     "get/set clipboard contents"
@@ -83,7 +83,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (:post
      (let ((contents (hunchentoot-post-data)))
        (set-x-selection contents :clipboard)
-       "OK"))
+       ""))
     (:get (get-x-selection :clipboard))))
 
 (define-regexp-route visible-window-pids-handler ("/visible-window-pids")
