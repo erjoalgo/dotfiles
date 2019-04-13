@@ -85,6 +85,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (:post
      (let ((contents (hunchentoot-post-data-or-err)))
        (set-x-selection contents :clipboard)
+       (set-x-selection contents :primary)
        ""))
     (:get (get-x-selection :clipboard))))
 
