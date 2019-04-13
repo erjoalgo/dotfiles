@@ -22,8 +22,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (defun ,name ()
        ,docstring
        (ppcre:register-groups-bind ,capture-names
-                                   (,url-regexp (hunchentoot:script-name*))
-                                   ,@body))
+           (,url-regexp (hunchentoot:script-name*))
+         (handler-case (progn ,@body)
+           (error (err)
+             (setf (hunchentoot:return-code*)
+                   hunchentoot:+HTTP-INTERNAL-SERVER-ERROR+)
+             (format nil "x-service error: ~A" err)))))
      (push (hunchentoot:create-regex-dispatcher ,url-regexp ',name)
            hunchentoot:*dispatch-table*)))
 
