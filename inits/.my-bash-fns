@@ -377,8 +377,9 @@ function current-shell-window-visible-p {
 
 _NOTIFY_LAST_COMMAND_THRESH_SECS=10
 function stumpwm-maybe-notify-last-command {
-    RET=${1} && shift
-    CMD=${1} && shift
+    local RET=${1} && shift
+    local CMD=${1} && shift
+
     ELAPSED_TIME_SECS=${1} && shift
 
     if test ${RET} = 0; then
@@ -400,8 +401,8 @@ function _command-start-time-set-maybe {
 }
 
 function post-command-maybe-notify {
-    RET=$?
-    CMD=$(fc -ln -0)
+    local RET=$?
+    local CMD=$(fc -ln -0)
     ELAPSED_TIME_SECS=$(expr ${SECONDS} - ${_COMMAND_START_TIME:-${SECONDS}})
     unset _COMMAND_START_TIME
     history -a
