@@ -37,8 +37,7 @@ NOTIFY_SEND_STUMPWM_PORTS=${NOTIFY_SEND_STUMPWM_PORTS:-1959,1960,1961,1962}
 EXIT_CODE=1
 for PORT in $(tr ',' ' ' <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
     curl "${HOST}:${PORT}/notify" -d "${MESSAGE}" \
-         ${COLOR_HEADER_OPT} 2> /dev/null \
-          && EXIT_CODE=0
+         ${COLOR_HEADER_OPT} 2> /dev/null &
 done
 
 exit ${EXIT_CODE}
