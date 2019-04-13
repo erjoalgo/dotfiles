@@ -50,8 +50,9 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 (setf hunchentoot:*dispatch-table* nil)
 
 (defun hunchentoot-post-data ()
-  (-> (hunchentoot:raw-post-data)
-      (babel:octets-to-string)))
+  (when (hunchentoot:raw-post-data)
+    (-> (hunchentoot:raw-post-data)
+        (babel:octets-to-string))))
 
 (define-regexp-route notify-handler ("/notify")
     "Issue a notification"
