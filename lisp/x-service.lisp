@@ -63,13 +63,10 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
          (color (->> (hunchentoot:headers-in*)
                      (assoc :STUMPWM-MESSAGE-COLOR)
                      cdr)))
-    (if (not text)
-        "No text in post data"
-        (progn
-          (when color
-            (setf text (message-colorize text color)))
-          (message-wrapped "~A" text)
-          ""))))
+  (when color
+    (setf text (message-colorize text color)))
+  (message-wrapped "~A" text)
+  ""))
 
 ;; (defalias url-browse url-launcher-browser-new-tab)
 
