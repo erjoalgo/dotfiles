@@ -53,13 +53,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (setf hunchentoot:*dispatch-table* nil)
 
-(defun hunchentoot-post-data ()
-  (-> (hunchentoot:raw-post-data)
-      (babel:octets-to-string)))
+(defun hunchentoot-post-data-or-err ()
+  (if (null (hunchentoot:raw-post-data))
+      (error "Missing post data")
+      (-> (hunchentoot:raw-post-data)
+          (babel:octets-to-string))))
 
 (define-regexp-route notify-handler ("/notify")
     "Issue a notification"
-  (let* ((text (hunchentoot-post-data))
+  (let* ((text (hunchentoot-post-data-or-err))
          (color (->> (hunchentoot:headers-in*)
                      (assoc :STUMPWM-MESSAGE-COLOR)
                      cdr)))
@@ -72,7 +74,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (define-regexp-route browse-handler ("/browse")
   "Browse to a URL"
-  (let ((url (hunchentoot-post-data)))
+  (let ((url (hunchentoot-post-data-or-err)))
     (format t "x-service: value of url: ~A~%" url)
     (url-launcher-browser-new-tab url)
     ""))
@@ -81,7 +83,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     "get/set clipboard contents"
   (case (hunchentoot:request-method*)
     (:post
-     (let ((contents (hunchentoot-post-data)))
+     (let ((contents (hunchentoot-post-data-or-err)))
        (set-x-selection contents :clipboard)
        ""))
     (:get (get-x-selection :clipboard))))
