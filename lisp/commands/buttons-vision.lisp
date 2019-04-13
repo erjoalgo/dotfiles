@@ -22,7 +22,7 @@
                       :selection :interactive
                       :scrot-top parent-dir
                       :verbose nil
-                      :eog-scrot nil))
+                      :show nil))
 
     (unless (and button-pathname
                  (probe-file button-pathname))
