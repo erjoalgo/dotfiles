@@ -44,7 +44,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (defun message-colorize (msg color)
   (let* ((color-sym (-> color princ-to-string string-upcase intern))
-        (idx (position color-sym *message-colors*)))
+         (idx (position color-sym *message-colors*)))
     (if idx
         (format nil "^~D~A^*" idx msg)
         (error "no such color: ~A. choices: ~A"
@@ -65,15 +65,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
          (color (->> (hunchentoot:headers-in*)
                      (assoc :STUMPWM-MESSAGE-COLOR)
                      cdr)))
-  (when color
-    (setf text (message-colorize text color)))
-  (message-wrapped "~A" text)
-  ""))
+    (when color
+      (setf text (message-colorize text color)))
+    (message-wrapped "~A" text)
+    ""))
 
 ;; (defalias url-browse url-launcher-browser-new-tab)
 
 (define-regexp-route browse-handler ("/browse")
-  "Browse to a URL"
+    "Browse to a URL"
   (let ((url (hunchentoot-post-data-or-err)))
     (format t "x-service: value of url: ~A~%" url)
     (url-launcher-browser-new-tab url)
