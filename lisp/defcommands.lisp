@@ -180,3 +180,22 @@
          (signal (if (member state '(:STOPPED :DEBBUGGER))
                      "CONT" "STOP")))
     (kill-process pid signal)))
+
+(defcommand swap-frames () ()
+  (let* ((group (current-group))
+         (frames (group-frames group)))
+    (assert (eq 2 (length frames)))
+    (message-wrapped "~A" frames)
+    (destructuring-bind (a b) frames
+      (let ((awin (frame-window a))
+            (bwin (frame-window b)))
+        ;; (setf (frame-window a) bwin)
+        ;; (setf (frame-window b) awin)
+        ;; (raise-window bwin)
+        ;; (raise-window awin)
+        (assert (and awin bwin))
+        (message-wrapped "~A => ~A, ~A => ~A"
+                         a bwin
+                         b awin)
+        (frame-raise-window group a bwin nil)
+        (frame-raise-window group b awin nil)))))
