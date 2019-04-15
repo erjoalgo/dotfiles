@@ -69,9 +69,8 @@ set scroll-step 40
 
 set adjust-open width
 set scroll-wrap false
-#set search-wrap false
 set selection-clipboard clipboard
-#selection-clipboard clipboard
+
 # map <C-=> zoom in
 # map <C--> zoom in
 # map + zoom in
