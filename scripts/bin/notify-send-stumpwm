@@ -30,20 +30,7 @@ while getopts "m:c:p:h" OPT; do
   esac
 done
 
-HOST="localhost"
-# also send to remote client(s) connected via ssh
-NOTIFY_SEND_STUMPWM_PORTS=${NOTIFY_SEND_STUMPWM_PORTS:-1959,1960,1961,1962}
-
-EXIT_CODE=1
-for PORT in $(tr ',' ' ' <<< "${NOTIFY_SEND_STUMPWM_PORTS}"); do
-  if exec 6<> /dev/tcp/"${HOST}/${PORT}" &> /dev/null; then
-    EXIT_CODE=0
-    curl "${HOST}:${PORT}/notify" -d "${MESSAGE}" ${COLOR_HEADER_OPT} 2> /dev/null &
-  fi
-done
-
-exit ${EXIT_CODE}
-
+x-service-curl "/notify" -d "${MESSAGE}" ${COLOR_HEADER_OPT}
 
 # Local Variables:
 # mode: sh

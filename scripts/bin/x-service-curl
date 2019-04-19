@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+import os
+import socket
+import subprocess
+import sys
+
+def socket_open_p(host, port):
+  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  result = sock.connect_ex((host,port))
+  sock.close()
+  return result == 0
+
+
+def x_service_curl(host, ports, path, rest):
+  gret = 0
+  cnt = 0
+  for port in ports:
+    if socket_open_p(host, port):
+      cnt += 1
+      ret = subprocess.call(["curl", "{}:{}{}".format(host, port, path)] + rest)
+      gret |= ret
+  return gret if cnt else 1
+
+def main():
+  if len(sys.argv) < 2:
+    print ("usage: x-service /PATH [CURL_FLAGS...]")
+    exit(1)
+  path = sys.argv[1]
+  host="localhost"
+  x_service_ports_str=(os.getenv("X_SERVICE_PORTS") or "1959,1960,1961,1962")
+  ports = map(int, x_service_ports_str.split(","))
+  rest = sys.argv[2:]
+  return x_service_curl(host, ports, path, rest)
+
+if __name__ == "__main__":
+  exit(main())
+
+# Local Variables:
+# mode: python-mode
+# End:
