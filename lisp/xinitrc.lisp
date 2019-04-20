@@ -43,7 +43,7 @@
            (run-shell-command (format nil "~A &" script) nil)))
 
 (defvar *screensaver-proc* nil)
-(defparameter *screensaver-lock-time-mins* 15)
+(defparameter *screensaver-lock-time-mins* 45)
 
 (defun screen-lock-program ()
   (or (which "xsecurelock.sh")
