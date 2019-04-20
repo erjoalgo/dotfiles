@@ -7,9 +7,11 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 sudo apt-get install -y dirmngr || true
 
 ./installs/install-stumpwm.sh
-if ! ./installs/emacs-install.sh; then
-  echo "warning: failed to build emacs from source"
-  which emacs
+if ! emacs --version | grep "26\\|27"; then
+  if ! ./installs/emacs-install.sh; then
+    echo "warning: failed to build emacs from source"
+    which emacs
+  fi
 fi
 sudo apt-get install -y chromium zathura konsole gnome-terminal pass keynav
 sudo apt-get install -y eog scrot
