@@ -45,8 +45,7 @@ EndSection
 EOF
 
 
-X_BROWSER=$(which chromium google-chrome-stable google-chrome firefox 2>/dev/null |  \
-  head -1) || true
+X_BROWSER=$(which x-www-browser-stumpwm)
 
 if which "${X_BROWSER}" && which update-alternatives; then
   sudo update-alternatives --install $(which x-www-browser)  \
