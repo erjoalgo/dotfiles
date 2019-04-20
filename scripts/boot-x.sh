@@ -13,9 +13,11 @@ if ! emacs --version | grep "26\\|27"; then
     which emacs
   fi
 fi
+
 sudo apt-get install -y chromium zathura konsole gnome-terminal pass keynav
 sudo apt-get install -y eog scrot
-sudo apt-get install -y wireless-tools wpasupplicant macchanger expect iw net-tools
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
+  macchanger expect iw net-tools
 sudo apt-get install -y libxcomposite-dev
 
 ./installs/install-xsecurelock.sh
