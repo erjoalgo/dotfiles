@@ -31,19 +31,19 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (push (hunchentoot:create-regex-dispatcher ,url-regexp ',name)
            hunchentoot:*dispatch-table*)))
 
-(defvar *message-colors*
-  '(black
-    red
-    green
-    yellow
-    blue
-    magenta
-    cyan
-    white)
+(defparameter *message-colors*
+  '(:black
+    :red
+    :green
+    :yellow
+    :blue
+    :magenta
+    :cyan
+    :white)
   "Message colors.")
 
 (defun message-colorize (msg color)
-  (let* ((color-sym (-> color princ-to-string string-upcase intern))
+  (let* ((color-sym (-> color princ-to-string string-upcase (intern :keyword)))
          (idx (position color-sym *message-colors*)))
     (if idx
         (format nil "^~D~A^*" idx msg)
