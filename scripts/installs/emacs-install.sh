@@ -39,7 +39,7 @@ elif command -v apt-get; then
     sudo apt-get install -y libgmp-dev
 
     sudo apt-get install -y gnutls-dev libncurses5-dev
-    install-from-source -u https://ftp.gnu.org/gnu/nettle/nettle-3.4.tar.gz \ -i 28C67298
+    install-from-source -u https://ftp.gnu.org/gnu/nettle/nettle-3.4.1-1.tar.gz \ -i 28C67298
 
     # install-from-source -u "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.5.tar.xz"
 fi
