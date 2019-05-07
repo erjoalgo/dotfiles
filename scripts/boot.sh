@@ -158,4 +158,13 @@ fi
 
 chmod 600 ~/.ssh/config
 
+X_BROWSER=$(which x-www-browser-stumpwm)
+
+if which "${X_BROWSER}" && which update-alternatives; then
+  sudo update-alternatives --install $(which x-www-browser)  \
+    x-www-browser ${X_BROWSER} 200
+  sudo update-alternatives --set x-www-browser ${X_BROWSER}
+  # sudo update-alternatives --config x-www-browser
+fi
+
 echo "success"
