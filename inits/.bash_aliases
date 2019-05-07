@@ -88,11 +88,11 @@ __git_complete gfr _git_rebase
 alias gkt='git checkout'
 __git_complete gkt _git_checkout
 alias gkp='git checkout -p'
-__git_complete gck _git_checkout
 alias gcrp='git cherry-pick'
 __git_complete gcrp _git_cherry_pick
 alias gkp-last='git checkout -p HEAD^'
-__git_complete gck _git_checkout
+__git_complete gkp _git_checkout
+__git_complete gkp-last _git_checkout
 alias gw='git show'
 alias gww='git show HEAD^'
 alias gwww='git show HEAD^^'
