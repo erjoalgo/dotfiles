@@ -18,7 +18,9 @@ def x_service_curl(host, ports, path, rest):
   for port in ports:
     if socket_open_p(host, port):
       cnt += 1
-      ret = subprocess.call(["curl", "{}:{}{}".format(host, port, path)] + rest)
+      url = "{}:{}{}".format(host, port, path)
+      cmd = ["timeout", "5s", "curl", url] + rest
+      ret = subprocess.call(cmd)
       gret |= ret
   return gret if cnt else 1
 
