@@ -474,9 +474,12 @@ fi
 function gitignore-dirlocals  {
   pushd .
   cdgittop
-  echo '**/.dir-locals.el' >> .gitignore
+  cat <<EOF >> .gitignore
+**/.dir-locals.el
+**/.gitignore
+EOF
   git add -f .gitignore
-  git commit -m "autocommit: ignore .dir-locals.el"
+  # git commit -m "autocommit: ignore .dir-locals.el"
   popd
 }
 
