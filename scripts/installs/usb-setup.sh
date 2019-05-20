@@ -31,7 +31,7 @@ fi
 
 udev-gen-rule-for-stick.sh -d ${DEVNAME}  -m ${HOME}/mnt -l ${SYMLINK}
 
-PARTITION=${DEVNAME}1
+PARTITION=${DEVNAME}
 
 if ! mount | grep "^${PARTITION}"; then
     sudo mount -o umask=000 ${PARTITION} ${SYMLINK}
