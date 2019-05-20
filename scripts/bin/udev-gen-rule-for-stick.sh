@@ -5,7 +5,7 @@ set -euo pipefail
 while getopts "d:m:o:l:h" OPT; do
     case ${OPT} in
     d)
-        DEVNAME=${OPTARG}
+        PARTITION=${OPTARG}
         ;;
     m)
         MOUNT_POINT_PARENT=${OPTARG}
@@ -23,9 +23,9 @@ while getopts "d:m:o:l:h" OPT; do
     esac
 done
 
-test -n "${DEVNAME}" -a -n "${MOUNT_POINT_PARENT}"
+test -n "${PARTITION}" -a -n "${MOUNT_POINT_PARENT}"
 
-ID_SERIAL_SHORT=$(udevadm info -n ${DEVNAME} |  \
+ID_SERIAL_SHORT=$(udevadm info -n ${PARTITION} |  \
                       grep ID_SERIAL_SHORT |  \
                       cut -d= -f2)
 
