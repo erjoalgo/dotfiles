@@ -24,7 +24,12 @@ fi
 
 SYMLINK=${HOME}/.usb-drive-symlink
 
-udev-gen-rule-for-stick.sh -d ${DEVNAME} -o umask=000 -m ${HOME}/mnt -l ${SYMLINK}
+MOUNT_OPTS=""
+if sudo blkid | grep "${DEVNAME}.*fat"; then
+    MOUNT_OPTS="-o umask=000"
+fi
+
+udev-gen-rule-for-stick.sh -d ${DEVNAME}  -m ${HOME}/mnt -l ${SYMLINK}
 
 PARTITION=${DEVNAME}1
 
