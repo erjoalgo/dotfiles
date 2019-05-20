@@ -62,8 +62,12 @@ fi
 
 echo "successfully wrote rule ${RULE_FNAME}"
 
-if test -n "${SYMLINK:-}" -a ! -d "${SYMLINK}"; then
-    ln -sf "${MOUNT_POINT}" "${SYMLINK}"
+
+if test -n "${SYMLINK:-}"; then
+   test -L "${SYMLINK}" && sudo unlink "${SYMLINK}"
+   if ! -e "${SYMLINK}" \); then
+       ln -sf "${MOUNT_POINT}" "${SYMLINK}";
+   fi
 fi
 
 # Local Variables:
