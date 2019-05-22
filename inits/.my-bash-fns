@@ -251,7 +251,7 @@ function pid-listening-at-port	{
     fi
 }
 
-function pid-listening-on-ports  {
+function ports-open-by-pid  {
   PID=${1} && shift
   sudo lsof -Pan -p ${PID} -i
 }
