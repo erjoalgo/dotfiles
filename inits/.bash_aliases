@@ -256,6 +256,7 @@ alias mic-check="arecord -vvv -f dat /dev/null"
 alias tma='tmux-attach'
 alias dd-status='watch -n 20 sudo kill -USR1 $(pidof dd)'
 
+alias bash-login-debugging-list-open-files="echo exit | strace bash -li |& less | grep ^open"
 # Local Variables:
 # mode: sh
 # End:
