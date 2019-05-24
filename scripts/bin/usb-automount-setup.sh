@@ -32,7 +32,7 @@ fi
 udev-gen-rule-for-stick.sh -d ${PARTITION}  -m ${HOME}/mnt -l ${SYMLINK}
 
 if ! mount | grep "^${PARTITION}"; then
-    sudo mount -o umask=000 ${PARTITION} ${SYMLINK}
+    sudo mount -o "${MOUNT_OPTS}" ${PARTITION} ${SYMLINK}
 fi
 
 for SECRET in \
