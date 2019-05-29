@@ -112,7 +112,7 @@ alias gsd='git stash drop'
 alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gsh='git stash'
-alias grvt='git-revert-HEAD'
+alias grvt='wte git-revert-HEAD'
 
 # never used
 # alias gm='git commit'
