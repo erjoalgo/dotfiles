@@ -9,4 +9,4 @@ echo ${FIND_ARGS}
 sudo adb shell find ${FIND_ARGS} \
     | sed 's/[[:space:]]//g' \
     | tee -a $(basename ${0}).log \
-    | xargs -L1 adb-pull-rm.sh
+    | xargs -rL1 adb-pull-rm.sh
