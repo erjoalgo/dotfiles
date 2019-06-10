@@ -1,33 +1,36 @@
-#!/bin/bash
+#!/bin/bash -x
+
+set -euo pipefail
+
+function usage  {
+    echo "usage: $(basename ${0}) <ANDROID_FILE_PATH>"
+}
 
 if test $# -ne 1; then
-    echo "invalid number of arguments" && exit ${LINENO}
+    usage
+    exit 1
 fi
 
+ADB_CMD=${ADB_CMD:-"sudo adb"}
 ANDROID_PATH="${1}"
-NAME=$(basename "${ANDROID_PATH}") || exit ${LINENO}
-
-ADB="sudo adb"
+NAME=$(basename "${ANDROID_PATH}")
 
 # TODO make sure 'adb shell ls' succeeds
-OUT=$(${ADB} shell ls "${ANDROID_PATH}") || exit ${LINENO}
+OUT=$(${ADB_CMD} shell ls "${ANDROID_PATH}")
 
 echo "${ANDROID_PATH}"
 
-if grep -i "no such file"<<<"${OUT}"; then
-    echo  "the android path ${ANDROID_PATH} doesn't exist" && exit 0
-fi
+! grep -i "no such file" <<< "${OUT}" || false
 
+test -e "${NAME}" || ${ADB_CMD} pull "${ANDROID_PATH}"
 
-if ! test -e "${NAME}"; then
-    ${ADB} pull "${ANDROID_PATH}" || exit ${LINENO}
-fi
+MD5_HDD=$(md5sum "${NAME}" | cut -f1)
+MD5_ANDROID=$(${ADB_CMD} shell md5sum "${ANDROID_PATH}" | cut -f1)
 
-MD5_HDD=$(md5sum "${NAME}" | sed -E 's/[[:space:]]+/\t/g' | cut -f1) || exit ${LINENO}
-MD5_ANDROID=$(${ADB} shell md5sum "${ANDROID_PATH}" | sed -E 's/[[:space:]]+/\t/g' | cut -f1) || exit ${LINENO}
-
-if test ${MD5_ANDROID} = ${MD5_HDD}; then
-    ${ADB} shell rm "${ANDROID_PATH}" || exit ${LINENO}
+if test "${MD5_ANDROID}" = "${MD5_HDD}"; then
+    ${ADB_CMD} shell rm "${ANDROID_PATH}"
 else
-    echo "corruption with ${ANDROID_PATH}" && exit ${LINENO}
+    echo "unexpected checksum for ${ANDROID_PATH}: ${MD5_ANDOIRD} vs ${MD5_HDD}"
+    echo "${ANDROID_PATH}\t$(${ADB_CMD} shell du -b ${ANDROID_PATH})"
+    echo "${NAME}\t$(du -b ${NAME})"
 fi
