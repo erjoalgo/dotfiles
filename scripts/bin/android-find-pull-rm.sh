@@ -8,5 +8,5 @@ echo ${FIND_ARGS}
 
 sudo adb shell find ${FIND_ARGS} \
     | sed 's/[[:space:]]//g' \
-    | tee log \
+    | tee -a $(basename ${0}).log \
     | xargs -L1 adb-pull-rm.sh
