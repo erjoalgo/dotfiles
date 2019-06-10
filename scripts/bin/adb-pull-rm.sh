@@ -24,13 +24,13 @@ echo "${ANDROID_PATH}"
 
 test -e "${NAME}" || ${ADB_CMD} pull "${ANDROID_PATH}"
 
-MD5_HDD=$(md5sum "${NAME}" | cut -f1)
-MD5_ANDROID=$(${ADB_CMD} shell md5sum "${ANDROID_PATH}" | cut -f1)
+MD5_HDD=$(md5sum "${NAME}" | tr ' ' '\t' | cut -f1)
+MD5_ANDROID=$(${ADB_CMD} shell md5sum "${ANDROID_PATH}" | tr ' ' '\t' | cut -f1)
 
 if test "${MD5_ANDROID}" = "${MD5_HDD}"; then
     ${ADB_CMD} shell rm "${ANDROID_PATH}"
 else
-    echo "unexpected checksum for ${ANDROID_PATH}: ${MD5_ANDOIRD} vs ${MD5_HDD}"
+    echo "unexpected checksum for ${ANDROID_PATH}: ${MD5_ANDROID} vs ${MD5_HDD}"
     echo "${ANDROID_PATH}\t$(${ADB_CMD} shell du -b ${ANDROID_PATH})"
     echo "${NAME}\t$(du -b ${NAME})"
 fi
