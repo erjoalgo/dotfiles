@@ -20,8 +20,9 @@ PROFILE_ENV=${PROFILE_ENV:-${HOME}/.profile-env}
 
 insert-text-block '# ea5c84ba-cd6c-4e0e-9bd5-da72a6bd845e-android-studio-bin-dir'  \
                   ${PROFILE_ENV} << EOF
+export PATH=\$PATH:${BIN_D}
+# may not exist until after running studio.sh
 export ANDROID_HOME=${HOME}/Android/Sdk/
-export PATH=\$PATH:\${ANDROID_HOME}/tools/bin
 EOF
 
 echo "in a new terminal, run studio.sh"
