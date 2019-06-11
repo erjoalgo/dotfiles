@@ -7,7 +7,7 @@ URL+="/ide-zips/3.4.1.0/android-studio-ide-183.5522156-linux.tar.gz"
 
 BASE=$(basename "${URL}")
 LOCAL=${HOME}/Downloads/${BASE}
-test -e "${LOCAL}" || curl "${URL}" -O "${LOCAL}"
+test -e "${LOCAL}" || curl "${URL}" -o "${LOCAL}"
 
 SRC=${HOME}/src/android-studio
 test -d "${SRC}" || tar -C "$(dirname ${SRC})" -axvf "${LOCAL}"
