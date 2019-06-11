@@ -20,7 +20,8 @@ def x_service_curl(host, ports, path, rest):
       cnt += 1
       url = "{}:{}{}".format(host, port, path)
       cmd = ["timeout", "5s", "curl", url] + rest
-      ret = subprocess.call(cmd)
+      p = subprocess.Popen(cmd)
+      ret = 0
       gret |= ret
   return gret if cnt else 1
 
