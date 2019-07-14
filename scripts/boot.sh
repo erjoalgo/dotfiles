@@ -25,6 +25,16 @@ if test -n "${APT_GET}"; then
    ${SUDOCMD} "${APT_GET} install -y git sudo curl"
 fi
 
+# set up passwordless sudo
+NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
+if test -d /etc/sudoers.d; then
+    # use sudoers.d if possible
+    ${SUDOCMD} "tee /etc/sudoers.d/${USER}-nopasswd <<< \"${NOPASSWD_LINE}\""
+    # INCLUDE_SUDOERS_LINE="#includedir /etc/sudoers.d"
+elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
+    ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
+fi
+
 if which apt-get; then
     sudo apt-get install -y apt-file
     sudo apt-file update
@@ -59,16 +69,6 @@ export PATH=$PATH:${SCRIPTS_BIN}
 
 which insert-text-block
 ${SUDOCMD} "ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin"
-
-# set up passwordless sudo
-NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
-if test -d /etc/sudoers.d; then
-    # use sudoers.d if possible
-    ${SUDOCMD} "bash -c '$(which insert-text-block) \#\ 9003681e-db65-4817-9bf0-c4329f0d261b-add-${USER}-sudo-nopasswd /etc/sudoers.d/nopasswd <<< \"${NOPASSWD_LINE}\"'"
-    # INCLUDE_SUDOERS_LINE="#includedir /etc/sudoers.d"
-elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
-    ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
-fi
 
 if test -n "${LOWBANDWITH:-}"; then
     # this is on a laptop
