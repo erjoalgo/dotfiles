@@ -35,10 +35,12 @@ elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
     ${SUDOCMD} "tee -a /etc/sudoers <<< \"${NOPASSWD_LINE}\""
 fi
 
+sudo echo "successful passwordless sudo"
+
 if which apt-get; then
     sudo apt-get install -y apt-file
     sudo apt-file update
-    if sudo "grep ^deb\ cdrom /etc/apt/sources.list"; then
+    if sudo grep ^deb\ cdrom /etc/apt/sources.list; then
         sudo ./update-sources-list.sh
         sudo apt-get update
     fi
@@ -68,13 +70,13 @@ test -d "${SCRIPTS_BIN}"
 export PATH=$PATH:${SCRIPTS_BIN}
 
 which insert-text-block
-sudo "ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin"
+sudo ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin
 
 if test -n "${LOWBANDWITH:-}"; then
     # this is on a laptop
-    sudo "${APT_GET} install -y wireless-tools links"
+    sudo ${APT_GET} install -y wireless-tools links
     if lspci -nn | grep -i "Intel.*Wireless"; then
-        sudo "${APT_GET} install firmware-iwlwifi"
+        sudo ${APT_GET} install firmware-iwlwifi
     else
         echo "unknown wireless card"
         exit 1
@@ -88,7 +90,7 @@ fi
 
 test 0 -ne "${EUID}"
 
-sudo "${APT_GET} install -y python python-setuptools python-pip"
+sudo ${APT_GET} install -y python python-setuptools python-pip
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
 
