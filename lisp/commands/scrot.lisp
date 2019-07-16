@@ -160,7 +160,11 @@ perform ocr on it, place ocr'd text into clipboard"
         (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
              (unmap-all-message-windows)
              (setf *record-box-and-funcall-state* nil)
-             (funcall fn (list p1 p))))
+             (sb-thread:make-thread
+              (lambda (fn p1 p)
+                (sleep .5)
+                (funcall fn (list p1 p)))
+              :arguments (list fn p1 p))))
         (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*))))))
 
 
