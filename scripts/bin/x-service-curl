@@ -30,7 +30,7 @@ def x_service_curl(host, ports, path, rest):
   return gret if cnt else 1
 
 def main():
-  if len(sys.argv) < 2:
+  if len(sys.argv) < 2 or set(("-h", "--help")).intersection(sys.argv):
     print ("usage: x-service /PATH [CURL_FLAGS...]")
     exit(1)
   path = sys.argv[1]
