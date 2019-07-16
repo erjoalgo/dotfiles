@@ -12,6 +12,10 @@ def socket_open_p(host, port):
   return result == 0
 
 
+def http_request(url, method, data, headers):
+  # TODO(ejalfonso) migrate to requests librart, make this a python package
+  pass
+
 def x_service_curl(host, ports, path, rest):
   gret = 0
   cnt = 0
