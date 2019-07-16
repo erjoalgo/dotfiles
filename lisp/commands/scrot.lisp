@@ -51,7 +51,7 @@
                         (error "filename may not contain spaces: ~A" out-png)
                         out-png)))
          (program "scrot")
-         (args (append (list out-png)
+         (args (append (list out-png "-z")
                        (case selection
                          (:interactive
                           ;; (message "select a box in the screen...")
