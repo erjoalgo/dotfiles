@@ -165,7 +165,8 @@ perform ocr on it, place ocr'd text into clipboard"
                 (sleep .5)
                 (funcall fn (list p1 p)))
               :arguments (list fn p1 p))))
-        (t (error "record-box-and-funcall usage error: ~A" *record-box-and-funcall-state*))))))
+        (t (error "record-box-and-funcall usage error: ~A"
+                  *record-box-and-funcall-state*))))))
 
 
 (defun grab-pointer-position ()
