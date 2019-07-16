@@ -479,7 +479,7 @@ function gitignore-dirlocals  {
 **/.gitignore
 EOF
   git add -f .gitignore
-  # git commit -m "autocommit: ignore .dir-locals.el"
+  git commit -m "ignore .dir-locals.el"
   popd
 }
 
