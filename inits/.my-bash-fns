@@ -49,15 +49,29 @@ function genpasswd {
     tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${l} | xargs;
 }
 
-function passgen	{
-    NAME=${1} && shift
-    SPECIAL_FLAG=${SPECIAL_FLAG:--n}
-    NOPROMPT_FLAG=${NOPROMPT_FLAG:-}
-    LENGTH=""
-    LENGTH=${LENGTH:-14}
-    pass generate ${SPECIAL_FLAG} ${NOPROMPT_FLAG} ${*} -c ${NAME} ${LENGTH}
+function xclip-tee  {
+    # replicate clipboard selection to primary, then echo it
     xclip -o -selection clipboard | xclip -i -selection primary
     xclip -o -selection primary
+}
+
+function pgen	{
+    # pass flags through to the pass subcommand
+    # add the -c, -n flags by default
+    local FLAGS="--clip --no-symbols"
+    while getopts "hncif:" OPT; do
+        case ${OPT} in
+            *)
+                FLAGS+=" -${OPT}"
+                ;;
+            h)
+                FLAGS+=" --help"
+                ;;
+        esac
+    done
+    shift $((OPTIND -1))
+    pass generate ${FLAGS} ${*}
+    xclip-tee
 }
 
 function passgen-allow-special	{
