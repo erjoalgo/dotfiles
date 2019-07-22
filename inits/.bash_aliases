@@ -1,5 +1,34 @@
 
 
+function make-completion-wrapper ()  {
+    # from https://unix.stackexchange.com/questions/4219/
+
+    # example
+    # make-completion-wrapper _apt_get _apt_get_install apt-get install
+    # complete -F _apt_get_install apt-inst
+
+    local function_name="$2"
+    local arg_count=$(($#-3))
+    local comp_function_name="$1"
+    shift 2
+    local function="
+    function $function_name {
+      ((COMP_CWORD+=$arg_count))
+      COMP_WORDS=( "$@" \${COMP_WORDS[@]:1} )
+      "$comp_function_name"
+      return 0
+    }"
+    eval "$function"
+}
+
+function complete-alias  {
+    EXISTING_COMPLETION_FN=${1} && shift
+    ALIAS=${1} && shift
+    AUTOGEN_COMPLETION_FN="__autogen_completion_${ALIAS}"
+    make-completion-wrapper ${EXISTING_COMPLETION_FN} ${AUTOGEN_COMPLETION_FN} ${*}
+    complete -F ${AUTOGEN_COMPLETION_FN} ${ALIAS}
+}
+
 
 #shortcuts
 alias cdrealpath='pwd; cd $(realpath .); pwd'
