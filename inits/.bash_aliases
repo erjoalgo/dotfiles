@@ -22,6 +22,11 @@ function make-completion-wrapper ()  {
 }
 
 function complete-alias  {
+    # uses make-completion-wrapper: https://unix.stackexchange.com/a/4220/50978
+    # example usage
+    # complete-alias _pass pshow pass show
+    # complete-alias _pass pgen pass generate
+
     EXISTING_COMPLETION_FN=${1} && shift
     ALIAS=${1} && shift
     AUTOGEN_COMPLETION_FN="__autogen_completion_${ALIAS}"
