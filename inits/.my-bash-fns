@@ -59,7 +59,8 @@ function pgen	{
     # pass flags through to the pass subcommand
     # add the -c, -n flags by default
     local FLAGS="--clip --no-symbols"
-    while getopts "hncif:" OPT; do
+    local OPTIND OPT a
+    while getopts "hncif" OPT; do
         case ${OPT} in
             *)
                 FLAGS+=" -${OPT}"
@@ -70,7 +71,9 @@ function pgen	{
         esac
     done
     shift $((OPTIND -1))
-    pass generate ${FLAGS} ${*}
+    NAME=${1} && shift
+    LENGTH=${1:-10} && shift
+    pass generate ${FLAGS} ${NAME} ${LENGTH} || return
     xclip-tee
 }
 
