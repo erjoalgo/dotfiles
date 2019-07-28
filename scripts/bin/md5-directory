@@ -1,0 +1,31 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "h" OPT; do
+    case ${OPT} in
+        h)
+            less $0
+            exit 0
+            ;;
+    esac
+done
+
+shift $((OPTIND -1))
+
+DIR=${1} && shift
+
+test -d "${DIR}"
+
+MD5_EXE=$(which md5 md5sum 2> /dev/null) || true
+
+which ${MD5_EXE}
+
+cd ${DIR}
+
+find . -type f -exec ${MD5_EXE} {} + | \
+    sort -k2
+
+# Local Variables:
+# mode: sh-mode
+# End:
