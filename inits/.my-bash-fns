@@ -521,3 +521,20 @@ function ec-which {
   emacsclient -n $(which ${PROGRAMS})
 }
 complete -F _command ec-which
+
+function __md5-directory-cmd  {
+    DIR=${1} && shift
+    if ! grep : <<< "${DIR}"; then
+        echo "${DIR}"
+    else
+        LABEL=$(cut -f1 -d: <<< "${DIR}")
+        DIR_PATH=$(cut -f1 -d: <<< "${DIR}")
+        echo "ssh ${LABEL} md5-directory-diff ${DIR_PATH}"
+    fi
+}
+
+function md5-directory-diff  {
+    DIR1=${1} && shift
+    DIR2=${1} && shift
+    diff <(__md5-directory-cmd "${DIR1}") <(__md5-directory-cmd "${DIR2}")
+}
