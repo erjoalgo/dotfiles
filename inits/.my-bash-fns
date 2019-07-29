@@ -538,3 +538,17 @@ function md5-directory-diff  {
     DIR2=${1} && shift
     diff <(__md5-directory-cmd "${DIR1}") <(__md5-directory-cmd "${DIR2}")
 }
+
+function sshfs-mount  {
+    MNT_SPEC=${1} && shift
+    if ! grep ':' <<< "${MNT_SPEC}"; then
+        MNT_SPEC+=":"
+    fi
+    MNT_LABEL=$(cut -f1 -d: <<< "${MNT_SPEC}")
+    MNT_REMOTE=$(cut -f2 -d: <<< "${MNT_SPEC}")
+    test -n "${LABEL}" || return
+    MNT_LOCAL=${MNT_LOCAL:-${HOME}/mnt/${LABEL}}
+    mkdir -p "${MNT_LOCAL}" || return
+    sshfs "${MNT_LABEL}:${MNT_REMOTE}" ${MNT_LOCAL} || return
+    echo "mounted ${LABEL} on ${MNT_LOCAL}"
+}
