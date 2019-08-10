@@ -1,271 +1,255 @@
-#!/bin/bash
+#!/usr/bin/python
 
-while getopts "ohp:P:e:m:aAE:i:t:" OPT; do
-    case ${OPT} in
-        o)
-            # flag to disregard any existing password
-            OVERWRITE="true"
-            ;;
-        e)
-            # connect to given essid
-            # required when connecting to a hidden essid
-            ESSID="${OPTARG}"
-            ;;
-        p)
-            # the wpa password
-            PASS="${OPTARG}"
-            OVERWRITE="true"
-            ;;
-        P)
-            # a plaintext file with several passwords to try
-            # implies OVERWRITE=true since we don't know the password
-            PASS_CANDS_FILE=$(realpath "${OPTARG}")
-            OVERWRITE="true"
-            if ! test -e "${PASS_CANDS_FILE}"; then
-                exit "no such file: ${PASS_CANDS_FILE}"
-            fi
-            ;;
+"""a simple standalone script to connect to a WPA, WEP or OPN network"""
+from __future__ import print_function
 
-        m)
-            # one-character flag to be passed to macchanger
-            MACCHANGE_OPT="${OPTARG}"
-            ;;
-        i)
-            # wireless interface
-            IFACE="${OPTARG}"
-            ;;
-        a)
-            # flag to prompt for essid, even if matching entry exists
-            ASK_ESSID="true"
-            ;;
-        A)
-            # don't prompt for essid, when there are multiple matches
-            # required when connecting to a hidden essid
-            ASK_ESSID="never"
-            ;;
-        E)
-            # sets the network's encryption
-            # required when connecting to a hidden essid
-            ENC="${OPTARG}"
-            ;;
-        t)
-            TRIES=${OPTARG}
-            ;;
-        h)
-            less $0
-            exit 0
-            ;;
-    esac
-done
+from subprocess import call, check_output
+import argparse
+import getpass
+import logging
+import os
+import re
+import subprocess
+import time
 
-X_NOTIFIY=true
-function message        {
-    if test -z "${X_NOTIFIY}"; then
-        notify-send ${*}
-    else
-        echo ${*}
-    fi
-}
+logging.basicConfig()
+logger = logging.getLogger("wifi-connect")
 
-if ! command -v iwlist > /dev/null \
-        || ! command -v iwconfig > /dev/null
-then
-    message "missing wireless-tools" && exit ${LINENO}
-fi
+def call_check(*args, **kwargs):
+    "proxy to subprocess.call, raising error on non-zero status"
+    cmd = args[0]
+    logger.debug("calling: %s", " ".join(cmd))
+    recode = subprocess.call(*args, **kwargs)
+    if recode != 0:
+        raise Exception("non-zero exit status")
+
+def pkill(proc):
+    call(["sudo", "pkill", proc])
+
+def selcand(cands, display_fun=str, error="no choices available"):
+    "interactively select a candidate from a list"
+    if not cands:
+        raise Exception(error)
+    elif len(cands) == 1:
+        return cands[0]
+    else:
+        print ("\n".join("{}: {}".format(i, display_fun(cand)) for (i, cand) in enumerate(cands)))
+        idx_string = raw_input("enter selection index: ")
+        try:
+            return cands[int(idx_string)]
+        except IndexError:
+            return selcand(cands, display_fun)
+
+def iface_list():
+    "discover the available wifi interfaces"
+    ifconfig_out = check_output(["ifconfig", "-a"])
+    m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
+    return list(set(m))
+
+def known_essids_list(directory):
+    "read the list of known essids or access points"
+    return os.listdir(directory)
 
 
-IFACE=${IFACE:-$(ip link | grep -Po '^wlan[0-9]|wlp[^:]*' | head -1)}
+class Cell(object):
+    class Encryptions(object):
+        WPA = "WPA"
+        WPA2 = "WPA2"
+        WEP = "WEP"
 
-if test 0 -ne $? || test -z ${IFACE}; then
-    message "wireless iface not found" && exit ${LINENO}
-fi
+    def __init__(self, scan_output=None):
+        self.essid = None
+        self.bssid = None
+        self.channel = None
+        self.signal = None
+        self.frequency = None
+        self.iface = None
+        self.wpa = None
+        self.encryption = None
+        self.signal_integer = None
+        if scan_output:
+            self.__init_from_scan_output__(scan_output)
 
-if test -n "${MACCHANGE_OPT}"; then
-    if ! command -v macchanger &> /dev/null; then
-        message "macchanger not installed" && exit ${LINENO}
-    fi
-    sudo ip link set ${IFACE} down || exit ${LINENO}
-    sudo macchanger "-${MACCHANGE_OPT}" "${IFACE}" #|| exit ${LINENO}
-fi
+    def __init_from_scan_output__(self, scan_output):
+        for (attr, regexp) in (
+                ("bssid", "^ *([a-f0-9:]+)"),
+                ("iface", "^.*\\(on (.*)\\)"),
+                ("essid", "SSID: (.*)"),
+                ("signal", "signal:(.*)"),
+                ("channel", "channel:(.*)"),
+                ("wpa", "WPA (Version .*)"),
+                ("freq", "frequency:(.*)"),
+                ("quality", "quality=(.*)"),
+                ("enc", "encryption key:(.*)"),
+                ("wpa2", "WPA2 (Version .*)")):
+            m = re.search(regexp, scan_output)
+            if m:
+                value = m.group(1)
+                setattr(self, attr, value)
+                if attr.upper() in Cell.Encryptions.__dict__:
+                    self.encryption = attr
+                elif attr == "signal":
+                    self.signal_integer = float(value.split()[0])
 
-sudo ip link set ${IFACE} up
+    def __repr__(self):
+        return "{}\t{}".format(self.essid, self.signal)
 
-SCAN_RESULTS_FN=/tmp/wifi-scan-results
+    @staticmethod
+    def scan_essids(iface,
+                    scan_attempts=7,
+                    scan_results_filename="/tmp/wifi-scan-results",
+                    debugging=False):
+        "scan for available access points or cells"
+        for _ in range(scan_attempts):
+            iw_out = None
+            if debugging:
+                iw_out = open(scan_results_filename).read()
+            else:
+                p = subprocess.Popen(["sudo", "iw", "dev", iface, "scan"],
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
+                stdout, stderr = p.communicate()
+                if p.returncode == 0:
+                    with open(scan_results_filename, "w") as fh:
+                        print(stdout, file=fh)
+                    iw_out = stdout
+                else:
+                    logger.error("error scanning: %s retrying...", stderr)
+                    logger.info("retrying...")
+                    time.sleep(1)
+            if iw_out:
+                cells_flat = re.split("\nBSS", iw_out)
+                logging.info("found %s possible cells", len(cells_flat))
+                if not cells_flat:
+                    logger.info("no networks found. retrying...")
+                    time.sleep(1)
+                else:
+                    cells = [Cell(scan_output=cell_flat) for cell_flat in cells_flat]
+                    return cells
+        raise Exception("scanning failed")
 
-TRIES=${TRIES:-7}
-if test -n "${ENC}" -a -n "${ESSID}"; then
-    # no need to scan, we know the ESSID and the encyrption
-    # need to skip scan to not err when connecting to hidden essid
-    TRIES=0
-    ESSIDS="${ESSID}"
-fi
+    def write_to_file(self, directory, password=None, force=False):
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        essid_file = os.path.join(directory, self.essid)
+        if not os.path.exists(essid_file) or force:
+            if self.encryption and not password:
+                password = getpass.getpass("enter password for {}: ".format(self.essid))
+            with open(essid_file, "w") as fh:
+                if self.is_wpa():
+                    call_check(["wpa_passphrase", self.essid, password], stdout=fh)
+                else:
+                    print(password or "", file=fh)
+        return essid_file
 
-for I in $(seq ${TRIES}); do
-    FAILED=""
-    IWLIST_OUT=$(sudo iw dev ${IFACE} scan | tee ${SCAN_RESULTS_FN})
-    # IWLIST_OUT=$(cat ${SCAN_RESULTS_FN})
-    if test 0 -ne $?; then
-        message "failed to scan"
-        FAILED=true
-    else
-        ESSIDS=$(grep "^	SSID" <<< "${IWLIST_OUT}" | sed 's/.*SSID: \(.*\).*/\1/g')
-        if test 0 -ne $? || test -z "${ESSIDS}"; then
-            message "failed to read essids"
-            FAILED=true
-        fi
-    fi
+    def is_wpa(self):
+        return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
 
-    if test "${FAILED}" != true; then
-        break
-    elif test $I -eq ${TRIES}; then
-        echo "maximum retries exceeded."
-        exit 1
-    else
-        message "retrying scan (${I}/${TRIES})..." && sleep 1
-    fi
-done
-
-
-NETWORKS_DIR=${HOME}/.config/wifi-connect
-mkdir -p ${NETWORKS_DIR}
-cd ${NETWORKS_DIR}
-
-COUNT=$(wc -l <<< "${ESSIDS}")
-case ${COUNT} in
-    1)
-        ESSID="${ESSIDS}"
-        ;;
-    0)
-        message "no networks found" && exit ${LINENO}
-        ;;
-    *)
-        if test -z "${ESSID}"; then
-            COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) \
-                        <(sort <<< "${ESSIDS}") \
-                       | tee /tmp/common-essids)
-            echo "known essids: ${COMM}"
-            test -n "${COMM}" && COMM_LEN=$(wc -l <<< "${COMM}") || COMM_LEN=0
-            if test "${ASK_ESSID}" != true -a ${COMM_LEN} = 1 \
-                    -o "${ASK_ESSID}" = never -a ${COMM_LEN} -ge 1; then
-                ESSID=$(head -1 <<< "${COMM}")
-            elif test "${ASK_ESSID}" != never; then
-                OLDIFS=$IFS
-                IFS=$'\n'
-                select ESSID in ${ESSIDS}; do
+    def connect(self, essid_file):
+        if self.is_wpa():
+            pkill("wpa_supplicant")
+            p=subprocess.Popen(["sudo", "wpa_supplicant",
+                                "-i", self.iface, "-c", essid_file, "-D", "nl80211,wext"],
+                               stdout=subprocess.PIPE)
+            for line in iter(p.stdout.readline, ""):
+                print (line)
+                if "CTRL-EVENT-CONNECTED" in line:
                     break
-                done
-                IFS=$OLDIFS
-            else
-                echo "no known essids"
-                exit 1
-            fi
-        elif ! grep -F "${ESSID}" <<< "${ESSIDS}"; then
-            message -e "specified essid '${ESSID}' not found in:\n${ESSIDS}" && exit ${LINENO}
-        fi
-esac
+                elif re.search("WRONG_KEY|Invalid configuration line", line):
+                    raise Exception("failed to connect via wpa_supplicant")
+            p.stdout.close()
+        else:
+            # wep or no encryption
+            cmd = ["sudo", "iwconfig", self.iface, "essid", self.essid]
+            if self.encryption == self.Encryptions.WEP:
+                with open(essid_file, "r") as fh:
+                    password = fh.read()
+                cmd += ["enc", "WEP", "key", password]
+            call_check(cmd)
+        pkill("dhclient")
+        call_check(["sudo", "dhclient", "-v", self.iface])
 
-test -n "${ESSID}"
-message "selected ${ESSID}"
+def select_cell(iface, essid=None, autoselect_essid=True, essids_directory=None):
+    cells = Cell.scan_essids(iface=iface)
+    if not cells:
+        logging.error("no wifi access points found")
+    else:
+        known_essids = [essid] if essid else known_essids_list(essids_directory)
+        matching = [cell for cell in cells if cell.essid in known_essids]
+        # strongest first
+        matching.sort(key=lambda cell: cell.signal_integer, reverse=True)
+        print ("DEBUG wifi-connect ifga: value of matching: {}".format(
+            "\n".join(map(str, matching))))
+        if not matching:
+            logging.error(
+                "no wifi access points found with essids:\n%s\nfound:\n%s",
+                ", ".join(known_essids),
+                ", ".join(cell.essid or "NONE" for cell in cells))
+        elif not autoselect_essid and len(matching) > 1:
+            return selcand(matching)
+        else:
+            return matching[0]
 
-# ENC=${ENC:-$(grep -B1 -F "${ESSID}" <<< "${IWLIST_OUT}"  | head -1 \
-    #          | sed 's/.*Encryption key:\(.*\)/\1/')}
+def iface_down_up(iface, macchange_opt=None):
+    if macchange_opt != None:
+        call_check(["sudo", "ifconfig", iface, "down"])
+        call_check(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
+    call_check(["sudo", "ifconfig", iface, "up"])
 
-if test -s "${ESSID}"; then
-    ENC=on
-elif test -f "${ESSID}"; then
-    ENC=off
-else
-    echo "select ecryption type: "
-    select ENC in on off; do
-        break
-    done
-fi
+def wifi_connect(config) :
+    "connect to one of the available wifi networks"
+    pkill("wpa_supplicant")
+    pkill("dhclient")
 
-sudo pkill -e wpa_supplicant
-sudo pkill -e dhclient
-
-case "${ENC}" in
-    on) #assume wpa
-        if ! command -v wpa_supplicant > /dev/null \
-                || ! command -v wpa_passphrase > /dev/null \
-                || ! command -v expect > /dev/null; then
-            message "missing wpasupplicant or expect" && exit ${LINENO}
-        fi
+    if not config.iface:
+        ifaces = iface_list()
+        config.iface = selcand(ifaces, error="wireless iface not found")
+    iface_down_up(iface=config.iface, macchange_opt=config.macchange_opt)
+    cell = select_cell(iface=config.iface,
+                       essid=config.essid,
+                       autoselect_essid=not config.always_ask_essid,
+                       essids_directory=config.essids_directory)
+    assert cell, "no cell was selected"
+    essid_file =cell.write_to_file(config.essids_directory,
+                                   password=config.password,
+                                   force=config.overwrite)
+    cell.connect(essid_file)
 
 
+def main():
+    "main method"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-o", "--overwrite", action="store_true",
+                        help="flag to disregard any existing password")
+    parser.add_argument("-e", "--essid",
+                        help="connect to given essid. required when connecting to a hidden essid")
+    parser.add_argument("-p", "--password",
+                        help="the password, option to avoid interactive prompt")
+    parser.add_argument("-m", "--macchange-opt",
+                        help="a one-character flag proxied to macchanger")
+    parser.add_argument("-i", "--iface",
+                        help="the wireless interface to use for discovery")
+    parser.add_argument("-a", "--always-ask-essid", action="store_true",
+                        help="always prompt for essid, even if matching entry exists")
+    parser.add_argument("-E", "--encryption",
+                        help="sets the network's encryption. "+
+                        "required when connecting to a hidden essid")
+    parser.add_argument("-d", "--essids_directory", default=
+                        os.path.expanduser("~/.config/wifi-connect"))
+    parser.add_argument("-v", "--verbose", action="store_true")
 
-        if test -n "${PASS_CANDS_FILE}"; then
-            PASS_CANDS=$(cat "${PASS_CANDS_FILE}")
-        elif test ! -f "${ESSID}" -o -n "${OVERWRITE}"; then
-            if test -z "${PASS}"; then
-                read -p "enter password for ${ESSID}: " PASS
-            fi
-            PASS_CANDS="${PASS}"
-        else
-            SKIP_WPA_PASSPHRASE=true
-            PASS_CANDS="dummy"
-        fi
+    args = parser.parse_args()
 
-        # TODO allow spaces
-        CONNECTED=""
-        for PASS in ${PASS_CANDS}; do
-            if test "${SKIP_WPA_PASSPHRASE}" != true; then
-                wpa_passphrase "${ESSID}" "${PASS}" | tee "${ESSID}"
-            fi
-            expect -df - <<EOF
-set timeout -1
-spawn sudo wpa_supplicant -i ${IFACE} -c "${ESSID}" -D nl80211,wext &
-# expect "Established DTLS connection"
-# expect -re "CTRL-EVENT-CONNECTED - Connection to 00:1a:1e:87:3c:01 completed"
-# expect -re "CTRL-EVENT-CONNECTED - Connection to [0-9a-z:]+ completed"
-expect {
+    if args.verbose or True:
+        logger.setLevel(logging.DEBUG)
+        logger.debug("verbose on...")
+    del args.verbose
 
-"CTRL-EVENT-CONNECTED" {
-       send -- "success\r"
-       if {[fork]!=0} exit
-       disconnect
-}
+    wifi_connect(args)
 
-"WRONG_KEY" {
-       exec sudo kill [exp_pid]
-       close
-       exit 1
-}
+if __name__ == "__main__":
+    main()
 
-"Invalid configuration line" {
-       exec sudo kill [exp_pid]
-       close
-       exit 1
-}
-
-}
-
-EOF
-            if test 0 = $?; then
-                CONNECTED=true
-                break
-            fi
-        done
-
-        if test "${CONNECTED}" != true; then
-            echo "error: wrong key?"
-            exit 1
-        fi
-
-        # in the absence of expect....
-        # sudo wpa_supplicant -i ${IFACE} -c ${ESSID} -D nl80211,wext &
-        # sleep 10
-
-        message "post CTRL-EVENT-CONNECTED expect"
-        ;;
-
-    off)
-        sudo iwconfig ${IFACE} essid "${ESSID}" || exit ${LINENO}
-        test -f "${ESSID}" || sudo touch "${ESSID}"
-        ;;
-    *)
-        message "unknown encryption ${ENC}" && exit ${LINENO}
-        ;;
-esac
-
-sudo dhclient -v ${IFACE} || exit ${LINENO}
+# Local Variables:
+# compile-command: "./wifi-connect.py -v"
+# End:
