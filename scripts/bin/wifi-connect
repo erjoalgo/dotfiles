@@ -77,7 +77,7 @@ class Cell(object):
                 ("essid", "SSID: (.*)"),
                 ("signal", "signal:(.*)"),
                 ("channel", "channel:(.*)"),
-                ("wpa", "WPA (Version .*)"),
+                ("wpa", "\n[ \t]+(WPA):"),
                 ("freq", "frequency:(.*)"),
                 ("quality", "quality=(.*)"),
                 ("enc", "encryption key:(.*)"),
@@ -143,7 +143,7 @@ class Cell(object):
         return essid_file
 
     def is_wpa(self):
-        return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
+        return self.encryption.upper() in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
 
     def connect(self, essid_file):
         if self.is_wpa():
