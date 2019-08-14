@@ -87,7 +87,7 @@ class Cell(object):
                 value = m.group(1)
                 setattr(self, attr, value)
                 if attr.upper() in Cell.Encryptions.__dict__:
-                    self.encryption = attr
+                    self.encryption = attr.upper()
                 elif attr == "signal":
                     self.signal_integer = float(value.split()[0])
 
@@ -143,7 +143,7 @@ class Cell(object):
         return essid_file
 
     def is_wpa(self):
-        return self.encryption.upper() in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
+        return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
 
     def connect(self, essid_file):
         if self.is_wpa():
