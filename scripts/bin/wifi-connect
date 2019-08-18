@@ -93,7 +93,11 @@ class Cell(object):
                     self.signal_integer = float(value.split()[0])
 
     def __repr__(self):
-        return "{}\t{}".format(self.essid, self.signal)
+        return "{star_opt}({encryption})\t{essid} {signal}".format(
+            encryption=self.encryption or "",
+            star_opt="*" if self.is_known else " ",
+            essid=self.essid,
+            signal=self.signal_integer)
 
     @staticmethod
     def scan_essids(iface,
