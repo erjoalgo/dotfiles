@@ -139,7 +139,8 @@ class Cell(object):
         essid_file = os.path.join(directory, self.essid)
         if not os.path.exists(essid_file) or force:
             if self.encryption and not password:
-                password = getpass.getpass("enter password for {}: ".format(self.essid))
+                # password = getpass.getpass("enter password for {}: ".format(self.essid))
+                password = raw_input("enter password for {}: ".format(self.essid))
             with open(essid_file, "w") as fh:
                 if self.is_wpa():
                     call_check(["wpa_passphrase", self.essid, password], stdout=fh)
