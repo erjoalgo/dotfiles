@@ -67,6 +67,7 @@ class Cell(object):
         self.wpa = None
         self.encryption = None
         self.signal_integer = None
+        self.is_known = None
         if scan_output:
             self.__init_from_scan_output__(scan_output)
 
@@ -170,25 +171,29 @@ class Cell(object):
         call_check(["sudo", "dhclient", "-v", self.iface])
 
 def select_cell(iface, essid=None, autoselect_essid=True, essids_directory=None):
+    known_essids = known_essids_list(essids_directory)
     cells = Cell.scan_essids(iface=iface)
+    for cell in cells:
+        cell.is_known = cell.essid in known_essids
+    cells.sort(key=lambda cell: (cell.is_known, -cell.signal_integer))
+    matching = filter(lambda cell: cell.is_known, cells)
     if not cells:
         logging.error("no wifi access points found")
     else:
-        known_essids = [essid] if essid else known_essids_list(essids_directory)
-        matching = [cell for cell in cells if cell.essid in known_essids]
         # strongest first
-        matching.sort(key=lambda cell: cell.signal_integer, reverse=True)
-        print ("DEBUG wifi-connect ifga: value of matching: {}".format(
-            "\n".join(map(str, matching))))
-        if not matching:
+        if not cells:
             logging.error(
                 "no wifi access points found with essids:\n%s\nfound:\n%s",
                 ", ".join(known_essids),
                 ", ".join(cell.essid or "NONE" for cell in cells))
-        elif not autoselect_essid and len(matching) > 1:
-            return selcand(matching)
+        elif autoselect_essid:
+            if matching:
+                return matching[0]
+            else:
+                logging.error(
+                    "no matching access points and auto-select enabled")
         else:
-            return matching[0]
+            return selcand(cells)
 
 def iface_down_up(iface, macchange_opt=None):
     if macchange_opt != None:
