@@ -46,7 +46,7 @@ def iface_list():
     m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
     return list(set(m))
 
-def known_essids_list(directory):
+def list_known_essids(directory):
     "read the list of known essids or access points"
     return os.listdir(directory)
 
@@ -171,7 +171,7 @@ class Cell(object):
         call_check(["sudo", "dhclient", "-v", self.iface])
 
 def select_cell(iface, essid=None, autoselect_essid=True, essids_directory=None):
-    known_essids = known_essids_list(essids_directory)
+    known_essids = list_known_essids(essids_directory)
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
         cell.is_known = cell.essid in known_essids
