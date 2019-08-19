@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf-8
 
 """a simple standalone script to connect to a WPA, WEP or OPN network"""
 from __future__ import print_function
@@ -33,12 +34,17 @@ def selcand(cands, display_fun=str, error="no choices available"):
     elif len(cands) == 1:
         return cands[0]
     else:
-        print ("\n".join("{}: {}".format(i, display_fun(cand)) for (i, cand) in enumerate(cands)))
+        print ("\n".join(
+            "{}: {}".format(box(str(i), 3), display_fun(cand))
+            for (i, cand) in enumerate(cands)))
         idx_string = raw_input("enter selection index: ")
         try:
             return cands[int(idx_string)]
         except IndexError:
             return selcand(cands, display_fun)
+
+def box(s, n):
+    return (s + " "*n)[:n]
 
 def iface_list():
     "discover the available wifi interfaces"
@@ -92,12 +98,20 @@ class Cell(object):
                 elif attr == "signal":
                     self.signal_integer = float(value.split()[0])
 
+    def signal_percent(self):
+        LOWEST_SEEN, HIGHEST_SEEN = 26, 83
+        percent = 100 - 100 * ((-self.signal_integer - LOWEST_SEEN) /
+                               (HIGHEST_SEEN - LOWEST_SEEN))
+        return int(percent)
+
     def __repr__(self):
-        return "{star_opt}({encryption})\t{essid} {signal}".format(
-            encryption=self.encryption or "",
+        bars = self.signal_percent()/10
+        return "{star_opt} {essid: >10}\t{encryption}\t{signal}".format(
+            encryption=box(self.encryption or "OPEN", 5),
             star_opt="*" if self.is_known else " ",
-            essid=self.essid,
-            signal=self.signal_integer)
+            essid=box(self.essid, 15),
+            signal="⬛"*bars,
+            signal_raw=(self.signal, self.signal_percent()))
 
     @staticmethod
     def scan_essids(iface,
@@ -180,7 +194,7 @@ def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
         cell.is_known = cell.essid in known_essids
-    cells.sort(key=lambda cell: (cell.is_known, -cell.signal_integer))
+    cells.sort(key=lambda cell: (1 - bool(cell.is_known), -cell.signal_percent()))
     matching = filter(lambda cell: cell.is_known, cells)
     if not cells:
         logging.error("no wifi access points found")
