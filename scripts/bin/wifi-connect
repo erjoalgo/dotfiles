@@ -48,7 +48,7 @@ def box(s, n):
 
 def iface_list():
     "discover the available wifi interfaces"
-    ifconfig_out = check_output(["ifconfig", "-a"])
+    ifconfig_out = check_output(["ip", "link"])
     m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
     return list(set(m))
 
@@ -214,9 +214,9 @@ def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
 
 def iface_down_up(iface, macchange_opt=None):
     if macchange_opt != None:
-        call_check(["sudo", "ifconfig", iface, "down"])
+        call_check(["sudo", "ip", "link", "set", iface, "down"])
         call_check(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
-    call_check(["sudo", "ifconfig", iface, "up"])
+    call_check(["sudo", "ip", "link", "set", iface, "up"])
 
 def wifi_connect(config) :
     "connect to one of the available wifi networks"
