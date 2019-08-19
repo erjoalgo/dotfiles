@@ -175,7 +175,7 @@ class Cell(object):
         pkill("dhclient")
         call_check(["sudo", "dhclient", "-v", self.iface])
 
-def select_cell(iface, essid=None, autoselect_essid=True, essids_directory=None):
+def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
     known_essids = list_known_essids(essids_directory)
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
@@ -191,14 +191,12 @@ def select_cell(iface, essid=None, autoselect_essid=True, essids_directory=None)
                 "no wifi access points found with essids:\n%s\nfound:\n%s",
                 ", ".join(known_essids),
                 ", ".join(cell.essid or "NONE" for cell in cells))
-        elif autoselect_essid:
-            if matching:
-                return matching[0]
-            else:
-                logging.error(
-                    "no matching access points and auto-select enabled")
-        else:
+        elif prompt == "always" or prompt == "if_needed" and not matching:
             return selcand(cells)
+        elif not matching:
+            logging.error("no matching access points")
+        else:
+            return matching[0]
 
 def iface_down_up(iface, macchange_opt=None):
     if macchange_opt != None:
@@ -217,7 +215,7 @@ def wifi_connect(config) :
     iface_down_up(iface=config.iface, macchange_opt=config.macchange_opt)
     cell = select_cell(iface=config.iface,
                        essid=config.essid,
-                       autoselect_essid=not config.always_ask_essid,
+                       prompt=config.prompt,
                        essids_directory=config.essids_directory)
     assert cell, "no cell was selected"
     essid_file =cell.write_to_file(config.essids_directory,
@@ -239,8 +237,9 @@ def main():
                         help="a one-character flag proxied to macchanger")
     parser.add_argument("-i", "--iface",
                         help="the wireless interface to use for discovery")
-    parser.add_argument("-a", "--always-ask-essid", action="store_true",
-                        help="always prompt for essid, even if matching entry exists")
+    parser.add_argument("-P", "--prompt",
+                        choices=["always", "never", "if_needed"],
+                        help="when to prompt for a selection")
     parser.add_argument("-E", "--encryption",
                         help="sets the network's encryption. "+
                         "required when connecting to a hidden essid")
