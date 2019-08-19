@@ -220,9 +220,6 @@ def iface_down_up(iface, macchange_opt=None):
 
 def wifi_connect(config) :
     "connect to one of the available wifi networks"
-    pkill("wpa_supplicant")
-    pkill("dhclient")
-
     if not config.iface:
         ifaces = iface_list()
         config.iface = selcand(ifaces, error="wireless iface not found")
