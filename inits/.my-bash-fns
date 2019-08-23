@@ -556,3 +556,12 @@ function sshfs-mount  {
     sshfs "${MNT_LABEL}:${MNT_REMOTE}" ${MNT_LOCAL} || return
     echo "mounted ${LABEL} on ${MNT_LOCAL}"
 }
+
+function git-cherry-pick-interactive  {
+  RANGE=${1} && shift
+  TMP=$(mktemp -p /tmp git-cherry-pick-interactive-XXXX)
+  git log "${RANGE}" --oneline > "${TMP}" || return
+  ${VISUAL} "${TMP}" || return
+  git cherry-pick $(cut -f1 -d' ' "${TMP}")
+}
+__git_complete git-cherry-pick-interactive _git_cherry_pick
