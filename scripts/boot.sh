@@ -160,6 +160,12 @@ fi
 
 chmod 600 ~/.ssh/config
 
+insert-text-block '# 9f56be79-fa85-4ec0-ab4f-a9d3df5fef76-maybe-add-gopath' ~/.profile-env  \
+  <<EOF
+if test -d ~/go/bin/; then
+   export PATH=\$PATH:${HOME}/go/bin/
+fi
+EOF
 X_BROWSER=$(which x-www-browser-stumpwm)
 
 
