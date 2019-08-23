@@ -508,6 +508,10 @@ EOF
   popd
 }
 
+function gitignore-README-md-html	{
+  gitignore-append-commit '**/README.md' '**/README.html'
+}
+
 function emacs-attach-loop  {
   for PID in $(pidof emacs); do
     kill -SIGUSR1 "${PID}"
