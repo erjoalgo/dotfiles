@@ -51,25 +51,30 @@
                         (error "filename may not contain spaces: ~A" out-png)
                         out-png)))
          (program "scrot")
-         (args (append (list out-png "-z")
-                       (case selection
-                         (:interactive
-                          ;; (message "select a box in the screen...")
-                          ;; (sleep .5)
-                          ;; (unmap-all-message-windows)
-                          (if (mouse-available-p)
-                              '("-s")
-                              (progn
-                                (echo "scrot will resume after two clicks at the box edges...")
-                                (return-from take-scrot (setf *record-box-and-funcall-state*
-                                                              (list
-                                                               (lambda (box)
-                                                                 (apply #'take-scrot name :selection box args))))))))
-                         (:fullscreen nil)
-                         (:window '("-u"))
-                         (t
-                          (setf box selection)
-                          nil))))
+         (args
+           (append
+            (list out-png "-z")
+            (case selection
+              (:interactive
+               ;; (message "select a box in the screen...")
+               ;; (sleep .5)
+               ;; (unmap-all-message-windows)
+               (if (mouse-available-p)
+                   '("-s")
+                   (progn
+                     (echo (concat "scrot will resume after two "
+                                   "clicks at the box edges..."))
+                     (return-from take-scrot
+                       (setf *record-box-and-funcall-state*
+                             (list
+                              (lambda (box)
+                                (apply #'take-scrot name
+                                       :selection box args))))))))
+              (:fullscreen nil)
+              (:window '("-u"))
+              (t
+               (setf box selection)
+               nil))))
          (proc (SB-EXT:RUN-PROGRAM program
                                    args
                                    :search t
@@ -77,13 +82,13 @@
                                    :error t
                                    :wait nil)))
 
-        (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-           as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
-           as elapsed-secs = (- (get-universal-time) start-time-secs)
-           as timeout-p = (> elapsed-secs timeout-secs)
-           while (not (or done-p timeout-p)) do
-             (sleep 1)
-           finally
+    (loop with start-time-secs = (GET-UNIVERSAL-TIME)
+          as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
+          as elapsed-secs = (- (get-universal-time) start-time-secs)
+          as timeout-p = (> elapsed-secs timeout-secs)
+          while (not (or done-p timeout-p)) do
+            (sleep 1)
+          finally
              (if (not (and done-p
                            (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
                  (error "scrot command failed: ~A"
@@ -103,19 +108,19 @@
           (message "scrot: ~A ~{~A~^ ~}~%" cmd args)
           (run-command-sync-notify-on-error cmd args))))
 
-        ;;why does this crash the session
-        (when show
-          (SB-EXT:RUN-PROGRAM "eog"
-                              (list out-png)
-                              :search t
-                              :wait nil))
+    ;;why does this crash the session
+    (when show
+      (SB-EXT:RUN-PROGRAM "eog"
+                          (list out-png)
+                          :search t
+                          :wait nil))
 
-        (set-x-selection out-png :clipboard)
+    (set-x-selection out-png :clipboard)
 
-        (when verbose
-          (message "copied to cliboard: ~A" out-png))
+    (when verbose
+      (message "copied to cliboard: ~A" out-png))
 
-        out-png-pathname))
+    out-png-pathname))
 
 
 (defun image-fn-to-text (image-fn)
@@ -156,7 +161,7 @@ perform ocr on it, place ocr'd text into clipboard"
       (message "~A" p)
       (case (length *record-box-and-funcall-state*)
         (1 (push p *record-box-and-funcall-state*)
-           (echo "one more click..."))
+         (echo "one more click..."))
         (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
              (unmap-all-message-windows)
              (setf *record-box-and-funcall-state* nil)
