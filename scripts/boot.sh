@@ -134,7 +134,7 @@ fi
 
 mkdir -p ${HOME}/src
 
-# some essential scripts
+# some essential tools
 if test -n "${APT_GET}"; then
     sudo ${APT_GET} install -y htop auditd fail2ban unison
     sudo ${APT_GET} install -y bootlogd || true
