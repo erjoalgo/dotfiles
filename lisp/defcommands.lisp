@@ -91,7 +91,8 @@
 (defcommand connect-internet () ()
   "connect to the internet via the wifi-connect program"
   (echo "connecting to the internet...")
-  (run-command-async-notify "wifi-connect" '("-A")))
+  ;; never prompt
+  (run-command-async-notify "wifi-connect" '("-Pnever")))
 
 (defcommand connect-internet-check () ()
   "check access to google.com"
