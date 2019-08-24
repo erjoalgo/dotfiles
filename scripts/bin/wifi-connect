@@ -166,8 +166,9 @@ class Cell(object):
         return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
 
     def connect(self, essid_file):
+        pkill("wpa_supplicant")
+        pkill("dhclient")
         if self.is_wpa():
-            pkill("wpa_supplicant")
             p=subprocess.Popen(["sudo", "wpa_supplicant",
                                 "-i", self.iface, "-c", essid_file, "-D", "nl80211,wext"],
                                stdout=subprocess.PIPE)
@@ -186,7 +187,6 @@ class Cell(object):
                     password = fh.read()
                 cmd += ["enc", "WEP", "key", password]
             call_check(cmd)
-        pkill("dhclient")
         call_check(["sudo", "dhclient", "-v", self.iface])
 
 def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
