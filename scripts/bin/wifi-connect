@@ -251,6 +251,7 @@ def main():
                         help="the wireless interface to use for discovery")
     parser.add_argument("-P", "--prompt",
                         choices=["always", "never", "if_needed"],
+                        default="if_needed",
                         help="when to prompt for a selection")
     parser.add_argument("-E", "--encryption",
                         help="sets the network's encryption. "+
