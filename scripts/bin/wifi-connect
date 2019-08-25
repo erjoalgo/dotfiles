@@ -194,8 +194,8 @@ def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
         cell.is_known = cell.essid in known_essids
-    cells.sort(key=lambda cell: (1 - bool(cell.is_known), -cell.signal_percent()))
-    matching = filter(lambda cell: cell.is_known, cells)
+    cells.sort(key=lambda cell: (1 - bool(cell.is_known), 100-cell.signal_percent()))
+    matching = filter(lambda cell: cell.is_known and cell.signal_percent()>50, cells)
     if not cells:
         logging.error("no wifi access points found")
     else:
