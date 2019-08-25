@@ -201,14 +201,15 @@ def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
     else:
         # strongest first
         if not cells:
-            logging.error(
-                "no wifi access points found with essids:\n%s\nfound:\n%s",
-                ", ".join(known_essids),
-                ", ".join(cell.essid or "NONE" for cell in cells))
+            raise Exception(
+                "no wifi access points found with essids:\n{}nfound:\n{}"
+                .format(
+                    ", ".join(known_essids),
+                    ", ".join(cell.essid or "NONE" for cell in cells)))
         elif prompt == "always" or prompt == "if_needed" and not matching:
             return selcand(cells)
         elif not matching:
-            logging.error("no matching access points")
+            raise Exception("no matching access points")
         else:
             return matching[0]
 
