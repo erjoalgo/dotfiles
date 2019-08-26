@@ -16,6 +16,8 @@ import time
 logging.basicConfig()
 logger = logging.getLogger("wifi-connect")
 
+CONFIG_DEFAUL_DIRECTORY = os.path.expanduser("~/.config/wifi-connect")
+
 def call_check(*args, **kwargs):
     "proxy to subprocess.call, raising error on non-zero status"
     cmd = args[0]
@@ -52,7 +54,7 @@ def iface_list():
     m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
     return list(set(m))
 
-def list_known_essids(directory):
+def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
     "read the list of known essids or access points"
     return os.listdir(directory)
 
@@ -147,10 +149,14 @@ class Cell(object):
                     return cells
         raise Exception("scanning failed")
 
-    def write_to_file(self, directory, password=None, force=False):
+    def config_file_path(self, directory=CONFIG_DEFAUL_DIRECTORY):
+        return os.path.join(directory, self.essid)
+
+    def write_config(self, password=None, force=False):
+        essid_file = self.config_file_path()
+        directory = os.path.dirname(essid_file)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        essid_file = os.path.join(directory, self.essid)
         if not os.path.exists(essid_file) or force:
             if self.encryption and not password:
                 # password = getpass.getpass("enter password for {}: ".format(self.essid))
@@ -227,11 +233,9 @@ def wifi_connect(config) :
     iface_down_up(iface=config.iface, macchange_opt=config.macchange_opt)
     cell = select_cell(iface=config.iface,
                        essid=config.essid,
-                       prompt=config.prompt,
-                       essids_directory=config.essids_directory)
+                       prompt=config.prompt)
     assert cell, "no cell was selected"
-    essid_file =cell.write_to_file(config.essids_directory,
-                                   password=config.password,
+    essid_file = cell.write_config(password=config.password,
                                    force=config.overwrite)
     cell.connect(essid_file)
 
