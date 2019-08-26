@@ -82,6 +82,7 @@ class Cell(object):
             self.__init_from_scan_output__(scan_output)
 
     def __init_from_scan_output__(self, scan_output):
+        setattr(self, "flat", scan_output)
         for (attr, regexp) in (
                 ("bssid", "^ *([a-f0-9:]+)"),
                 ("iface", "^.*\\(on (.*)\\)"),
