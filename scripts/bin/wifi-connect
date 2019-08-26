@@ -59,6 +59,9 @@ def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
     return os.listdir(directory)
 
 
+class WrongPassword(Exception):
+    pass
+
 class Cell(object):
     class Encryptions(object):
         WPA = "WPA"
@@ -168,6 +171,11 @@ class Cell(object):
                     print(password or "", file=fh)
         return essid_file
 
+    def remove_config(self):
+        filename = self.config_file_path()
+        logging.warn("removing config file %s", filename)
+        os.remove(filename)
+
     def is_wpa(self):
         return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
 
@@ -183,7 +191,7 @@ class Cell(object):
                 if "CTRL-EVENT-CONNECTED" in line:
                     break
                 elif re.search("WRONG_KEY|Invalid configuration line", line):
-                    raise Exception("failed to connect via wpa_supplicant")
+                    raise WrongPassword("failed to connect via wpa_supplicant")
             p.stdout.close()
         else:
             # wep or no encryption
@@ -237,7 +245,11 @@ def wifi_connect(config) :
     assert cell, "no cell was selected"
     essid_file = cell.write_config(password=config.password,
                                    force=config.overwrite)
-    cell.connect(essid_file)
+    try:
+        cell.connect(essid_file)
+    except WrongPassword as ex:
+        cell.remove_config()
+        raise ex
 
 
 def main():
