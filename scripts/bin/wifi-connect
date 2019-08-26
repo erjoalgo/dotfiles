@@ -111,12 +111,12 @@ class Cell(object):
 
     def __repr__(self):
         bars = self.signal_percent()/10
-        return "{star_opt} {essid: >10}\t{encryption}\t{signal}".format(
+        return u"{star_opt} {essid: >10}\t{encryption}\t{signal} ({signal_percent}%)".format(
             encryption=box(self.encryption or "OPEN", 5),
             star_opt="*" if self.is_known else " ",
             essid=box(self.essid, 15),
-            signal="⬛"*bars,
-            signal_raw=(self.signal, self.signal_percent()))
+            signal=box(u"⬛"*bars, 10),
+            signal_percent=self.signal_percent()).encode("utf8")
 
     @staticmethod
     def scan_essids(iface,
