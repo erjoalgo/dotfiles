@@ -75,7 +75,6 @@ class Cell(object):
         self.signal = None
         self.frequency = None
         self.iface = None
-        self.wpa = None
         self.encryption = None
         self.signal_integer = None
         self.is_known = None
