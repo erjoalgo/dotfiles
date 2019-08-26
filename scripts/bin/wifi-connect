@@ -203,13 +203,17 @@ class Cell(object):
             call_check(cmd)
         call_check(["sudo", "dhclient", "-v", self.iface])
 
-def select_cell(iface, essid=None, prompt="if_needed", essids_directory=None):
-    known_essids = list_known_essids(essids_directory)
+MIN_SIGNAL_PERCENTAGE = 15
+def select_cell(iface, essid=None, prompt="if_needed"):
+    known_essids = list_known_essids()
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
         cell.is_known = cell.essid in known_essids
     cells.sort(key=lambda cell: (1 - bool(cell.is_known), 100-cell.signal_percent()))
-    matching = filter(lambda cell: cell.is_known and cell.signal_percent()>50, cells)
+    matching = filter(lambda cell:
+                      (cell.is_known and
+                       cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE),
+                      cells)
     if not cells:
         logging.error("no wifi access points found")
     else:
