@@ -6,30 +6,21 @@ export EDITOR='emacsclient'
 
 #bash prompt
 
-COLOR=$(python /dev/stdin <<EOF
-COLORS="""
-Black	0;30
-Blue	0;34
-Green	0;32
-Cyan	0;36
-Red	0;31
-Purple	0;35
-Brown	0;33
-Blue	0;34
-Green	0;32
-Cyan	0;36
-Purple	0;35
-Brown	0;33
-"""
-colors_list=filter(bool, COLORS.split('\n'))
+# Color codes
+# 0 – Black
+# 1 – Red
+# 2 – Green
+# 3 – Yellow
+# 4 – Blue
+# 5 – Magenta
+# 6 – Cyan
+# 7 – White
+HOSTNAME_HASH_HEX=$(hostname | md5sum | cut -f1 -d' ')
+COLORS_COUNT=8
+IDX=$(python -c "print 0x${HOSTNAME_HASH_HEX} % ${COLORS_COUNT}")
+PS1="\[$(tput setaf $IDX)\]█\[$(tput setaf 4)\][\h][\W][\$?]$ \[$(tput sgr0)\]"
+export PS1=$PS1
 
-hostname_idx=reduce(lambda cum, c: cum+ord(c)*31, '$(hostname)', 0)
-color=colors_list[hostname_idx%len(colors_list)]
-print(color.split()[1])
-EOF
-)
-
-export PS1="\[\033[${COLOR}m\]█\[\033[00m\]\[\033[0;34m\][\h][\$?][\W]$ \[\033[00m\]"
 
 source ~/.bash_aliases #should already be sourced by original bashrc
 for SRC in $(find -L ~/.bash-fns/ -type f); do
