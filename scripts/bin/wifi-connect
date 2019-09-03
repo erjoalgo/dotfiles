@@ -54,6 +54,17 @@ def iface_list():
     m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
     return list(set(m))
 
+def config_list(directory=CONFIG_DEFAUL_DIRECTORY):
+    "list known configurations"
+    return [os.path.join(directory, filename)
+            for filename in os.listdir(directory)]
+
+def iface_default():
+    "discover the available wifi interfaces"
+    ifaces = iface_list()
+    if ifaces:
+        return ifaces[0]
+
 def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
     "read the list of known essids or access points"
     return os.listdir(directory)
@@ -155,12 +166,12 @@ class Cell(object):
     def config_file_path(self, directory=CONFIG_DEFAUL_DIRECTORY):
         return os.path.join(directory, self.essid)
 
-    def write_config(self, password=None, force=False):
+    def write_config(self, password=None):
         essid_file = self.config_file_path()
         directory = os.path.dirname(essid_file)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        if not os.path.exists(essid_file) or force:
+        if not os.path.exists(essid_file):
             if self.encryption and not password:
                 # password = getpass.getpass("enter password for {}: ".format(self.essid))
                 password = raw_input("enter password for {}: ".format(self.essid))
@@ -204,12 +215,14 @@ class Cell(object):
         call_check(["sudo", "dhclient", "-v", self.iface])
 
 MIN_SIGNAL_PERCENTAGE = 15
-def select_cell(iface, essid=None, prompt="if_needed"):
+def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=False):
     known_essids = list_known_essids()
     cells = Cell.scan_essids(iface=iface)
     for cell in cells:
         cell.is_known = cell.essid in known_essids
-    cells.sort(key=lambda cell: (bool(cell.is_known), cell.signal_percent()))
+    cells.sort(key=lambda cell: (essid  == cell.essid,
+                                 bool(cell.is_known),
+                                 cell.signal_percent()))
     matching = filter(lambda cell:
                       (cell.is_known and
                        cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE),
@@ -225,7 +238,7 @@ def select_cell(iface, essid=None, prompt="if_needed"):
                     ", ".join(known_essids),
                     ", ".join(cell.essid or "NONE" for cell in cells)))
         elif prompt == "always" or prompt == "if_needed" and not matching:
-            return selcand(cells)
+            return selcand(cells if not known_cells_only else matching)
         elif not matching:
             raise Exception("no matching access points")
         else:
@@ -237,18 +250,15 @@ def iface_down_up(iface, macchange_opt=None):
         call_check(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
     call_check(["sudo", "ip", "link", "set", iface, "up"])
 
-def wifi_connect(config) :
+def wifi_connect(iface=None, essid=None, prompt="if_needed",
+                 password=None, macchange_opt=None, **config):
     "connect to one of the available wifi networks"
-    if not config.iface:
-        ifaces = iface_list()
-        config.iface = selcand(ifaces, error="wireless iface not found")
-    iface_down_up(iface=config.iface, macchange_opt=config.macchange_opt)
-    cell = select_cell(iface=config.iface,
-                       essid=config.essid,
-                       prompt=config.prompt)
+    iface_down_up(iface=iface, macchange_opt=macchange_opt)
+    cell = select_cell(iface=iface,
+                       essid=essid,
+                       prompt=prompt)
     assert cell, "no cell was selected"
-    essid_file = cell.write_config(password=config.password,
-                                   force=config.overwrite)
+    essid_file = cell.write_config(password=password)
     try:
         cell.connect(essid_file)
     except WrongPassword as ex:
@@ -256,38 +266,90 @@ def wifi_connect(config) :
         raise ex
 
 
+def find_cell(essid=None, known_cells_only=True, **kwargs):
+    if not essid:
+        cell = select_cell(prompt="always",
+                           known_cells_only=known_cells_only,
+                           **kwargs)
+    else:
+        cell = select_cell(essid=essid, prompt="never",
+                           known_cells_only=known_cells_only,
+                           **kwargs)
+    assert cell, "no cell selected"
+    config_file = cell.config_file_path()
+    assert not known_cells_only or os.path.exists(config_file)
+    return cell
+
+def wifi_config_show(essid=None, **kwargs):
+    "connect to one of the available wifi networks"
+    cell = find_cell(essid, known_cells_only=True, **kwargs)
+    assert cell, "no cell selected"
+    config_file = cell.config_file_path()
+    assert config_file
+    with open(config_file, "r") as fh:
+        print (config_file)
+        print (fh.read())
+
+def wifi_forget(essid=None, **kwargs):
+    "remove the config associated with the specified network"
+    if essid:
+        cell = find_cell(essid, known_cells_only=True, **kwargs)
+        assert cell, "no cell selected"
+        config_file = cell.config_file_path()
+    else:
+        known_configs = config_list()
+        config_file = selcand(known_configs)
+    assert config_file
+    os.remove(config_file)
+
 def main():
     "main method"
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--overwrite", action="store_true",
-                        help="flag to disregard any existing password")
     parser.add_argument("-e", "--essid",
-                        help="connect to given essid. required when connecting to a hidden essid")
-    parser.add_argument("-p", "--password",
+                        help="operate on the given essid. "
+                        "required when connecting to a hidden essid")
+    # parser.add_argument("-d", "--essids_directory", default=
+    #                     os.path.expanduser("~/.config/wifi-connect"))
+    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument(
+        "-i", "--iface",
+        choices = iface_list(),
+        default = iface_default(),
+        help="the wireless interface to use for discovery")
+
+    subparsers = parser.add_subparsers(help="")
+
+    subparser_connect = subparsers.add_parser("connect", help="connect")
+    subparser_connect.add_argument("-p", "--password",
                         help="the password, option to avoid interactive prompt")
-    parser.add_argument("-m", "--macchange-opt",
+    subparser_connect.add_argument("-m", "--macchange-opt",
                         help="a one-character flag proxied to macchanger")
-    parser.add_argument("-i", "--iface",
-                        help="the wireless interface to use for discovery")
-    parser.add_argument("-P", "--prompt",
+    subparser_connect.add_argument("-P", "--prompt",
                         choices=["always", "never", "if_needed"],
                         default="if_needed",
                         help="when to prompt for a selection")
-    parser.add_argument("-E", "--encryption",
+    subparser_connect.add_argument("-E", "--encryption",
                         help="sets the network's encryption. "+
                         "required when connecting to a hidden essid")
-    parser.add_argument("-d", "--essids_directory", default=
-                        os.path.expanduser("~/.config/wifi-connect"))
-    parser.add_argument("-v", "--verbose", action="store_true")
+    subparser_connect.set_defaults(func="wifi_connect")
+
+    subparser_show = subparsers.add_parser("show", help="show")
+    subparser_show.set_defaults(func="wifi_config_show")
+
+    subparser_remove = subparsers.add_parser("forget", help="forget the specified network")
+    subparser_remove.set_defaults(func="wifi_forget")
 
     args = parser.parse_args()
 
-    if args.verbose or True:
+    if args.verbose:
         logger.setLevel(logging.DEBUG)
         logger.debug("verbose on...")
     del args.verbose
 
-    wifi_connect(args)
+    fn = globals().get(args.func)
+    assert fn, "function {} not defined".format(args.func)
+    del args.func
+    fn(**vars(args))
 
 if __name__ == "__main__":
     main()
