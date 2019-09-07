@@ -54,7 +54,7 @@ for REMOTE_USER in $CP_DEST_USERS; do
     if test "${REMOTE_PRIVILEGED_USER}" = "${REMOTE_USER}"; then
         SU_OPT="bash -c"
     else
-        SU_OPT="su ${REMOTE_PRIVILEGED_USER} -c"
+        SU_OPT="sudo su ${REMOTE_PRIVILEGED_USER} -c"
     fi
     BASH_CMD="${SU_OPT} 'bash -s'"
     SCRIPT=$(cat <<EOF
