@@ -51,16 +51,13 @@ SSH_CMD="ssh -tt ${SSH_OPTS} ${SSH_USER_HOST_PORT}"
 
 
 for REMOTE_USER in $CP_DEST_USERS; do
-    cat<<EOF
-As remote ${REMOTE_PRIVILEGED_USER}, adding to remote user ${REMOTE_USER}
-the local key ${IDENTITY_FILE}
-EOF
     if test "${REMOTE_PRIVILEGED_USER}" = "${REMOTE_USER}"; then
         SU_OPT="bash -c"
     else
         SU_OPT="su ${REMOTE_PRIVILEGED_USER} -c"
     fi
-    ${SSH_CMD} "${SU_OPT} 'bash -s'" <<EOF
+    BASH_CMD="${SU_OPT} 'bash -s'"
+    SCRIPT=$(cat <<EOF
 set -euxo pipefail
 id -u ${REMOTE_USER}
 pwd
@@ -75,6 +72,14 @@ $(cat ${IDENTITY_FILE})
 EOFF
 chown -R ${REMOTE_USER}:${REMOTE_USER} .
 EOF
+)
+    cat<<EOF
+As remote ${REMOTE_PRIVILEGED_USER}
+via ${SSH_CMD} ${BASH_CMD}
+adding to remote user ${REMOTE_USER}
+the local key ${IDENTITY_FILE}.
+EOF
+    ${SSH_CMD} ${BASH_CMD} <<< "${SCRIPT}"
 done
 
 # Local Variables:
