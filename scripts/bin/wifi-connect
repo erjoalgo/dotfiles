@@ -5,11 +5,9 @@
 from __future__ import print_function
 
 import argparse
-import getpass
 import logging
 import os
 import re
-import subprocess
 import subprocess
 import time
 
@@ -215,10 +213,9 @@ def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=Fal
     cells.sort(key=lambda cell: (essid  == cell.essid,
                                  bool(cell.is_known),
                                  cell.signal_percent()))
-    matching = filter(lambda cell:
-                      (cell.is_known and
-                       cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE),
-                      cells)
+    matching = [cell for cell in cells
+                if (cell.is_known and
+                    cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE)]
     if not cells:
         logger.error("no wifi access points found")
     else:
