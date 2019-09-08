@@ -283,10 +283,15 @@ def find_cell(essid=None, known_cells_only=True, **kwargs):
 
 def wifi_config_show(essid=None, **kwargs):
     "connect to one of the available wifi networks"
-    cell = find_cell(essid, known_cells_only=True, **kwargs)
-    assert cell, "no cell selected"
-    config_file = cell.config_file_path()
-    assert config_file
+    if essid:
+        cell = find_cell(essid, known_cells_only=True, **kwargs)
+        assert cell, "no cell selected"
+        config_file = cell.config_file_path()
+        assert config_file
+    else:
+        known_configs = config_list()
+        config_file = selcand(known_configs)
+
     with open(config_file, "r") as fh:
         print (config_file)
         print (fh.read())
