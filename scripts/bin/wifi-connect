@@ -100,7 +100,7 @@ class Cell(object):
                 ("essid", "SSID: (.*)"),
                 ("signal", "signal:(.*)"),
                 ("channel", "channel:(.*)"),
-                ("wpa", "\n[ \t]+(WPA):|VHT capabilities"),
+                ("wpa", "\n[ \t]+(WPA):"),
                 ("freq", "frequency:(.*)"),
                 ("quality", "quality=(.*)"),
                 ("enc", "encryption key:(.*)"),
