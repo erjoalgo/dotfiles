@@ -98,7 +98,7 @@ class Cell(object):
                 ("essid", "SSID: (.*)"),
                 ("signal", "signal:(.*)"),
                 ("channel", "channel:(.*)"),
-                ("wpa", "\n[ \t]+(WPA):"),
+                ("wpa", "\n[ \t]+(?:(WPA):|[*] Authentication suites: .*PSK)"),
                 ("freq", "frequency:(.*)"),
                 ("quality", "quality=(.*)"),
                 ("enc", "encryption key:(.*)"),
