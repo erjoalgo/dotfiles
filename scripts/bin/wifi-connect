@@ -133,36 +133,27 @@ class Cell(object):
     @staticmethod
     def scan_essids(iface,
                     scan_attempts=7,
-                    scan_results_filename="/tmp/wifi-scan-results",
-                    debugging=False):
+                    scan_results_filename="/tmp/wifi-scan-results"):
         "scan for available access points or cells"
         for _ in range(scan_attempts):
-            iw_out = None
-            if debugging:
-                iw_out = open(scan_results_filename).read()
+            try:
+                iw_out = check_output(["sudo", "iw", "dev", iface, "scan"])
+            except subprocess.CalledProcessError as ex:
+                logger.error("error scanning: %s retrying...", ex)
             else:
-                p = subprocess.Popen(["sudo", "iw", "dev", iface, "scan"],
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE)
-                stdout, stderr = p.communicate()
-                if p.returncode == 0:
-                    with open(scan_results_filename, "w") as fh:
-                        print(stdout, file=fh)
-                    iw_out = stdout
-                else:
-                    logger.error("error scanning: %s retrying...", stderr)
-                    logger.info("retrying...")
-                    time.sleep(1)
-            if iw_out:
+                with open(scan_results_filename, "w") as fh:
+                    print(iw_out, file=fh)
                 cells_flat = re.split("\nBSS", iw_out)
                 logging.info("found %s possible cells", len(cells_flat))
                 if not cells_flat:
                     logger.info("no networks found. retrying...")
-                    time.sleep(1)
                 else:
                     cells = [Cell(scan_output=cell_flat) for cell_flat in cells_flat]
                     return cells
-        raise Exception("scanning failed")
+            logger.info("retrying...")
+            time.sleep(1)
+        else:
+            raise Exception("scanning failed")
 
     def config_file_path(self, directory=CONFIG_DEFAUL_DIRECTORY):
         return os.path.join(directory, self.essid)
