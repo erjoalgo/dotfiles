@@ -4,12 +4,12 @@
 """a simple standalone script to connect to a WPA, WEP or OPN network"""
 from __future__ import print_function
 
-from subprocess import call, check_output
 import argparse
 import getpass
 import logging
 import os
 import re
+import subprocess
 import subprocess
 import time
 
@@ -18,16 +18,16 @@ logger = logging.getLogger("wifi-connect")
 
 CONFIG_DEFAUL_DIRECTORY = os.path.expanduser("~/.config/wifi-connect")
 
-def call_check(*args, **kwargs):
-    "proxy to subprocess.call, raising error on non-zero status"
-    cmd = args[0]
-    logger.debug("calling: %s", " ".join(cmd))
-    recode = subprocess.call(*args, **kwargs)
-    if recode != 0:
-        raise Exception("non-zero exit status")
+def check_output(cmd, **kwargs):
+    """wrap subprocess.call with logging."""
+    logger.info("calling: %s", " ".join(cmd))
+    return subprocess.check_output(cmd, **kwargs)
 
 def pkill(proc):
-    call(["sudo", "pkill", proc])
+    try:
+        check_output(["sudo", "pkill", proc])
+    except subprocess.CalledProcessError:
+        pass
 
 def selcand(cands, display_fun=str, error="no choices available"):
     "interactively select a candidate from a list"
@@ -177,7 +177,7 @@ class Cell(object):
                 password = raw_input("enter password for {}: ".format(self.essid))
             with open(essid_file, "w") as fh:
                 if self.is_wpa():
-                    call_check(["wpa_passphrase", self.essid, password], stdout=fh)
+                    check_output(["wpa_passphrase", self.essid, password], stdout=fh)
                 else:
                     print(password or "", file=fh)
         return essid_file
@@ -211,8 +211,8 @@ class Cell(object):
                 with open(essid_file, "r") as fh:
                     password = fh.read()
                 cmd += ["enc", "WEP", "key", password]
-            call_check(cmd)
-        call_check(["sudo", "dhclient", "-v", self.iface])
+            check_output(cmd)
+        check_output(["sudo", "dhclient", "-v", self.iface])
 
 MIN_SIGNAL_PERCENTAGE = 15
 def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=False):
@@ -246,9 +246,9 @@ def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=Fal
 
 def iface_down_up(iface, macchange_opt=None):
     if macchange_opt != None:
-        call_check(["sudo", "ip", "link", "set", iface, "down"])
-        call_check(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
-    call_check(["sudo", "ip", "link", "set", iface, "up"])
+        check_output(["sudo", "ip", "link", "set", iface, "down"])
+        check_output(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
+    check_output(["sudo", "ip", "link", "set", iface, "up"])
 
 def wifi_connect(iface=None, essid=None, prompt="if_needed",
                  password=None, macchange_opt=None, **config):
