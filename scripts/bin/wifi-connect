@@ -146,7 +146,9 @@ class Cell(object):
                 if not cells_flat:
                     logger.info("no networks found. retrying...")
                 else:
-                    cells = [Cell(scan_output=cell_flat) for cell_flat in cells_flat]
+                    cells = [Cell(scan_output=cell_flat)
+                             for cell_flat in cells_flat
+                             if cell_flat]
                     return cells
             logger.info("retrying...")
             time.sleep(1)
