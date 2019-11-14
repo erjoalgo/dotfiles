@@ -48,7 +48,7 @@
     ((DIGIT-CHAR-P c)
      (format nil "the number ~C" c))
     ((eq c #\Space) "Space")
-    (t (format nil "~C" c))))
+    (t (format nil "the symbol ~C" c))))
 
 (defun spell-word (word)
   (let* ((spelling-lines

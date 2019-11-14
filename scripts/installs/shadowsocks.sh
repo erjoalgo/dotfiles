@@ -4,7 +4,9 @@ set -euo pipefail
 
 which go
 
-go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
+go get -u -v github.com/shadowsocks/go-shadowsocks2
+
+# go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
 
 SAMPLE_CONFIG=${HOME}/.shadow-sample-config.json
 
