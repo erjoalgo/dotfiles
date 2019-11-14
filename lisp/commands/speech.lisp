@@ -65,7 +65,8 @@
     "Jerusalem" "Paris" "India"
     "Beijing" "Chicago" "Xochimilco" "Florence"
     "Richmond" "Detroit" "Queretaro"
-    "Washington" "Oakland" "Korea" "Zimbabwe"
+    "Washington" "Oakland" "Korea"
+    "Zero"
     "Egypt" "Uruguay" "Vietnam"
     "London" "Shanghai" "Mexico"
     "New York" "Tokyo"))
