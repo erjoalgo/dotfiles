@@ -56,7 +56,7 @@
          (preamble (format nil "spelling ~D characters" (length word))))
     (speak-string preamble)
     (sleep 1)
-    (speak-string (format nil "~{~A~^, ~}" spelling-lines))
+    (speak-string (format nil "~{~A~^, ~}" spelling-lines) :word-gap-ms 30)
     spelling-lines))
 
 (defparameter spell-words
