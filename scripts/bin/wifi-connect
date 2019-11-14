@@ -169,7 +169,9 @@ class Cell(object):
                 password = raw_input("enter password for {}: ".format(self.essid))
             with open(essid_file, "w") as fh:
                 if self.is_wpa():
-                    check_output(["wpa_passphrase", self.essid, password], stdout=fh)
+                    subprocess.call(
+                        ["wpa_passphrase", self.essid, password],
+                        stdout=fh)
                 else:
                     print(password or "", file=fh)
         return essid_file
@@ -186,8 +188,10 @@ class Cell(object):
         pkill("wpa_supplicant")
         pkill("dhclient")
         if self.is_wpa():
-            p=subprocess.Popen(["sudo", "wpa_supplicant",
-                                "-i", self.iface, "-c", essid_file, "-D", "nl80211,wext"],
+            args = ["sudo", "wpa_supplicant",
+                    "-i", self.iface, "-c", essid_file, "-D", "nl80211,wext"]
+            logger.info("calling: %s", " ".join(args))
+            p=subprocess.Popen(args,
                                stdout=subprocess.PIPE)
             for line in iter(p.stdout.readline, ""):
                 print (line)
