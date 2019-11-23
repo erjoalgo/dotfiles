@@ -128,7 +128,7 @@ class Cell(object):
         return u"{star_opt} {essid: >10}\t{encryption}\t{signal} ({signal_percent}%) {bssid}".format(
             encryption=box(self.encryption or "OPEN", 5),
             star_opt="*" if self.is_known else " ",
-            essid=box(self.essid, 15),
+            essid=box(self.essid or "<HIDDEN>", 15),
             signal=box(u"⬛"*bars, 10),
             signal_percent=self.signal_percent(),
             bssid=self.bssid).encode("utf8")
