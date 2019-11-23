@@ -6,6 +6,8 @@
 FIND_ARGS=${*}
 echo ${FIND_ARGS}
 
+adb shell command -v find
+
 sudo adb shell find ${FIND_ARGS} \
     | sed 's/[[:space:]]//g' \
     | tee -a $(basename ${0}).log \
