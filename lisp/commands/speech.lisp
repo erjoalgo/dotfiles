@@ -46,7 +46,7 @@
                          (warn "missing sample word for char ~C" c-lower)
                          (format nil "~C" c-lower))))))
     ((DIGIT-CHAR-P c)
-     (format nil "the number ~C" c))
+     (format nil "~C" c))
     ((eq c #\Space) "Space")
     (t (format nil "the symbol ~C" c))))
 
