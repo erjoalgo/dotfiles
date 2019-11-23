@@ -34,13 +34,18 @@ def selcand(cands, display_fun=str, error="no choices available"):
     elif len(cands) == 1:
         return cands[0]
     else:
-        print ("\n".join(
-            "{}: {}".format(box(str(i), 3), display_fun(cand))
-            for (i, cand) in enumerate(cands)))
+        # cells.sort(key=lambda cell: cell.essid)
+        display_cand_sorted = sorted((display_fun(cand), cand)
+                                     for cand in cands)
+        for (i, display_cand) in enumerate(display_cand_sorted):
+            display, _ = display_cand
+            print("{}: {}".format(box(str(i), 3), display))
         idx_string = raw_input("enter selection index: ")
         try:
-            return cands[int(idx_string)]
-        except IndexError:
+            index = int(idx_string)
+            _, cand = display_cand_sorted[index]
+            return cand
+        except (IndexError, ValueError):
             return selcand(cands, display_fun)
 
 def box(s, n):
