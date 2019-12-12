@@ -154,8 +154,9 @@
       (byzanz-record nil nil))))
 
 (defcommand byzanz-record-auto-stop () ()
-  (message "stopping byzanz recording...")
-  (nc "localhost" byzanz-recording-control-port "1"))
+  (nc "localhost" byzanz-recording-control-port "1")
+  (sleep 1)
+  (message "stopping byzanz recording..."))
 
 (defcommand emacs-killusr2 () ()
   "invoke this command to debug an emacs hang/freeze"
