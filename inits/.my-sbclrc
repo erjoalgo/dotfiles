@@ -1,6 +1,17 @@
-(in-package #:CL-USER)
+(defpackage DBG
+  (:use common-lisp)
+  (:export
+   prin
+   echo
+   dsc-table
+   dbg
+   package-unintern-shadowing-symbols
+   package-unexport-all-symbols
+   sort-by))
 
-(defun describe-obj (obj)
+(in-package #:DBG)
+
+(defun prin (obj)
   (loop with class = (class-of obj)
      for slot in (sb-mop:class-slots class)
      as slot-name = (slot-value slot 'sb-pcl::name)
@@ -9,7 +20,7 @@
                          :UNBOUND)
      collect (list slot-name slot-value)))
 
-(defun describe-hash-table (table)
+(defun dsc-table (table)
   '(with-hash-table-iterator (itr table)
     (loop
        (multiple-value-bind (entry-p key value)
@@ -19,8 +30,6 @@
              (return)))))
   (loop for k being the hash-keys of table
       collect (cons k (gethash k table))))
-
-(defvar dbg nil)
 
 (defun package-unintern-shadowing-symbols (&optional pkg)
   (setf pkg (or pkg *package*))
@@ -40,10 +49,6 @@
                           (funcall pred b)))
          args))
 
-;; (defpackage stumpwm (:use :cl))
-;; (defun message (&rest args))
-
-;; '(mapcar 'CL-USER::unintern-shadowing-symbols
-;;                                (remove-if-not (lambda (pkg)
-;;                                                 (ppcre:scan "^YT-COMMENT" (package-name pkg)))
-;;                                               (list-all-packages)))
+;; Local Variables:
+;; mode: lisp
+;; End:

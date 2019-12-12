@@ -166,6 +166,16 @@ if test -d ~/go/bin/; then
    export PATH=\$PATH:${HOME}/go/bin/
 fi
 EOF
+
+insert-text-block ';; 5ef52c11-e976-4eb5-90fa-38795231059d-load-my-sbclrc' \
+   ${HOME}/.sbclrc <<EOF
+  ;; #-dbg
+  (let ((my-sbclrc (merge-pathnames "git/erjoalgo-stumpwmrc/inits/.my-sbclrc"
+                                         (user-homedir-pathname))))
+    (when (probe-file my-sbclrc)
+      (load my-sbclrc)))
+EOF
+
 X_BROWSER=$(which x-www-browser-stumpwm)
 
 
