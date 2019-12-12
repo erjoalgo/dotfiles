@@ -137,7 +137,9 @@
                              "-p" ;; not always the same
                              byzanz-recording-control-port)))))
     (set-x-selection (namestring recording-pathname) :clipboard)
-    (message "starting byzanz recording...")
+    (message "starting byzanz recording in 1s...")
+    (sleep 1)
+    (unmap-all-message-windows)
     (run-command-async-notify
      "byzanz-record"
      `(,@duration-args ,recording-pathname))))
