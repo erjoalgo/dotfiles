@@ -10,18 +10,18 @@
 (defun vol (action
             &key
               (percent 3)
-              sink
+              (alsamixer-control "Master")
+              (pulseaudio-sink "1")
               (backend *vol-backend*))
   (assert (member action '(:set :up :down :mute-toggle :get)))
   (case backend
     (:amixer
-     (setf sink (or sink "Master"))
      (case action
        ((:set :up :down)
         (sb-ext:run-program
          "amixer"
          (list "set"
-               sink
+               alsamixer-control
                (format nil "~D%~A" percent
                        (case action
                          (:set "")
@@ -38,19 +38,18 @@
                    (vol :set :percent 0)
                    nil)))
        (:get
-        (let* ((out (run-shell-command (format nil "amixer get ~A" sink) t))
+        (let* ((out (run-shell-command (format nil "amixer get ~A" alsamixer-control) t))
                (vol (ppcre:register-groups-bind (vol) ("Playback.*?[[]([0-9]+)%]" out)
                       vol)))
           (assert vol)
           vol))))
     (:pactl
-     (setf sink (or sink 0))
      (case action
        ((:set :up :down)
         (sb-ext:run-program
          "pactl"
          (list "set-sink-volume"
-               (write-to-string sink)
+               (format nil "~A" pulseaudio-sink)
                (format nil "~A~D%"
                        (case action
                          (:set "")
