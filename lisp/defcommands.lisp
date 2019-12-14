@@ -199,3 +199,14 @@
           (fnext)
           (pull-window win2))))))
 
+(defun ekiga-call (number &key (sip-host "sanjose2.voip.ms"))
+  (let* ((number-clean (ppcre:regex-replace-all "[^0-9]" number ""))
+         (intl-prefix-opt (if (eq (length number-clean) 10) "1" ""))
+         (call-arg (format nil "sip:~A~A@~A"
+                           intl-prefix-opt number-clean sip-host)))
+    (run-command-async-notify "ekiga" `("-c" ,call-arg))))
+
+(defcommand ekiga-call-clipboard () ()
+  (let* ((clipboard (get-x-selection :clipboard)))
+    (ekiga-call clipboard)))
+
