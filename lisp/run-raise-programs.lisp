@@ -129,6 +129,11 @@ seconds ago")
         :cmd eclipse-cmd
         :raise-key "H-r")))
 
+(define-run-or-pull-program "ekiga"
+    :raise-key "H-q"
+    :pull-key "H-Q"
+    :classes '("Ekiga" "ekiga"))
+
 (define-run-or-pull-program "zathura")
 
 (define-run-or-pull-program "vncviewer")
