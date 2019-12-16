@@ -9,3 +9,7 @@ Parent=FALLBACK/
 [Interaction Options]
 AutoCopySelectedText=true
 MiddleClickPasteMode=0
+
+[Scrolling]
+HistoryMode=1
+HistorySize=100000
