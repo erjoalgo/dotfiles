@@ -7,9 +7,9 @@ function make-completion-wrapper ()  {
     # make-completion-wrapper _apt_get _apt_get_install apt-get install
     # complete -F _apt_get_install apt-inst
 
+    local comp_function_name="$1"
     local function_name="$2"
     local arg_count=$(($#-3))
-    local comp_function_name="$1"
     shift 2
     local function="
     function $function_name {
