@@ -210,3 +210,7 @@
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (ekiga-call clipboard)))
 
+(defcommand ekiga-call-prompt (number) ((:string "Enter number: "))
+  (when number
+    (ekiga-call number)))
+

@@ -183,7 +183,8 @@
    ("H-t" "tmp")
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
-   ("H-q" "ekiga-call-clipboard")))
+   ("H-q" "ekiga-call-clipboard")
+   ("q" "ekiga-call-prompt")))
 
 
 (define-key-bindings *screen-rotation-map*
