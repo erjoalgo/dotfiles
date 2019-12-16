@@ -176,7 +176,7 @@
                                args
                                retcode-output
                                on-success on-error)
-  (destructuring-bind (retcode-sym output-sym) retcode-output
+  (destructuring-bind (retcode-sym output-sym) (or retcode-output '(nil nil))
     (setf retcode-sym (or retcode-sym (gensym "retcode-"))
           output-sym (or output-sym (gensym "output-")))
     `(eval-async
