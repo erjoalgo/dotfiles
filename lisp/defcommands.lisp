@@ -207,6 +207,6 @@
     (run-command-async "ekiga" `("-c" ,call-arg) nil t)))
 
 (defcommand ekiga-call-clipboard () ()
-  (let* ((clipboard (get-x-selection :clipboard)))
+  (let* ((clipboard (get-x-selection nil :clipboard)))
     (ekiga-call clipboard)))
 
