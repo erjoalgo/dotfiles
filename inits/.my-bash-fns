@@ -105,9 +105,6 @@ function pass-show-xs	{
   pass show ${PASS_PATH} | xs
 }
 
-for PASS_CMD in passgen{,-allow-special,-pin} pass-show-xs; do
-    complete -o filenames -o nospace -F _pass ${PASS_CMD}
-done
 
 function test-port	{
     HOST="${1}"

@@ -30,8 +30,18 @@ function complete-alias  {
     EXISTING_COMPLETION_FN=${1} && shift
     ALIAS=${1} && shift
     AUTOGEN_COMPLETION_FN="__autogen_completion_${ALIAS}"
-    make-completion-wrapper ${EXISTING_COMPLETION_FN} ${AUTOGEN_COMPLETION_FN} ${*}
-    complete -F ${AUTOGEN_COMPLETION_FN} ${ALIAS}
+    make-completion-wrapper ${EXISTING_COMPLETION_FN} ${AUTOGEN_COMPLETION_FN} \
+                            ${*}
+    COMMAND=${1} # don't shift
+    LAZY_LOAD_COMPLETION_FN="__lazy_complete_$ALIAS"
+    local function="
+    function ${LAZY_LOAD_COMPLETION_FN} {
+      _completion_loader ${COMMAND}
+      complete -F ${AUTOGEN_COMPLETION_FN} ${ALIAS}
+      return 0
+    }"
+    eval "$function"
+    complete -F "${LAZY_LOAD_COMPLETION_FN}" "${ALIAS}"
 }
 
 
