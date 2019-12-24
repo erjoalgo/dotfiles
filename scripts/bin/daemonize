@@ -5,9 +5,20 @@ if test ${1} = '-h'; then
     exit 0
 fi
 
-LOGFILE=${LOGFILE:-/var/log/$(basename ${1})}
-# test -w ${LOGFILE} -o ! -e ${LOGFILE} || exit ${LINENO}
+# allow users to specify LOGFILE=program-name
+# instead of LOGFILE=/var/log/program-name
+LOGFILE_PATH=${LOGFILE_PATH:-/var/log/${LOGFILE:-$(basename ${1})}.log}
+sudo touch ${LOGFILE_PATH}
+sudo chown $(whoami):$(whoami) ${LOGFILE_PATH}
+test -w ${LOGFILE_PATH}
 
-sudo touch ${LOGFILE} && sudo chown $(whoami):$(whoami) ${LOGFILE}
+echo "writing to log file: ${LOGFILE_PATH}. command: ${*}"
 
-${*} >> ${LOGFILE} 2>&1 < /dev/null &
+setsid ${*} >> ${LOGFILE_PATH} 2>&1 < /dev/null & disown
+# TODO
+sleep 1
+
+
+# Local Variables:
+# mode: sh-mode
+# End:
