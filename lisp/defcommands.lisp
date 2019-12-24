@@ -200,6 +200,7 @@
           (pull-window win2))))))
 
 (defun ekiga-call (number &key (sip-host "sanjose2.voip.ms"))
+  (assert number)
   (let* ((number-clean (ppcre:regex-replace-all "[^0-9]" number ""))
          (intl-prefix-opt (if (eq (length number-clean) 10) "1" ""))
          (call-arg (format nil "sip:~A~A@~A"
