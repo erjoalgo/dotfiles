@@ -160,6 +160,10 @@ fi
 
 chmod 600 ~/.ssh/config
 
+if ! test -e ~/.ssh/id_rsa.pub; then
+    ssh-keygen -t rsa -b 4096 -o -a 100
+fi
+
 insert-text-block '# 9f56be79-fa85-4ec0-ab4f-a9d3df5fef76-maybe-add-gopath' ~/.profile-env  \
   <<EOF
 if test -d ~/go/bin/; then
