@@ -93,8 +93,9 @@
     (trim-spaces (run-shell-command
                   (format nil "which ~A" program)))))
 
-(with-elapsed-time ms (xmodmap-load)
-  (message "xmodmap load took ~D ms" ms))
+(loop for i below 2 do
+     (with-elapsed-time ms (xmodmap-load)
+       (message "xmodmap load took ~D ms" ms)))
 
 (with-elapsed-time ms (run-startup-scripts)
   (message "startup shell scripts took ~D ms" ms))
