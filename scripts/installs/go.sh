@@ -3,8 +3,9 @@
 set -euo pipefail
 
 GOROOT=/usr/local/go
-if ! command -v go; then
-    GO_URL=https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz
+if ! command -v go || true; then
+    # GO_URL=https://storage.googleapis.com/golang/go1.7.5.linux-amd64.tar.gz
+    GO_URL=https://dl.google.com/go/go1.13.5.linux-amd64.tar.gz
     mkdir -p ~/src && cd ~/src
     test -f $(basename ${GO_URL}) || wget "${GO_URL}"
     FNAME=$(basename ${GO_URL})
