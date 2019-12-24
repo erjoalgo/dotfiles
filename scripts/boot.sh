@@ -38,7 +38,7 @@ fi
 sudo echo "successful passwordless sudo"
 
 if which apt-get; then
-    sudo apt-get install -y apt-file
+    sudo apt-get install -y apt-file unattended-upgrades
     sudo apt-file update
     if sudo grep ^deb\ cdrom /etc/apt/sources.list; then
         sudo ./update-sources-list.sh
