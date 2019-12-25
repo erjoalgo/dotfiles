@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-URL=http://prdownloads.sourceforge.net/sbcl/sbcl-1.4.15-x86-64-linux-binary.tar.bz2
+URL=http://prdownloads.sourceforge.net/sbcl/sbcl-1.5.9-source.tar.bz2
 
 BASE=$(basename "${URL}")
-DIR_PREFIX=$(grep -o "sbcl[0-9.-]*"  <<< "${BASE}")
+DIR_PREFIX=$(grep -o "sbcl-[0-9.]*"  <<< "${BASE}")
 
 TOP=${HOME}/src
 mkdir -p ${TOP}
@@ -29,5 +29,6 @@ test -d "${DIR}"
 
 cd "${DIR}"
 
+sh make.sh --fancy
 sudo ./install.sh
 sudo apt-get install -y make rlwrap
