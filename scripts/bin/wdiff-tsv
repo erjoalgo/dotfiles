@@ -1,0 +1,22 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+function normalize  {
+    FILE=${1} && shift
+    sed  \
+        -e 's/“/"/g' \
+        -e 's/,//g' \
+        ${FILE}
+}
+
+wdiff \
+    --start-delete '<delete>' \
+    --end-delete '</delete>' \
+    --start-insert '<insert>'  \
+    --end-insert '</insert>' \
+    -n <(normalize "$1") <(normalize "$2")
+
+# Local Variables:
+# mode: sh-mode
+# End:
