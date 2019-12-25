@@ -36,3 +36,29 @@ if ! command -v sbcl; then
 fi
 
 sudo apt-get install -y make rlwrap
+
+QL_SETUP="${HOME}/quicklisp/setup.lisp"
+if ! test -f "${QL_SETUP}"; then
+    cd /tmp
+    curl -O https://beta.quicklisp.org/quicklisp.lisp
+    curl -O https://beta.quicklisp.org/quicklisp.lisp.asc
+    gpg --verify quicklisp.lisp.asc quicklisp.lisp || true
+    sbcl --load quicklisp.lisp --non-interactive --eval  \
+	'(quicklisp-quickstart:install)'
+    rm quicklisp.lisp{,.asc}
+fi
+
+
+SBCLRC="${HOME}/.sbclrc"
+# the below command is interactive. it is simpler to insert the text to load
+# sbcl --load "${QL_SETUP}" --non-interactive --eval '(ql:add-to-init-file)' < /dev/null
+
+insert-text-block ";;; 2a00bf58-9854-4512-8e13-a85409493a54-ql:add-to-init-file-manual" \
+	          "${SBCLRC}"<<EOF
+  ;;; The following lines added by ql:add-to-init-file:
+  #-quicklisp
+  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                         (user-homedir-pathname))))
+    (when (probe-file quicklisp-init)
+      (load quicklisp-init)))
+EOF
