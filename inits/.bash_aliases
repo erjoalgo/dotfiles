@@ -183,7 +183,6 @@ if command -v apt-get > /dev/null; then
     {
 
 	local cur
-	_init_completion || return
 
 	COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" \
 				 2> /dev/null ) )
