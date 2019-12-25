@@ -136,7 +136,7 @@ mkdir -p ${HOME}/src
 
 # some essential tools
 if test -n "${APT_GET}"; then
-    sudo ${APT_GET} install -y htop auditd fail2ban unison tmux
+    sudo ${APT_GET} install -y htop auditd fail2ban unison tmux wget
     sudo ${APT_GET} install -y bootlogd || true
 fi
 
