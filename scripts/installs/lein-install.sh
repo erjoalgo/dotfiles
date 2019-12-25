@@ -16,7 +16,7 @@ if ! test -f ${LEIN}; then
 fi
 
 if ! command -v java; then
-    sudo apt-get install -y openjdk-7-jre
+    sudo apt-get install -y default-jre
 fi
 
 chmod +x ${LEIN}
