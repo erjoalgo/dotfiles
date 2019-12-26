@@ -108,7 +108,8 @@ for I in $(seq ${TRIES}); do
         message "failed to scan"
         FAILED=true
     else
-        ESSIDS=$(grep "^	SSID" <<< "${IWLIST_OUT}" | sed 's/.*SSID: \(.*\).*/\1/g')
+        ESSIDS=$(grep "^	SSID" <<< "${IWLIST_OUT}" \
+                     | sed 's/.*SSID: \(.*\).*/\1/g')
         if test 0 -ne $? || test -z "${ESSIDS}"; then
             message "failed to read essids"
             FAILED=true
