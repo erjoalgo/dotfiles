@@ -45,7 +45,7 @@ if test -z "${SSH_USERHOST}" -o -z "${REMOTE_NAME}"; then
 fi
 
 ssh ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -s" <<EOF
-set -e
+set -euxo pipefail
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
 mkdir -p \$REPO_PATH && cd \$REPO_PATH
