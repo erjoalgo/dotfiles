@@ -43,6 +43,8 @@ if test ${IGNORED} != 0; then
     echo "WARN: ${IGNORED} ignored files would be lost in $(pwd)"
 fi
 
+# TODO consider orphaned commits
+
 if test -n "${LOST}"; then
     MESSAGE=$(sed 's/, \(, \)*/\n - /g' <<< "${LOST}")
     echo "WARN: data would be lost if $(pwd) was deleted: "
