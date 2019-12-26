@@ -59,7 +59,6 @@ safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
 safe_ln "${INITS_TOP}/.my-bash-fns" "${HOME}/.bash-fns/"
 
 safe_ln "${INITS_TOP}/konsole" "${HOME}/.local/share/"
-safe_ln "${INITS_TOP}/konsolerc" "${HOME}/.config/"
 
 #link the top itself
 #if existss and is a directory, link will be put inside the directory symlink
