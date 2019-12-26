@@ -51,6 +51,7 @@ REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
 mkdir -p \$REPO_PATH && cd \$REPO_PATH
 git init --bare
 chown -R git:git .
+exit
 EOF
 
 # TODO remove possible user from SSH_USERHOST
