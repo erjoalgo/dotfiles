@@ -44,7 +44,7 @@ if test -z "${SSH_USERHOST}" -o -z "${REMOTE_NAME}"; then
     exit 1
 fi
 
-ssh ${SSH_USERHOST} ${SSH_OPTS}  "sudo bash -s" <<EOF
+ssh ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -s" <<EOF
 set -e
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
