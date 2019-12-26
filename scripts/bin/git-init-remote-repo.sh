@@ -60,6 +60,9 @@ EOF
 REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO_NAME}"
 ORIGIN_NAME=origin
 
+git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
+echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
+git push -u ${REMOTE_NAME}
+
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-git fetch ${REMOTE_NAME}
 git branch --set-upstream-to=${REMOTE_NAME}/${BRANCH}
