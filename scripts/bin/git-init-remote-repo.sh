@@ -36,6 +36,8 @@ while getopts "ht:o:r:n:d:" OPT; do
     esac
 done
 
+# ensure we're on a git repository
+git status
 
 REPO=${REPO:-$(basename $(pwd))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
