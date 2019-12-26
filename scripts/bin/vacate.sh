@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-for DIR in ${HOME}/git/*; do
+for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -type d); do
     cd "${DIR}"
     pwd
     if git status &> /dev/null; then
