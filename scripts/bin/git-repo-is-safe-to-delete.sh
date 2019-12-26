@@ -49,8 +49,3 @@ if test -n "${LOST}"; then
     echo "${MESSAGE}"
     exit ${LINENO}
 fi
-
-
-
-# git push origin --all --dry-run 2>&1 | tee /dev/stderr \
-#     | grep -F "Everything up-to-date"
