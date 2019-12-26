@@ -141,10 +141,26 @@ case ${COUNT} in
         ;;
     *)
         if test -z "${ESSID}"; then
-            COMM=$(comm -12 <(ls -1 "${NETWORKS_DIR}" | sort) \
-                        <(sort <<< "${ESSIDS}") \
+            LEFT=""
+            OLDIFS=$IFS
+            IFS=$'\n'
+            IDX=0
+            for ESSID in ${ESSIDS}; do
+                LEFT+="${IDX}~${ESSID}$(echo)1"
+                IDX=$(expr ${IDX} + 1)
+            done
+            IFS=$OLDIFS
+            export ESSIDS
+            export LEFT
+            export NETWORKS_DIR
+            echo "rec edit"
+            bash
+            COMM=$(join -12 -21 -t '~' \
+                        <(sort <<< "${LEFT}") \
+                        <(ls -1 "${NETWORKS_DIR}" | sort) \
+                       | sort -n \
                        | tee /tmp/common-essids)
-            echo "known essids: ${COMM}"
+            echo -e "known essids:\n\n${COMM}\n"
             test -n "${COMM}" && COMM_LEN=$(wc -l <<< "${COMM}") || COMM_LEN=0
             if test "${ASK_ESSID}" != true -a ${COMM_LEN} = 1 \
                     -o "${ASK_ESSID}" = never -a ${COMM_LEN} -ge 1; then
