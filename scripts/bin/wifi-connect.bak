@@ -1,0 +1,362 @@
+#!/usr/bin/python
+# coding=utf-8
+
+"""a simple standalone script to connect to a WPA, WEP or OPN network"""
+from __future__ import print_function
+
+import argparse
+import logging
+import os
+import re
+import subprocess
+import time
+
+logger = logging.getLogger(__name__)
+logging.basicConfig()
+
+CONFIG_DEFAUL_DIRECTORY = os.path.expanduser("~/.config/wifi-connect")
+
+def check_output(cmd, **kwargs):
+    """wrap subprocess.call with logging."""
+    logger.info("calling: %s", " ".join(cmd))
+    return subprocess.check_output(cmd, **kwargs)
+
+def pkill(proc):
+    try:
+        check_output(["sudo", "pkill", proc])
+    except subprocess.CalledProcessError:
+        pass
+
+def selcand(cands, display_fun=str, error="no choices available", sort=False):
+    "interactively select a candidate from a list"
+    if not cands:
+        raise Exception(error)
+    elif len(cands) == 1:
+        return cands[0]
+    else:
+        # cells.sort(key=lambda cell: cell.essid)
+        display_cand_sorted = [(display_fun(cand), cand) for cand in cands]
+        if sort:
+            display_cand_sorted.sort()
+        for (i, display_cand) in enumerate(display_cand_sorted):
+            display, _ = display_cand
+            print("{}: {}".format(box(str(i), 3), display))
+        idx_string = raw_input("enter selection index: ")
+        try:
+            index = int(idx_string)
+            _, cand = display_cand_sorted[index]
+            return cand
+        except (IndexError, ValueError):
+            return selcand(cands, display_fun, sort=sort)
+
+def box(s, n):
+    return (s + " "*n)[:n]
+
+def iface_list():
+    "discover the available wifi interfaces"
+    ifconfig_out = check_output(["ip", "link"])
+    m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
+    return list(set(m))
+
+def config_list(directory=CONFIG_DEFAUL_DIRECTORY):
+    "list known configurations"
+    return [os.path.join(directory, filename)
+            for filename in os.listdir(directory)]
+
+def iface_default():
+    "discover the available wifi interfaces"
+    ifaces = iface_list()
+    if ifaces:
+        return ifaces[0]
+
+def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
+    "read the list of known essids or access points"
+    return os.listdir(directory)
+
+
+class WrongPassword(Exception):
+    pass
+
+class Cell(object):
+    class Encryptions(object):
+        WPA = "WPA"
+        WPA2 = "WPA2"
+        WEP = "WEP"
+
+    def __init__(self, scan_output=None):
+        self.essid = None
+        self.bssid = None
+        self.channel = None
+        self.signal = None
+        self.frequency = None
+        self.iface = None
+        self.encryption = None
+        self.signal_integer = None
+        self.is_known = None
+        if scan_output:
+            self.__init_from_scan_output__(scan_output)
+
+    def __init_from_scan_output__(self, scan_output):
+        setattr(self, "flat", scan_output)
+        for (attr, regexp) in (
+                ("bssid", "^(?:BSS)? *([a-f0-9:]+)"),
+                ("iface", "^.*\\(on (.*)\\)"),
+                ("essid", "SSID: (.*)"),
+                ("signal", "signal:(.*)"),
+                ("channel", "channel:(.*)"),
+                ("wpa", "\n[ \t]+(?:(WPA):|[*] Authentication suites: .*PSK)"),
+                ("freq", "frequency:(.*)"),
+                ("quality", "quality=(.*)"),
+                ("enc", "encryption key:(.*)"),
+                ("wpa2", "WPA2 (Version .*)")):
+            m = re.search(regexp, scan_output)
+            if m:
+                value = m.group(1)
+                setattr(self, attr, value)
+                if attr.upper() in Cell.Encryptions.__dict__:
+                    self.encryption = attr.upper()
+                elif attr == "signal":
+                    self.signal_integer = float(value.split()[0])
+
+    def signal_percent(self):
+        LOWEST_SEEN, HIGHEST_SEEN = 26, 83
+        percent = 100 - 100 * ((-self.signal_integer - LOWEST_SEEN) /
+                               (HIGHEST_SEEN - LOWEST_SEEN))
+        return int(percent)
+
+    def __repr__(self):
+        bars = self.signal_percent()/10
+        return u"{star_opt} {essid: >10}\t{encryption}\t{signal} ({signal_percent}%) {bssid}".format(
+            encryption=box(self.encryption or "OPEN", 5),
+            star_opt="*" if self.is_known else " ",
+            essid=box(self.essid or "<HIDDEN>", 15),
+            signal=box(u"⬛"*bars, 10),
+            signal_percent=self.signal_percent(),
+            bssid=self.bssid).encode("utf8")
+
+    @staticmethod
+    def scan_essids(iface,
+                    scan_attempts=7,
+                    scan_results_filename="/tmp/wifi-scan-results"):
+        "scan for available access points or cells"
+        for _ in range(scan_attempts):
+            try:
+                iw_out = check_output(["sudo", "iw", "dev", iface, "scan"])
+            except subprocess.CalledProcessError as ex:
+                logger.error("error scanning: %s retrying...", ex)
+            else:
+                with open(scan_results_filename, "w") as fh:
+                    print(iw_out, file=fh)
+                cells_flat = re.split("\nBSS", iw_out)
+                logger.info("found %s possible cells", len(cells_flat))
+                if not cells_flat:
+                    logger.info("no networks found. retrying...")
+                else:
+                    cells = [Cell(scan_output=cell_flat)
+                             for cell_flat in cells_flat
+                             if cell_flat]
+                    return cells
+            logger.info("retrying...")
+            time.sleep(1)
+        else:
+            raise Exception("scanning failed")
+
+    def config_file_path(self, directory=CONFIG_DEFAUL_DIRECTORY):
+        return os.path.join(directory, self.essid)
+
+    def write_config(self, password=None):
+        essid_file = self.config_file_path()
+        directory = os.path.dirname(essid_file)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        if not os.path.exists(essid_file):
+            if self.encryption and not password:
+                # password = getpass.getpass("enter password for {}: ".format(self.essid))
+                password = raw_input("enter password for {}: ".format(self.essid))
+            with open(essid_file, "w") as fh:
+                if self.is_wpa():
+                    subprocess.call(
+                        ["wpa_passphrase", self.essid, password],
+                        stdout=fh)
+                else:
+                    print(password or "", file=fh)
+        return essid_file
+
+    def remove_config(self):
+        filename = self.config_file_path()
+        logger.warn("removing config file %s", filename)
+        os.remove(filename)
+
+    def is_wpa(self):
+        return self.encryption in (Cell.Encryptions.WPA, Cell.Encryptions.WPA2)
+
+    def connect(self, essid_file):
+        pkill("wpa_supplicant")
+        pkill("dhclient")
+        if self.is_wpa():
+            args = ["sudo", "wpa_supplicant",
+                    "-i", self.iface, "-c", essid_file, "-D", "nl80211,wext"]
+            logger.info("calling: %s", " ".join(args))
+            p=subprocess.Popen(args,
+                               stdout=subprocess.PIPE)
+            for line in iter(p.stdout.readline, ""):
+                print (line)
+                if "CTRL-EVENT-CONNECTED" in line:
+                    break
+                elif re.search("WRONG_KEY|Invalid configuration line", line):
+                    raise WrongPassword("failed to connect via wpa_supplicant")
+            p.stdout.close()
+        else:
+            # wep or no encryption
+            cmd = ["sudo", "iwconfig", self.iface, "essid", self.essid]
+            if self.encryption == self.Encryptions.WEP:
+                with open(essid_file, "r") as fh:
+                    password = fh.read()
+                cmd += ["enc", "WEP", "key", password]
+            check_output(cmd)
+        check_output(["sudo", "dhclient", "-v", self.iface])
+
+MIN_SIGNAL_PERCENTAGE = 15
+def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=False):
+    known_essids = list_known_essids()
+    cells = Cell.scan_essids(iface=iface)
+    for cell in cells:
+        cell.is_known = cell.essid in known_essids
+    cells.sort(key=lambda cell: (essid  == cell.essid,
+                                 bool(cell.is_known),
+                                 cell.signal_percent()))
+    matching = [cell for cell in cells
+                if (cell.is_known and
+                    cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE)]
+    if not cells:
+        logger.error("no wifi access points found")
+    else:
+        # strongest first
+        if not cells:
+            raise Exception(
+                "no wifi access points found with essids:\n{}nfound:\n{}"
+                .format(
+                    ", ".join(known_essids),
+                    ", ".join(cell.essid or "NONE" for cell in cells)))
+        elif prompt == "always" or prompt == "if_needed" and not matching:
+            return selcand(cells if not known_cells_only else matching)
+        elif not matching:
+            raise Exception("no matching access points")
+        else:
+            return matching[0]
+
+def iface_down_up(iface, macchange_opt=None):
+    if macchange_opt != None:
+        check_output(["sudo", "ip", "link", "set", iface, "down"])
+        check_output(["sudo", "macchanger", "-{}".format(macchange_opt), iface])
+    check_output(["sudo", "ip", "link", "set", iface, "up"])
+
+def wifi_connect(iface=None, essid=None, prompt="if_needed",
+                 password=None, macchange_opt=None, **config):
+    "connect to one of the available wifi networks"
+    iface_down_up(iface=iface, macchange_opt=macchange_opt)
+    cell = select_cell(iface=iface,
+                       essid=essid,
+                       prompt=prompt)
+    assert cell, "no cell was selected"
+    essid_file = cell.write_config(password=password)
+    try:
+        cell.connect(essid_file)
+    except WrongPassword as ex:
+        cell.remove_config()
+        raise ex
+
+
+def find_cell(essid=None, known_cells_only=True, **kwargs):
+    if not essid:
+        cell = select_cell(prompt="always",
+                           known_cells_only=known_cells_only,
+                           **kwargs)
+    else:
+        cell = select_cell(essid=essid, prompt="never",
+                           known_cells_only=known_cells_only,
+                           **kwargs)
+    assert cell, "no cell selected"
+    config_file = cell.config_file_path()
+    assert not known_cells_only or os.path.exists(config_file)
+    return cell
+
+def wifi_config_show(essid=None, **kwargs):
+    "connect to one of the available wifi networks"
+    if essid:
+        cell = find_cell(essid, known_cells_only=True, **kwargs)
+        assert cell, "no cell selected"
+        config_file = cell.config_file_path()
+        assert config_file
+    else:
+        known_configs = config_list()
+        config_file = selcand(known_configs)
+
+    with open(config_file, "r") as fh:
+        print (config_file)
+        print (fh.read())
+
+def wifi_forget(essid=None, **kwargs):
+    "remove the config associated with the specified network"
+    if essid:
+        cell = find_cell(essid, known_cells_only=True, **kwargs)
+        assert cell, "no cell selected"
+        config_file = cell.config_file_path()
+    else:
+        known_configs = config_list()
+        config_file = selcand(known_configs)
+    assert config_file
+    os.remove(config_file)
+
+def main():
+    "main method"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-e", "--essid",
+                        help="operate on the given essid. "
+                        "required when connecting to a hidden essid")
+    # parser.add_argument("-d", "--essids_directory", default=
+    #                     os.path.expanduser("~/.config/wifi-connect"))
+    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument(
+        "-i", "--iface",
+        choices = iface_list(),
+        default = iface_default(),
+        help="the wireless interface to use for discovery")
+
+    subparsers = parser.add_subparsers(help="")
+
+    subparser_connect = subparsers.add_parser("connect", help="connect")
+    subparser_connect.add_argument("-p", "--password",
+                        help="the password, option to avoid interactive prompt")
+    subparser_connect.add_argument("-m", "--macchange-opt",
+                        help="a one-character flag proxied to macchanger")
+    subparser_connect.add_argument("-P", "--prompt",
+                        choices=["always", "never", "if_needed"],
+                        default="if_needed",
+                        help="when to prompt for a selection")
+    subparser_connect.add_argument("-E", "--encryption",
+                        help="sets the network's encryption. "+
+                        "required when connecting to a hidden essid")
+    subparser_connect.set_defaults(func="wifi_connect")
+
+    subparser_show = subparsers.add_parser("show", help="show")
+    subparser_show.set_defaults(func="wifi_config_show")
+
+    subparser_remove = subparsers.add_parser("forget", help="forget the specified network")
+    subparser_remove.set_defaults(func="wifi_forget")
+
+    args = parser.parse_args()
+
+    logger.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+
+    fn = globals().get(args.func)
+    assert fn, "function {} not defined".format(args.func)
+    del args.func
+    fn(**vars(args))
+
+if __name__ == "__main__":
+    main()
+
+# Local Variables:
+# compile-command: "./wifi-connect.py -v"
+# End:
