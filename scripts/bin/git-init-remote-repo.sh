@@ -37,7 +37,7 @@ while getopts "ht:o:r:n:d:" OPT; do
 done
 
 
-REPO=${REPO:-$(basename $(pwd))}
+REPO_NAME=${REPO_NAME:-$(basename $(pwd))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
 if test -z "${SSH_USERHOST}" -o -z "${REMOTE_NAME}"; then
     usage
@@ -47,8 +47,8 @@ fi
 ssh ${SSH_USERHOST} ${SSH_OPTS}  "sudo bash -s" <<EOF
 set -e
 
-REPOPATH=${SRV_PREFIX}/${REPO}
-mkdir -p \$REPOPATH && cd \$REPOPATH
+REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
+mkdir -p \$REPO_PATH && cd \$REPO_PATH
 git init --bare
 chown -R git:git .
 EOF
@@ -56,8 +56,7 @@ EOF
 # TODO remove possible user from SSH_USERHOST
 # TODO add possible non-standard port
 
-REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO}"
-echo ${REMOTE_URL}
+REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO_NAME}"
 ORIGIN_NAME=origin
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
