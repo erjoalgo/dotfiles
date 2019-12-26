@@ -10,7 +10,7 @@ git status &> /dev/null
 LOST=""
 
 # what local files would be lost forever if I deleted this repo?
-REMOVED=$(git clean -nxd | tee /dev/stderr | wc -l)
+REMOVED=$(git ls-files --others --exclude-standard | tee /dev/stderr | wc -l)
 if test ${REMOVED} != 0; then
    LOST+=", ${REMOVED} untracked files"
 fi
@@ -38,6 +38,10 @@ if test ${STASHED} != 0; then
 fi
 
 
+IGNORED=$(git clean -ndX | wc -l)
+if test ${IGNORED} != 0; then
+    echo "WARN: ${IGNORED} ignored files would be lost in $(pwd)"
+fi
 
 if test -n "${LOST}"; then
     MESSAGE=$(sed 's/, \(, \)*/\n - /g' <<< "${LOST}")
