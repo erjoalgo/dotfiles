@@ -26,12 +26,6 @@ if test ${LINES}  != 0; then
 fi
 
 # git fetch origin
-LOCAL_COMMITS=$(git cherry -v | tee /dev/stderr | wc -l)
-if test ${LOCAL_COMMITS} != 0; then
-    LOST+=", ${LOCAL_COMMITS} local unpublished commits (via git cherry)"
-fi
-
-# git fetch origin
 # https://stackoverflow.com/questions/2016901/viewing-unpushed-git-commits
 LOCAL_COMMITS=$(git --no-pager log --branches --not --remotes --oneline | wc -l)
 if test ${LOCAL_COMMITS} != 0; then
