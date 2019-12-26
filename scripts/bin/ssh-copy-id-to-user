@@ -71,6 +71,7 @@ tee -a authorized_keys <<EOFF
 $(cat ${IDENTITY_FILE})
 EOFF
 chown -R ${REMOTE_USER}:${REMOTE_USER} .
+exit
 EOF
 )
     cat<<EOF
