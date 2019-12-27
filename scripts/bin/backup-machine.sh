@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
 
@@ -6,10 +6,14 @@ function usage  {
     echo "usage: backup-machine.sh -d OUTPUT_DIRECTORY"
 }
 
-while getopts "hd:" OPT; do
+FINALIZE=""
+while getopts "d:fh" OPT; do
     case ${OPT} in
     d)
         OUTPUT_DIRECTORY=${OPTARG}
+        ;;
+    f)
+        FINALIZE=true
         ;;
     h)
         less $0
@@ -25,12 +29,15 @@ if test -z "${OUTPUT_DIRECTORY:-}"; then
 fi
 
 mkdir -p "${OUTPUT_DIRECTORY}"
-
 cd "${OUTPUT_DIRECTORY}"
 
-for DIR in /var/ /etc; do
-    OUT=$(tr / ! <<< "${DIR}").tar.gz
-    test -s ${OUT} || sudo tar -czf ${OUT} "${DIR}"
+for DIR in /var/{log,mail,www,backups} /etc /lost+found/; do
+    if test -d "${DIR}"; then
+        echo "backing up ${DIR}"
+        OUT="system/$(tr / ! <<< ${DIR})"
+        mkdir -p $(dirname "${OUT}")
+        sudo rsync -ra "${DIR}" "${OUT}" || true
+    fi
 done
 
 sudo apt-get install -y sysv-rc-conf
@@ -44,13 +51,72 @@ for CMD in \
         "find /" \
         "dpkg --get-selections" \
     ; do
-    OUT="$(sed 's|[ /]|-|g' <<< ${CMD}).txt.gz"
-    test -s "${OUT}" || sudo ${CMD} | gzip > "${OUT}"
+    echo "persisting output of '${CMD}'"
+    OUT="system/commands/$(sed 's|[ /]|-|g' <<< ${CMD}).txt"
+    mkdir -p $(dirname "${OUT}")
+    test -s "${OUT}" || sudo ${CMD} > "${OUT}"
 done
 
-if command -v pg_dump; then
-    OUT=pg_dump.sql.gz; test -s ${OUT} ||  \
+# service-specific backups
+if command -v pg_dump > /dev/null; then
+    OUT=pg_dump.sql.gz
+    if ! test -s ${OUT}; then
+        echo "backing up postgres db"
         sudo -upostgres pg_dumpall | gzip > ${OUT}
+    fi
 fi
 
-du -h *
+# TODO back up mysql
+
+for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
+    echo "backing up parts of ${HOMEDIR}"
+    for BASENAME in  \
+        .authinfo \
+            .auto-save \
+            .backups \
+            .bash_history \
+            .cache \
+            .config \
+            .el \
+            .eld \
+            .emacs-dirlocals-ro \
+            .gitconfig \
+            .gnupg \
+            .gnus-gmail \
+            .lesshst \
+            .pki \
+            .sbcl_history \
+            .sbcl_history* \
+            .slime-history.eld \
+            .ssh \
+            .tmp \
+            .tmp \
+            .vim \
+            .viminfo \
+            .wget-hsts \
+            .xsessionrc \
+        ; do
+        IN="${HOMEDIR}/${BASENAME}"
+        if sudo test -e "${IN}"; then
+            OUT="$(pwd)/home/$(basename ${HOMEDIR})/${BASENAME}"
+            mkdir -p $(dirname "${OUT}")
+            if ! test -e "${OUT}"; then
+                # output doesn't exist
+                sudo mv "${IN}" "${OUT}"
+                sudo ln -s "${OUT}" "${IN}"
+            elif ! sudo test -L "${IN}"; then
+                echo "${IN} is not a symlink pointing to ${OUT}"
+                exit $LINENO
+            fi
+        fi
+    done
+done
+
+if test "${FINALIZE}" = true; then
+    # ensure the vacate.sh script approves before finalizing migration
+    vacate.sh
+    IN=$(pwd)
+    OUT="${IN}.tar.gz"
+    tar --remove-files -czf "${OUT}" "${IN}"
+    md5sum "${OUT}"
+fi
