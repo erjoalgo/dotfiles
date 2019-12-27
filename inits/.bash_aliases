@@ -253,7 +253,6 @@ alias ssh-ecdsa-fingerprint-sha256-old-ssh="awk '{print \$2}' /etc/ssh/ssh_host_
 alias pem-sha256='openssl x509 -noout -fingerprint -sha256 -in'
 
 # command defaults
-alias grep='grep --color=auto'
 if ls --color=auto &> /dev/null; then
     alias ls='ls --color=auto'
 fi
