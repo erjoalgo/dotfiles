@@ -60,9 +60,13 @@ EOF
 REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO_NAME}"
 ORIGIN_NAME=origin
 
-git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
-echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
-git push -u ${REMOTE_NAME}
+if ! git remote show "${REMOTE_NAME}"; then
+    git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
+    echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
+elif test $(git config --get "remote.${REMOTE_NAME}") != "${REMOTE_URL}"; then
+    echo "remote ${REMOTE_NAME} exists and doesn't point to ${REMOTE_URL}"
+    exit ${LINENO}
+fi
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 git branch --set-upstream-to=${REMOTE_NAME}/${BRANCH}
