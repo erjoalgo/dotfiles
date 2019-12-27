@@ -572,7 +572,9 @@ function git-delete-review-dangling-commits () {
         echo "changes present. aborting...";
         return;
     fi;
-    for SHA in $(git fsck --no-reflogs | sed "s/^dangling \(commit\|blob\) //g");
+    for SHA in $(git fsck --no-reflogs |  \
+                     grep -Fv "dangling blob" |  \
+                     sed "s/^dangling \(commit\|blob\) //g");
     do
         echo "considering ${SHA}";
         git cherry-pick -n "${SHA}";
