@@ -5,7 +5,8 @@ set -eu #o pipefail
 git status &> /dev/null
 
 
-# https://stackoverflow.com/questions/35311231/
+# check all remotes are up, since data pushed only to dead remotes will be lost
+git fetch --all
 
 LOST=""
 
