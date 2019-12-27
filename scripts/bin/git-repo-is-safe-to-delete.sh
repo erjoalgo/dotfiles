@@ -16,14 +16,14 @@ if test ${REMOVED} != 0; then
    LOST+=", ${REMOVED} untracked files"
 fi
 
-LINES=$(git diff | wc -l)
-if test ${LINES}  != 0; then
-   LOST+=", ${LINES} lines of unstaged changes"
+UNSTAGED_LINES=$(git diff | wc -l)
+if test ${UNSTAGED_LINES}  != 0; then
+   LOST+=", ${UNSTAGED_LINES} lines of unstaged changes"
 fi
 
-LINES=$(git diff --cached | wc -l)
-if test ${LINES}  != 0; then
-   LOST+=", ${LINES} lines of staged changes"
+STAGED_LINES=$(git diff --cached | wc -l)
+if test ${STAGED_LINES}  != 0; then
+   LOST+=", ${STAGED_LINES} lines of staged changes"
 fi
 
 # git fetch origin
