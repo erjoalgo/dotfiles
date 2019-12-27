@@ -69,4 +69,4 @@ elif test $(git config --get "remote.${REMOTE_NAME}") != "${REMOTE_URL}"; then
 fi
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-git branch --set-upstream-to=${REMOTE_NAME}/${BRANCH}
+git push --set-upstream ${REMOTE_NAME} ${BRANCH}
