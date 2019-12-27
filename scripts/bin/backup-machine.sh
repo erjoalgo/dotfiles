@@ -44,7 +44,7 @@ for CMD in \
         "find /" \
         "dpkg --get-selections" \
     ; do
-    OUT="$(sed 's/ /-/g' <<< ${CMD}).txt.gz"
+    OUT="$(sed 's|[ /]|-|g' <<< ${CMD}).txt.gz"
     test -s "${OUT}" || sudo ${CMD} | gzip > "${OUT}"
 done
 
