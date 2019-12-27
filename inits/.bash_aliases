@@ -302,6 +302,11 @@ alias tma='tmux-attach'
 alias dd-status='watch -n 20 sudo kill -USR1 $(pidof dd)'
 
 alias bash-login-debugging-list-open-files="echo exit | strace bash -li |& less | grep ^open"
+
+alias git-delete-show-untracked-files='git ls-files --others --exclude-standard'
+alias git-delete-show-ignored-files='git clean -ndX'
+alias git-delete-show-dangling-commits='git fsck --no-reflogs | sed "s/^dangling \(commit\|blob\) //g" | xargs git log --no-walk'
+
 # Local Variables:
 # mode: sh
 # End:

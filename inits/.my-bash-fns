@@ -562,3 +562,35 @@ function git-cherry-pick-interactive  {
   git cherry-pick $(cut -f1 -d' ' "${TMP}")
 }
 __git_complete git-cherry-pick-interactive _git_cherry_pick
+
+function git-delete-review-dangling-commits () {
+    if ! git status; then
+        echo "not in a git repository";
+        return;
+    fi;
+    if ! git diff HEAD --exit-code; then
+        echo "changes present. aborting...";
+        return;
+    fi;
+    for SHA in $(git fsck --no-reflogs | sed "s/^dangling \(commit\|blob\) //g");
+    do
+        echo "considering ${SHA}";
+        git cherry-pick -n "${SHA}";
+        if git --no-pager diff HEAD --exit-code; then
+            echo "dangling ${SHA} is safe to delete";
+        else
+            echo "rec. edit";
+            bash;
+            git reset . || return;
+            git checkout -f . || return;
+            read -p"cont (q: quit)? : " CONT;
+            test "${CONT}" != q || return;
+        fi;
+    done
+}
+
+function git-delete-prune-dangling-commits  {
+    read -p"confirm permanent prune of dangling commits: "
+    git reflog expire --expire-unreachable=now --all;
+    git gc --prune=now
+}
