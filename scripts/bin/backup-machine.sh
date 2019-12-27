@@ -3,7 +3,7 @@
 set -euo pipefail
 
 function usage  {
-    echo "backup-machine.sh -d OUTPUT_DIRECTORY"
+    echo "usage: backup-machine.sh -d OUTPUT_DIRECTORY"
 }
 
 while getopts "hd:" OPT; do
@@ -19,23 +19,38 @@ while getopts "hd:" OPT; do
 done
 shift $((OPTIND -1))
 
-if test -z "${OUTPUT_DIRECTORY}"; then
+if test -z "${OUTPUT_DIRECTORY:-}"; then
     usage
     exit $LINENO
 fi
 
-mkdir -p ${OUTPUT_DIRECTORY}
+mkdir -p "${OUTPUT_DIRECTORY}"
 
-cd ${OUTPUT_DIRECTORY}
+cd "${OUTPUT_DIRECTORY}"
 
-sudo dpkg --get-selections > installed-software.txt
-zip -9r var.zip /var/
-zip -9r etc.zip /etc
+for DIR in /var/ /etc; do
+    OUT=$(tr / ! <<< "${DIR}").tar.gz
+    test -s ${OUT} || sudo tar -czf ${OUT} "${DIR}"
+done
 
-sudo find / | gzip > directory-structure.gz
-sudo mount > mount.txt
-sudo fdisk > fdisk.txt
+sudo apt-get install -y sysv-rc-conf
+for CMD in \
+    "uname -r" \
+        "uname -m" \
+        "lsb_release -a" \
+        "sysv-rc-conf --list" \
+        "mount" \
+        "fdisk --list" \
+        "find /" \
+        "dpkg --get-selections" \
+    ; do
+    OUT="$(sed 's/ /-/g' <<< ${CMD}).txt.gz"
+    test -s "${OUT}" || sudo ${CMD} | gzip > "${OUT}"
+done
 
-if command -v pgdump; then
-    pg_dump dbname > pg_dump.sql
+if command -v pg_dump; then
+    OUT=pg_dump.sql.gz; test -s ${OUT} ||  \
+        sudo -upostgres pg_dumpall | gzip > ${OUT}
 fi
+
+du -h *
