@@ -10,7 +10,6 @@ git fetch --all
 
 LOST=""
 
-# what local files would be lost forever if I deleted this repo?
 REMOVED=$(git ls-files --others --exclude-standard | tee /dev/stderr | wc -l)
 if test ${REMOVED} != 0; then
    LOST+=", ${REMOVED} untracked files"
@@ -43,12 +42,11 @@ if test ${STASHED} != 0; then
     LOST+=", ${DANGLING_COMMITS} dangling commits"
 fi
 
+# explicitly-ignored files, warning only
 IGNORED=$(git clean -ndX | wc -l)
 if test ${IGNORED} != 0; then
     echo "WARN: ${IGNORED} ignored files would be lost in $(pwd)"
 fi
-
-# TODO consider orphaned commits
 
 if test -n "${LOST}"; then
     MESSAGE=$(sed 's/, \(, \)*/\n - /g' <<< "${LOST}")
