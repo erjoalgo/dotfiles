@@ -97,7 +97,9 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
             .xsessionrc \
         ; do
         IN="${HOMEDIR}/${BASENAME}"
-        if sudo test -e "${IN}"; then
+        if sudo test -L "${IN}"; then
+            echo "skipping ${IN}, which is a symlink"
+        elif sudo test -e "${IN}"; then
             OUT="$(pwd)/home/$(basename ${HOMEDIR})/${BASENAME}"
             mkdir -p $(dirname "${OUT}")
             if ! test -e "${OUT}"; then
