@@ -50,6 +50,8 @@ for CMD in \
         "fdisk --list" \
         "find /" \
         "dpkg --get-selections" \
+        "netstat -tulpn" \
+        "service --status-all" \
     ; do
     echo "persisting output of '${CMD}'"
     OUT="system/commands/$(sed 's|[ /]|-|g' <<< ${CMD}).txt"
