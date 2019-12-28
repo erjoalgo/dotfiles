@@ -51,7 +51,6 @@ GIT_EMAIL=erjoalgo@gmail.com
 GIT_NAME="Ernesto Alfonso"
 GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
-mkdir -p ${HOME}/bin
 
 for REPO in  \
     erjoalgo-stumpwmrc \
