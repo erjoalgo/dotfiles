@@ -110,7 +110,7 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
                 exit $LINENO
             fi
             # make sure the symink is pointing to the current backup
-            sudo ln -s "${OUT}" "${IN}"
+            sudo ln -fs "${OUT}" "${IN}"
         fi
     done
 done
