@@ -179,19 +179,9 @@ if command -v apt-get > /dev/null; then
     alias aff='apt-file find'
     alias afl='apt-file list'
     alias sagiy='sudo apt-get install -y'
-    _sagiy()
-    {
-
-	local cur
-
-	COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" \
-				 2> /dev/null ) )
-	return 0
-    } &&
-	complete -F _sagiy sagiy
-    complete -F _sagiy acs
-    complete -F _sagiy acw
-    complete -F _sagiy dpkgl
+    for ALIAS in sagiy acs acw dpkgl; do
+        complete-alias _apt_get ${ALIAS} apt-get install
+    done
 
     alias sagu='sudo apt-get update'
     alias acw='apt-cache show'
