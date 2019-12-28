@@ -17,6 +17,7 @@ while getopts "d:u:t:Dhb" OPT; do
         DROP=true
         ;;
     b)
+        # don't prompt for passwords, read from stdin
         BATCH=true
         ;;
     h)
@@ -49,10 +50,7 @@ else
     sudo -u postgres psql <<EOF
 CREATE USER ${USER} WITH PASSWORD '${PASS}';
 CREATE DATABASE ${DBNAME} OWNER ${USER};
-
 GRANT ALL PRIVILEGES ON DATABASE "${DBNAME}" to ${USER};
-
--- ALTER USER ${USER} CREATEDB;
 EOF
 
 fi
