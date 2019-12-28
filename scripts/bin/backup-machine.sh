@@ -68,6 +68,14 @@ if command -v pg_dump > /dev/null; then
     fi
 fi
 
+if command -v mysqldump > /dev/null; then
+    OUT=mysqldump.sql.gz
+    if ! test -s ${OUT}; then
+        echo "backing up mysql db"
+        sudo mysqldump --all-databases | gzip > "${OUT}"
+    fi
+fi
+
 # TODO back up mysql
 
 for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
