@@ -106,16 +106,11 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
                 # output doesn't exist
                 sudo mv "${IN}" "${OUT}"
             elif ! sudo test -L "${IN}"; then
-                if sudo test -f "${IN}"; then
-                    # incremental log file like .bash_history. append to backup
-                    sudo cat "${IN}" >> "${OUT}"
-                else
-                    echo "${IN} is not a symlink pointing to ${OUT}"
-                    exit $LINENO
-                fi
+                echo "${IN} is not a symlink pointing to ${OUT}"
+                exit $LINENO
             fi
             # make sure the symink is pointing to the current backup
-            sudo ln -fs "${OUT}" "${IN}"
+            sudo ln -s "${OUT}" "${IN}"
         fi
     done
 done
