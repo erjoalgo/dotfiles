@@ -119,7 +119,11 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
                 sudo mv "${IN}" "${OUT}"
             elif ! sudo test -L "${IN}"; then
                 echo "${IN} is not a symlink pointing to ${OUT}"
-                exit $LINENO
+                if sudo test -f "${IN}"; then
+                    sudo cat "${IN}" | sudo tee -a "${OUT}"
+                else
+                    exit $LINENO
+                fi
             fi
             # make sure the symink is pointing to the current backup
             sudo ln -fs "${OUT}" "${IN}"
