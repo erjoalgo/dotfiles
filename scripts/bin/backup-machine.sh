@@ -79,6 +79,7 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
             .config \
             .el \
             .eld \
+            .emacs.auto-save \
             .emacs-dirlocals-ro \
             .gitconfig \
             .gnupg \
@@ -95,6 +96,7 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
             .viminfo \
             .wget-hsts \
             .xsessionrc \
+            custom-backup \
         ; do
         IN="${HOMEDIR}/${BASENAME}"
         if sudo test -L "${IN}"; then
