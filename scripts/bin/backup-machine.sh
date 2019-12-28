@@ -122,4 +122,5 @@ if test "${FINALIZE}" = true; then
     OUT="${IN}.tar.gz"
     sudo tar -czf "${OUT}" "${IN}"
     md5sum "${OUT}"
+    read -p"verify md5sum in backup destination: "
 fi
