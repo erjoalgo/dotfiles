@@ -120,6 +120,6 @@ if test "${FINALIZE}" = true; then
     vacate.sh
     IN=$(pwd)
     OUT="${IN}.tar.gz"
-    sudo tar --remove-files -czf "${OUT}" "${IN}"
+    sudo tar -czf "${OUT}" "${IN}"
     md5sum "${OUT}"
 fi
