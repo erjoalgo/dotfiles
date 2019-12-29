@@ -96,6 +96,9 @@ for HOMEDIR in $(find /home -maxdepth 1 -mindepth 1 -type d) /root; do
             .gnus-gmail \
             .lesshst \
             .pki \
+            sent \
+            .pip \
+            .otpw \
             .sbcl_history \
             .sbcl_history* \
             .slime-history.eld \
