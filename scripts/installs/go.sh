@@ -18,7 +18,7 @@ if ! command -v go || test ${UPGRADE_GO} = true; then
 
     PROFILE_FILE=/etc/profile.d/go-env.sh
     which insert-text-block
-    sudo $(which insert-text-block) \
+    sudo insert-text-block \
 	 '# c0b15b6c-e5fc-495a-b1be-f02308cee38d-add-go-tools-to-path'  \
 		      ${PROFILE_FILE} <<EOF
 export PATH=\${PATH}:${GOROOT}/bin

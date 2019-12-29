@@ -13,8 +13,9 @@ while true; do
     fi
 done
 
-sudo $(which insert-text-block) '# 7c822fec-0e8e-4d13-a28c-2bfe74f4ad29-tor-obfs-bridge' \
-                  /etc/tor/.torrc <<EOF
+sudo insert-text-block \
+     '# 7c822fec-0e8e-4d13-a28c-2bfe74f4ad29-tor-obfs-bridge' \
+     /etc/tor/.torrc <<EOF
 #Bridge config
 RunAsDaemon 1
 ORPort ${PORT}

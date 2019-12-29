@@ -12,7 +12,7 @@ if ! test -e "${NVM_SH}"; then
             ${HOME}/.profile-env \
         ; do
         test -w ${PROFILE_FILE} && SUDOOPT="" || SUDOOPT="sudo"
-        ${SUDOOPT} $(which insert-text-block) \
+        ${SUDOOPT} insert-text-block \
                    '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                    ${PROFILE_FILE} <<"EOF"
 export NVM_DIR="$HOME/.nvm"
