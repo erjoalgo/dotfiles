@@ -30,6 +30,7 @@ if command -v yum; then
     sudo yum install -y libXpm libXpm-devel.x86_64
     sudo yum install -y gnutls gnutls-utils
     sudo yum install -y hunspell{,-es}
+    sudo yum install -y uuid-runtime
 elif command -v apt-get; then
     sudo apt-get build-dep -y emacs25
     sudo apt-get install -y aspell-es emacs-goodies-el
@@ -40,6 +41,7 @@ elif command -v apt-get; then
 
     sudo apt-get install -y gnutls-dev libncurses5-dev
     install-from-source -u https://ftp.gnu.org/gnu/nettle/nettle-3.4.1-1.tar.gz \ -i 28C67298
+    sudo apt-get install -y uuid-runtime
 
     # install-from-source -u "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.5.tar.xz"
 fi
