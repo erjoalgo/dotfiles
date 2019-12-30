@@ -487,14 +487,10 @@ function tmux-attach  {
   if test 1 = $(tmux list-session | wc -l); then
      tmux attach -d
   else
-     IFS_OLD=$IFS
-     IFS=$'\n'
-  select SESSNO in $(tmux list-sessions); do
-    IFS=$IFS_OLD
-    tmux attach -dt $(cut -f1 -d: <<< "${SESSNO}")
-  break
-  done
-fi
+     tmux list-sessions
+     read -p"select session: " SESSNO
+     tmux attach -dt $SESSNO
+  fi
 }
 
 function gitignore-dirlocals  {
