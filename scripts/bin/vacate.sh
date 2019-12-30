@@ -4,7 +4,8 @@ set -euo pipefail
 
 # consider directories in reverse mtime order, so that newly-edited/fixed repos
 # are considered last
-for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -type d | xargs ls -1trd); do
+for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
+                 xargs ls -1trd); do
     echo "considering ${DIR}"
     cd "${DIR}"
     if ! git status &> /dev/null; then
