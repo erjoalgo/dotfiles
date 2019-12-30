@@ -47,7 +47,7 @@ for CMD in \
         "lsb_release -a" \
         "sysv-rc-conf --list" \
         "mount" \
-        "fdisk --list" \
+        "fdisk -l" \
         "find /" \
         "dpkg --get-selections" \
         "netstat -tulpn" \
