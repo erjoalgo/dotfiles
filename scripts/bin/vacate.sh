@@ -8,7 +8,7 @@ for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
                  xargs ls -1trd) ${*}; do
     echo "considering ${DIR}"
     cd "${DIR}"
-    if ! git status &> /dev/null; then
+    if test -n "${ALLOW_NON_GIT_REPOS:-}" && ! git status &> /dev/null; then
         echo "non git repository: ${DIR}"
         exit ${LINENO}
     fi
