@@ -31,7 +31,7 @@ fi
 mkdir -p "${OUTPUT_DIRECTORY}"
 cd "${OUTPUT_DIRECTORY}"
 
-for DIR in /var/{log,mail,www,backups} /etc /lost+found/; do
+for DIR in /var/{log,mail,www,backups,db} /etc /lost+found/; do
     if test -d "${DIR}"; then
         echo "backing up ${DIR}"
         OUT="system/$(tr / ! <<< ${DIR})"
@@ -74,6 +74,10 @@ if command -v mysqldump > /dev/null; then
         echo "backing up mysql db"
         sudo mysqldump --all-databases -p > "${OUT}"
     fi
+fi
+
+if sudo service openproject status; then
+    sudo openproject run backup
 fi
 
 # TODO back up mysql
