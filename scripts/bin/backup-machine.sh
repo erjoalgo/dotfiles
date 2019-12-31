@@ -61,18 +61,18 @@ done
 
 # service-specific backups
 if command -v pg_dump > /dev/null; then
-    OUT=pg_dump.sql.gz
-    if ! test -s ${OUT}; then
+    OUT=pg_dump.sql
+    if ! sudo test -s ${OUT}; then
         echo "backing up postgres db"
-        sudo -upostgres pg_dumpall | gzip > ${OUT}
+        sudo -upostgres pg_dumpall > ${OUT}
     fi
 fi
 
 if command -v mysqldump > /dev/null; then
-    OUT=mysqldump.sql.gz
-    if ! test -s ${OUT}; then
+    OUT=mysqldump.sql
+    if ! sudo test -s ${OUT}; then
         echo "backing up mysql db"
-        sudo mysqldump --all-databases | gzip > "${OUT}"
+        sudo mysqldump --all-databases -p > "${OUT}"
     fi
 fi
 
