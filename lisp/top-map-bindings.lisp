@@ -27,7 +27,8 @@
   *utils-map*
   *special-chars-map*
   *search-engine-map*
-  *commands-map*)
+  *commands-map*
+  *brightness-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -184,7 +185,8 @@
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
    ("H-q" "ekiga-call-clipboard")
-   ("q" "ekiga-call-prompt")))
+   ("q" "ekiga-call-prompt")
+   ("b" *brightness-map*)))
 
 
 (define-key-bindings *screen-rotation-map*
@@ -209,6 +211,19 @@
 
 (define-key *help-map* (kbd "g") "echo-current-group-name")
 ;;(define-key *special-characters-map* (kbd "?") "run-shell-command xdotool key ¿")
+
+(define-key-bindings
+    *brightness-map*
+    (loop
+       for c across (concat "`1234"
+                            "56789"
+                            "0")
+       for percentage in '(.01 .05 .1 .5 .8
+                           1 30 50 70 90
+                           100)
+       collect
+         (list (format nil "~C" c)
+               (format nil "set-brightness ~A" percentage))))
 
 (pop-top-map)
 (set-prefix-key (kbd "F19"))

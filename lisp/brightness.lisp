@@ -37,15 +37,17 @@
       trim-spaces
       parse-integer))
 
-(defun set-brightness (percentage)
-  (let* ((new-actual (->
-		     (+ *min-brightness*
-		       (->
-			(- *max-brightness* *min-brightness*)
-			(* percentage)))
-		     round))
-	(cmd (format nil "echo ~D | sudo tee ~A"
-	     new-actual *brightness-pathname*)))
+(defcommand set-brightness (percentage-string) ((:string "enter brightness: "))
+  (let* ((percentage (read-from-string percentage-string))
+         (new-raw (->
+		   (+ *min-brightness*
+		      (->
+		       (- *max-brightness* *min-brightness*)
+		       (* percentage)))
+		   round))
+	 (cmd (format nil "echo ~D | sudo tee ~A"
+	              new-raw *brightness-pathname*)))
+    (echo new-raw)
     (run-shell-command cmd t)
     (echo cmd)))
 
