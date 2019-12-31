@@ -11,9 +11,13 @@ for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
     fi
     echo "considering ${DIR}"
     cd "${DIR}"
-    if test -n "${ALLOW_NON_GIT_REPOS:-}" && ! git status &> /dev/null; then
-        echo "non git repository: ${DIR}"
-        exit ${LINENO}
+    if ! git status &> /dev/null; then
+        if  test -n "${ALLOW_NON_GIT_REPOS:-}"; then
+            continue;
+        else
+            echo "non git repository: ${DIR}"
+            exit ${LINENO}
+        fi
     fi
     if ! git-repo-is-safe-to-delete.sh; then
         echo "git repo at ${DIR} is not safe to delete"
