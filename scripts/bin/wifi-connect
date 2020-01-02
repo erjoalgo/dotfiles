@@ -71,7 +71,10 @@ def iface_default():
 
 def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
     "read the list of known essids or access points"
-    return os.listdir(directory)
+    if os.path.exists(directory):
+        return os.listdir(directory)
+    else:
+        return []
 
 
 class WrongPassword(Exception):
