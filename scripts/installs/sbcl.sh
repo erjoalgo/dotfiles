@@ -50,7 +50,7 @@ if ! test -f "${QL_SETUP}"; then
     rm quicklisp.lisp{,.asc}
 fi
 
-sbcl --non-interactive --eval "(ql:quickload 'quicklisp-slime-helper)"
+sbcl --non-interactive --load ${QL_SETUP} --eval "(ql:quickload 'quicklisp-slime-helper)"
 
 SBCLRC="${HOME}/.sbclrc"
 # the below command is interactive. it is simpler to insert the text to load
