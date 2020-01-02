@@ -31,8 +31,10 @@ if ! command -v sbcl; then
     cd "${DIR}"
 
     sudo apt-get install -y zlib1g-dev
+    sudo apt-get install -y sbcl
     sh make.sh --fancy
-    sudo ./install.sh
+    sudo apt-get purge sbcl
+    sudo sh ./install.sh
 fi
 
 sudo apt-get install -y make rlwrap
