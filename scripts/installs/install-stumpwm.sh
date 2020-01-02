@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 APT_GET="apt-get"
 if command -v yum; then
@@ -15,6 +16,7 @@ sudo ${APT_GET} install -y xinit x11-xserver-utils \
      xbacklight xcalib xsel upower xscreensaver
 
 SBCLRC="${HOME}/.sbclrc"
+command -v sbcl || ./sbcl.sh
 sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
 (mapcar 'ql:quickload
 	'(
