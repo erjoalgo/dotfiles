@@ -183,8 +183,8 @@
    ("H-t" "tmp")
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
-   ("H-q" "ekiga-call-clipboard")
-   ("q" "ekiga-call-prompt")
+   ("H-q" "sip-call-clipboard")
+   ("q" "sip-call-prompt")
    ("b" *brightness-map*)))
 
 
