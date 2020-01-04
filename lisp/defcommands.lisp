@@ -88,15 +88,24 @@
     (message (concat "group: " (group-name (current-group))))
     (echo-windows)))
 
-(defcommand connect-internet () ()
+(defcommand connect-to-internet () ()
   "connect to the internet via the wifi-connect program"
   (echo "connecting to the internet...")
   ;; never prompt
   (run-command-async-notify "wifi-connect" '("connect" "-Pnever")))
 
-(defcommand connect-internet-check () ()
-  "check access to google.com"
-  (run-command-async-notify "ping" '("-c" "3" "google.com")))
+(defcommand connect-to-internet-maybe () ()
+  "connect to the internet via the wifi-connect program"
+  (if (connect-to-internet-connected-p)
+      (echo "already connected to the internet")
+      (connect-to-internet)))
+
+(defcommand connect-to-internet-connected-p () ()
+  "check if connected to the internet"
+  (multiple-value-bind (retcode _output)
+      (run-command-retcode-output "curl" '("ipecho.erjoalgo.com"))
+    (declare (ignore _output))
+    (zerop retcode)))
 
 (defcommand echo-window-class () ()
   "echo window class"
