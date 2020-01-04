@@ -1,11 +1,13 @@
 (defvar *vol-muted* nil)
 (defvar *vol-backend* :amixer)
 
-(setf *vol-backend*
-      (cond
-        ((which "amixer") :amixer)
-        ((which "pactl") :pactl)
-        (t (warn "no volume cli found"))))
+(defun vol-find-backend ()
+  (cond
+    ((which "amixer") :amixer)
+    ((which "pactl") :pactl)
+    (t (warn "no volume cli found"))))
+
+(defvar *vol-backend* (vol-find-backend))
 
 (defun vol (action
             &key
@@ -14,6 +16,7 @@
               (pulseaudio-sink "1")
               (backend *vol-backend*))
   (assert (member action '(:set :up :down :mute-toggle :get)))
+  (assert backend)
   (case backend
     (:amixer
      (case action
