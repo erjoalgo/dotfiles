@@ -161,7 +161,7 @@
  '(
    ("i" "invert-screen")
    ;;("k" "run-shell-command call_skype_numer.py -w")
-   ("M" "echo_pointer")
+   ("M" "echo-pointer")
    ("m" "toggle-magnifier")
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
