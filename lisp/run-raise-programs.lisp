@@ -139,6 +139,14 @@ seconds ago")
 
 (define-run-or-pull-program "vncviewer")
 
+(defvar *games-keymap* (make-sparse-keymap))
+
+(define-run-or-pull-program "eboard"
+  :raise-key "H-e"
+  :pull-key "H-E"
+  :classes '("eboard" "Eboard")
+  :keymap *games-keymap*)
+
 
 
 ;; Warning: these bindings affect the *top-map*, which is

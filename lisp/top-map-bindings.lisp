@@ -73,8 +73,6 @@
 
       ("H-h" *help-map*)
 
-      ("H-d" "dict-lookup-command")
-
       ("H-DEL" *special-chars-map*)
       ("H-I" "invert-current-window")
       ("H-i" "invert-screen")
@@ -86,7 +84,6 @@
       ("H-g" "search-engine-search ddg")
 
       ("H-m" *search-engine-map*)
-      ("H-D" "cat-message-command ~/vocab")
       ("H-l" "launch-url")
       ("H-L" "launcher-append-url")
       ("H-Home" "asdfasdf")
@@ -132,8 +129,8 @@
       ("H-t" *text-shortcuts-map*)
 
       ("H-N" "gnext")
-      ("H-P" "gprev"))
-
+      ("H-P" "gprev")
+      ("H-d" *games-keymap*))
   ;;not efficient nor necessary but only run at initialization
   )
 
@@ -185,7 +182,9 @@
    ("H-B" "byzanz-record-auto-stop")
    ("H-q" "sip-call-clipboard")
    ("q" "sip-call-prompt")
-   ("b" *brightness-map*)))
+   ("b" *brightness-map*)
+   ("d" "dict-lookup-command")
+   ("D" "cat-message-command ~/vocab")))
 
 
 (define-key-bindings *screen-rotation-map*
