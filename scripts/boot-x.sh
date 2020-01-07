@@ -53,7 +53,7 @@ EOF
 
 
 insert-text-block '# eab944d5-9973-4f44-b2e0-1b168f164397-konsolerc-defaults'  \
-                  ${HOME}/.config/konsolerc << EOF
+                  ${HOME}/.config/konsolerc -b << EOF
 # konsolerc file tends to be managed by konsole in a site-specific way.
 [Desktop Entry]
 DefaultProfile=erjoalgo.profile
