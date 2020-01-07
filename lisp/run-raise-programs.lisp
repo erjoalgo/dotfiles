@@ -64,7 +64,8 @@ seconds ago")
 					(pull-key (string-upcase raise-key))
 					(cmd name)
 					(classes `(list ,(string-capitalize name)))
-					(all-screens nil))
+                                      (all-screens nil)
+                                      (keymap '*top-map*))
 
   `(progn
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
@@ -81,7 +82,7 @@ seconds ago")
 			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
 						 ,cmd ,pull-p ,all-screens))
 	      ,(unless (null key)
-		 `(define-key *top-map* (kbd ,key) ,cmd-name-string))))))
+		 `(define-key ,keymap (kbd ,key) ,cmd-name-string))))))
 
 (define-run-or-pull-program "BROWSER"
     :cmd browser-name
