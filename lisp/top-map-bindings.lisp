@@ -164,6 +164,7 @@
    ("m" "toggle-magnifier")
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
+   ("H-w" "connect-to-internet-maybe")
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)
    ("s" "scrot-cmd-anon" )
