@@ -160,7 +160,6 @@
  *utils-map*
  '(
    ("i" "invert-screen")
-   ;;("k" "run-shell-command call_skype_numer.py -w")
    ("M" "echo-pointer")
    ("m" "toggle-magnifier")
    ("r" *screen-rotation-map*)
