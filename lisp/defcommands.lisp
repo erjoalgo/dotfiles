@@ -103,7 +103,9 @@
 (defcommand connect-to-internet-connected-p () ()
   "check if connected to the internet"
   (multiple-value-bind (retcode _output)
-      (run-command-retcode-output "curl" '("ipecho.erjoalgo.com"))
+      (run-command-retcode-output "curl" '("ipecho.erjoalgo.com"
+                                           "--max-time=10"
+                                           "--connect-timeout=10"))
     (declare (ignore _output))
     (zerop retcode)))
 
