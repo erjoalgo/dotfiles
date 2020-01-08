@@ -602,5 +602,5 @@ function git-patch-cross-repo  {
     # usage: git-patch-cross-repo <OTHER_REPO> [./path/to/file1 ./path/to/file2 ...]
     OTHER_REPO=${1} && shift
     git log --pretty=email --patch-with-stat --reverse -- ${*} |  \
-        (cd ${PTHER_REPO} && git am)
+        (cd ${OTHER_REPO} && git am)
 }
