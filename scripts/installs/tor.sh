@@ -15,8 +15,10 @@ gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install -y deb.torproject.org-keyring tor
 
-cat <<EOF >> ~/.torrc
+insert-text-block '# 2f798a9e-bef5-401e-af6e-8597461114b8-tor-client' \
+                  ${HOME}/.torrc<<EOF
 TestSocks 1
 SafeSocks 1
 EOF
+
 sudo service tor start
