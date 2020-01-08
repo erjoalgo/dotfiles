@@ -147,7 +147,10 @@ seconds ago")
   :classes '("eboard" "Eboard")
   :keymap *games-keymap*)
 
-
+(define-run-or-pull-program "signal-desktop"
+  :raise-key "H-s"
+  :pull-key "H-S"
+  :classes '("signal" "Signal"))
 
 ;; Warning: these bindings affect the *top-map*, which is
 ;; later deep-copied onto other per-window bindings.
