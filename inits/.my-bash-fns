@@ -596,3 +596,11 @@ function git-delete-prune-dangling-commits  {
     git reflog expire --expire-unreachable=now --all;
     git gc --prune=now
 }
+
+function git-patch-cross-repo  {
+    # based on https://stackoverflow.com/a/11426261/1941755
+    # usage: git-patch-cross-repo <OTHER_REPO> [./path/to/file1 ./path/to/file2 ...]
+    OTHER_REPO=${1} && shift
+    git log --pretty=email --patch-with-stat --reverse -- ${*} |  \
+        (cd ${PTHER_REPO} && git am)
+}
