@@ -78,7 +78,7 @@ function pgen	{
 }
 
 function pshow  {
-    pass show -c ${*}
+    pass show -c ${*} || return
     xclip-tee
 }
 complete-alias _pass pshow pass show
