@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "hd:" OPT; do
+while getopts "l:d:h" OPT; do
     case ${OPT} in
+    l)
+        SYMLINK=${OPTARG}
+        ;;
     d)
-        PARTITION=${OPTARG}
+        HOMEDIR_PATH=${OPTARG}
         ;;
     h)
         less $0
@@ -14,25 +17,23 @@ while getopts "hd:" OPT; do
     esac
 done
 
-if test -z "${PARTITION:-}"; then
-    sudo blkid
-    read -p "insert usb disk..."
-    sudo blkid
-    read -p "enter partition block path: " PARTITION
-    test -e "${PARTITION}"
-fi
 
-SYMLINK=${HOME}/.usb-drive-symlink
+SYMLINK=${SYMLINK:-${HOME}/.usb-drive-symlink}
+MOUNT_POINT=$(udev-gen-rule-for-stick.sh -M | tee /dev/stderr |  \
+                  grep -Po "(?<=mounting to ).*")
 
-MOUNT_OPTS=""
-if sudo blkid | grep "${PARTITION}.*fat"; then
-    MOUNT_OPTS="-o umask=000"
-fi
+test -d ${MOUNT_POINT}
 
-udev-gen-rule-for-stick.sh -d ${PARTITION}  -m ${HOME}/mnt -l ${SYMLINK}
-
-if ! mount | grep "^${PARTITION}"; then
-    sudo mount -o "${MOUNT_OPTS}" ${PARTITION} ${SYMLINK}
+if test -n "${SYMLINK:-}"; then
+   test -L "${SYMLINK}" && sudo unlink "${SYMLINK}"
+   if ! test -e "${SYMLINK}" \); then
+       test -n "${HOMEDIR_PATH:-}" ||  \
+           read -p"enter relative path to home directory within external drive: " \
+                HOMEDIR_PATH
+       HOMEDIR="${MOUNT_POINT}/${HOMEDIR_PATH}"
+       test -d "${HOMEDIR}"
+       ln -sf "${HOMEDIR}" "${SYMLINK}";
+   fi
 fi
 
 for SECRET in \

@@ -2,19 +2,19 @@
 
 set -euo pipefail
 
-while getopts "d:m:o:l:h" OPT; do
+while getopts "d:m:o:l:Mh" OPT; do
     case ${OPT} in
     d)
         PARTITION=${OPTARG}
         ;;
     m)
-        MOUNT_POINT_PARENT=${OPTARG}
+        MOUNT_POINT_PREFIX=${OPTARG}
         ;;
     o)
         MOUNT_OPTS="-o ${OPTARG}"
         ;;
-    l)
-        SYMLINK=${OPTARG}
+    M)
+        NOMOUNT=true
         ;;
     h)
         less $0
@@ -23,21 +23,40 @@ while getopts "d:m:o:l:h" OPT; do
     esac
 done
 
-test -n "${PARTITION}" -a -n "${MOUNT_POINT_PARENT}"
+MOUNT_POINT_PREFIX=${MOUNT_POINT_PREFIX:-${HOME}/mnt/}
+test -n "${MOUNT_POINT_PREFIX}"
+
+while true; do
+    if test -e "${PARTITION:-}"; then
+        break
+    fi
+    sudo blkid
+    select PARTITION in $(sudo blkid | cut -f1 -d:); do
+        break
+    done
+done
 
 ID_SERIAL_SHORT=$(udevadm info -n ${PARTITION} |  \
                       grep ID_SERIAL_SHORT |  \
                       cut -d= -f2)
 
-MOUNT_POINT="${MOUNT_POINT_PARENT}/${ID_SERIAL_SHORT}"
+MOUNT_POINT="${MOUNT_POINT_PREFIX}${ID_SERIAL_SHORT}"
 
 mkdir -p ${MOUNT_POINT} || sudo mkdir -p ${MOUNT_POINT}
 
 RULE_FNAME=/etc/udev/rules.d/199-automount-usb-${ID_SERIAL_SHORT}.rules
 
+
+MOUNT_OPTS=${MOUNT_OPTS:-""}
+if test -n "${MOUNT_OPTS}"; then
+    MOUNT_OPTS=" ${MOUNT_OPTS}"
+fi
+if sudo blkid | grep "${PARTITION}.*fat"; then
+    MOUNT_OPTS+=" -o umask=000"
+fi
 cat <<EOF | sudo tee ${RULE_FNAME}
 # auto-generated rule to mount device at mount point
-ACTION=="add", KERNEL=="sd[a-z][1-9]", SUBSYSTEM=="block", RUN+="$(which mount) ${MOUNT_OPTS:-} /dev/%k ${MOUNT_POINT}"
+ACTION=="add", KERNEL=="sd[a-z][1-9]", SUBSYSTEM=="block", RUN+="$(which mount)${MOUNT_OPTS:-} /dev/%k ${MOUNT_POINT}"
 EOF
 
 RELOAD=false
@@ -59,15 +78,11 @@ if test ${RELOAD} = true; then
     sudo service udev restart
 fi
 
+echo "successfully wrote rule ${RULE_FNAME}, mounting to ${MOUNT_POINT}"
 
-echo "successfully wrote rule ${RULE_FNAME}"
-
-
-if test -n "${SYMLINK:-}"; then
-   test -L "${SYMLINK}" && sudo unlink "${SYMLINK}"
-   if ! test -e "${SYMLINK}" \); then
-       ln -sf "${MOUNT_POINT}" "${SYMLINK}";
-   fi
+# mount the first time
+if test -z "${NOMOUNT:-}" && ! mount | grep -F "${PARTITION}"; then
+    sudo mount -o "${MOUNT_OPTS}" "${PARTITION}" "${MOUNT_POINT}"
 fi
 
 # Local Variables:
