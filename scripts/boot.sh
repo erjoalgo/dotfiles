@@ -136,8 +136,11 @@ mkdir -p ${HOME}/src
 # some essential tools
 if test -n "${APT_GET}"; then
     sudo ${APT_GET} install -y htop fail2ban unison tmux wget
+    sudo ${APT_GET} install -y bootlogd || true
     # auditd may fail with "audit support not in kernel"
-    sudo ${APT_GET} install -y bootlogd auditd || true
+    if ! sudo ${APT_GET} install -y auditd; then
+	sudo ${APT_GET} purge -y auditd
+    fi
 fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
