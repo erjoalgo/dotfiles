@@ -149,10 +149,12 @@
             (list
              ,@(loop for i from from upto to
                      as name = (format nil "gselect-F~D" i)
+                  as cmd = (format nil "gselect ~A" (if (eq i 1) "Default"
+                                                        (format nil "F~D" i)))
 	             collect
 	             `(progn
                         (defselgroup ,i ,name)
-                        (list ,(format nil "H-F~D" i) ,name)))))))
+                        (list ,(format nil "H-F~D" i) ,cmd)))))))
   (def-gselect-keys 1 6))
 
 
