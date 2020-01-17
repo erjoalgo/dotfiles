@@ -147,7 +147,7 @@
      (def-gselect-keys (from to)
        `(define-key-bindings (all-top-maps)
             (list
-             ,@(loop for i from from upto to
+             ,@(loop for i :from from :upto to
                      as name = (format nil "gselect-F~D" i)
                   as cmd = (format nil "gselect ~A" (if (eq i 1) "Default"
                                                         (format nil "F~D" i)))
