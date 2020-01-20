@@ -33,6 +33,9 @@
 (defcommand sip-call-terminate () ()
   (linphonecsh "generic" "terminate"))
 
+(defcommand sip-call-dtmf (numbers) ((:string "enter DTMF tones to send: "))
+  (linphonecsh "generic" numbers))
+
 (defun sip-sms-send (sip-address message)
   ;; TODO add "chat" command to linphonecsh
   (linphonecsh "generic"
