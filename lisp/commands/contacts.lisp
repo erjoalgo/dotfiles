@@ -58,6 +58,17 @@
      contact)
    (throw 'error "Abort")))
 
+(define-stumpwm-type :contact-number (input prompt)
+  (or
+   (when-let*
+       ((contact
+         (funcall (gethash :contact *command-type-hash*) input prompt))
+        (phones (contact-phones contact))
+        (number (selcand-select phones "select among multiple phone number: "
+                                 #'identity t)))
+     number)
+   (throw 'error "Abort")))
+
 (define-stumpwm-type :contact (input prompt)
   (or (argument-pop input)
       (selcand-select *contacts* prompt #'contact-name nil t)
