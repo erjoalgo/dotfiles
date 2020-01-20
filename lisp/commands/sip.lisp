@@ -40,8 +40,7 @@
                        sip-address message)))
 
 (defcommand sip-sms-send-selection (message)
-    ((:string (format nil "Enter SMS message to send to ~A: "
-                      (get-x-selection nil :clipboard))))
+    ((:string "Enter SMS message: "))
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (sip-sms-send clipboard message)))
 
