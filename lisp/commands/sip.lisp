@@ -21,6 +21,16 @@
   (when number
     (sip-call number)))
 
+(defcommand sip-call-contact (contact) ((:contact "Enter contact to call: "))
+  (assert contact)
+  (or
+   (when-let* ((phones (contact-phones contact))
+               (number (selcand-select phones "select among multiple phone number: "
+                                       #'identity t)))
+     (sip-call number)
+     t)
+   (error "no phone number found for contact ~A." contact)))
+
 (defcommand sip-call-terminate () ()
   (linphonecsh "generic" "terminate"))
 
