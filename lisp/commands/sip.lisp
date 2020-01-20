@@ -4,14 +4,18 @@
   (message "running: linphonecsh ~{~A~^ ~}" args)
   (run-command-async "linphonecsh" args nil t))
 
-(defun sip-call (number &key (sip-host "sanjose2.voip.ms"))
-  (assert number)
+(defvar *sip-default-host* "sanjose2.voip.ms")
+
+(defun sip-phone-number-to-address (number &key (sip-host *sip-default-host*))
   (let* ((number-clean (ppcre:regex-replace-all "[^0-9]" number ""))
          (intl-prefix-opt "")
-         (call-arg (format nil "sip:~A~A@~A"
-                           intl-prefix-opt number-clean sip-host)))
-    (echo (format nil "calling ~A" call-arg))
-    (linphonecsh "dial" call-arg)))
+         (sip-address (format nil "sip:~A~A@~A"
+                              intl-prefix-opt number-clean sip-host)))
+    sip-address))
+
+(defun sip-call (number)
+  (assert number)
+  (linphonecsh "dial" (sip-phone-number-to-address number)))
 
 (defcommand sip-call-selection () ()
   (let* ((clipboard (get-x-selection nil :clipboard)))
