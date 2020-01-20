@@ -28,7 +28,8 @@
   *special-chars-map*
   *search-engine-map*
   *commands-map*
-  *brightness-map*)
+  *brightness-map*
+  *linphone-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -130,7 +131,8 @@
 
       ("H-N" "gnext")
       ("H-P" "gprev")
-      ("H-d" *games-keymap*))
+      ("H-d" *games-keymap*)
+      ("H-b" *linphone-map*))
   ;;not efficient nor necessary but only run at initialization
   )
 
@@ -182,8 +184,6 @@
    ("H-t" "tmp")
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
-   ("H-q" "sip-call-clipboard")
-   ("q" "sip-call-prompt")
    ("b" *brightness-map*)
    ("d" "dict-lookup-command")
    ("D" "cat-message-command ~/vocab")))
@@ -224,6 +224,15 @@
        collect
          (list (format nil "~C" c)
                (format nil "set-brightness ~A" percentage))))
+
+(define-key-bindings
+    *linphone-map*
+    `(
+      ("H-c" "sip-call-clipboard")
+      ("H-d" "sip-call-prompt")
+      ("H-t" "sip-call-terminate")
+      ("H-i" "sip-init")
+      ("H-I" "sip-exit")))
 
 (pop-top-map)
 (set-prefix-key (kbd "F19"))
