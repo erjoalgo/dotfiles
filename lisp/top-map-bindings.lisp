@@ -232,6 +232,9 @@
       ("H-s" "sip-call-selection")
       ("H-n" "sip-call-number")
       ("H-t" "sip-call-terminate")
+      ("H-C" "sip-sms-send-contact")
+      ("H-S" "sip-sms-send-selection")
+      ("H-N" "sip-sms-send-number")
       ("H-i" "sip-init")
       ("H-I" "sip-exit")))
 
