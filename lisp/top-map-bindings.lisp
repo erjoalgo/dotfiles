@@ -228,8 +228,9 @@
 (define-key-bindings
     *linphone-map*
     `(
-      ("H-c" "sip-call-clipboard")
-      ("H-d" "sip-call-prompt")
+      ("H-c" "sip-call-contact")
+      ("H-s" "sip-call-selection")
+      ("H-n" "sip-call-number")
       ("H-t" "sip-call-terminate")
       ("H-i" "sip-init")
       ("H-I" "sip-exit")))

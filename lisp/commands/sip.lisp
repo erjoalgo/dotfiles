@@ -13,13 +13,13 @@
     (echo (format nil "calling ~A" call-arg))
     (linphonecsh "dial" call-arg)))
 
-(defcommand sip-call-clipboard () ()
+(defcommand sip-call-selection () ()
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (sip-call clipboard)))
 
-(defcommand sip-call-prompt (number) ((:string "Enter number: "))
-  (when number
-    (sip-call number)))
+(defcommand sip-call-number (number) ((:string "Enter number: "))
+  (assert (stringp number))
+  (sip-call number))
 
 (defcommand sip-call-contact (contact) ((:contact "Enter contact to call: "))
   (assert contact)
