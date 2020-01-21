@@ -36,6 +36,15 @@
 (defcommand sip-call-dtmf (numbers) ((:string "enter DTMF tones to send: "))
   (linphonecsh "generic" numbers))
 
+(defcommand sip-call-mute () ()
+  (linphonecsh "generic" "mute"))
+
+(defcommand sip-call-unmute () ()
+  (linphonecsh "generic" "unmute"))
+
+(defcommand sip-call-answer () ()
+  (linphonecsh "generic" "answer"))
+
 (defun sip-sms-send (sip-address message)
   ;; TODO add "chat" command to linphonecsh
   (linphonecsh "generic"
