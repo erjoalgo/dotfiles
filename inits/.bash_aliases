@@ -296,6 +296,7 @@ alias git-delete-show-untracked-files='git ls-files --others --exclude-standard'
 alias git-delete-show-ignored-files='git clean -ndX'
 alias git-delete-show-dangling-commits='git fsck --no-reflogs | sed "s/^dangling \(commit\|blob\) //g" | xargs git log --no-walk'
 alias git-delete-show-unpublished-commits='git --no-pager log --branches --not --remotes'
+alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 # Local Variables:
 # mode: sh
