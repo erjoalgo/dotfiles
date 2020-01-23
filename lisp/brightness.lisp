@@ -37,8 +37,10 @@
       trim-spaces
       parse-integer))
 
-(defcommand set-brightness (percentage-string) ((:string "enter brightness: "))
-  (let* ((percentage (read-from-string percentage-string))
+(defcommand set-brightness (percentage-input) ((:string "enter brightness: "))
+  (let* ((percentage (if (stringp percentage-input)
+                         (read-from-string percentage-input)
+                         percentage-input))
          (new-raw (->
 		   (+ *min-brightness*
 		      (->
