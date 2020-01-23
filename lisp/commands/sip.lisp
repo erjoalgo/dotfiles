@@ -17,12 +17,15 @@
   (assert number)
   (linphonecsh "dial" (sip-phone-number-to-address number)))
 
+(defun string-blank-p (string)
+  (zerop (length (trim-spaces string))))
+
 (defcommand sip-call-selection () ()
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (sip-call clipboard)))
 
 (defcommand sip-call-number (number) ((:string "Enter number: "))
-  (assert (stringp number))
+  (assert (not (string-blank-p number)))
   (sip-call number))
 
 (defcommand sip-call-contact (contact-number)
