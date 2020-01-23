@@ -15,9 +15,9 @@ if test ${REMOVED} != 0; then
    LOST+=", ${REMOVED} untracked files"
 fi
 
-UNSTAGED_LINES=$(git diff | wc -l)
-if test ${UNSTAGED_LINES}  != 0; then
-   LOST+=", ${UNSTAGED_LINES} lines of unstaged changes"
+UNSTAGED=$(git diff --shortstat)
+if test -n "${UNSTAGED}"; then
+   LOST+=", unstaged changes: ${UNSTAGED}"
 fi
 
 STAGED_LINES=$(git diff --cached | wc -l)
