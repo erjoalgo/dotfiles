@@ -28,8 +28,8 @@
      (t
       (apply 'error error-key :display display :error-key error-key key-vals))))
 
-(defvar *whitespace-char-list* '(#\Space #\Newline #\Backspace #\Tab
-				      #\Linefeed #\Page #\Return #\Rubout))
+(defvar *whitespace-chars* '(#\Space #\Newline #\Backspace #\Tab
+			     #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
   (string-trim '(#\space #\tab #\newline) str))
 
