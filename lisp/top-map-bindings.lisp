@@ -29,7 +29,8 @@
   *search-engine-map*
   *commands-map*
   *brightness-map*
-  *linphone-map*)
+  *linphone-map*
+  *linphone-sms-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -226,15 +227,20 @@
                (format nil "set-brightness ~A" percentage))))
 
 (define-key-bindings
+    *linphone-sms-map*
+    `(
+      ("H-c" "sip-sms-send-contact")
+      ("H-l" "sip-sms-send-selection")
+      ("H-n" "sip-sms-send-number")))
+
+(define-key-bindings
     *linphone-map*
     `(
       ("H-c" "sip-call-contact")
-      ("H-s" "sip-call-selection")
+      ("H-l" "sip-call-selection")
       ("H-n" "sip-call-number")
       ("H-t" "sip-call-terminate")
-      ("H-C" "sip-sms-send-contact")
-      ("H-S" "sip-sms-send-selection")
-      ("H-N" "sip-sms-send-number")
+      ("H-s" *linphone-sms-map*)
       ("H-d" "sip-call-dtmf")
       ("H-m" "sip-call-mute")
       ("H-M" "sip-call-unmute")
