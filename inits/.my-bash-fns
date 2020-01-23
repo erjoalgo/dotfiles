@@ -278,6 +278,13 @@ function pid-listening-at-port	{
     fi
 }
 
+function kill-process-listening-at-port	{
+  PORT=${1} && shift
+  PID=$(pid-listening-at-port "${PORT}") || return
+  test -n "${PID}" || return
+  kill ${PID}
+}
+
 function ports-open-by-pid  {
   PID=${1} && shift
   sudo lsof -Pan -p ${PID} -i
