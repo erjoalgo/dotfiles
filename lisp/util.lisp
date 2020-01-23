@@ -44,24 +44,6 @@
 			  (coerce '(#\Tab) 'string)
 			  (time-date-and-time))))
 
-;;reference. directly from define-stumpwm-type example
-'(define-stumpwm-type :symbol (input prompt)
-  (or (find-symbol (string-upcase
-		    (or (argument-pop input)
-			;; Whitespace messes up find-symbol.
-			(string-trim \" \"
-				     (completing-read (current-screen)
-						      prompt
-						      ;; find all symbols in the
-						      ;;  stumpwm package.
-						      (let (acc)
-							(do-symbols (s (find-package \"STUMPWM\"))
-							  (push (string-downcase (symbol-name s)) acc))
-							acc)))
-			(throw 'error \"Abort.\")))
-		   \"STUMPWM\")
-      (throw 'error \"Symbol not in STUMPWM package\")))
-
 (defmacro define-stumpwm-type-for-completion
     (sym completion-form)
   `(define-stumpwm-type ,sym (input prompt)
