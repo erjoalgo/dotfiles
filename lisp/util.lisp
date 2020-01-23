@@ -193,3 +193,12 @@
           collect (subseq text idx (min len new-idx)) into chunks
           do (setf idx new-idx)
           finally (echo-string-list screen chunks))))
+
+(defmacro def-thread (thread-var &body body)
+  `(progn
+     (defvar ,thread-var nil)
+     (when (and ,thread-var
+                (sb-thread:thread-alive-p ,thread-var))
+       (sb-thread:terminate-thread ,thread-var))
+     (setf ,thread-var
+           (sb-thread:make-thread (lambda () ,@body)))))
