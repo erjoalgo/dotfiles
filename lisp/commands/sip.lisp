@@ -51,7 +51,7 @@
 (defun sip-sms-send (sip-address message)
   ;; TODO add "chat" command to linphonecsh
   (linphonecsh "generic"
-               (format nil "chat ~A '~A'"
+               (format nil "chat ~A ~A"
                        sip-address message)))
 
 (defcommand sip-sms-send-selection (message)
