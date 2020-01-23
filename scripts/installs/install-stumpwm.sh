@@ -26,6 +26,8 @@ sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
 "quicklisp-slime-helper"
 "usocket"
 "alexandria"
+"cl-csv" ;; for contacts.csv support
+"websocket-driver-client" ;; for fanout client
 ))
 EOF
 
