@@ -78,6 +78,13 @@ Accept: */*
          (lines (cl-ppcre:split #\Newline resp)))
     (car (last lines))))
 
+(defun subseq-minus (seq start &optional end)
+  "allow negative indices"
+  (let* ((len (length seq))
+	 (start (mod start len))
+	 (end (and end (mod end len))))
+    (subseq seq start end)))
+
 (defun mozrepl-firefox-get-url ()
   (let ((out (mozrepl-send-command "content.document.location.href"
 				   :wait t)))

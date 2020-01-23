@@ -28,13 +28,6 @@
      (t
       (apply 'error error-key :display display :error-key error-key key-vals))))
 
-(defun subseq-minus (seq start &optional end)
-  "allow negative indices"
-  (let* ((len (length seq))
-	 (start (mod start len))
-	 (end (and end (mod end len))))
-    (subseq seq start end)))
-
 (defvar *whitespace-char-list* '(#\Space #\Newline #\Backspace #\Tab
 				      #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
