@@ -77,7 +77,7 @@
 		:input t)
 	      nil ))
 	;;log to different file? or at least add tags
-	(log-entry-timestamp url *search-history-fn*)))))
+	(log-entry-timestamped url *search-history-fn*)))))
 
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")
@@ -158,7 +158,7 @@
 	         (query (uri-encode args))
 	         (url (format nil engine-fmt query)))
 	    (url-launcher-browser-new-tab url)
-	    (log-entry-timestamp (format nil "~A:~A" engine terms)
+	    (log-entry-timestamped (format nil "~A:~A" engine terms)
 			         *search-history-fn*))))))
 
 (defparameter DEFAULT-SEARCH-ENGINE "ddg")

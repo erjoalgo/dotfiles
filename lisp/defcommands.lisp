@@ -65,7 +65,7 @@
 	 (*suppress-echo-timeout* t); let me read the definition in peace
 	 )
     (when word
-      (log-entry-timestamp word *vocab-fn*)
+      (log-entry-timestamped word *vocab-fn*)
       (message "definition: ~a" definition))))
 
 (defcommand echo-pointer ()     ()

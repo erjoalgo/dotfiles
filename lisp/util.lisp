@@ -40,8 +40,7 @@
 (defun trim-spaces (str)
   (string-trim '(#\space #\tab #\newline) str))
 
-
-(defun log-entry-timestamp (entry fn)
+(defun log-entry-timestamped (entry fn)
   (with-open-file (fh fn
 		      :if-does-not-exist :create
 		      :if-exists :append
