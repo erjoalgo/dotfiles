@@ -1,5 +1,7 @@
 (in-package :STUMPWM)
 
+(ql:quickload 'cl-csv)
+
 (defvar *contacts-csv* #P"~/Downloads/contacts.csv")
 
 (defvar *contacts* nil)
