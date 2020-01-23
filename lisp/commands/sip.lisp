@@ -57,18 +57,19 @@
 (defcommand sip-sms-send-selection (message)
     ((:string "Enter SMS message: "))
   (let* ((clipboard (get-x-selection nil :clipboard)))
-    (sip-sms-send clipboard message)))
+    (sip-sms-send-number clipboard message)))
 
 (defcommand sip-sms-send-number (number message)
     ((:string "Enter number: ") (:string "Enter SMS message: "))
-  (assert (stringp number))
-  (sip-sms-send number message))
+  (assert (not (string-blank-p number)))
+  (sip-sms-send (sip-phone-number-to-address number)
+                message))
 
 (defcommand sip-sms-send-contact (contact-number message)
     ((:contact-number "Enter contact to sms-send: ")
      (:string "Enter SMS message: "))
   (assert contact-number)
-  (sip-sms-send contact-number message))
+  (sip-sms-send-number contact-number message))
 
 (defcommand sip-init () ()
   (linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
