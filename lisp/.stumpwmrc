@@ -1,25 +1,16 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+;; sbclrc gives us quickload
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
-
-(defun load-stumpwmrc-file (relative-path)
-  (load (merge-pathnames
-         relative-path
-         (merge-pathnames #P".stumpwmrc.d/lisp/"
-                          (user-homedir-pathname)))))
-
-(load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
 (ql:quickload :erjoalgo-stumpwmrc)
-
-(defparameter *init-errs* nil)
-
 (swank-start)
 (xinitrc-init)
-
 ;; TODO remove side-effects from this file
-(load-stumpwmrc-file "top-map-bindings")
-
+(load
+ (merge-pathnames
+  "top-map-bindings.lisp"
+  (asdf:system-source-directory :erjoalgo-stumpwmrc)))
 (init-decorations)
 (url-launcher-init)
 (text-shortcuts-init)
@@ -29,6 +20,5 @@
 (def-thread-start *sms-fanout-reconnect-thread*
   (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
-
 (setf *startup-message* nil)
 (startup-apps-run)
