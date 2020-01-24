@@ -2,6 +2,18 @@
 # -*- mode: sh; -*-
 
 set -euo pipefail
+while getopts "h" OPT; do
+    case ${OPT} in
+        h)
+            less $0
+            exit 0
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+# a list of directories containing an .asd file
+ASDF_PROJECT_DIRECTORIES=${*}
 
 CONF_DIR=${HOME}/.config/common-lisp/source-registry.conf.d/
 mkdir -p ${CONF_DIR}
@@ -11,17 +23,13 @@ mkdir -p ${LINK_FARM}
 
 insert-text-block ';; 8fa697e3-0a47-4d17-be60-83cef7b8e3ce-add-default-asdf-link-farm' \
                   ${CONF_DIR}/42-asd-link-farm.conf<<EOF
-
 ;; (:directory "${LINK_FARM}") this doesn't work
-
 (:tree "${LINK_FARM}")
-
 ;; Local Variables:
 ;; mode: lisp
 ;; End:
 EOF
 
-
-for ASDF_PROJECT_DIRECTORY in ${*}; do
+for ASDF_PROJECT_DIRECTORY in ${ASDF_PROJECT_DIRECTORIES}; do
     ln -sf $(realpath ${ASDF_PROJECT_DIRECTORY}) ${LINK_FARM}
 done
