@@ -20,7 +20,6 @@
   ;; (:file "packages")
   (:file "util")
   (:file "defs")
-  (:file "defs-secret")
   (:file "xinitrc")
   (:file "decorations")
   (:file "pid-util")
