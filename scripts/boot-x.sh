@@ -68,6 +68,9 @@ Favorites=
 ShowMenuBarByDefault=false
 EOF
 
+./bin/asdf-add-project-to-link-farm ../lisp
+./bin/asdf-system-installed-p erjoalgo-stumpwmrc
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
