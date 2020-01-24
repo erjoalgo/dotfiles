@@ -17,6 +17,8 @@
 (init-brightness)
 (contacts:contacts-load)
 (x-service-start 1959)
+(def-thread-start *battery-notification-thread*
+  (battery-info-check-notify-loop))
 (def-thread-start *sms-fanout-reconnect-thread*
   (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
