@@ -54,7 +54,6 @@
             (lambda (err)
               (stumpwm:message "sms-fanout: channel error ~A ~A" err)
               (setf client nil)))
-    (wsd:send client "Hi")
     client))
 
 (defun reconnect-loop (address &key (reconnect-delay-mins 1))
