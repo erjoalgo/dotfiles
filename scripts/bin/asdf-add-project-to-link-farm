@@ -1,4 +1,5 @@
 #!/bin/bash -x
+# -*- mode: sh; -*-
 
 set -euo pipefail
 
@@ -24,7 +25,3 @@ EOF
 for ASDF_PROJECT_DIRECTORY in ${*}; do
     ln -sf $(realpath ${ASDF_PROJECT_DIRECTORY}) ${LINK_FARM}
 done
-
-# Local Variables:
-# mode: sh
-# End:
