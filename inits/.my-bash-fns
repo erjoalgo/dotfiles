@@ -470,11 +470,6 @@ function git-revert-HEAD {
     git revert ${1:-HEAD}
 }
 
-function asdf-system-installed-p {
-    SYSTEM=${1} && shift
-    sbcl --eval "(ql:quickload '${SYSTEM})" --non-interactive
-}
-
 function pidof-ls-open-files  {
   PROCNAME=${1} && shift
   for PID in $(pidof ${PROCNAME}); do
