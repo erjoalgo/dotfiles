@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defun battery-info ()
   (let* ((devices (run-shell-command "upower -e" t))
          (device (loop for device in (cl-ppcre:split #\Newline devices)

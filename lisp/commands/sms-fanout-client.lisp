@@ -1,13 +1,17 @@
-(ql:quickload :websocket-driver-client)
+(defpackage :sms-fanout-client
+  (:use :cl)
+  (:export
+   #:connect
+   #:connected-p
+   #:reconnect-loop))
+(in-package :sms-fanout-client)
 
-(defparameter *sms-fanout-address*
-  "wss://sms.erjoalgo.com/fanout?api-key=REDACTED")
+;; (ql:quickload :websocket-driver-client)
+;; (ql:quickload :cl-json)
 
 (defvar *sms-fanout-client* nil)
 
-(defparameter *sms-fanount-reconnect-interval-mins* 1)
-
-(defun sms-fanout-connected-p (&key (client *sms-fanout-client*))
+(defun connected-p (&key (client *sms-fanout-client*))
   (and client
        (eq :OPEN (wsd:ready-state client))
        client))
@@ -26,10 +30,10 @@
                                      ,alist-sym))))
          ,@body))))
 
-(defun sms-fanout-connect ()
-  (when-let ((current (sms-fanout-connected-p)))
+(defun connect (address)
+  (stumpwm::when-let ((current (connected-p)))
     (wsd:close-connection current))
-  (let ((client (wsd:make-client *sms-fanout-address*)))
+  (let ((client (wsd:make-client address)))
     (wsd:start-connection client)
     (wsd:on :message client
             (lambda (message)
@@ -48,29 +52,27 @@
               (setf client nil)))
     (wsd:on :error client
             (lambda (err)
-              (message "sms-fanout: channel error ~A ~A" err)
+              (stumpwm:message "sms-fanout: channel error ~A ~A" err)
               (setf client nil)))
-    ;; (wsd:send client "Hi")
+    (wsd:send client "Hi")
     client))
 
-;;
-
-(def-thread *sms-fanout-reconnect-thread*
-    (loop do
-         (progn
-           (format t "on sms-fanout reconnect loop")
-           (unless (sms-fanout-connected-p)
-             '(message "sms-fanout reconnect loop: attempting to reconnect")
-             (handler-case
-                 (setf *sms-fanout-client* (sms-fanout-connect))
-               ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
-                 (format t "failed to connect: ~A. " err)))
-             '(message "sms-fanout reconnect loop: post connect attempt"))
-           (when (sms-fanout-connected-p)
-             (format t "pinging")
-             (wsd:send-ping *sms-fanout-client*))
-           (format t "sleeping...")
-           (sleep (* *sms-fanount-reconnect-interval-mins* 60)))))
+(defun reconnect-loop (address &key (reconnect-delay-mins 1))
+  (loop do
+       (progn
+         (format t "on sms-fanout reconnect loop")
+         (unless (connected-p :client *sms-fanout-client*)
+           (format t "sms-fanout reconnect loop: attempting to reconnect")
+           (handler-case
+               (setf *sms-fanout-client* (connect address))
+             ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
+               (format t "failed to connect: ~A. " err)))
+           (format t "sms-fanout reconnect loop: post connect attempt"))
+         (when (connected-p)
+           (format t "pinging")
+           (wsd:send-ping *sms-fanout-client*))
+         (format t "sleeping...")
+         (sleep (* reconnect-delay-mins 60)))))
 
 ;; (sms-fanout-connect)
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)

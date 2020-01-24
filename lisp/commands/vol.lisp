@@ -1,3 +1,5 @@
+(in-package :stumpwm)
+
 (defvar *vol-muted* nil)
 (defvar *vol-backend* :amixer)
 

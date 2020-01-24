@@ -1,3 +1,4 @@
+(in-package :stumpwm)
 ;; things that used to be run by .xinitrc
 
 (defun xmodmap-locate-file (&key
@@ -68,10 +69,12 @@
                                 :error t
                                 :wait nil)))))
 
-(unless (fboundp 'with-elapsed-time)
-  (defmacro with-elapsed-time (var timed-form post-form)
-    (declare (ignore var post-form))
-    timed-form))
+(defmacro with-elapsed-time (elapsed-time-ms-var form &body body)
+  (let ((start-time-sym (gensym "start-time")))
+    `(let ((,start-time-sym (get-internal-real-time)))
+       ,form
+       (let ((,elapsed-time-ms-var (- (get-internal-real-time) ,start-time-sym)))
+         ,@body))))
 
 (unless (fboundp 'run-shell-command)
   (defun run-shell-command (cmd &optional sync)
@@ -93,12 +96,13 @@
     (trim-spaces (run-shell-command
                   (format nil "which ~A" program)))))
 
-(loop for i below 2 do
-     (with-elapsed-time ms (xmodmap-load)
-       (message "xmodmap load took ~D ms" ms)))
+(defun xinitrc-init ()
+  (loop for i below 2 do
+       (with-elapsed-time ms (xmodmap-load)
+         (message "xmodmap load took ~D ms" ms)))
 
-(with-elapsed-time ms (run-startup-scripts)
-  (message "startup shell scripts took ~D ms" ms))
+  (with-elapsed-time ms (run-startup-scripts)
+    (message "startup shell scripts took ~D ms" ms))
 
-(with-elapsed-time ms (start-screensaver)
-  (message "screensaver load took ~D ms" ms))
+  (with-elapsed-time ms (start-screensaver)
+    (message "screensaver load took ~D ms" ms)))

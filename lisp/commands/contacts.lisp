@@ -1,4 +1,8 @@
-(in-package :STUMPWM)
+(defpackage :contacts
+  (:use :cl)
+  (:export
+   #:contacts-load))
+(in-package :contacts)
 
 (ql:quickload 'cl-csv)
 
@@ -46,37 +50,37 @@
                                          (extract-cols row '(14 15 16)))
                           :phones (extract-cols row '(20 17 18 19 21 22))))))))
 
-(define-stumpwm-type :contact (input prompt)
-  (or (argument-pop input)
-   (when-let*
-       ((contact-name
-         (completing-read (current-screen)
-		          prompt
-                          (mapcar #'contact-name *contacts*)))
-        (contact (loop for contact in *contacts*
-                    thereis (when (equal (contact-name contact)
-                                         contact-name)
-                              contact))))
-     contact)
-   (throw 'error "Abort")))
+(stumpwm:define-stumpwm-type :contact (input prompt)
+  (or (stumpwm:argument-pop input)
+      (stumpwm::when-let*
+          ((contact-name
+            (stumpwm:completing-read (stumpwm:current-screen)
+		                     prompt
+                                     (mapcar #'contact-name *contacts*)))
+           (contact (loop for contact in *contacts*
+                       thereis (when (equal (contact-name contact)
+                                            contact-name)
+                                 contact))))
+        contact)
+      (throw 'error "Abort")))
 
-(define-stumpwm-type :contact-number (input prompt)
+(stumpwm:define-stumpwm-type :contact-number (input prompt)
   (or
-   (when-let*
+   (stumpwm::when-let*
        ((contact
-         (funcall (gethash :contact *command-type-hash*) input prompt))
+         (funcall (gethash :contact stumpwm::*command-type-hash*) input prompt))
         (phones (contact-phones contact))
-        (number (selcand-select phones "select among multiple phone number: "
-                                 #'identity t)))
+        (number (selcand:select
+                 phones
+                 "select among multiple phone number: "
+                 #'identity t)))
      number)
    (throw 'error "Abort")))
 
-(define-stumpwm-type :contact (input prompt)
-  (or (argument-pop input)
-      (selcand-select *contacts* prompt #'contact-name nil t)
+(stumpwm:define-stumpwm-type :contact (input prompt)
+  (or (stumpwm:argument-pop input)
+      (selcand:select *contacts* prompt #'contact-name nil t)
       (throw 'error "No contact selected (abort?)")))
 
 (defun contacts-load ()
   (setq *contacts* (contacts-read)))
-
-(contacts-load)

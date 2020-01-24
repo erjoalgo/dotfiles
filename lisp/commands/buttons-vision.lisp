@@ -1,11 +1,13 @@
-(defparameter BUTTONS-ROOT
-  (merge-pathnames "button-imgs" DATA-PRIVATE))
+(in-package :STUMPWM)
+
+(defparameter *buttons-root*
+  (merge-pathnames "button-imgs" *data-private*))
 
 (define-stumpwm-type-from-wild-pathname :button-pathname
-    (merge-pathnames (make-pathname :type "png" :name :WILD) BUTTONS-ROOT)
+    (merge-pathnames (make-pathname :type "png" :name :WILD) *buttons-root*)
   :allow-nonexistent t)
 
-(ensure-directory-exists BUTTONS-ROOT :max-parents t)
+(ensure-directory-exists *buttons-root* :max-parents t)
 
 (defcommand click-button (button-pathname) ((:button-pathname "enter button image: "))
   (message "button image is ~A" button-pathname))
@@ -14,7 +16,7 @@
   (let* ((name (pathname-name button-pathname))
 	 (parent-dir (make-pathname :name nil :type nil :defaults button-pathname)))
 
-    (ensure-directory-exists BUTTONS-ROOT)
+    (ensure-directory-exists *buttons-root*)
     (ensure-directory-exists parent-dir)
 
     (setf button-pathname

@@ -1,4 +1,5 @@
 ;; TODO clos
+(in-package :STUMPWM)
 
 (defstruct psym-driver
   list-serialized-records ;; pathname => '(serialized1, serialized2 ...)

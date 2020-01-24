@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defparameter *scrots-top*
   (merge-pathnames  "pictures/auto-scrots/" (user-homedir-pathname)))
 
@@ -28,6 +30,10 @@
   (remove-if-not (lambda (pathname)
                    (ppcre:scan "mouse" (pathname-name pathname)))
                  (directory #P"/dev/input/*")))
+
+(defvar *record-box-and-funcall-state*
+  nil
+  "Internal to record-box-and-funcall")
 
 (defun take-scrot (name
                    &rest args
@@ -149,10 +155,6 @@ perform ocr on it, place ocr'd text into clipboard"
       (xlib:global-pointer-position *display*)
     (declare (ignore win))
     (cons x y)))
-
-(defvar *record-box-and-funcall-state*
-  nil
-  "Internal to record-box-and-funcall")
 
 (defun record-box-and-funcall (&optional screen code x y)
   (declare (ignore screen code))

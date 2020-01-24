@@ -1,14 +1,15 @@
+(in-package :STUMPWM)
+
 (defvar pid-original-group-alist nil
   "An alist (PID . (GROUP . TIMESTAMP)) that records
 the group/workspace in which a process was originally started")
 
-(defvar raise-window-in-original-group-secs nil
+(defparameter raise-window-in-original-group-secs 10
   "If non-nil, any window from a process originally
 started in group A that is raised in group B
 is moved back to group A if its process
 was started less than RAISE-WINDOW-IN-ORIGINAL-GROUP-SECS
 seconds ago")
-(setf raise-window-in-original-group-secs 10)
 
 (defun raise-window-in-original-group (new-win)
   (let ((new-win-pid (window-pid new-win)))
@@ -64,8 +65,8 @@ seconds ago")
 					(pull-key (string-upcase raise-key))
 					(cmd name)
 					(classes `(list ,(string-capitalize name)))
-                                      (all-screens nil)
-                                      (keymap '*top-map*))
+                                        (all-screens nil)
+                                        (keymap '*top-map*))
 
   `(progn
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
@@ -83,78 +84,3 @@ seconds ago")
 						 ,cmd ,pull-p ,all-screens))
 	      ,(unless (null key)
 		 `(define-key ,keymap (kbd ,key) ,cmd-name-string))))))
-
-(define-run-or-pull-program "BROWSER"
-    :cmd browser-name
-    :raise-key "H-f"
-    :pull-key "H-F"
-    :classes browser-classes)
-
-(define-run-or-pull-program "X-TERMINAL-EMULATOR"
-    :raise-key "H-c"
-    :cmd (trim-spaces
-          (run-shell-command
-           "which konsole roxterm gnome-terminal xterm | head -1" t))
-    :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
-		   "xterm" "XTerm" "Gnome-terminal"))
-
-(defparameter emacs-classes
-  (list "emacs" "GoogleEmacs"))
-
-(define-run-or-pull-program "emacs"
-    :pull-key "H-E"
-    ;; :cmd "~/git/emacs/src/emacs"
-    ;; :cmd "emacsclient --create-frame"
-    :classes emacs-classes)
-
-(defun first-existing-file (&rest files)
-  (loop for file in files thereis
-       (and (probe-file (parse-namestring file))
-	    file)))
-
-(defun first-existing-command (&rest commands)
-  "assume command has no spaces or funny characters"
-  (->> (run-shell-command (format nil "which ~{~A~^ ~}" commands) t)
-       (cl-ppcre:split #\Newline)
-       (car)))
-
-(let ((eclipse-cmd
-       (first-existing-command
-        "eclipse"
-        "android-studio"
-        "STS")))
-
-  (when eclipse-cmd
-    (define-run-or-pull-program "android-studio"
-        :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
-        :cmd eclipse-cmd
-        :raise-key "H-r")))
-
-(define-run-or-pull-program "linphone"
-    :raise-key "H-q"
-    :pull-key "H-Q"
-    :classes '("Linphone" "linphone"))
-
-(define-run-or-pull-program "zathura")
-
-(define-run-or-pull-program "vncviewer")
-
-(defvar *games-keymap* (make-sparse-keymap))
-
-(define-run-or-pull-program "eboard"
-  :raise-key "H-e"
-  :pull-key "H-E"
-  :classes '("eboard" "Eboard")
-  :keymap *games-keymap*)
-
-(define-run-or-pull-program "signal-desktop"
-  :raise-key "H-s"
-  :pull-key "H-S"
-  :classes '("signal" "Signal"))
-
-;; Warning: these bindings affect the *top-map*, which is
-;; later deep-copied onto other per-window bindings.
-;; Changes won't take effect on existing deep-copies of
-;; *top-map*
-;; for changes to take effect, 'per-window-bindings' and
-;; top-map-bindings.lisp should be evaled in that order

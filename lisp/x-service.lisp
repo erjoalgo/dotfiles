@@ -1,6 +1,14 @@
+(defpackage :x-service
+  (:use :cl)
+  (:export
+   #:x-service-start))
+(in-package :x-service)
+
+(in-package :STUMPWM)
+
 (defvar *x-service* nil)
 
-(defun service-start (port)
+(defun x-service-start (port)
   "Start a service based on the config obtained by proxying all arguments make-config"
   (when (and *x-service*
              (or (null port) (hunchentoot:started-p *x-service*)))
@@ -70,7 +78,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                      cdr)))
     (when color
       (setf text (message-colorize text color)))
-    (message-wrapped "~A" text)
+    (stumpwm::message-wrapped "~A" text)
     ""))
 
 ;; (defalias url-browse url-launcher-browser-new-tab)
@@ -79,7 +87,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     "Browse to a URL"
   (let ((url (hunchentoot-post-data-or-err)))
     (format t "x-service: value of url: ~A~%" url)
-    (url-launcher-browser-new-tab url)
+    (stumpwm::url-launcher-browser-new-tab url)
     ""))
 
 (define-regexp-route clipboard-handler ("/clipboard")
@@ -87,18 +95,18 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (case (hunchentoot:request-method*)
     (:post
      (let ((contents (hunchentoot-post-data-or-err)))
-       (set-x-selection contents :clipboard)
-       (set-x-selection contents :primary)
+       (stumpwm:set-x-selection contents :clipboard)
+       (stumpwm:set-x-selection contents :primary)
        ""))
-    (:get (get-x-selection :clipboard))))
+    (:get (stumpwm:get-x-selection :clipboard))))
 
 (define-regexp-route visible-window-pids-handler ("/visible-window-pids")
     "get a list of pids of windows that are visible"
   (->>
-   (group-windows (current-group))
+   (stumpwm:group-windows (stumpwm:current-group))
    (remove-if-not
     #'window-visible-p)
    (mapcar #'window-pid)
    (format nil "~{~A~^~%~}")))
 
-(service-start 1959)
+;; (service-start 1959)

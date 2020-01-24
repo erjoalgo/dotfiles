@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 ;; (defpackage #:brightness)
 
 (defvar *actual-brightness-pathname*)
@@ -75,5 +77,3 @@
 (defcommand brightness-down () ()
   "decrease brightness"
   (up-down-brightness nil))
-
-(init-brightness)

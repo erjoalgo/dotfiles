@@ -1,3 +1,39 @@
+(in-package :STUMPWM)
+
+(defun file-string (path)
+  (with-open-file (stream path)
+    (let* ((n-estimate (file-length stream))
+	  (data (make-string n-estimate))
+	  (n (read-sequence data stream)))
+      (unless (= n n-estimate)
+	(setf data (subseq data 0 n)))
+      data)))
+
+(defun machine-get-uuid ()
+  (let ((fstab (file-string #P"/etc/fstab")))
+    (cl-ppcre:register-groups-bind
+        (root-device-name root)
+        ("(?m)^([^	 ]+)[ 	]+(/)[	 ]+" fstab)
+      (declare (ignore root))
+      (assert fstab)
+      (let* ((cmd (format nil "lsblk ~A -o uuid" root-device-name))
+             (lsblk-out (run-shell-command cmd t))
+             (uuid (second (cl-ppcre:split #\Newline lsblk-out))))
+        (assert uuid)
+        uuid))))
+
+(defun ensure-directory-exists (pathname &key (max-parents 0))
+  (unless (probe-file pathname)
+    (let ((parent
+            (uiop:pathname-parent-directory-pathname
+             (uiop:ensure-directory-pathname pathname))))
+      (when (and (not (equal parent pathname))
+                 (or (eq t max-parents) (> max-parents 0)))
+        (ensure-directory-exists
+         parent
+         :max-parents (if (eq t max-parents) t (1- max-parents)))))
+    (SB-POSIX:MKDIR pathname #o775)))
+
 (defun deep-copy-map (source-map)
   (let ((new-map (make-sparse-keymap)))
     (dolist (binding (kmap-bindings source-map))
@@ -6,32 +42,13 @@
 	(define-key new-map key command)))
     new-map))
 
-;;this fixes a certain issue with Virtualbox and stumpwm
-(defun error-handler (display error-key &rest key-vals &key asynchronous &allow-other-keys)
-  "Handle X errors"
-  (cond
-    ;; ignore asynchronous window errors
-    ((and asynchronous
-          (find error-key '(xlib:window-error xlib:drawable-error xlib:match-error)))
-     (dformat 4 "Ignoring error: ~s~%" error-key))
-    ((eq error-key 'xlib:access-error)
-     (write-line "Another window manager is running.")
-     (write-line (prin1-to-string error-key) )
-     (write-line (prin1-to-string key-vals))
-     ;(and (boundp 'ab) (write-line (prin1-to-string ab)))
-
-     ;(throw :top-level :quit)
-     )
-     ;; all other asynchronous errors are printed.
-     (asynchronous
-      (message "Caught Asynchronous X Error: ~s ~s" error-key key-vals))
-     (t
-      (apply 'error error-key :display display :error-key error-key key-vals))))
-
 (defvar *whitespace-chars* '(#\Space #\Newline #\Backspace #\Tab
 			     #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
   (string-trim '(#\space #\tab #\newline) str))
+
+(defun string-blank-p (string)
+  (zerop (length (trim-spaces string))))
 
 (defun log-entry-timestamped (entry fn)
   (with-open-file (fh fn
@@ -194,7 +211,7 @@
           do (setf idx new-idx)
           finally (echo-string-list screen chunks))))
 
-(defmacro def-thread (thread-var &body body)
+(defmacro def-thread-start (thread-var &body body)
   `(progn
      (defvar ,thread-var nil)
      (when (and ,thread-var
@@ -202,3 +219,14 @@
        (sb-thread:terminate-thread ,thread-var))
      (setf ,thread-var
            (sb-thread:make-thread (lambda () ,@body)))))
+
+(defun first-existing-file (&rest files)
+  (loop for file in files thereis
+       (and (probe-file (parse-namestring file))
+	    file)))
+
+(defun first-existing-command (&rest commands)
+  "assume command has no spaces or funny characters"
+  (->> (run-shell-command (format nil "which ~{~A~^ ~}" commands) t)
+       (cl-ppcre:split #\Newline)
+       (car)))

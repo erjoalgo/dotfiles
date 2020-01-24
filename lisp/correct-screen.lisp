@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defun run-shell-command-print (cmd &optional collect-output-p)
   (print cmd)
   (run-shell-command cmd collect-output-p))

@@ -1,4 +1,15 @@
-(defvar *vocab-fn* (merge-pathnames "sensitive/vocab" STUMPWM-TOP))
+(in-package :STUMPWM)
+
+(defvar *vocab-fn* (merge-pathnames "sensitive/vocab" *stumpwm-top-directory*))
+
+(define-stumpwm-type-from-wild-pathname :lisp-source-file
+    (merge-pathnames (make-pathname :type "lisp" :name :WILD) *stumpwm-top-directory*))
+
+(defcommand load-file (pathname) ((:lisp-source-file "enter lisp file to load: " ))
+  "load a file"
+  (in-package :stumpwm)
+  (when pathname
+    (load-safe pathname)))
 
 (defun is-browser-win (win)
   (member (window-class win) browser-classes :test 'equal))
@@ -121,7 +132,7 @@
   (echo (url-launcher-get-browser-current-url)))
 
 (define-stumpwm-type-from-wild-pathname :lisp-source-file
-    (merge-pathnames (make-pathname :type "lisp" :name :WILD) STUMPWM-TOP))
+    (merge-pathnames (make-pathname :type "lisp" :name :WILD) *stumpwm-top-directory*))
 
 (defcommand load-file (pathname) ((:lisp-source-file "enter lisp file to load: " ))
   "load a file"

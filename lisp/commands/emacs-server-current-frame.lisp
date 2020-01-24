@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 ;; send USR1 to emacs process in current window to actiavte server
 
 (defun window-class-matcher (window-classes)

@@ -1,4 +1,59 @@
-;(defvar *top-hash-map* nil )
+(in-package :STUMPWM)
+
+(define-run-or-pull-program "BROWSER"
+    :cmd *browser-name*
+    :raise-key "H-f"
+    :pull-key "H-F"
+    :classes *browser-classes*)
+
+(define-run-or-pull-program "X-TERMINAL-EMULATOR"
+    :raise-key "H-c"
+    :cmd (trim-spaces
+          (run-shell-command
+           "which konsole roxterm gnome-terminal xterm | head -1" t))
+    :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
+		   "xterm" "XTerm" "Gnome-terminal"))
+
+(define-run-or-pull-program "emacs"
+    :pull-key "H-E"
+    ;; :cmd "~/git/emacs/src/emacs"
+    ;; :cmd "emacsclient --create-frame"
+    :classes emacs-classes)
+
+(let ((eclipse-cmd
+       (first-existing-command
+        "eclipse"
+        "android-studio"
+        "STS")))
+  (when eclipse-cmd
+    (define-run-or-pull-program "android-studio"
+        :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
+        :cmd eclipse-cmd
+        :raise-key "H-r")))
+
+(define-run-or-pull-program "linphone"
+    :raise-key "H-q"
+    :pull-key "H-Q"
+    :classes '("Linphone" "linphone"))
+
+(define-run-or-pull-program "zathura")
+
+(define-run-or-pull-program "vncviewer")
+
+(defvar *games-keymap* (make-sparse-keymap))
+
+(define-run-or-pull-program "eboard"
+  :raise-key "H-e"
+  :pull-key "H-E"
+  :classes '("eboard" "Eboard")
+  :keymap *games-keymap*)
+
+(define-run-or-pull-program "signal-desktop"
+  :raise-key "H-s"
+  :pull-key "H-S"
+  :classes '("signal" "Signal"))
+
+(per-window-bindings-reload-from-fn)
 
 ;;to avoid sync-keys on every define-key
 (defvar *real-top-map* nil)
@@ -26,7 +81,7 @@
   *screen-rotation-map*
   *utils-map*
   *special-chars-map*
-  *search-engine-map*
+  ;; *search-engine-map*
   *commands-map*
   *brightness-map*
   *linphone-map*
@@ -139,27 +194,22 @@
 
 
 
-(macrolet
-    ((defselgroup (i name)
-       `(defcommand ,(intern name) () ()
-          (if (>= (1- ,i) (length (sort-groups (current-screen))))
-              (gnew (format nil "F~D" ,i))
-              (->
-               (nth (1- ,i) (sort-groups (current-screen)))
-               (gselect)))))
-     (def-gselect-keys (from to)
-       `(define-key-bindings (all-top-maps)
-            (list
-             ,@(loop for i :from from :upto to
-                     as name = (format nil "gselect-F~D" i)
-                  as cmd = (format nil "gselect ~A" (if (eq i 1) "Default"
-                                                        (format nil "F~D" i)))
-	             collect
-	             `(progn
-                        (defselgroup ,i ,name)
-                        (list ,(format nil "H-F~D" i) ,cmd)))))))
-  (def-gselect-keys 1 6))
+(defcommand gselect-nth (i) ((:number "enter group number: "))
+  (assert (< i (length (sort-groups (current-screen)))))
+  '(switch-to-group group-name)
+  (-> i
+      (nth (sort-groups (current-screen)))
+      switch-to-group))
 
+(loop
+   for group-name in '("Default" "F2" "F3" "F4" "F5")
+   for i from 0
+   as key = (format nil "H-F~D" (1+ i))
+   as command = (format nil "gselect-nth ~D" i)
+   do (gnewbg group-name)
+   do
+     (define-key-bindings (all-top-maps)
+         (list (list key command))))
 
 (define-key-bindings
  *utils-map*
@@ -248,8 +298,8 @@
       ("H-i" "sip-init")
       ("H-I" "sip-exit")))
 
+(search-engines-install-to-map)
 (pop-top-map)
 (set-prefix-key (kbd "F19"))
 
-;; TODO reorder all this
-(search-engines-install-to-map)
+;; TODO use buttons framework

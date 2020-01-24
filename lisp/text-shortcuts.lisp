@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defun xdotool (cmds)
   (sb-ext:run-program "xdotool" cmds
                       :wait nil
@@ -35,12 +37,10 @@
 
 (defparameter *text-shortcuts-alist*
   (make-psym
-   :pathnames (loop for data-dir in DATA-DIRS
+   :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "text-shortcuts" data-dir))
    :driver psym-lines-list-driver
    :short-description "text shortcuts"))
-
-(psym-load *text-shortcuts-alist*)
 
 (define-stumpwm-type-with-completion
     :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
@@ -54,3 +54,5 @@
      (:text-shortcut-pathname "select classification: "))
   (psym-add *text-shortcuts-alist* shortcut pathname))
 
+(defun text-shortcuts-init ()
+  (psym-load *text-shortcuts-alist*))

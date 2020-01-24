@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defpackage #:url-launcher
   (:export
    #:launch-url
@@ -6,30 +8,22 @@
    #:uri-encode))
 
 (defparameter *search-history-fn*
-  (merge-pathnames "search-history" DATA-PRIVATE-ONE-WAY))
+  (merge-pathnames "search-history" *data-private-one-way*))
 
-(ensure-directory-exists
- (uiop:pathname-parent-directory-pathname
-  (uiop:ensure-directory-pathname *search-history-fn*))
- :max-parents 2)
-
-;;; Launcher
 (defparameter *launcher-persistent-alist*
   (make-psym
-   :pathnames (loop for data-dir in DATA-DIRS
+   :pathnames (loop for data-dir in *DATA-DIRS*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
    :driver psym-dir-alist-driver
    :short-description "launcher urls"))
 
-(psym-load *launcher-persistent-alist*)
-
 (defun url-launcher-get-browser-current-url ()
-  (chrome-get-url))
+  (mozrepl:chrome-get-url))
 
 (defun url-launcher-browser-new-tab (url)
   ;;(mozreplfirefoxnewtab url)
   ;; (echo (format nil "url is ~A" url))
-  (SB-EXT:RUN-PROGRAM browser-name
+  (SB-EXT:RUN-PROGRAM *browser-name*
 		      (list url)
 		      :search t
 		      :wait nil
@@ -44,7 +38,7 @@
     ;;(".*[.]pdf" "gv")
     ("(^https?://.*|.*[.]html.*).*" ,#'url-launcher-browser-new-tab)
     (".*[.](docx?|odt)$" "libreoffice")
-    ("about:config" ,#'mozrepl-firefox-new-tab)))
+    ("about:config" ,#'mozrepl:firefox-new-tab)))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
@@ -101,12 +95,10 @@
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
   (make-psym
-   :pathnames (loop for data-dir in DATA-DIRS
+   :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "search-engines" data-dir))
    :driver psym-tsv-alist-driver
    :short-description "search engines"))
-
-(psym-load *search-engine-persistent-alist*)
 
 (defun uri-encode (search-terms)
   (reduce
@@ -161,21 +153,23 @@
 	    (log-entry-timestamped (format nil "~A:~A" engine terms)
 			         *search-history-fn*))))))
 
-(defparameter DEFAULT-SEARCH-ENGINE "ddg")
+(defparameter *default-search-engine* "ddg")
 
 (defcommand search-engine-search-clipboard () ()
   "search the clipboard contents"
-  (search-engine-search DEFAULT-SEARCH-ENGINE (get-x-selection )))
+  (search-engine-search *default-search-engine* (get-x-selection )))
 
 ;; make command name shorter to make help-map (?) more useful
 (defcommand-alias engsearch search-engine-search)
 
+(defvar *search-engine-map* (make-sparse-keymap) "")
+
 (defcommand search-engines-install-to-map () ()
   "reload search engines from file"
-  (psym-load *SEARCH-ENGINE-PERSISTENT-ALIST*)
+  (psym-load *search-engine-persistent-alist*)
   (loop
     with used-letters = nil
-    for (eng . fmt) in (psym-records *SEARCH-ENGINE-PERSISTENT-ALIST*)
+    for (eng . fmt) in (psym-records *search-engine-persistent-alist*)
     as letter = (loop for letter across eng
 		      unless (member letter used-letters :test 'eql)
 		        return letter)
@@ -193,7 +187,19 @@
   )
 
 
-(dolist (class browser-classes)
+(dolist (class *browser-classes*)
   (push `(:class ,class) stumpwm:*deny-raise-request*))
 
-(setf *suppress-deny-messages* t)
+(defun url-launcher-init ()
+  (ensure-directory-exists
+   (uiop:pathname-parent-directory-pathname
+    (uiop:ensure-directory-pathname *search-history-fn*))
+   :max-parents 2)
+  (make-psym
+   :pathnames (loop for data-dir in *data-dirs*
+                 collect (merge-pathnames "url-launcher-urls/" data-dir))
+   :driver psym-dir-alist-driver
+   :short-description "launcher urls")
+  (psym-load *launcher-persistent-alist*)
+  (psym-load *search-engine-persistent-alist*)
+  (setf *suppress-deny-messages* t))

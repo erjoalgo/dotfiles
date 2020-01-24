@@ -1,7 +1,9 @@
-(defpackage #:stumpwm-per-window-bindings
-  (:export
-   #:per-window-bindings-reload
-   #:per-window-bindings-reload-from-fn))
+(in-package :STUMPWM)
+
+;; (defpackage #:stumpwm-per-window-bindings
+;;   (:export
+;;    #:per-window-bindings-reload
+;;    #:per-window-bindings-reload-from-fn))
 
 (defvar *per-window-bindings-rules* nil
   "a list of (CLASSES BINDINGS),
@@ -10,7 +12,7 @@ where each BINDING is a (KEY . FORM).
 these are read from a file *per-window-binding-rules-fn*" )
 
 (defvar *per-window-binding-rules-fn*
-  (merge-pathnames "per-window-bindings-rules.lisp" STUMPWM-TOP)
+  (merge-pathnames "per-window-bindings-rules.lisp" *stumpwm-top-directory*)
   "file where *per-window-bindings-rules* should be reloaded.
 it contains lisp code which sets the *per-window-bindings-rules* value")
 
@@ -24,13 +26,13 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (setf *per-window-bindings-class-to-map*
 	(make-hash-table :test 'equal))
   (loop for (classes . bindings) in rules
-     as top-copy = (deep-copy-map STUMPWM::*top-map*)
+     as top-copy = (stumpwm::deep-copy-map STUMPWM::*top-map*)
      do (loop for (key form) in bindings
 	   as defcmd-form = `(defcommand-annon ,form)
 	   as cmd-name = (eval defcmd-form)
 	   ;;do (print defcmd-form)
 	   do
-	     (define-key top-copy (kbd key) cmd-name))
+	     (stumpwm:define-key top-copy (stumpwm:kbd key) cmd-name))
      do (loop for class in classes
 	   ;;do (format t "setting class ~A to ~A~%" class top-copy)
 	   do (setf (gethash (string-downcase class)
@@ -44,7 +46,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 (defcommand per-window-bindings-reload-from-fn-cmd () ()
   "reload bindings from *per-window-binding-rules-fn*"
   (stumpwm::per-window-bindings-reload-from-fn))
-
 
 (defvar *current-top-bindings* nil)
 
@@ -75,7 +76,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                          (or
                           (member (string-downcase
                                    (window-class (current-window)))
-                                  browser-classes
+                                  *browser-classes*
                                   :test #'equal :key #'string-downcase)))
                     (member "changing bindings from Chromium to NIL..." msgs
                             :test 'equal))
@@ -91,16 +92,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
           (push bindings-dest *current-top-bindings*))))
     (push (cons (GET-UNIVERSAL-TIME) msgs) dbg)))
 
-' (loop for entry in (reverse dbg)
-            with last = nil
-            when (and (consp entry)
-                      (numberp (car entry))) do
-                      (when last
-                        (format t "~As: ~{~A~^~%    ~}~%"
-                                (- (car entry) last)
-                                (reverse (cdr entry))))
-                      (setf last (car entry)))
-
 (defmacro defcommand-annon  (&rest forms)
   (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
 	 (docstring (format nil "~A. contents: ~A" name forms))
@@ -108,8 +99,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 		  (STUMPWM::defcommand ,name () () ,docstring ,@forms)
 		  ,(symbol-name name))))
     form))
-
-(per-window-bindings-reload-from-fn)
 
 (defun focus-window-bindings-hook (new old)
   (declare (ignore old))
@@ -124,7 +113,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (add-hook STUMPWM:*destroy-window-hook* 'destroy-window-hook)
 
-;; STUMPWM:*focus-frame-hook* runs before (screen-current-window (current-screen)) is defined...
+;; STUMPWM:*focus-frame-hook* runs before
+;; (screen-current-window (current-screen)) is defined...
 ;; so this won't work:
 ;; (add-hook STUMPWM:*focus-frame-hook* 'focus-window-bindings)
 

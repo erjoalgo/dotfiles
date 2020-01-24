@@ -1,6 +1,6 @@
 (setf *per-window-bindings-rules*
       `(
-  (,stumpwm::browser-classes
+  (,stumpwm::*browser-classes*
    ("F2" (send-fake-key (current-window) (kbd "C-TAB")))
    ("F1" (send-fake-key (current-window) (kbd "C-ISO_Left_Tab")))
    ("F4" (send-fake-key (current-window) (kbd "C-F4")))

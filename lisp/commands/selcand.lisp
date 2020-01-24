@@ -1,12 +1,19 @@
-(defvar *selcand-default-hints*
+(defpackage :selcand
+  (:use :cl)
+  (:export
+   #:select))
+(in-package :selcand)
+
+
+(defvar *default-hints*
   "1234acdefqrstvwxz"
   "Default hint chars.")
 
-(defun selcand-hints (candidates &optional chars)
+(defun hints (candidates &optional chars)
   "Return an alist (HINT . CAND) for each candidate in CANDIDATES.
 
   Each hint consists of characters in the string CHARS."
-  (setf chars (or chars *selcand-default-hints*))
+  (setf chars (or chars *default-hints*))
   (assert candidates)
   (loop
      with hint-width = (ceiling (log (length candidates) (length chars)))
@@ -21,25 +28,27 @@
                         for cand in candidates
                         collect (cons hint cand)))))
 
-(defun selcand-select (candidates &optional prompt stringify-fn
-                                    autoselect-if-single
-                                    no-hints)
+(defun select (candidates &optional prompt stringify-fn autoselect-if-single
+                            no-hints)
   "Use PROMPT to prompt for a selection from CANDIDATES."
   (let* ((sep ") ")
          (stringify-fn (or stringify-fn #'prin1-to-string))
-         (hints-cands (if no-hints
-                          (mapcar (lambda (cand)
-                                    (cons (funcall stringify-fn cand) cand))
-                                  candidates)
-                          (loop for (hint . cand) in (selcand-hints candidates)
-                             collect (cons (concat hint sep (funcall stringify-fn cand))
-                                           cand))))
+         (hints-cands
+          (if no-hints
+              (mapcar (lambda (cand)
+                        (cons (funcall stringify-fn cand) cand))
+                      candidates)
+              (loop for (hint . cand) in (hints candidates)
+                 collect (cons
+                          (concatenate 'string hint
+                                       sep (funcall stringify-fn cand))
+                          cand))))
          (choices (mapcar #'car hints-cands))
          (prompt (or prompt "select candidate: "))
          (hint-selected (if (and autoselect-if-single (null (cdr choices)))
-                     (car choices)
-                     (completing-read (current-screen) prompt
-                                      choices :require-match t)))
+                            (car choices)
+                            (stumpwm:completing-read (stumpwm:current-screen) prompt
+                                                     choices :require-match t)))
          (cand (cdr (assoc hint-selected hints-cands :test #'equal))))
     (assert (or (null hint-selected) cand))
     cand))

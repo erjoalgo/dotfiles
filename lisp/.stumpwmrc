@@ -3,152 +3,32 @@
 
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
-;; TODO asdf
+(defun load-stumpwmrc-file (relative-path)
+  (load (merge-pathnames
+         relative-path
+         (merge-pathnames #P".stumpwmrc.d/lisp/"
+                          (user-homedir-pathname)))))
 
-(ql:quickload "usocket")
-(ql:quickload "hunchentoot")
-(ql:quickload "babel")
-
-(defun file-string (path)
-  (with-open-file (stream path)
-    (let* ((n-estimate (file-length stream))
-	  (data (make-string n-estimate))
-	  (n (read-sequence data stream)))
-      (unless (= n n-estimate)
-	(setf data (subseq data 0 n)))
-      data)))
-
-(defun ensure-directory-exists (pathname &key (max-parents 0))
-  (unless (probe-file pathname)
-    (let ((parent
-            (uiop:pathname-parent-directory-pathname
-             (uiop:ensure-directory-pathname pathname))))
-      (when (and (not (equal parent pathname))
-                 (or (eq t max-parents) (> max-parents 0)))
-        (ensure-directory-exists
-         parent
-         :max-parents (if (eq t max-parents) t (1- max-parents)))))
-    (SB-POSIX:MKDIR pathname #o775)))
-
-(defun machine-get-uuid ()
-  (let ((fstab (file-string #P"/etc/fstab")))
-    (cl-ppcre:register-groups-bind
-        (root-device-name root)
-        ("(?m)^([^	 ]+)[ 	]+(/)[	 ]+" fstab)
-      (declare (ignore root))
-      (assert fstab)
-      (let* ((cmd (format nil "lsblk ~A -o uuid" root-device-name))
-             (lsblk-out (run-shell-command cmd t))
-             (uuid (second (cl-ppcre:split #\Newline lsblk-out))))
-        (assert uuid)
-        uuid))))
-
-(defparameter MACHINE-UUID (machine-get-uuid))
-
-(defmacro with-elapsed-time (elapsed-time-ms-var form &body body)
-  (let ((start-time-sym (gensym "start-time")))
-    `(let ((,start-time-sym (get-internal-real-time)))
-       ,form
-       (let ((,elapsed-time-ms-var (- (get-internal-real-time) ,start-time-sym)))
-         ,@body))))
-
-(defun load-safe (pathname)
-  "load file, trapping and recording errors"
-  ;; (message "loading file: ~A..." pathname)
-  (handler-case
-      (progn
-        (with-elapsed-time elapsed-time (load pathname)
-          (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time)))
-    (error (err)
-      (message "error loading: ~A~%: '~A'" pathname err)
-      (cons pathname err))))
-
-(defparameter STUMPWM-TOP
-  ;; TODO find current file, e.g. __file__
-  ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
-  (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
-
-(defparameter DATA-PRIVATE
-  (merge-pathnames "private-data/stumpwm/" (user-homedir-pathname)))
-
-(defparameter DATA-PRIVATE-ONE-WAY
-  (merge-pathnames "private-data-one-way/stumpwm/" (user-homedir-pathname)))
-
-(defparameter DATA-DIRS
-  (list
-   (merge-pathnames "data/*/" (uiop:pathname-parent-directory-pathname STUMPWM-TOP))
-   DATA-PRIVATE
-   DATA-PRIVATE-ONE-WAY))
-
-(defparameter browser-classes
-  '("Iceweasel" "Firefox"  "Navigator"  "Chromium" "chromium-browser"
-    "Tor Browser" "Google-chrome" "Firefox-esr"))
-
-(defparameter browser-name
-  (or
-   (pathname-name
-    (string-trim '(#\newline)
-                 (run-shell-command "which chromium chromium-browser chrome google-chrome" t)))
-   "chromium"))
-
-(defparameter load-list
-  '(
-    "util.lisp"
-    "xinitrc.lisp"
-    "decorations.lisp"
-    "pid-util.lisp"
-    "defcommands.lisp"
-    "mozrepl.lisp"
-    "psym.lisp"
-
-    "url-launcher.lisp"
-    "text-shortcuts.lisp"
-
-    "run-raise-programs.lisp"
-    "per-window-bindings.lisp"
-    "top-map-bindings.lisp"
-
-    "swank-loader.lisp"
-    "correct-screen.lisp"
-    "brightness.lisp"
-    "startup-apps.lisp"
-    "x-service.lisp")
-
-  "defines components to load and their order")
-
-(defvar load-extra-directories
-  '("commands" "experimental"))
+(load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
+(ql:quickload :erjoalgo-stumpwmrc)
 
 (defparameter *init-errs* nil)
 
-;; disable *startup-message* to see queueed messages
+(swank-start)
+(xinitrc-init)
+
+;; TODO remove side-effects from this file
+(load-stumpwmrc-file "top-map-bindings")
+
+(init-decorations)
+(url-launcher-init)
+(text-shortcuts-init)
+(init-brightness)
+(contacts:contacts-load)
+(x-service-start 1959)
+(def-thread-start *sms-fanout-reconnect-thread*
+  (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
+;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
+
 (setf *startup-message* nil)
-(with-message-queuing nil
-  (let (errs)
-    (loop
-      for filename in load-list
-      do
-         (push (load-safe (merge-pathnames
-                           filename
-                           STUMPWM-TOP))
-               errs))
-
-    (dolist (directory-name load-extra-directories)
-      (dolist (pathname (directory
-                         (make-pathname
-                          :name :WILD
-                          :directory (append
-                                      (pathname-directory STUMPWM-TOP)
-                                      (list directory-name))
-                          :type "lisp")))
-        (when (pathname-name pathname)
-          ;; is file
-          (push (load-safe pathname) errs))))
-
-    (progn
-      (setf *init-errs* (remove-if #'null errs))
-      (message "finished loading .stumpwmrc. ~D errors"
-               (length *init-errs*)))))
-
-;;manual
-;;https://stumpwm.github.io/git/stumpwm-git_16.html
+(startup-apps-run)

@@ -1,3 +1,5 @@
+(in-package :stumpwm)
+
 (defcommand speak-key ()
     ;;((:key "enter key to speak: " ));;this requires pressing enter
     ()
@@ -31,6 +33,29 @@
   (let* ((word (GET-X-SELECTION)))
     (spell-word word)))
 
+(defparameter spell-words
+  '("Yokohama" "Guadalajara" "Atlanta"
+    "Houston"
+    "Jerusalem" "Paris" "India"
+    "Beijing" "Chicago" "Xochimilco" "Florence"
+    "Richmond" "Detroit" "Queretaro"
+    "Washington" "Oakland" "Korea"
+    "Zero"
+    "Egypt" "Uruguay" "Vietnam"
+    "London" "Shanghai" "Mexico"
+    "New York" "Tokyo"))
+
+(defparameter char-sample-word
+  (loop
+     with alist = nil
+     for word in spell-words
+     as c = (aref word 0)
+     as key = (CHAR-DOWNCASE c)
+     as val = (assoc key alist)
+     unless (or val (not (ALPHA-CHAR-P c)))
+     do (push (cons key word) alist)
+     finally (return alist)))
+
 (defun spell-char-line (c)
   (cond
     ((ALPHA-CHAR-P c)
@@ -58,26 +83,3 @@
     (sleep 1)
     (speak-string (format nil "~{~A~^, ~}" spelling-lines) :word-gap-ms 30)
     spelling-lines))
-
-(defparameter spell-words
-  '("Yokohama" "Guadalajara" "Atlanta"
-    "Houston"
-    "Jerusalem" "Paris" "India"
-    "Beijing" "Chicago" "Xochimilco" "Florence"
-    "Richmond" "Detroit" "Queretaro"
-    "Washington" "Oakland" "Korea"
-    "Zero"
-    "Egypt" "Uruguay" "Vietnam"
-    "London" "Shanghai" "Mexico"
-    "New York" "Tokyo"))
-
-(defparameter char-sample-word
-  (loop
-     with alist = nil
-     for word in spell-words
-     as c = (aref word 0)
-     as key = (CHAR-DOWNCASE c)
-     as val = (assoc key alist)
-     unless (or val (not (ALPHA-CHAR-P c)))
-     do (push (cons key word) alist)
-     finally (return alist)))
