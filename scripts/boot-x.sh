@@ -87,9 +87,6 @@ EOF
 
 sudo systemctl enable getty@tty1.service
 
-./bin/asdf-add-project-to-link-farm ../lisp
-./bin/asdf-system-installed-p erjoalgo-stumpwmrc
-
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
