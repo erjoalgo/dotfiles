@@ -5,7 +5,8 @@
  :license "GPLv3"
  :author "Ernesto Alfonso <erjoalgo@gmail.com>"
  :depends-on
- (#:stumpwm
+ (
+  #:stumpwm ;; this should not be loaded from quicklisp, but from the latest sources
   #:usocket ;; mozrepl, swank, etc
   #:cl-csv  ;; contacts
   #:swank ;; swank-loader
