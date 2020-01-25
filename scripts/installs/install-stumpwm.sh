@@ -54,16 +54,6 @@ if command -v yum; then
 fi
 
 
-# autologin to stumpwm on tty1
-AUTOLOGIN_CONF="/etc/systemd/system/getty@tty1.service.d/autologin.conf"
-sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
-sudo insert-text-block '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
-     "${AUTOLOGIN_CONF}" <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin "${USER}" %I
-EOF
-
 sudo ${APT_GET} install -y xdotool
 which nc || sudo ${APT_GET} install -y net-tools
 

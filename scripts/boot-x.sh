@@ -68,6 +68,25 @@ Favorites=
 ShowMenuBarByDefault=false
 EOF
 
+
+sudo insert-text-block '# Zss7UaEgcFtP1T8JPS7h77vOaQlYDR3H-enable-autologin' \
+     /etc/systemd/logind.conf<<EOF
+NAutoVTs=1
+EOF
+
+AUTOLOGIN_CONF=/etc/systemd/system/getty@tty1.service.d/autologin.conf
+# autologin to stumpwm on tty1
+sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
+
+sudo insert-text-block '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
+     "${AUTOLOGIN_CONF}" <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin "${USER}" %I
+EOF
+
+sudo systemctl enable getty@tty1.service
+
 ./bin/asdf-add-project-to-link-farm ../lisp
 ./bin/asdf-system-installed-p erjoalgo-stumpwmrc
 
