@@ -39,5 +39,6 @@
 (def-thread-start *sms-fanout-reconnect-thread*
   (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
+
 (setf *startup-message* nil)
 (startup-apps-run)
