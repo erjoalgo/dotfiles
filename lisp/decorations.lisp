@@ -6,7 +6,7 @@
 (defvar *background-image-fn*
       (merge-pathnames  ".background-image-symlink" (user-homedir-pathname)))
 
-(defun init-decorations ()
+(defun decorations-init ()
   (setq *message-window-gravity* :center)
   (setq *input-window-gravity* :center)
   (setq *run-or-raise-all-groups* nil)

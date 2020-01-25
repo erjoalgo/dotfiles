@@ -28,10 +28,10 @@
 (swank-start)
 (xinitrc-init)
 (load-stumpwmrc-file "top-map-bindings.lisp") ;; TODO remove side-effects. add "init" method
-(init-decorations)
+(decorations-init)
 (url-launcher-init)
 (text-shortcuts-init)
-(init-brightness)
+(brightness-init)
 (safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
 (x-service-start 1959)
 (def-thread-start *battery-notification-thread*

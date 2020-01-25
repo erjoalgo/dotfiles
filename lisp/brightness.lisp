@@ -11,7 +11,7 @@
 (defun run-shell-command-t (cmd)
   (run-shell-command cmd t))
 
-(defun init-brightness ()
+(defun brightness-init ()
   (flet ((find-pathname (filename)
            (let* ((cmd (format nil "find /sys/devices -name ~A" filename))
                   (out (run-shell-command cmd t))
