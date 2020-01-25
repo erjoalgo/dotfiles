@@ -13,6 +13,17 @@
 
 (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
 (ql:quickload :erjoalgo-stumpwmrc)
+
+(defvar *init-errors* nil)
+
+(defmacro safe-init-sexp (&body body)
+  "evaluate an expression, handling and recording errors"
+  `(handler-case
+       (progn ,@body)
+     (error (err)
+       (push (list ',body err) *init-errors*)
+       (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
+
 (swank-start)
 (xinitrc-init)
 (load-stumpwmrc-file "top-map-bindings.lisp") ;; TODO remove side-effects. add "init" method
@@ -20,7 +31,7 @@
 (url-launcher-init)
 (text-shortcuts-init)
 (init-brightness)
-(contacts:contacts-load)
+(safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
 (x-service-start 1959)
 (def-thread-start *battery-notification-thread*
   (battery-info-check-notify-loop))
