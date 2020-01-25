@@ -92,13 +92,12 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
           (push bindings-dest *current-top-bindings*))))
     (push (cons (GET-UNIVERSAL-TIME) msgs) dbg)))
 
-(defmacro defcommand-annon  (&rest forms)
-  (let* ((name (gentemp "autogen-cmd" "STUMPWM"))
-	 (docstring (format nil "~A. contents: ~A" name forms))
-	 (form `(progn
-		  (STUMPWM::defcommand ,name () () ,docstring ,@forms)
-		  ,(symbol-name name))))
-    form))
+(defmacro defcommand-annon  (name &rest forms)
+  (let* ((name (intern name "STUMPWM"))
+	 (docstring (format nil "~A. auto-defined: ~A" name forms)))
+    `(progn
+       (message ,(format nil "defining ~A" name))
+       (STUMPWM::defcommand ,name () () ,docstring ,@forms))))
 
 (defun focus-window-bindings-hook (new old)
   (declare (ignore old))
