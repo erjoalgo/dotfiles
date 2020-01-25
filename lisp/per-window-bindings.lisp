@@ -26,7 +26,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
   (setf *per-window-bindings-class-to-map*
 	(make-hash-table :test 'equal))
   (loop for (classes . bindings) in rules
-     as top-copy = (stumpwm::deep-copy-map STUMPWM::*top-map*)
+        as top-copy = (stumpwm::deep-copy-map STUMPWM::*top-map*)
         do (loop for (key name . form) in bindings
                  as cmd-name = (format nil "per-window-binding-~A" name)
                  as defcmd-form =
@@ -35,13 +35,13 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                              'form)
                     ,@form)
                  do (eval defcmd-form)
-	   do
-	     (stumpwm:define-key top-copy (stumpwm:kbd key) cmd-name))
-     do (loop for class in classes
-	   ;;do (format t "setting class ~A to ~A~%" class top-copy)
-	   do (setf (gethash (string-downcase class)
-			     *per-window-bindings-class-to-map*)
-                    top-copy))))
+                 do
+                    (stumpwm:define-key top-copy (stumpwm:kbd key) cmd-name))
+        do (loop for class in classes
+                 ;;do (format t "setting class ~A to ~A~%" class top-copy)
+                 do (setf (gethash (string-downcase class)
+                                   *per-window-bindings-class-to-map*)
+                          top-copy))))
 
 (defun per-window-bindings-reload-from-fn ()
   (load *per-window-binding-rules-fn*)
@@ -71,23 +71,23 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
           (push (format nil "found bindings") msgs)))
 
       (unless (eq curr-bindings bindings-dest)
-          (push (format nil "changing bindings from ~A to ~A..."
-                        (when (current-window) (window-class (current-window)))
-                        class-dest)
-                msgs)
-          (when (or (and (null class-dest)
-                         (current-window)
-                         (or
-                          (member (string-downcase
-                                   (window-class (current-window)))
-                                  *browser-classes*
-                                  :test #'equal :key #'string-downcase)))
-                    (member "changing bindings from Chromium to NIL..." msgs
-                            :test 'equal))
-            (message "changing from browser to nil?")
-            (return-from update-window-bindings))
+        (push (format nil "changing bindings from ~A to ~A..."
+                      (when (current-window) (window-class (current-window)))
+                      class-dest)
+              msgs)
+        (when (or (and (null class-dest)
+                       (current-window)
+                       (or
+                        (member (string-downcase
+                                 (window-class (current-window)))
+                                *browser-classes*
+                                :test #'equal :key #'string-downcase)))
+                  (member "changing bindings from Chromium to NIL..." msgs
+                          :test 'equal))
+          (message "changing from browser to nil?")
+          (return-from update-window-bindings))
         (when curr-bindings
-            (push (format nil "popping old bindings") msgs)
+          (push (format nil "popping old bindings") msgs)
           (pop-top-map)
           (pop *current-top-bindings*))
         (when bindings-dest
