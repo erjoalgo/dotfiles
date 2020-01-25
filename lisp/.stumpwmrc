@@ -24,6 +24,7 @@
        (push (list ',body err) *init-errors*)
        (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
 
+(safe-init-sexp (load-stumpwmrc-file "defs-secret.lisp")) ;; file may not exist
 (swank-start)
 (xinitrc-init)
 (load-stumpwmrc-file "top-map-bindings.lisp") ;; TODO remove side-effects. add "init" method
