@@ -44,4 +44,5 @@
   (:file "commands/sip")
   (:file "commands/speech")
   (:file "commands/vol")
-  (:file "commands/sms-fanout-client")))
+  (:file "commands/sms-fanout-client")
+  (:file "commands/snipit")))
