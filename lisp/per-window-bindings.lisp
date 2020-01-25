@@ -27,10 +27,14 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 	(make-hash-table :test 'equal))
   (loop for (classes . bindings) in rules
      as top-copy = (stumpwm::deep-copy-map STUMPWM::*top-map*)
-     do (loop for (key form) in bindings
-	   as defcmd-form = `(defcommand-annon ,form)
-	   as cmd-name = (eval defcmd-form)
-	   ;;do (print defcmd-form)
+        do (loop for (key name . form) in bindings
+                 as cmd-name = (format nil "per-window-binding-~A" name)
+                 as defcmd-form =
+                 `(defcommand ,(intern cmd-name "STUMPWM") () ()
+                    ,(format nil "per-window binding: ~A"
+                             'form)
+                    ,@form)
+                 do (eval defcmd-form)
 	   do
 	     (stumpwm:define-key top-copy (stumpwm:kbd key) cmd-name))
      do (loop for class in classes
