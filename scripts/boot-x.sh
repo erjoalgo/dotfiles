@@ -40,18 +40,6 @@ sudo $(which update-config-file-key-value) \
 
 sudo service systemd-logind restart
 
-# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=851810
-# fix xcalib unsupported ramp size
-sudo insert-text-block \
-     '# ed74222e-d8c2-4920-a450-fa17d93e7650-fix-xcalib-broken'  \
-     --parents /etc/X11/xorg.conf.d/20-intel.conf<<EOF
-Section "Device"
-  Identifier "Intel Graphics"
-  Driver "intel"
-EndSection
-EOF
-
-
 KONSOLERC=${HOME}/.config/konsolerc
 sed -i '/^DefaultProfile=/d' ${KONSOLERC}
 
