@@ -24,21 +24,24 @@
        (push (list ',body err) *init-errors*)
        (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
 
-(safe-init-sexp (load-stumpwmrc-file "defs-secret.lisp")) ;; file may not exist
-(swank-start)
-(xinitrc-init)
-(load-stumpwmrc-file "top-map-bindings.lisp") ;; TODO remove side-effects. add "init" method
-(decorations-init)
-(url-launcher-init)
-(text-shortcuts-init)
-(brightness-init)
-(safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
-(x-service-start 1959)
-(def-thread-start *battery-notification-thread*
-  (battery-info-check-notify-loop))
-(def-thread-start *sms-fanout-reconnect-thread*
-  (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
-;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
+(with-message-queuing
+    ;; file may not exist
+    (safe-init-sexp (load-stumpwmrc-file "defs-secret.lisp"))
+  (swank-start)
+  (xinitrc-init)
+  ;; TODO remove side-effects. add "init" method
+  (load-stumpwmrc-file "top-map-bindings.lisp")
+  (decorations-init)
+  (url-launcher-init)
+  (text-shortcuts-init)
+  (brightness-init)
+  (safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
+  (x-service-start 1959)
+  (def-thread-start *battery-notification-thread*
+      (battery-info-check-notify-loop))
+  (def-thread-start *sms-fanout-reconnect-thread*
+      (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
+  (setf *startup-message* nil)
+  (startup-apps-run))
 
-(setf *startup-message* nil)
-(startup-apps-run)
+;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
