@@ -3,18 +3,19 @@
 
 ;; sbclrc gives us quickload
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
+
+(defun load-stumpwmrc-file (relative-path)
+  (let ((source-directory
+          (or *load-truename*
+              (merge-pathnames #P".stumpwmrc.d/lisp/"
+                               (user-homedir-pathname)))))
+    (load (merge-pathnames relative-path source-directory))))
+
+(load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
 (ql:quickload :erjoalgo-stumpwmrc)
-(load
- (merge-pathnames
-  "defs-secret.lisp"
-  (asdf:system-source-directory :erjoalgo-stumpwmrc)))
 (swank-start)
 (xinitrc-init)
-;; TODO remove side-effects from this file
-(load
- (merge-pathnames
-  "top-map-bindings.lisp"
-  (asdf:system-source-directory :erjoalgo-stumpwmrc)))
+(load-stumpwmrc-file "top-map-bindings.lisp") ;; TODO remove side-effects. add "init" method
 (init-decorations)
 (url-launcher-init)
 (text-shortcuts-init)
