@@ -34,7 +34,7 @@
 
 (in-package :stumpwm)
 
-(defcommand call-selection () ()
+(defcommand sip-call-selection () ()
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (sip:call clipboard)))
 
