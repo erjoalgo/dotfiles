@@ -30,6 +30,14 @@
                                      ,alist-sym))))
          ,@body))))
 
+(defvar *messages-received* (make-hash-table))
+
+(defun on-message-received (from to message id)
+  (unless (gethash id *messages-received*)
+    (setf (gethash id *messages-received*) t)
+    (let ((text (format nil "sms from ~A (to ~A): ~A" from to message)))
+      (stumpwm:message-wrapped text))))
+
 (defun connect (address)
   (stumpwm::when-let ((current (connected-p)))
     (wsd:close-connection current))
@@ -39,13 +47,13 @@
             (lambda (message)
               (let* ((json-data (cl-json:decode-json-from-string message)))
                 (format t "~&Got: ~A~%" message)
-                (alist-let json-data (to from message status code)
+                (alist-let json-data (to from message status code id)
                   (if status
                       (progn (assert (and status code))
                              (format t "ws status: ~A code ~A" status code))
                       (progn
-                        (assert (and to from message))
-                        '(x-message (format nil "sms-fanout message received: ~A" message))))))))
+                        (assert (and to from message id))
+                        (on-message-received from to message id)))))))
     (wsd:on :close client
             (lambda (&key code reason)
               (format t "sms-fanout: channel closed: ~A ~A" code reason)
