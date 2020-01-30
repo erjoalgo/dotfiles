@@ -45,8 +45,8 @@
     (wsd:start-connection client)
     (wsd:on :message client
             (lambda (message)
+              (format t "~&Got: ~A~%" message)
               (let* ((json-data (cl-json:decode-json-from-string message)))
-                (format t "~&Got: ~A~%" message)
                 (alist-let json-data (to from message status code id)
                   (if status
                       (progn (assert (and status code))
