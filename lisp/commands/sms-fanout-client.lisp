@@ -67,18 +67,18 @@
 (defun reconnect-loop (address &key (reconnect-delay-mins 1))
   (loop do
        (progn
-         (format t "on sms-fanout reconnect loop")
-         (unless (connected-p :client *sms-fanout-client*)
-           (format t "sms-fanout reconnect loop: attempting to reconnect")
-           (handler-case
-               (setf *sms-fanout-client* (connect address))
-             ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
-               (format t "failed to connect: ~A. " err)))
-           (format t "sms-fanout reconnect loop: post connect attempt"))
-         (when (connected-p)
+         (if (connected-p :client *sms-fanout-client*)
+             '(stumpwm:message "already connected.")
+             (progn
+               (stumpwm:message
+                "sms-fanout reconnect loop: attempting to reconnect")
+               (handler-case
+                   (setf *sms-fanout-client* (connect address))
+                 ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
+                   (stumpwm:message "failed to connect: ~A. " err)))))
+         (when (connected-p :client *sms-fanout-client*)
            (format t "pinging")
            (wsd:send-ping *sms-fanout-client*))
-         (format t "sleeping...")
          (sleep (* reconnect-delay-mins 60)))))
 
 ;; (sms-fanout-connect)
