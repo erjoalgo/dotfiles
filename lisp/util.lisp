@@ -209,7 +209,9 @@
           as new-idx = (+ idx chars-per-line)
           collect (subseq text idx (min len new-idx)) into chunks
           do (setf idx new-idx)
-          finally (echo-string-list screen chunks))))
+       finally (echo-string-list screen chunks))))
+
+(export '(message-wrapped) :STUMPWM)
 
 (defmacro def-thread-start (thread-var &body body)
   `(progn
