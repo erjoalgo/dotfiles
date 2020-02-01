@@ -75,6 +75,8 @@ EOF
 
 sudo systemctl enable getty@tty1.service
 
+./installs/xdg-open-tel-linphone
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
