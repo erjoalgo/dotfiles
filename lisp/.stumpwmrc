@@ -42,6 +42,7 @@
   (def-thread-start *sms-fanout-reconnect-thread*
       (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
   (setf *startup-message* nil)
-  (startup-apps-run))
+  (startup-apps-run)
+  (safe-init-sexp (assert (psym-records *search-engine-persistent-alist*))))
 
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
