@@ -232,3 +232,10 @@
   (->> (run-shell-command (format nil "which ~{~A~^ ~}" commands) t)
        (cl-ppcre:split #\Newline)
        (car)))
+
+(defmacro with-elapsed-time (elapsed-time-ms-var form &body body)
+  (let ((start-time-sym (gensym "start-time")))
+    `(let ((,start-time-sym (get-internal-real-time)))
+       ,form
+       (let ((,elapsed-time-ms-var (- (get-internal-real-time) ,start-time-sym)))
+         ,@body))))
