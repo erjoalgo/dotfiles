@@ -5,6 +5,15 @@
 (define-stumpwm-type-from-wild-pathname :lisp-source-file
     (merge-pathnames (make-pathname :type "lisp" :name :WILD) *stumpwm-top-directory*))
 
+(defun load-safe (pathname)
+  "load file, trapping and recording errors"
+  (handler-case
+      (with-elapsed-time elapsed-time (load pathname)
+        (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time))
+    (error (err)
+      (message "error loading: ~A~%: '~A'" pathname err)
+      (cons pathname err))))
+
 (defcommand load-file (pathname) ((:lisp-source-file "enter lisp file to load: " ))
   "load a file"
   (in-package :stumpwm)
@@ -12,7 +21,7 @@
     (load-safe pathname)))
 
 (defun is-browser-win (win)
-  (member (window-class win) browser-classes :test 'equal))
+  (member (window-class win) *browser-classes* :test 'equal))
 
 (defcommand other-frame-scroll-browser (up-down-key)
     ((:rest "key: "))
@@ -134,13 +143,6 @@
 (define-stumpwm-type-from-wild-pathname :lisp-source-file
     (merge-pathnames (make-pathname :type "lisp" :name :WILD) *stumpwm-top-directory*))
 
-(defcommand load-file (pathname) ((:lisp-source-file "enter lisp file to load: " ))
-  "load a file"
-  (in-package :stumpwm)
-  (when pathname
-    (load-safe pathname)))
-
-
 (defcommand byzanz-record (name duration)
     ((:string " recording name: ")
      (:number "recording duration in seconds: "))
@@ -176,7 +178,7 @@
       (byzanz-record nil nil))))
 
 (defcommand byzanz-record-auto-stop () ()
-  (nc "localhost" byzanz-recording-control-port "1")
+  (mozrepl:nc "localhost" byzanz-recording-control-port "1")
   (sleep 1)
   (message "stopping byzanz recording..."))
 
