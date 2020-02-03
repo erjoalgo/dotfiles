@@ -28,7 +28,7 @@ while getopts "hu:d:g:D:" OPT; do
     esac
 done
 
-INSTALL_DIR=${INSTALL_DIR:-/usr/local}
+INSTALL_DIR=${INSTALL_DIR:-/usr/local/src}
 
 if ! test -n "${URL}"; then
     usage
@@ -57,6 +57,11 @@ if ! test -d ${INSTALL_DIR}/${DNAME}; then
 fi
 
 cd ${INSTALL_DIR}/${DNAME}
+
+if ! test -e ./configure; then
+    autoreconf -i
+    test -e ./configure
+fi
 
 sudo ./configure
 sudo make
