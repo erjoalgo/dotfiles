@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
-from __future__ import print_function
 import os
-import psutil
 import socket
 import subprocess
 import sys
@@ -40,18 +38,6 @@ def main():
   x_service_ports_str=(os.getenv("X_SERVICE_PORTS") or "1959,1960,1961,1962")
   ports = map(int, x_service_ports_str.split(","))
   rest = sys.argv[2:]
-
-  procs = []
-  proc = psutil.Process(os.getpid())
-  while True:
-    procs.append(" ".join(proc.cmdline()) + " " + str(proc))
-    if proc.pid == 1:
-      break
-    proc = proc.parent()
-
-  with open("/tmp/stumpwm.log", "a") as fh:
-    print (" ".join(("\n".join(procs), path, host, " ".join(rest))), file=fh)
-    print ("\n\n", file=fh)
   return x_service_curl(host, ports, path, rest)
 
 if __name__ == "__main__":

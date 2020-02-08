@@ -445,7 +445,7 @@ function post-command-maybe-notify {
 }
 
 if command -v notify-send-stumpwm >/dev/null \
-  && notify-send-stumpwm -m "(from bash $(whoami)): connected to $(hostname)" -c green; then
+  && notify-send-stumpwm -m "connected to $(hostname)" -c green; then
   PROMPT_COMMAND=post-command-maybe-notify
   trap '_command-start-time-set-maybe' DEBUG
 else
