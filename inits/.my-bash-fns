@@ -607,3 +607,10 @@ function git-patch-cross-repo  {
     git log --pretty=email --patch-with-stat --reverse -- ${*} |  \
         (cd ${OTHER_REPO} && git am)
 }
+
+function melpa-test-recipe  {
+    RECIPE=${1} && shift
+    make clean recipes/${RECIPE} &&  \
+        make recipes/${RECIPE} \
+        && EMACS_COMMAND='emacs -Q' make sandbox INSTALL=${RECIPE}
+}
