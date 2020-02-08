@@ -35,13 +35,15 @@
          (stringify-fn (or stringify-fn #'prin1-to-string))
          (hints-cands
           (if no-hints
-              (mapcar (lambda (cand)
-                        (cons (funcall stringify-fn cand) cand))
-                      candidates)
+              (mapcar
+               (lambda (cand)
+                 (cons (stumpwm::string-trim " " (funcall stringify-fn cand)) cand))
+               candidates)
               (loop for (hint . cand) in (hints candidates)
                  collect (cons
-                          (concatenate 'string hint
-                                       sep (funcall stringify-fn cand))
+                          (stumpwm::string-trim " "
+                           (concatenate 'string hint
+                                        sep (funcall stringify-fn cand)))
                           cand))))
          (choices (mapcar #'car hints-cands))
          (prompt (or prompt "select candidate: "))
