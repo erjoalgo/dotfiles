@@ -45,4 +45,5 @@
   (:file "commands/speech")
   (:file "commands/vol")
   (:file "commands/sms-fanout-client")
-  (:file "commands/snipit")))
+  (:file "commands/snipit")
+  (:file "redefs")))
