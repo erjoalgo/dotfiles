@@ -1,12 +1,21 @@
-(defun completing-read-notrim (screen prompt completions &key (initial-input "") require-match)
-  "Read a line of input through stumpwm and return it with TAB
-completion. Completions can be a list, an fbound symbol, or a
-function. If its an fbound symbol or a function then that function is
-passed the substring to complete on and is expected to return a list
-of matches. If require-match argument is non-nil then the input must
-match with an element of the completions."
-  (check-type completions (or list function symbol))
-  (read-one-line screen prompt
-                 :completions completions
-                 :initial-input initial-input
-                 :require-match require-match))
+;;this fixes a certain issue with Virtualbox and stumpwm
+(defun error-handler (display error-key &rest key-vals &key asynchronous &allow-other-keys)
+  "Handle X errors"
+  (cond
+    ;; ignore asynchronous window errors
+    ((and asynchronous
+          (find error-key '(xlib:window-error xlib:drawable-error xlib:match-error)))
+     (dformat 4 "Ignoring error: ~s~%" error-key))
+    ((eq error-key 'xlib:access-error)
+     (write-line "Another window manager is running.")
+     (write-line (prin1-to-string error-key) )
+     (write-line (prin1-to-string key-vals))
+     ;(and (boundp 'ab) (write-line (prin1-to-string ab)))
+
+     ;(throw :top-level :quit)
+     )
+     ;; all other asynchronous errors are printed.
+     (asynchronous
+      (message "Caught Asynchronous X Error: ~s ~s" error-key key-vals))
+     (t
+      (apply 'error error-key :display display :error-key error-key key-vals))))
