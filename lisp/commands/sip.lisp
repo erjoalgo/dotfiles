@@ -3,8 +3,13 @@
   (:export
    #:call
    #:linphonecsh
+   #:linphonecsh-sync
    #:sms-send
-   #:phone-number-to-address))
+   #:phone-number-to-address
+   #:linphonecsh-active-calls
+   #:linphone-call-id
+   #:linphone-call-destination
+   #:linphone-call-state))
 (in-package :sip)
 
 (defun linphonecsh (&rest args)
@@ -12,6 +17,16 @@
   ;; TODO check if "linphonecsh init" needs to be called
   (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args)
   (stumpwm::run-command-async "linphonecsh" args nil t))
+
+(defun linphonecsh-sync (&rest args)
+  "Execute a linphonec command via linphonecsh."
+  ;; TODO check if "linphonecsh init" needs to be called
+  (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args)
+  (multiple-value-bind (retcode output)
+      (stumpwm::run-command-retcode-output "linphonecsh" args)
+    (if (zerop retcode)
+        output
+        (error "non-zero exit status: ~A ~A" retcode output))))
 
 (defvar *sip-default-host* "sanjose2.voip.ms")
 
@@ -31,6 +46,26 @@
   (linphonecsh "generic"
                (format nil "chat ~A ~A"
                        sip-address message)))
+
+(defun linphonecsh-active-calls ()
+  (let ((output (linphonecsh-sync "generic" "calls")))
+    (linphonecsh-parse-active-calls output)))
+
+(defstruct linphone-call
+  id destination state flags)
+
+(defun linphonecsh-parse-active-calls (output)
+  (let* ((col (format nil " *([^|~%]*?) *"))
+         (regexp (format nil "(?m)^~{~A~^[|]~}~%" (list col col col col)))
+         calls)
+    (format t regexp)
+    (cl-ppcre:do-register-groups (id destination state flags) (regexp output nil :sharedp t)
+      (push (make-linphone-call :id id
+                                :destination destination
+                                :state state
+                                :flags flags)
+            calls))
+    calls))
 
 (in-package :stumpwm)
 
@@ -59,9 +94,6 @@
 (defcommand sip-call-unmute () ()
   (sip:linphonecsh "generic" "unmute"))
 
-(defcommand sip-call-answer () ()
-  (sip:linphonecsh "generic" "answer"))
-
 (defcommand sip-sms-send-number (number message)
     ((:string "Enter number: ") (:string "Enter SMS message: "))
   (assert (not (string-blank-p number)))
@@ -78,6 +110,24 @@
      (:string "Enter SMS message: "))
   (assert contact-number)
   (sip-sms-send-number contact-number message))
+
+(defcommand sip-call-answer () ()
+  (let ((active-calls (remove-if-not
+                       (lambda (call) (equal "IncomingReceived"
+                                             (sip:linphone-call-state call)))
+                       (sip:linphonecsh-active-calls))))
+    (if (null active-calls)
+        (error "no active calls found")
+        (let* ((call (selcand:select
+                      active-calls
+                      "select call to answer: "
+                      #'sip:linphone-call-destination
+                      t)))
+          (if (null call)
+              (error "no call selected")
+              (let* ((call-id (sip:linphone-call-id call))
+                     (command (format nil "answer ~D" call-id)))
+                (sip:linphonecsh "generic" command)))))))
 
 (defcommand sip-init () ()
   (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
