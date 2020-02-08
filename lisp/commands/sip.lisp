@@ -55,6 +55,11 @@
   id destination state flags)
 
 (defun linphonecsh-parse-active-calls (output)
+  ;; Call states
+  ;; Id |            Destination              |      State      |    Flags   |
+  ;; ------------------------------------------------------------------------
+  ;; 6  | sip:user@example.com     | OutgoingEarlyMedia |
+  ;; 7  | sip:user@example.com       | IncomingReceived |
   (let* ((col (format nil " *([^|~%]*?) *"))
          (regexp (format nil "(?m)^~{~A~^[|]~}~%" (list col col col col)))
          calls)
