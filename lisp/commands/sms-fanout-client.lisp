@@ -81,5 +81,6 @@
            (wsd:send-ping *sms-fanout-client*))
          (sleep (* reconnect-delay-mins 60)))))
 
+;; (connected-p :client *sms-fanout-client*)
 ;; (sms-fanout-connect)
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
