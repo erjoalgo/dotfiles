@@ -1,7 +1,6 @@
 (in-package :stumpwm)
 
 (defvar *vol-muted* nil)
-(defvar *vol-backend* :amixer)
 
 (defun vol-find-backend ()
   (cond
@@ -9,7 +8,7 @@
     ((which "pactl") :pactl)
     (t (warn "no volume cli found"))))
 
-(defvar *vol-backend* (vol-find-backend))
+(defparameter *vol-backend* (vol-find-backend))
 
 (defun vol (action
             &key
