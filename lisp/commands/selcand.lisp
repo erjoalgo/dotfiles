@@ -49,8 +49,9 @@
          (prompt (or prompt "select candidate: "))
          (hint-selected (if (and autoselect-if-single (null (cdr choices)))
                             (car choices)
-                            (stumpwm:completing-read (stumpwm:current-screen) prompt
-                                                     choices :require-match t)))
+                            (or (stumpwm:completing-read
+                                 (stumpwm:current-screen) prompt choices)
+                                (throw 'error "Abort."))))
          (cand (cdr (assoc hint-selected hints-cands :test #'equal))))
     (assert (or (null hint-selected) cand))
     cand))
