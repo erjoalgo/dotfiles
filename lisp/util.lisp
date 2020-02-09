@@ -203,13 +203,16 @@
          (pixels-per-line (screen-width screen))
          (chars-per-line (floor pixels-per-line pixels-per-char)))
     (assert (> chars-per-line 0))
+    (loop for text in (ppcre:split #\Newline text)
+       with chunks
+         do
     (loop with len = (length text)
           with idx = 0
           while (< idx len)
-          as new-idx = (+ idx chars-per-line)
-          collect (subseq text idx (min len new-idx)) into chunks
-          do (setf idx new-idx)
-       finally (echo-string-list screen chunks))))
+       as new-idx = (+ idx chars-per-line)
+          do (push (subseq text idx (min len new-idx)) chunks)
+       do (setf idx new-idx))
+       finally (echo-string-list screen (nreverse chunks)))))
 
 (export '(message-wrapped) :STUMPWM)
 
