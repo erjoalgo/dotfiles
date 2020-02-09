@@ -210,11 +210,6 @@
           with idx = 0
           while (< idx len)
        as new-idx = (+ idx chars-per-line)
-         ;; (min (+ idx chars-per-line)
-         ;;      (if-let
-         ;;          ((pos (ppcre:scan #\Newline text :start idx)))
-         ;;        (1+ pos)
-         ;;        most-positive-double-float))
           do (push (subseq text idx (min len new-idx)) chunks)
        do (setf idx new-idx))
        finally (echo-string-list screen (nreverse chunks)))))
