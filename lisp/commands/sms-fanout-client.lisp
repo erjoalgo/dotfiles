@@ -99,7 +99,7 @@
          (if (connected-p :client *client*)
              '(stumpwm:message "already connected.")
              (progn
-               (stumpwm:message
+               '(stumpwm:message
                 "sms-fanout reconnect loop: attempting to reconnect")
                (handler-case
                    (setf *client* (connect address))
