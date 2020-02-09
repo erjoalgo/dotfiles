@@ -9,6 +9,9 @@
    #:linphonecsh-active-calls
    #:linphone-call-id
    #:linphone-call-destination
+   #:linphonec-init
+   #:linphonec-started-p
+   #:linphonec-restart
    #:linphone-call-state))
 (in-package :sip)
 
@@ -71,6 +74,20 @@
                                 :flags flags)
             calls))
     calls))
+
+(defun linphonec-init ()
+  (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
+
+(defun linphonec-started-p ()
+  ;; TODO actually check registration status
+  (multiple-value-bind (retcode output)
+      (stumpwm::run-command-retcode-output "linphonecsh" (list "generic" "help"))
+    (declare (ignore output))
+    (zerop retcode)))
+
+(defun linphonec-restart ()
+  (stumpwm::run-command-retcode-output "pkill" (list "linphone"))
+  (linphonec-init))
 
 (in-package :stumpwm)
 
@@ -135,7 +152,7 @@
                 (sip:linphonecsh "generic" command)))))))
 
 (defcommand sip-init () ()
-  (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
+  (sip:linphonec-init))
 
 (defcommand sip-exit () ()
   (sip:linphonecsh "exit"))
