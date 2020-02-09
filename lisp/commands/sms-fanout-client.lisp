@@ -108,6 +108,9 @@
          (when (connected-p :client *client*)
            (format t "pinging")
            (wsd:send-ping *client*))
+         (unless (sip:linphonec-started-p)
+           (stumpwm:message "restatring linphonec..")
+           (sip:linphonec-restart))
          (sleep (* reconnect-delay-mins 60)))))
 
 ;; (connected-p :client *client*)
