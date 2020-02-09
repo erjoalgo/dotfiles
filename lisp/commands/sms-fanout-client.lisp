@@ -9,12 +9,28 @@
 ;; (ql:quickload :websocket-driver-client)
 ;; (ql:quickload :cl-json)
 
-(defvar *sms-fanout-client* nil)
+(defvar *client* nil)
+(defvar *client-last-pong* nil)
 
-(defun connected-p (&key (client *sms-fanout-client*))
-  (and client
-       (eq :OPEN (wsd:ready-state client))
-       client))
+(defvar sms-fanout-connected-p-timeout-seconds 3)
+
+(defun connected-p (&key (client *client*))
+  (let ((client (or client *client*)))
+    (when (and client (eq :OPEN (wsd:ready-state client)))
+      (let* ((before (GET-UNIVERSAL-TIME))
+             (deadline (+ before
+                          sms-fanout-connected-p-timeout-seconds))
+             pong-received?)
+        (wsd:send-text client "ping")
+        (loop while
+             (and (< (GET-UNIVERSAL-TIME) deadline)
+                  (not
+                   (setq pong-received?
+                         (and *client-last-pong*
+                              (>= *client-last-pong* before)))))
+           do (sleep .5))
+        (when pong-received?
+          client)))))
 
 (defun x-message (message)
   (sb-ext:run-program "xmessage" (list message "-center")
@@ -35,7 +51,9 @@
 (defun on-message-received (from to message id)
   (unless (gethash id *messages-received*)
     (setf (gethash id *messages-received*) t)
-    (let ((text (format nil "sms from ~A (to ~A): ~A" from to message)))
+    (let ((text
+           (format nil "sms from ~A (to ~A):~%~A" from to
+                   (stumpwm::message-colorize message :yellow))))
       (stumpwm:message-wrapped text))))
 
 (defun connect (address)
@@ -44,16 +62,27 @@
   (let ((client (wsd:make-client address)))
     (wsd:start-connection client)
     (wsd:on :message client
-            (lambda (message)
-              (format t "~&Got: ~A~%" message)
-              (let* ((json-data (cl-json:decode-json-from-string message)))
-                (alist-let json-data (to from message status code id)
-                  (if status
-                      (progn (assert (and status code))
-                             (format t "ws status: ~A code ~A" status code))
-                      (progn
-                        (assert (and to from message id))
-                        (on-message-received from to message id)))))))
+            (lambda (text)
+              (format t "~&Got: ~A~%" text)
+              (alist-let (cl-json:decode-json-from-string text) (status message-type body)
+                (cond
+                  ((not (zerop status))
+                   (wsd:close-connection client)
+                   (error "non-zero status from zerver: ~A" text))
+                  ((ppcre:scan "status/" message-type)
+                   ;; TODO associate with client object
+                   '(stumpwm:message "pong received: ~A" text)
+                   (setf *client-last-pong* (GET-UNIVERSAL-TIME)))
+                  ((ppcre:scan "push-messages/" message-type)
+                   (if (null body)
+                       (unless (equal "push-messages/old" message-type)
+                         (error "0 messages in body"))
+                       (loop for message in body do
+                            (alist-let message (to from message id)
+                              (on-message-received from to message id)))))
+                  (t
+                   (wsd:close-connection client)
+                   (error "unexpected message type: ~A" message-type))))))
     (wsd:on :close client
             (lambda (&key code reason)
               (format t "sms-fanout: channel closed: ~A ~A" code reason)
@@ -67,20 +96,20 @@
 (defun reconnect-loop (address &key (reconnect-delay-mins 1))
   (loop do
        (progn
-         (if (connected-p :client *sms-fanout-client*)
+         (if (connected-p :client *client*)
              '(stumpwm:message "already connected.")
              (progn
                (stumpwm:message
                 "sms-fanout reconnect loop: attempting to reconnect")
                (handler-case
-                   (setf *sms-fanout-client* (connect address))
+                   (setf *client* (connect address))
                  ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
                    (stumpwm:message "failed to connect: ~A. " err)))))
-         (when (connected-p :client *sms-fanout-client*)
+         (when (connected-p :client *client*)
            (format t "pinging")
-           (wsd:send-ping *sms-fanout-client*))
+           (wsd:send-ping *client*))
          (sleep (* reconnect-delay-mins 60)))))
 
-;; (connected-p :client *sms-fanout-client*)
+;; (connected-p :client *client*)
 ;; (sms-fanout-connect)
 ;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
