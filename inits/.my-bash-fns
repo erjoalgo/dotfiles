@@ -610,6 +610,18 @@ function git-patch-cross-repo  {
 
 function melpa-test-recipe  {
     RECIPE=${1} && shift
+    if test -z "${RECIPE}"; then
+        echo "usage: melpa-test-recipe RECIPE"
+        return
+    fi
+    RECIPE_FILE=recipes/${RECIPE}
+    if ! test -e "${RECIPE_FILE}"; then
+        echo "${RECIPE_FILE} does not exist."
+        return
+    fi
+    echo "${RECIPE_FILE}"
+    cat "${RECIPE_FILE}"
+    read -p"confirm: "
     make clean recipes/${RECIPE} &&  \
         make recipes/${RECIPE} \
         && EMACS_COMMAND='emacs -Q' make sandbox INSTALL=${RECIPE}
