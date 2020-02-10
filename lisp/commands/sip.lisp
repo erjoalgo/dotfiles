@@ -18,7 +18,7 @@
 (defun linphonecsh (&rest args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args)
+  (stumpwm:message-wrapped "linphonecsh ~{~A~^ ~}" args)
   (stumpwm::run-command-async "linphonecsh" args nil t))
 
 (defun linphonecsh-sync (&rest args)
