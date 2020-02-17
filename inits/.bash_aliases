@@ -132,7 +132,7 @@ alias gfr='git fetch && git rebase'
 __git_complete gfr _git_rebase
 alias gkt='git checkout'
 __git_complete gkt _git_checkout
-alias gkp='git checkout -p'
+alias gkp='__git-commit-interactive-wrapper git checkout -p'
 alias gcrp='git cherry-pick'
 __git_complete gcrp _git_cherry_pick
 alias gkp-last='git checkout -p HEAD^'
