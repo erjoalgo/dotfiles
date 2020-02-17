@@ -1,5 +1,3 @@
-
-
 function make-completion-wrapper ()  {
     # from https://unix.stackexchange.com/questions/4219/
 
