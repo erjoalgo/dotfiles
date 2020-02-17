@@ -121,6 +121,7 @@ alias __git-commit-interactive-wrapper='VISUAL="vi +start" wrap-single-char.py e
 alias gcp='__git-commit-interactive-wrapper git commit -p'
 alias gcpa='__git-commit-interactive-wrapper git commit -p --amend'
 alias gcpan='__git-commit-interactive-wrapper git commit -p --amend --no-edit'
+alias gcpn='__git-commit-interactive-wrapper git commit -p --no-edit'
 __git_complete gcp _git_commit
 __git_complete gcpa _git_commit
 __git_complete gcpan _git_commit
