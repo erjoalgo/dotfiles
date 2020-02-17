@@ -165,7 +165,9 @@ class Cell(object):
             raise Exception("scanning failed")
 
     def config_file_path(self, directory=CONFIG_DEFAUL_DIRECTORY):
-        return os.path.join(directory, self.essid)
+        # assert self.essid is not None
+        if self.essid:
+            return os.path.join(directory, self.essid)
 
     def write_config(self, password=None):
         essid_file = self.config_file_path()
@@ -262,6 +264,8 @@ def wifi_connect(iface=None, essid=None, prompt="if_needed",
                        essid=essid,
                        prompt=prompt)
     assert cell, "no cell was selected"
+    print ("DEBUG wifi-connect juc2: value of cell: {}".format(cell))
+    assert cell.essid
     essid_file = cell.write_config(password=password)
     try:
         cell.connect(essid_file)
