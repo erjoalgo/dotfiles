@@ -138,6 +138,8 @@
 (defun window-pid (win)
   (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))
 
+(export '(window-pid) :STUMPWM)
+
 (defmacro eval-async (&body form)
   `(sb-thread:make-thread
     (lambda () ,@form)))
@@ -215,6 +217,28 @@
        finally (echo-string-list screen (nreverse chunks)))))
 
 (export '(message-wrapped) :STUMPWM)
+
+(defparameter *message-colors*
+  '(:black
+    :red
+    :green
+    :yellow
+    :blue
+    :magenta
+    :cyan
+    :white)
+  "Message colors.")
+
+(defun message-colorize (msg color)
+  (let* ((color-sym (-> color princ-to-string string-upcase (intern :keyword)))
+         (idx (position color-sym *message-colors*)))
+    (if idx
+        (format nil "^~D~A^*" idx msg)
+        (error "no such color: ~A. choices: ~A"
+               color
+               *message-colors*))))
+
+(export '(message-colorize *message-colors*) :STUMPWM)
 
 (defmacro def-thread-start (thread-var &body body)
   `(progn

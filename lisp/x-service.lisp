@@ -1,14 +1,13 @@
 (defpackage :x-service
   (:use :cl)
-  (:export
-   #:x-service-start))
-(in-package :x-service)
+  (:export #:start)
+  (:import-from :stumpwm :-> :->>))
 
-(in-package :STUMPWM)
+(in-package :x-service)
 
 (defvar *x-service* nil)
 
-(defun x-service-start (port)
+(defun start (port)
   "Start a service based on the config obtained by proxying all arguments make-config"
   (when (and *x-service*
              (or (null port) (hunchentoot:started-p *x-service*)))
@@ -39,26 +38,6 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (push (hunchentoot:create-regex-dispatcher ,url-regexp ',name)
            hunchentoot:*dispatch-table*)))
 
-(defparameter *message-colors*
-  '(:black
-    :red
-    :green
-    :yellow
-    :blue
-    :magenta
-    :cyan
-    :white)
-  "Message colors.")
-
-(defun message-colorize (msg color)
-  (let* ((color-sym (-> color princ-to-string string-upcase (intern :keyword)))
-         (idx (position color-sym *message-colors*)))
-    (if idx
-        (format nil "^~D~A^*" idx msg)
-        (error "no such color: ~A. choices: ~A"
-               color
-               *message-colors*))))
-
 (setf hunchentoot:*dispatch-table* nil)
 
 (defun hunchentoot-post-data-or-err ()
@@ -77,7 +56,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                      (assoc :STUMPWM-MESSAGE-COLOR)
                      cdr)))
     (when color
-      (setf text (message-colorize text color)))
+      (setf text (stumpwm:message-colorize text color)))
     (stumpwm::message-wrapped "~A" text)
     ""))
 
@@ -105,8 +84,8 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (->>
    (stumpwm:group-windows (stumpwm:current-group))
    (remove-if-not
-    #'window-visible-p)
-   (mapcar #'window-pid)
+    #'stumpwm:window-visible-p)
+   (mapcar #'stumpwm:window-pid)
    (format nil "~{~A~^~%~}")))
 
 ;; (service-start 1959)

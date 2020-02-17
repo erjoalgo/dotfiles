@@ -36,7 +36,7 @@
   (text-shortcuts-init)
   (brightness-init)
   (safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
-  (x-service-start 1959)
+  (x-service:start 1959)
   (def-thread-start *battery-notification-thread*
       (battery-info-check-notify-loop))
   (def-thread-start *sms-fanout-reconnect-thread*
