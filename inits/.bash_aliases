@@ -205,6 +205,7 @@ alias spsi='sudo python setup.py install'
 alias .a='source ~/.bash_aliases && for SRC in $(find -L ~/.bash-fns/ -type f) ~/.profile-env; do source $SRC; done'
 alias .brc='source ~/.bashrc'
 alias .t='tmux source ~/.tmux.conf'
+alias .r='reset'
 alias aa='aliasadd.py'
 
 #misc programs
