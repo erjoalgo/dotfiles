@@ -88,4 +88,35 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
    (mapcar #'stumpwm:window-pid)
    (format nil "~{~A~^~%~}")))
 
-;; (service-start 1959)
+(define-regexp-route read-char-handler ("/read-char")
+    "Read a single character"
+  (let ((prompt
+         (->> (hunchentoot:headers-in*)
+              (assoc :STUMPWM-PROMPT)
+              cdr)))
+    (when prompt
+      (stumpwm:message-wrapped (format nil "~A " prompt)))
+    (format nil "~C" (stumpwm:read-one-char (stumpwm:current-screen)))))
+
+
+(define-regexp-route read-line-handler ("/read-line")
+  "Read a line"
+  (let ((prompt
+         (->> (hunchentoot:headers-in*)
+              (assoc :STUMPWM-PROMPT)
+              cdr))
+        (completions
+         (->> (hunchentoot:headers-in*)
+              (assoc :STUMPWM-COMPLETIONS)
+              cdr))
+        (require-match
+         (->> (hunchentoot:headers-in*)
+              (assoc :STUMPWM-REQUIRE-MATCH)
+              cdr)))
+    (or (stumpwm:read-one-line
+         (stumpwm:current-screen) (format nil "~A " prompt)
+         :completions completions
+         :require-match require-match)
+        (throw 'error "Abort."))))
+
+;; (x-service:start 1959)
