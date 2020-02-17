@@ -29,8 +29,6 @@ class GatingPatternState():
         return bool(self.state)
 
 def sigint_handler(signal, frame, child):
-    # print ("DEBUG TRACE: wrap-single-char q8fo ")
-    # import time; time.sleep(1)
     child.kill(signal)
 
 def send_single_chars_loop(child, screen, chars, gating_pattern):
@@ -59,7 +57,6 @@ def run(program, args, chars, pattern=None):
 
     if gating_pattern_state:
         expect.append(pattern)
-        # expect.append(u".+")
 
     while True:
         index = child.expect(expect, timeout=None)
@@ -68,17 +65,9 @@ def run(program, args, chars, pattern=None):
         elif index == 1:
             continue
         elif index == 2 or index == 3:
-            # print ("DEBUG wrap-single-char vdho: value of index: {}".format(index))
-            # print ("DEBUG wrap-single-char e5av: value of child.before: {}".format(child.before))
-            # print ("DEBUG wrap-single-char 8yi4: value of child.after: {}".format(child.after))
             assert gating_pattern_state
             if index == 2:
                 gating_pattern_state.set_active(True)
-                # curses.refresh()
-            # print ("DEBUG wrap-single-char 6mpv: value of index: {}".format(index))
-            # print ("DEBUG wrap-single-char qq0u: value of is_proxy_enabled(): {}".format(is_proxy_enabled()))
-            # sys.stdout.write(child.before)
-            # sys.stdout.write(child.after)
             sys.stdout.flush()
         else:
             assert(False)
