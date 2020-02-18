@@ -7,9 +7,6 @@ import signal
 import struct, fcntl, termios
 import sys
 
-def beep(freq=None):
-    os.system("beep.sh {}".format(freq or ""))
-
 class ProcFilter(object):
     def __init__(self, program, args, chars, pattern):
         self.pattern = re.compile(pattern) if pattern else None
