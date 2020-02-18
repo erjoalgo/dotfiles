@@ -164,7 +164,7 @@
 
 (defvar *search-engine-map* (make-sparse-keymap) "")
 
-(defcommand search-engines-install-to-map () ()
+(defcommand search-engines-reload () ()
   "reload search engines from file"
   (psym-load *search-engine-persistent-alist*)
   (loop
