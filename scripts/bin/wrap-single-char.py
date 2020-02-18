@@ -16,7 +16,6 @@ class ProcFilter(object):
         self.program = program
         self.args = args
         self.cum = ""
-        self.logfile = open("/tmp/pexpect.log", "w")
 
     def run(self):
         rows, columns = os.popen('stty size', 'r').read().split()
