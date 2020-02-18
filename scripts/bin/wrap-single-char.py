@@ -28,20 +28,39 @@ class GatingPatternState():
     def is_active(self):
         return bool(self.state)
 
+def beep(freq=None):
+    os.system("beep.sh {}".format(freq or ""))
+
+def endwin():
+    try:
+        beep()
+    except:
+        pass
+    try:
+        curses.endwin()
+    except:
+        # traceback.print_exc()
+        pass
+
 def sigint_handler(signal, frame, child):
     child.kill(signal)
+    endwin()
 
 def send_single_chars_loop(child, screen, chars, gating_pattern):
     while True:
         event = screen.getkey()
         if event in chars and gating_pattern.is_active():
-            child.sendline(event)
             if gating_pattern:
                 gating_pattern.set_active(False)
             if event == "e":
-                curses.endwin()
+                endwin()
+            child.sendline(event)
         else:
-            child.send(event)
+            try:
+                # may fail if child was already closed
+                child.send(event)
+            except:
+                pass
 
 def run(program, args, chars, pattern=None):
     gating_pattern_state = GatingPatternState() if pattern else None
@@ -67,12 +86,13 @@ def run(program, args, chars, pattern=None):
         elif index == 2 or index == 3:
             assert gating_pattern_state
             if index == 2:
+                beep("-f880")
                 gating_pattern_state.set_active(True)
             sys.stdout.flush()
         else:
             assert(False)
     child.close()
-    curses.endwin()
+    endwin()
     exit(child.exitstatus)
 
 if __name__ == "__main__":
@@ -80,8 +100,5 @@ if __name__ == "__main__":
         run(args.program[0], args.program[1:], chars=args.chars, pattern=unicode(args.pattern))
     except Exception as exc:
         traceback.print_exc(exc)
-        try:
-            curses.endwin()
-        except:
-            pass
+        endwin()
         exit(1)
