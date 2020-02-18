@@ -113,5 +113,4 @@
                                (cl-who:fmt "~A" email))))))))
             str)))
 
-;; (dbg:package-unexport-all-symbols)
 ;; (contacts-load)
