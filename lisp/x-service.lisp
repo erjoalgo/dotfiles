@@ -1,6 +1,6 @@
 (defpackage :x-service
   (:use :cl)
-  (:export #:start)
+  (:export #:start #:define-regexp-route)
   (:import-from :stumpwm :-> :->>))
 
 (in-package :x-service)
