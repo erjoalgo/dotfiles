@@ -1,14 +1,10 @@
 #!/usr/bin/python
-from enum import Enum
 import argparse
-import curses
 import os
 import pexpect
+import re
 import signal
 import sys
-import thread
-import time
-import traceback
 
 parser = argparse.ArgumentParser()
 parser.add_argument("chars",
