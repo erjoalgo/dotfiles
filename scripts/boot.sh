@@ -90,6 +90,8 @@ fi
 test 0 -ne "${EUID}"
 
 sudo ${APT_GET} install -y python python-setuptools python-pip
+pip install getchwrap --user
+
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
 
