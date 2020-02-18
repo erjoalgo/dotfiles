@@ -4,6 +4,7 @@ import os
 import pexpect
 import re
 import signal
+import struct, fcntl, termios
 import sys
 
 parser = argparse.ArgumentParser()
@@ -14,87 +15,63 @@ parser.add_argument("--pattern", "-p",
 parser.add_argument("program", help = "the program and arguments to run", nargs="+")
 args=parser.parse_args()
 
-class GatingPatternState():
-    def __init__(self):
-        self.state = None
-
-    def set_active(self, is_active):
-        self.state = is_active
-
-    def is_active(self):
-        return bool(self.state)
-
 def beep(freq=None):
     os.system("beep.sh {}".format(freq or ""))
 
-def endwin():
-    try:
-        beep()
-    except:
-        pass
-    try:
-        curses.endwin()
-    except:
-        # traceback.print_exc()
-        pass
+class ProcFilter(object):
+    def __init__(self, program, args, chars, pattern):
+        self.pattern = re.compile(pattern) if pattern else None
+        self.input_filter_enabled = not pattern
+        self.chars = chars
+        self.proc = None
+        self.program = program
+        self.args = args
+        self.cum = ""
+        self.logfile = open("/tmp/pexpect.log", "w")
 
-def sigint_handler(signal, frame, child):
-    child.kill(signal)
-    endwin()
+    def run(self):
+        rows, columns = os.popen('stty size', 'r').read().split()
+        self.proc = pexpect.spawn(self.program, self.args)
+        self.proc.setwinsize(int(rows), int(columns))
+        self.proc.interact(
+            output_filter=lambda s, self=self: self.output_filter(s),
+            input_filter=lambda s, self=self: self.input_filter(s)
+            )
+        self.proc.logfile_read = sys.stderr
+        signal.signal(signal.SIGINT,
+                      lambda signal, frame, self=self:
+                      self.sigint_handler(signal, frame))
+        signal.signal(signal.SIGWINCH,
+                      lambda signal, frame, self=self:
+                      self.sigwinch_passthrough(signal, frame))
 
-def send_single_chars_loop(child, screen, chars, gating_pattern):
-    while True:
-        event = screen.getkey()
-        if event in chars and gating_pattern.is_active():
-            if gating_pattern:
-                gating_pattern.set_active(False)
-            if event == "e":
-                endwin()
-            child.sendline(event)
-        else:
-            try:
-                # may fail if child was already closed
-                child.send(event)
-            except:
-                pass
+    def input_filter(self, s):
+        if (self.input_filter_enabled) and s in self.chars:
+            s += "\n"
+            if self.pattern:
+                self.input_filter_enabled = False
+        return s
 
-def run(program, args, chars, pattern=None):
-    gating_pattern_state = GatingPatternState() if pattern else None
-    child = pexpect.spawn(program, args, encoding="utf-8")
-    signal.signal(signal.SIGINT,
-                  lambda signal, frame, child=child: sigint_handler(signal, frame, child))
-    child.logfile_read = sys.stdout
-    expect = [pexpect.EOF, pexpect.TIMEOUT]
+    def output_filter(self, s):
+        self.cum += s
+        if self.pattern and self.pattern.search(self.cum):
+            self.input_filter_enabled = True
+            self.cum = ""
+        return s
 
-    screen = curses.initscr()
-    curses.noecho()
-    thread.start_new_thread(send_single_chars_loop, (child, screen, chars, gating_pattern_state))
+    def sigint_handler(self, signal, frame):
+        self.proc.kill(signal)
 
-    if gating_pattern_state:
-        expect.append(pattern)
-
-    while True:
-        index = child.expect(expect, timeout=None)
-        if index == 0:
-            break
-        elif index == 1:
-            continue
-        elif index == 2 or index == 3:
-            assert gating_pattern_state
-            if index == 2:
-                beep("-f880")
-                gating_pattern_state.set_active(True)
-            sys.stdout.flush()
-        else:
-            assert(False)
-    child.close()
-    endwin()
-    exit(child.exitstatus)
+    def sigwinch_passthrough(self, sig, data):
+        s = struct.pack("HHHH", 0, 0, 0, 0)
+        a = struct.unpack('hhhh', fcntl.ioctl(sys.stdout.fileno(),
+            termios.TIOCGWINSZ , s))
+        if not self.proc.closed:
+            self.proc.setwinsize(a[0],a[1])
 
 if __name__ == "__main__":
-    try:
-        run(args.program[0], args.program[1:], chars=args.chars, pattern=unicode(args.pattern))
-    except Exception as exc:
-        traceback.print_exc(exc)
-        endwin()
-        exit(1)
+    proc = ProcFilter(args.program[0],
+                      args.program[1:],
+                      chars = args.chars,
+                      pattern = args.pattern)
+    proc.run()
