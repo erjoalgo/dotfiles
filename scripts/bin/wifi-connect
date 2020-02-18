@@ -122,6 +122,8 @@ class Cell(object):
                     self.signal_integer = float(value.split()[0])
 
     def signal_percent(self):
+        if self.signal_integer is None:
+            return float('nan')
         LOWEST_SEEN, HIGHEST_SEEN = 26, 83
         percent = 100 - 100 * ((-self.signal_integer - LOWEST_SEEN) /
                                (HIGHEST_SEEN - LOWEST_SEEN))
