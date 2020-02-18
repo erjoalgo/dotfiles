@@ -86,3 +86,32 @@
 
 (defun contacts-load ()
   (setq *contacts* (contacts-read)))
+
+(x-service:define-regexp-route contacts-handler ("/contacts")
+    "Display a list of contacts"
+  (cl-who:with-html-output-to-string (str)
+    (:table :border 3 :cellpadding 4
+            (loop for contact in contacts::*contacts*
+               as name = (contacts:contact-name contact)
+               as emails = (contacts:contact-emails contact)
+               as phones = (contacts:contact-phones contact)
+               do
+                 (cl-who:htm
+                  (:tr
+                   (:td
+                    ;; :bgcolor "green"
+                    (cl-who:fmt "~A" name))
+                   (:td
+                    (loop for phone in phones
+                       do (cl-who:htm
+                           (:a :href (format nil "tel:~A" phone)
+                               (cl-who:fmt "~A" phone)))))
+                   (:td
+                    (loop for email in emails
+                       do (cl-who:htm
+                           (:a :href (format nil "mailto:~A" email)
+                               (cl-who:fmt "~A" email))))))))
+            str)))
+
+;; (dbg:package-unexport-all-symbols)
+;; (contacts-load)
