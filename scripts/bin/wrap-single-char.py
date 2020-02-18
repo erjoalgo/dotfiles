@@ -23,9 +23,7 @@ class ProcFilter(object):
         self.proc.setwinsize(int(rows), int(columns))
         self.proc.interact(
             output_filter=lambda s, self=self: self.output_filter(s),
-            input_filter=lambda s, self=self: self.input_filter(s)
-            )
-        self.proc.logfile_read = sys.stderr
+            input_filter=lambda s, self=self: self.input_filter(s))
         signal.signal(signal.SIGINT,
                       lambda signal, frame, self=self:
                       self.sigint_handler(signal, frame))
