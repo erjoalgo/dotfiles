@@ -7,14 +7,6 @@ import signal
 import struct, fcntl, termios
 import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument("chars",
-                    help = "a string of chars will be wrap with newlines when typed")
-parser.add_argument("--pattern", "-p",
-                    help = "enable wrapping only when this pexpect pattern is seen")
-parser.add_argument("program", help = "the program and arguments to run", nargs="+")
-args=parser.parse_args()
-
 def beep(freq=None):
     os.system("beep.sh {}".format(freq or ""))
 
@@ -70,6 +62,13 @@ class ProcFilter(object):
             self.proc.setwinsize(a[0],a[1])
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("chars",
+                        help = "a string of chars will be wrap with newlines when typed")
+    parser.add_argument("--pattern", "-p",
+                        help = "enable wrapping only when this pexpect pattern is seen")
+    parser.add_argument("program", help = "the program and arguments to run", nargs="+")
+    args=parser.parse_args()
     proc = ProcFilter(args.program[0],
                       args.program[1:],
                       chars = args.chars,
