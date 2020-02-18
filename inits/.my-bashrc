@@ -41,7 +41,7 @@ shopt -s checkwinsize
 
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
 {
-  LAGGING=$(vacate.sh)
+  LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh)
   printf '%s' "${LAGGING%%A}"
   echo
 } &

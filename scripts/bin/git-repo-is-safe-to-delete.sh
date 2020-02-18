@@ -38,7 +38,7 @@ if test ${STASHED} != 0; then
 fi
 
 DANGLING_COMMITS=$(git fsck --no-reflogs | grep -v 'dangling blob' | wc -l)
-if test ${STASHED} != 0; then
+if test ${STASHED} != 0 -a -z "${IGNORE_DANGLING_COMMITS:-}"; then
     LOST+=", ${DANGLING_COMMITS} dangling commits"
 fi
 
