@@ -1,7 +1,10 @@
 (defpackage :contacts
   (:use :cl)
   (:export
-   #:contacts-load))
+   #:contacts-load
+   #:contact-name
+   #:contact-emails
+   #:contact-phones))
 (in-package :contacts)
 
 (ql:quickload 'cl-csv)
@@ -12,7 +15,7 @@
 
 (defstruct contact
   name
-  email
+  emails
   phones)
 
 ;; 0 First Name 1 Middle Name 2 Last Name 3 Title 4 Suffix 5 Initials 6 Web Page 7 Gender
@@ -46,8 +49,7 @@
                          (make-contact
                           :name (format nil "~{~A~^ ~}"
                                         (extract-cols row '(3 0 1 2 4)))
-                          :email (format nil "~{~A~^ ~}"
-                                         (extract-cols row '(14 15 16)))
+                          :emails (extract-cols row '(14 15 16))
                           :phones (extract-cols row '(20 17 18 19 21 22))))))))
 
 (stumpwm:define-stumpwm-type :contact (input prompt)
