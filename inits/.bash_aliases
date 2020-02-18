@@ -106,7 +106,8 @@ __git_complete ga _git_add
 alias grv='git remote -vv'
 # alias gpom='git push origin master'
 alias gitresetsoft='git reset --soft HEAD~1'
-alias grh='git reset HEAD'
+alias grh='__git-commit-interactive-wrapper git reset HEAD'
+alias grhp='__git-commit-interactive-wrapper git reset HEAD -p'
 alias gb='git branch --sort=-committerdate'
 __git_complete gb _git_branch
 alias gmbs='git-merge-base-show'
@@ -117,7 +118,7 @@ alias gmmma-gpom='git add -A . && gmmma && gpom'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
-alias __git-commit-interactive-wrapper='VISUAL="vi" getchwrap eynqsh?d -p "(Stage|Discard).+[?] " --'
+alias __git-commit-interactive-wrapper='VISUAL="vi" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again).+[?] " --'
 alias gcp='__git-commit-interactive-wrapper git commit -p'
 alias gcpa='__git-commit-interactive-wrapper git commit -p --amend'
 alias gcpan='__git-commit-interactive-wrapper git commit -p --amend --no-edit'
