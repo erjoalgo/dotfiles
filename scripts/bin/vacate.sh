@@ -22,7 +22,6 @@ for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
     if test -n "${SKIP_NON_GIT_REPOS:-}" -a ! -d "${DIR}"; then
         continue
     fi
-    echo "considering ${DIR}"
     cd "${DIR}"
     if ! git status &> /dev/null; then
         if  test -n "${SKIP_NON_GIT_REPOS:-}"; then
