@@ -6,13 +6,13 @@ set -euo pipefail
 # are considered last
 for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
                  xargs ls -1trd) ${*}; do
-    if test -n "${ALLOW_NON_GIT_REPOS:-}" -a ! -d "${DIR}"; then
+    if test -n "${SKIP_NON_GIT_REPOS:-}" -a ! -d "${DIR}"; then
         continue
     fi
     echo "considering ${DIR}"
     cd "${DIR}"
     if ! git status &> /dev/null; then
-        if  test -n "${ALLOW_NON_GIT_REPOS:-}"; then
+        if  test -n "${SKIP_NON_GIT_REPOS:-}"; then
             continue;
         else
             echo "non git repository: ${DIR}"
