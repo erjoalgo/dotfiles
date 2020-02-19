@@ -2,6 +2,19 @@
 
 set -euo pipefail
 
+while getopts "dh:" OPT; do
+    case ${OPT} in
+    d)
+        export IGNORE_DANGLING_COMMITS=true
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
 # consider directories in reverse mtime order, so that newly-edited/fixed repos
 # are considered last
 for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
