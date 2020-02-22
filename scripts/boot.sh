@@ -108,6 +108,9 @@ done
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 
+insert-text-block '# jPC5VOJsRIpcLjXh9o0mJMgPknbejdjl-source-my-bash-profile'  \
+                  "${HOME}/.bash_profile" <<< "source ${HOME}/.my-bash-profile"
+
 XSESSIONRC=${HOME}/.xsessionrc
 touch ${XSESSIONRC}
 # lightdm does not source ~/.profile

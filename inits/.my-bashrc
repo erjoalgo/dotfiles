@@ -39,14 +39,6 @@ export PROMPT_COMMAND='history -a'
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
-{
-  LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh)
-  printf '%s' "${LAGGING%%A}"
-  echo
-} &
-disown %-
-
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     exec xinit;
 fi

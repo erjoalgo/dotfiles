@@ -32,6 +32,7 @@ for LINK in \
     .pythonrc.py \
     .inputrc \
     .my-bashrc \
+    .my-bash-profile \
     .xmodmap \
     .xinitrc \
     .my-profile \
