@@ -118,7 +118,7 @@ alias gmmma-gpom='git add -A . && gmmma && gpom'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
-alias __git-commit-interactive-wrapper='VISUAL="vi" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again).+[?] " --'
+alias __git-commit-interactive-wrapper='VISUAL="vim" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again).+[?] " --'
 alias gcp='__git-commit-interactive-wrapper git commit -p'
 alias gcpa='__git-commit-interactive-wrapper git commit -p --amend'
 alias gcpan='__git-commit-interactive-wrapper git commit -p --amend --no-edit'
@@ -278,7 +278,7 @@ alias ..4='cd ../../../..'
 alias ..5='cd ../../../../..'
 # alias ..6='cd ../../../../../..'
 
-alias with-vi-editor='EDITOR=vi VISUAL=vi'
+alias with-vi-editor='EDITOR=vim VISUAL=vim'
 complete -F _command with-vi-editor
 alias wve='with-vi-editor'
 complete -F _command wve
