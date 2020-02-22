@@ -104,7 +104,9 @@
                    (:td
                     (loop for phone in phones
                        do (cl-who:htm
-                           (:a :href (format nil "tel:~A" phone)
+                           (:a :href
+                               (format nil "tel:~A"
+                                       (ppcre:regex-replace-all "[^0-9]" phone ""))
                                (cl-who:fmt "~A" phone)))))
                    (:td
                     (loop for email in emails
