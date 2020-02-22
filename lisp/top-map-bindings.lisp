@@ -298,7 +298,8 @@
       ("H-i" "sip-init")
       ("H-I" "sip-exit")))
 
-(search-engines-install-to-map)
+;; (url-launcher:search-engines-reload)
+(search-engines-reload)
 (pop-top-map)
 (set-prefix-key (kbd "F19"))
 

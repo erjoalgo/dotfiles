@@ -5,6 +5,7 @@
    #:launch-url
    #:launcher-append-url
    #:search-engine-search
+   #:search-engines-reload
    #:uri-encode))
 
 (defparameter *search-history-fn*
