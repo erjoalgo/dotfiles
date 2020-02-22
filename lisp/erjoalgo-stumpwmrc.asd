@@ -15,6 +15,7 @@
   #:clx ;; xlib references
   #:websocket-driver-client ;; sms-fanout
   #:cl-json ;; sms-fanout
+  #:cl-who ;; contacts html rendering
   )
  :components
  (
