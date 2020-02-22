@@ -32,6 +32,10 @@ if command -v x-service-curl; then
                -H"STUMPWM-PROMPT: call (c) or (t) text ${TEL}? ")
 
     if test "${RESP}" = "t"; then
+        if command -v emacssip; then
+            emacssip "${TEL}"
+            exit $?
+        fi
         CHAT=$(x-service-curl  \
                /read-line  \
                -H "STUMPWM-PROMPT: enter SMS to send to ${TEL}: ")
