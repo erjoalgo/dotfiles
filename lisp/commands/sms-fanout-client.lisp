@@ -104,7 +104,8 @@
                (handler-case
                    (setf *client* (connect address))
                  ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
-                   (stumpwm:message "failed to connect: ~A. " err)))))
+                   (stumpwm:message "failed to connect to ~A: ~A. "
+                                    address err)))))
          (when (connected-p :client *client*)
            (format t "pinging")
            (wsd:send-ping *client*))
