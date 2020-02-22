@@ -102,17 +102,21 @@
                     ;; :bgcolor "green"
                     (cl-who:fmt "~A" name))
                    (:td
-                    (loop for phone in phones
-                       do (cl-who:htm
-                           (:a :href
-                               (format nil "tel:~A"
-                                       (ppcre:regex-replace-all "[^0-9]" phone ""))
-                               (cl-who:fmt "~A" phone)))))
+                    (:ul
+                     (loop for phone in phones
+                        do (cl-who:htm
+                            (:li
+                             (:a :href
+                                 (format nil "tel:~A"
+                                         (ppcre:regex-replace-all "[^0-9]" phone ""))
+                                 (cl-who:fmt "~A" phone)))))))
                    (:td
-                    (loop for email in emails
-                       do (cl-who:htm
-                           (:a :href (format nil "mailto:~A" email)
-                               (cl-who:fmt "~A" email))))))))
+                    (:ul
+                     (loop for email in emails
+                        do (cl-who:htm
+                            (:li
+                             (:a :href (format nil "mailto:~A" email)
+                                 (cl-who:fmt "~A" email))))))))))
             str)))
 
 ;; (contacts-load)
