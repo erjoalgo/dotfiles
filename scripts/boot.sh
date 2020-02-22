@@ -104,7 +104,6 @@ for SCRIPT in  \
     ./${SCRIPT}
 done
 
-# needs to go after link-inits.sh
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
 
