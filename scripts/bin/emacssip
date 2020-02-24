@@ -1,7 +1,6 @@
 #!/bin/bash
 # taken from https://www.emacswiki.org/emacs/MailtoHandler
 
-emacsclient
 emacsclient --eval "(raise-frame)" --eval "(sip-chat \"$@\")"
 
 # Local Variables:
