@@ -25,7 +25,7 @@
        (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
 
 (with-message-queuing t
-    ;; file may not exist
+  ;; file may not exist
   (safe-init-sexp (load-stumpwmrc-file "defs-secret.lisp"))
   (swank-start)
   (xinitrc-init)
@@ -38,9 +38,9 @@
   (safe-init-sexp (contacts:contacts-load)) ;; contacts file may not exist
   (x-service:start 1959)
   (def-thread-start *battery-notification-thread*
-      (battery-info-check-notify-loop))
+    (battery-info-check-notify-loop))
   (def-thread-start *sms-fanout-reconnect-thread*
-      (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
+    (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
   (setf *startup-message* nil)
   (startup-apps-run)
   (safe-init-sexp (assert (psym-records *search-engine-persistent-alist*))))
