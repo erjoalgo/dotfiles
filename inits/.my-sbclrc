@@ -42,6 +42,15 @@
                           (funcall pred b)))
          args))
 
+(defun lookup-thread ()
+  (format t "~{~A~^~%~}" (sb-thread:list-all-threads))
+  (format t "~%~%enter any thread pattern: ")
+  (loop with pat = (read-line)
+        for thread in (sb-thread:list-all-threads)
+          thereis
+          (when (cl-ppcre:scan pat (format nil "~A" thread))
+            thread)))
+
 ;; Local Variables:
 ;; mode: lisp
 ;; End:
