@@ -230,21 +230,20 @@ def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=Fal
                     cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE and
                     (essid is None or essid == cell.essid))]
     if not cells:
-        logger.error("no wifi access points found")
+        raise Exception(
+            "no wifi access points found with essids:\n{}nfound:\n{}"
+            .format(
+                ", ".join(known_essids),
+                ", ".join(cell.essid or "NONE" for cell in cells)))
+    elif prompt == "always" or prompt == "if_needed" and not matching:
+        return selcand(
+            (cells if not known_cells_only else matching),
+            display_fun=lambda cell: "{}{}".format(
+                "*" if cell.essid in known_essids else " "))
+    elif not matching:
+        raise Exception("no matching access points")
     else:
-        # strongest first
-        if not cells:
-            raise Exception(
-                "no wifi access points found with essids:\n{}nfound:\n{}"
-                .format(
-                    ", ".join(known_essids),
-                    ", ".join(cell.essid or "NONE" for cell in cells)))
-        elif prompt == "always" or prompt == "if_needed" and not matching:
-            return selcand(cells if not known_cells_only else matching)
-        elif not matching:
-            raise Exception("no matching access points")
-        else:
-            return matching[0]
+        return matching[0]
 
 def iface_down_up(iface, macchange_opt=None):
     if macchange_opt != None:
