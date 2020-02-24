@@ -266,3 +266,10 @@
        ,form
        (let ((,elapsed-time-ms-var (- (get-internal-real-time) ,start-time-sym)))
          ,@body))))
+
+(define-stumpwm-type :non-blank-string (input prompt)
+  (or (argument-pop input)
+      (let ((line (read-one-line (current-screen) prompt)))
+        (when (and line (not (string-blank-p line)))
+          line))
+      (throw 'error "Abort.")))
