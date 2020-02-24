@@ -3,11 +3,11 @@
   (:export
    prin
    echo
-   dsc-table
-   dbg
-   package-unintern-shadowing-symbols
-   package-unexport-all-symbols
-   sort-by))
+   describe-hash-table
+   unintern-shadowing-symbols
+   unexport-all-symbols
+   sort-by
+   lookup-thread))
 
 (in-package #:DBG)
 
@@ -20,25 +20,18 @@
                          :UNBOUND)
      collect (list slot-name slot-value)))
 
-(defun dsc-table (table)
-  '(with-hash-table-iterator (itr table)
-    (loop
-       (multiple-value-bind (entry-p key value)
-           (itr)
-         (if entry-p
-             (print-hash-entry key value)
-             (return)))))
+(defun describe-hash-table (table)
   (loop for k being the hash-keys of table
       collect (cons k (gethash k table))))
 
-(defun package-unintern-shadowing-symbols (&optional pkg)
+(defun unintern-shadowing-symbols (&optional pkg)
   (setf pkg (or pkg *package*))
   (let ((syms (package-shadowing-symbols pkg)))
     (dolist (sym syms) (unintern sym pkg))
     (format t "uninterned ~D shadowing symbols ~%"
             (length syms))))
 
-(defun package-unexport-all-symbols (&optional pkg)
+(defun unexport-all-symbols (&optional pkg)
   (setf pkg (or pkg *package*))
   (do-external-symbols (sym pkg)
     (unexport sym pkg)))
