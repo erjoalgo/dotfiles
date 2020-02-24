@@ -95,7 +95,6 @@ class Cell(object):
         self.iface = None
         self.encryption = None
         self.signal_integer = None
-        self.is_known = None
         if scan_output:
             self.__init_from_scan_output__(scan_output)
 
@@ -131,9 +130,8 @@ class Cell(object):
 
     def __repr__(self):
         bars = self.signal_percent()/10
-        return u"{star_opt} {essid: >10}\t{encryption}\t{signal} ({signal_percent}%) {bssid}".format(
+        return u"{essid: >10}\t{encryption}\t{signal} ({signal_percent}%) {bssid}".format(
             encryption=box(self.encryption or "OPEN", 5),
-            star_opt="*" if self.is_known else " ",
             essid=box(self.essid or "<HIDDEN>", 20),
             signal=box(u"⬛"*bars, 10),
             signal_percent=self.signal_percent(),
@@ -225,14 +223,12 @@ MIN_SIGNAL_PERCENTAGE = 15
 def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=False):
     known_essids = list_known_essids()
     cells = Cell.scan_essids(iface=iface)
-    for cell in cells:
-        cell.is_known = cell.essid in known_essids
-    cells.sort(key=lambda cell: (bool(cell.is_known),
+    cells.sort(key=lambda cell: (cell.essid in known_essids,
                                  cell.signal_percent()))
     matching = [cell for cell in cells
-                if (cell.is_known and
+                if (cell.essid in known_essids and
                     cell.signal_percent()>=MIN_SIGNAL_PERCENTAGE and
-                    essid is None or essid == cell.essid)]
+                    (essid is None or essid == cell.essid))]
     if not cells:
         logger.error("no wifi access points found")
     else:
