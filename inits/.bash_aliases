@@ -118,7 +118,7 @@ alias gmmma-gpom='git add -A . && gmmma && gpom'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
-alias __git-commit-interactive-wrapper='VISUAL="vim" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again).+[?] " --'
+alias __git-commit-interactive-wrapper='VISUAL="vim" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again|Apply).+[?] " --'
 alias gcp='__git-commit-interactive-wrapper git commit -p'
 alias gcpa='__git-commit-interactive-wrapper git commit -p --amend'
 alias gcpan='__git-commit-interactive-wrapper git commit -p --amend --no-edit'
@@ -132,12 +132,12 @@ alias gmff='git merge --ff-only'
 __git_complete gmff _git_merge
 alias gfr='git fetch && git rebase'
 __git_complete gfr _git_rebase
-alias gkt='git checkout'
+alias gkt='__git-commit-interactive-wrapper git checkout'
 __git_complete gkt _git_checkout
 alias gkp='__git-commit-interactive-wrapper git checkout -p'
 alias gcrp='git cherry-pick'
 __git_complete gcrp _git_cherry_pick
-alias gkp-last='git checkout -p HEAD^'
+alias gkp-last='__git-commit-interactive-wrapper git checkout -p HEAD^'
 __git_complete gkp _git_checkout
 __git_complete gkp-last _git_checkout
 alias gw='git show'
