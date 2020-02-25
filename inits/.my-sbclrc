@@ -42,13 +42,23 @@
                           (funcall pred b)))
          args))
 
+(defun substringp (needle haystack &key (test 'char=))
+  ;; https://stackoverflow.com/questions/34620352/34620827#34620827
+  "Returns the index of the first occurrence of the string designated
+by NEEDLE within the string designated by HAYSTACK, or NIL if it does
+not occur.  Characters within the string are compared by TEST, which
+defaults to CHAR= (for case-sensitive comparison)."
+  (search (string needle)
+          (string haystack)
+          :test test))
+
 (defun lookup-thread ()
   (format t "~{~A~^~%~}" (sb-thread:list-all-threads))
   (format t "~%~%enter any thread pattern: ")
   (loop with pat = (read-line)
         for thread in (sb-thread:list-all-threads)
           thereis
-          (when (cl-ppcre:scan pat (format nil "~A" thread))
+          (when (substringp pat (format nil "~A" thread))
             thread)))
 
 ;; Local Variables:
