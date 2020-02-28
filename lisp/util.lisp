@@ -273,3 +273,23 @@
         (when (and line (not (string-blank-p line)))
           line))
       (throw 'error "Abort.")))
+
+(defmacro define-stumpwm-type-with-completion
+    (type-name list-form
+     &key
+       (key-fn #'identity)
+       (value-fn #'identity)
+       (no-hints t))
+  `(define-stumpwm-type ,type-name (input prompt)
+     (or
+      (argument-pop input)
+      (when-let*
+          ((selection
+            (selcand:select
+             ,list-form
+             prompt
+             ,key-fn
+             t
+             ,no-hints)))
+        (,value-fn selection))
+      (throw 'error "Abort"))))
