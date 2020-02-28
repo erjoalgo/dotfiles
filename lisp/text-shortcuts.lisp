@@ -42,7 +42,9 @@
    :short-description "text shortcuts"))
 
 (define-stumpwm-type-with-completion
-    :text-shortcut (alist (psym-records *text-shortcuts-alist*)))
+    :text-shortcut
+    (psym-records *text-shortcuts-alist*)
+  :no-hints nil)
 
 (define-stumpwm-type-pathname
     :text-shortcut-pathname

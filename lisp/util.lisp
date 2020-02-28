@@ -277,8 +277,8 @@
 (defmacro define-stumpwm-type-with-completion
     (type-name list-form
      &key
-       (key-fn #'identity)
-       (value-fn #'identity)
+       (key-fn 'identity)
+       (value-fn 'identity)
        (no-hints t))
   `(define-stumpwm-type ,type-name (input prompt)
      (or
@@ -288,7 +288,7 @@
             (selcand:select
              ,list-form
              prompt
-             ,key-fn
+             (function ,key-fn)
              t
              ,no-hints)))
         (,value-fn selection))

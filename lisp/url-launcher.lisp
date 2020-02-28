@@ -45,33 +45,32 @@
      thereis (and (cl-ppcre:scan regexp url) opener)
      finally (return #'url-launcher-browser-new-tab)))
 
-(define-stumpwm-type-with-completion
-    :launcher-url (alist (psym-records *launcher-persistent-alist*))
-  :sel-form (key (alist-get key alist)))
+(define-stumpwm-type-with-completion :launcher-url
+    (psym-records *launcher-persistent-alist*)
+  :key-fn car
+  :value-fn cdr)
 
-(defcommand launch-url (launcher-key-value) ((:launcher-url "enter url key: "))
+(defcommand launch-url (url) ((:launcher-url "enter url key: "))
   "do a completing read of stored keys, then launch url"
-  (destructuring-bind (key . url) launcher-key-value
-    (declare (ignore key))
-    (when url
-      (let* ((url (expand-user url))
-	     (opener (url-command url)))
+  (when url
+    (let* ((url (expand-user url))
+           (opener (url-command url)))
 
-	(if (functionp opener)
-	    (funcall opener url)
-	    (progn
-	      (run-shell-command (format nil "~A ~A" opener url))
-	      ;;TODO why this causes hang
-	      '(SB-EXT:RUN-PROGRAM opener  (list url)
-		;;TODO output to tmp?
-		:search t
-		:wait nil
-		:output t
-		:error t
-		:input t)
-	      nil ))
-	;;log to different file? or at least add tags
-	(log-entry-timestamped url *search-history-fn*)))))
+      (if (functionp opener)
+          (funcall opener url)
+          (progn
+            (run-shell-command (format nil "~A ~A" opener url))
+            ;;TODO why this causes hang
+            '(SB-EXT:RUN-PROGRAM opener  (list url)
+              ;;TODO output to tmp?
+              :search t
+              :wait nil
+              :output t
+              :error t
+              :input t)
+            nil ))
+      ;;log to different file? or at least add tags
+      (log-entry-timestamped url *search-history-fn*))))
 
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")
@@ -126,9 +125,11 @@
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
 
-(define-stumpwm-type-with-completion
-    :search-engine (alist (psym-records *search-engine-persistent-alist*))
-  :sel-form (key (alist-get key alist)))
+(define-stumpwm-type-with-completion :search-engine
+    (psym-records *search-engine-persistent-alist*)
+  :key-fn car
+  :value-fn cdr
+  :no-hints nil)
 
 (defcommand search-engine-search
     (engine terms)
