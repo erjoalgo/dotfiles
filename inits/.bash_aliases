@@ -108,8 +108,10 @@ alias grv='git remote -vv'
 alias gitresetsoft='git reset --soft HEAD~1'
 alias grh='__git-commit-interactive-wrapper git reset HEAD'
 alias grhp='__git-commit-interactive-wrapper git reset HEAD -p'
+alias grr='git reset --hard'
 alias gb='git branch --sort=-committerdate'
 __git_complete gb _git_branch
+__git_complete grr _git_branch
 alias gmbs='git-merge-base-show'
 __git_complete gmb _git_diff
 #bash completion will do the rest below
