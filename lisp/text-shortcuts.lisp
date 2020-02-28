@@ -36,10 +36,9 @@
 (define-key *text-shortcuts-map* (kbd "H-T") "text-shortcut-add")
 
 (defparameter *text-shortcuts-alist*
-  (make-psym
+  (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "text-shortcuts" data-dir))
-   :driver psym-lines-list-driver
    :short-description "text shortcuts"))
 
 (define-stumpwm-type-with-completion
@@ -47,7 +46,7 @@
 
 (define-stumpwm-type-pathname
     :text-shortcut-pathname
-  (psym-concrete-pathnames *text-shortcuts-alist* :include-nonexistent t))
+  (psym-non-wild-pathnames *text-shortcuts-alist* :include-nonexistent t))
 
 (defcommand text-shortcut-add (shortcut pathname)
     ((:string "enter text shortcut to add: ")

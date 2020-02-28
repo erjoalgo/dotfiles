@@ -1,41 +1,42 @@
 ;; TODO clos
 (in-package :STUMPWM)
 
-(defstruct psym-driver
-  list-serialized-records ;; pathname => '(serialized1, serialized2 ...)
-  deserialize-record   ;; serialized => record
-  serialize-record   ;; (pathname, record) => serialized
-  )
+(defclass psym ()
+  ((records
+    :initarg :records
+    :accessor psym-records)
+   (pathnames
+    :initarg :pathnames
+    :accessor psym-pathnames)
+   (short-description
+    :initarg :short-description
+    :accessor psym-short-description)))
 
-(defstruct psym
-  records
-  pathnames
-  driver
-  short-description
-  )
+;; list-serialized-records ;; pathname => '(serialized1, serialized2 ...)
+;; deserialize-record   ;; serialized => record
+;; serialize-record   ;; (pathname, record) => serialized
 
-(defun psym-concrete-pathnames (psym &key include-nonexistent)
-  (loop for pathname-possibly-wild in (psym-pathnames psym)
-     append (if (WILD-PATHNAME-P pathname-possibly-wild)
-                (directory pathname-possibly-wild)
-                (when (or include-nonexistent (probe-file pathname-possibly-wild))
-                  (list pathname-possibly-wild)))))
+(defmethod psym-non-wild-pathnames ((psym psym) &key include-nonexistent)
+  (loop for pathname in (psym-pathnames psym)
+        if (WILD-PATHNAME-P pathname)
+          append (directory pathname)
+        else when
+             (or include-nonexistent
+                 (probe-file pathname))
+        collect pathname))
 
 (defmacro wrap-safe (form err-sym error-form)
   `(handler-case
        ,form
      (error (,err-sym) ,error-form)))
 
-(defun psym-load (psym &key (verbose t))
-  (loop for pathname in (psym-concrete-pathnames psym)
-        with list-serialized = (psym-driver-list-serialized-records (psym-driver psym))
-        with deserialize-fun = (psym-driver-deserialize-record (psym-driver psym))
-        as serialized = (wrap-safe
-                         (funcall list-serialized pathname)
-                         err (warn "error listing ~A: ~A" pathname err))
-        append (wrap-safe (mapcar deserialize-fun serialized) err
-                          (warn "error loading records from ~A (~A): ~A"
-                                serialized pathname err))
+(defmethod psym-load ((psym psym) &key (verbose t))
+  (loop for pathname in (psym-non-wild-pathnames psym)
+        as serialized = (psym-list-serialized-records psym pathname)
+        append (mapcar
+                (lambda (serialized-record)
+                  (psym-deserialize-record psym serialized-record))
+                serialized)
           into records
         finally
            (progn
@@ -44,95 +45,82 @@
                         (or (psym-short-description psym) "records")))
              (setf (psym-records psym) records))))
 
-(defun psym-add (psym record &optional pathname)
+(defmethod psym-add ((psym psym) record &optional pathname)
   (unless pathname
-    (setf pathname (or (car (psym-concrete-pathnames psym))
-                       (error "no concrete pathnames for psym ~A" psym))))
-  (let ((serialize-fun (psym-driver-serialize-record (psym-driver psym))))
-    (funcall serialize-fun pathname record)
-    (push record (psym-records psym))))
+    (setf pathname (or (car (psym-non-wild-pathnames psym))
+                       (error "no regular pathnames for psym ~A" psym))))
+  (psym-serialize-record psym pathname record)
+  (push record (psym-records psym)))
 
 (defun file-to-lines (pathname)
   (ppcre:split #\Newline (file-string pathname)))
 
-(defparameter psym-tsv-alist-driver
-  (let ((separator "	"))
-    (declare (ignore separator))
-    (make-psym-driver
-     :list-serialized-records #'file-to-lines
-     :deserialize-record (lambda (line)
-                           ;; tab used below
-                           (or
-                            (ppcre:register-groups-bind (key val) ("^([^	]+)	(.*)$" line)
-                              (cons key val))
-                            (error "non-tsv line")))
-     ;; tab used below
-     :serialize-record (lambda (pathname record)
-                         (destructuring-bind (key . value) record
-                           (with-open-file (fh pathname
-			                       :if-does-not-exist :create
-			                       :if-exists :append
-			                       :direction :output)
-                             (format fh "~A	~A~%" key value))))))
-  "a psym driver for tab-separated files")
+(defclass psym-tsv (psym) ()
+  ;; a psym subclass for tab-separated files
+  )
 
-(defparameter psym-dir-alist-driver
-  (make-psym-driver
-   :list-serialized-records (lambda (pathname-top)
-                              (remove-if-not
-                               (lambda (pathname) (pathname-name (probe-file pathname)))
-                               (directory
-                                (make-pathname :name :WILD
-                                               :defaults
-                                               (uiop:ensure-directory-pathname pathname-top)))))
-   :deserialize-record (lambda (pathname-record)
-                         (cons (pathname-name pathname-record) (file-string pathname-record)))
+(defmethod psym-list-serialized-records ((psym psym-tsv) pathname)
+  (file-to-lines pathname))
 
-   :serialize-record (lambda (pathname-top record)
-                       (destructuring-bind (key . value) record
-                         (with-open-file (fh (make-pathname :name key
-                                                            :defaults pathname-top)
-			                     :if-does-not-exist :create
-			                     :if-exists :SUPERSEDE
-			                     :direction :output)
-                           (format fh "~A" value))))))
+(defmethod psym-deserialize-record ((psym psym-tsv) line)
+  (let ((regexp (format nil "^([^~C]+)~C(.*)$" #\tab #\tab)))
+    ;; TODO(ejalfonso) compile regexp
+    (or
+     (ppcre:register-groups-bind (key val) (regexp line)
+       (cons key val))
+     (error "non-tsv line"))))
 
-(defparameter psym-lines-list-driver
-  (make-psym-driver
-   :list-serialized-records #'file-to-lines
-   :deserialize-record #'identity
-   :serialize-record (lambda (pathname-top record)
-                       (format t "serializing to ~A..." pathname-top)
-                       (with-open-file (fh pathname-top
-			                   :if-does-not-exist :create
-			                   :if-exists :append
-			                   :direction :output)
-                         (format fh "~A~%" record)))))
 
-(defmacro define-stumpwm-type-with-completion
-    (type-name (list-sym list-form)
-     &key
-       (require-match t)
-       (disallow-empty t)
-       (space-trim t)
-       (default-prompt (format nil "select ~A: " list-form))
-       ((:sel-form (sel form))
-        (let ((sym (gensym "selection")))
-          (list sym sym))))
+(defmethod psym-serialize-record ((psym psym-tsv) pathname record)
+  (destructuring-bind (key . value) record
+    (with-open-file (fh pathname
+                        :if-does-not-exist :create
+                        :if-exists :append
+                        :direction :output)
+      (format fh "~A~C~A~%" key #\tab value))))
 
-  `(define-stumpwm-type ,type-name (input prompt)
-     (or (argument-pop input)
-         (let* ((,list-sym ,list-form)
-                (,sel (completing-read (current-screen)
-                                       (or prompt ,default-prompt)
-                                       ,list-sym
-                                       :require-match ,require-match)))
-           (when ,sel
-             (when ,space-trim (setf ,sel (trim-spaces ,sel)))
-             (if (and ,disallow-empty (= (length ,sel) 0))
-                 (error "sel must be nonempty")
-                 ,form)))
-	 (throw 'error "Abort."))))
+(defclass psym-dir-alist (psym) ()
+  ;; a psym subclass for records as files in a directory
+  )
+
+(defmethod psym-list-serialized-records ((psym psym-dir-alist) pathname-top)
+  (remove-if-not
+   (lambda (pathname) (pathname-name (probe-file pathname)))
+   (directory
+    (make-pathname :name :WILD
+                   :defaults
+                   (uiop:ensure-directory-pathname pathname-top)))))
+
+(defmethod psym-deserialize-record ((psym psym-dir-alist) pathname-record)
+  (cons (pathname-name pathname-record)
+        (file-string pathname-record)))
+
+
+(defmethod psym-serialize-record ((psym psym-dir-alist) pathname record)
+  (destructuring-bind (key . value) record
+    (with-open-file (fh (make-pathname :name key
+                                       :defaults pathname)
+                        :if-does-not-exist :create
+                        :if-exists :SUPERSEDE
+                        :direction :output)
+      (format fh "~A" value))))
+
+(defclass psym-lines-list (psym) ()
+  ;; a psym subclass for records as a set of lines in a file
+  )
+
+(defmethod psym-list-serialized-records ((psym psym-lines-list) pathname)
+  (file-to-lines pathname))
+
+(defmethod psym-deserialize-record ((psym psym-lines-list) record)
+  record)
+
+(defmethod psym-serialize-record ((psym psym-lines-list) pathname record)
+  (with-open-file (fh pathname
+                      :if-does-not-exist :create
+                      :if-exists :append
+                      :direction :output)
+    (format fh "~A~%" record)))
 
 (defun alist-get (key alist)
   (let ((key-value (assoc key alist  :test 'equal)))

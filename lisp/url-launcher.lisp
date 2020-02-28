@@ -12,10 +12,9 @@
   (merge-pathnames "search-history" *data-private-one-way*))
 
 (defparameter *launcher-persistent-alist*
-  (make-psym
+  (make-instance 'psym-dir-alist
    :pathnames (loop for data-dir in *DATA-DIRS*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
-   :driver psym-dir-alist-driver
    :short-description "launcher urls"))
 
 (defun url-launcher-get-browser-current-url ()
@@ -95,10 +94,9 @@
 
 ;;search-engine-search
 (defparameter *search-engine-persistent-alist*
-  (make-psym
+  (make-instance 'psym-tsv
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "search-engines" data-dir))
-   :driver psym-tsv-alist-driver
    :short-description "search engines"))
 
 (defun uri-encode (search-terms)
@@ -196,10 +194,9 @@
    (uiop:pathname-parent-directory-pathname
     (uiop:ensure-directory-pathname *search-history-fn*))
    :max-parents 2)
-  (make-psym
+  (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
-   :driver psym-dir-alist-driver
    :short-description "launcher urls")
   (psym-load *launcher-persistent-alist*)
   (psym-load *search-engine-persistent-alist*)
