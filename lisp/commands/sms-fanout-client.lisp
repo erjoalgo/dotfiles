@@ -89,28 +89,35 @@
               (setf client nil)))
     (wsd:on :error client
             (lambda (err)
-              (stumpwm:message "sms-fanout: channel error ~A ~A" err)
+              (syslog-log :ERR (format nil "sms-fanout: channel error: ~A" err))
               (setf client nil)))
     client))
+
+
+(defun syslog-log (priority message)
+  ;; '((:EMERG . 0) (:ALERT . 1) (:CRIT . 2) (:ERR . 3) (:WARNING . 4)
+  ;;   (:NOTICE . 5) (:INFO . 6) (:DEBUG . 7))
+  (cl-syslog:log "stumpwm/sms-fanout" ':user priority
+                 message))
 
 (defun reconnect-loop (address &key (reconnect-delay-mins 1))
   (loop do
        (progn
          (if (connected-p :client *client*)
-             '(stumpwm:message "already connected.")
+             (syslog-log ':info "already connected")
              (progn
-               '(stumpwm:message
-                "sms-fanout reconnect loop: attempting to reconnect")
+               (syslog-log :info "sms-fanout reconnect loop: attempting to reconnect")
                (handler-case
                    (setf *client* (connect address))
                  ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
-                   (stumpwm:message "failed to connect to ~A: ~A. "
-                                    address err)))))
+                   (syslog-log :info (format nil
+                                             "failed to connect to ~A: ~A. "
+                                             address err))))))
          (when (connected-p :client *client*)
-           (format t "pinging")
+           (syslog-log :info (format nil "pinging"))
            (wsd:send-ping *client*))
          (unless (sip:linphonec-started-p)
-           (stumpwm:message "restatring linphonec..")
+           (syslog-log :info "restatring linphonec..")
            (sip:linphonec-restart))
          (sleep (* reconnect-delay-mins 60)))))
 
