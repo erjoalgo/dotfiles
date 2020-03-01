@@ -93,7 +93,7 @@ sudo ${APT_GET} install -y python python-setuptools python-pip vim
 pip install getchwrap --user
 
 # set default cmd line editor to vi
-sudo update-alternatives --set editor /usr/bin/vim.tiny --verbose || true
+sudo update-alternatives --set editor /usr/bin/vim --verbose || true
 
 # link inits
 cd ~/git/erjoalgo-stumpwmrc/scripts/
