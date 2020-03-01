@@ -239,7 +239,8 @@ def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=Fal
         return selcand(
             (cells if not known_cells_only else matching),
             display_fun=lambda cell: "{}{}".format(
-                "*" if cell.essid in known_essids else " "))
+                "*" if cell.essid in known_essids else " ",
+                cell))
     elif not matching:
         raise Exception("no matching access points")
     else:
