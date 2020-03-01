@@ -9,7 +9,9 @@ sudo chown root:root "${SANDBOX_BIN}"
 sudo chmod 4755 "${SANDBOX_BIN}"
 # copy sandbox executable to a shared location
 BINDIR=/usr/local/sbin/
-sudo cp -p "${SANDBOX_BIN}" "${BINDIR}/chrome-devel-sandbox"
+BIN_SANDBOX="${BINDIR}/chrome-devel-sandbox"
+sudo cp -p "${SANDBOX_BIN}" "${BIN_SANDBOX}" || \
+    test -e "${BIN_SANDBOX}"
 
 insert-text-block '# 23c70cf5-1d79-4890-a78a-0715db0251bf-add-chrome-devel-sandbox-envvar'  \
                   ${HOME}/.profile-env <<EOF
