@@ -16,7 +16,7 @@
   #:websocket-driver-client ;; sms-fanout
   #:cl-json ;; sms-fanout
   #:cl-who ;; contacts html rendering
-  #:cl-syslog:log ;; sms-fanout
+  #:cl-syslog ;; sms-fanout
   )
  :components
  (
