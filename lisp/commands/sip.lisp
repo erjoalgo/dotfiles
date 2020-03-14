@@ -124,12 +124,10 @@
     (sip:call clipboard)))
 
 (defcommand sip-call-number (number) ((:non-blank-string "Enter number: "))
-  (assert (not (string-blank-p number)))
   (sip:call number))
 
 (defcommand sip-call-contact (contact-number)
     ((:contact-number "Enter contact to call: "))
-  (assert contact-number)
   (sip:call contact-number))
 
 (defcommand sip-call-terminate () ()
@@ -146,7 +144,6 @@
 
 (defcommand sip-sms-send-number (number message)
     ((:non-blank-string "Enter number: ") (:non-blank-string "Enter SMS message: "))
-  (assert (not (string-blank-p number)))
   (sip:sms-send (sip:phone-number-to-address number)
                 message))
 
