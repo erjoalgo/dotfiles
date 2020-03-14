@@ -9,12 +9,25 @@
     (t (warn "no volume cli found"))))
 
 (defparameter *vol-backend* (vol-find-backend))
+(defparameter *pulseaudio-default-sink-index* nil)
+
+(defun pulseaudio-sink-indices ()
+  (let ((output (run-shell-command "pacmd list-sinks" t))
+        indices)
+    (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^  [*] index: ([0-9]+)" output)
+      (push index indices))
+    indices))
+
+(defun pulseaudio-default-sink-index ()
+  (setf *pulseaudio-default-sink-index*
+        (or *pulseaudio-default-sink-index*
+            (car (pulseaudio-sink-indices))
+            (error "no pulseaudio sinks found"))))
 
 (defun vol (action
             &key
               (percent 3)
               (alsamixer-control "Master")
-              (pulseaudio-sink "1")
               (backend *vol-backend*))
   (assert (member action '(:set :up :down :mute-toggle :get)))
   (assert backend)
@@ -53,7 +66,7 @@
         (sb-ext:run-program
          "pactl"
          (list "set-sink-volume"
-               (format nil "~A" pulseaudio-sink)
+               (format nil "~D" (pulseaudio-default-sink-index))
                (format nil "~A~D%"
                        (case action
                          (:set "")
