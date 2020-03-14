@@ -71,8 +71,10 @@
                 as choice = (progn
                               (stumpwm:message "~D ~A" i prompt)
                               (format nil "~C"
-                                    (stumpwm:read-one-char
-                                     (stumpwm:current-screen))))
+                                      (or
+                                       (stumpwm:read-one-char
+                                        (stumpwm:current-screen))
+                                       (throw 'error "Abort."))))
                 while (not (member choice choices :test #'equal))
                 finally
                   (progn
