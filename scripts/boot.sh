@@ -202,7 +202,6 @@ sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
 nameserver 209.182.235.223
 nameserver 209.182.235.223
 EOF
-# sudo resolvconf -u
 
 X_WWW_BROWSER=$(which x-www-browsers) || X_WWW_BROWSER="/usr/bin/x-www-browser"
 
