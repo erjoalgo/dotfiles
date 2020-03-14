@@ -127,7 +127,7 @@
   (sip:call number))
 
 (defcommand sip-call-contact (contact-number)
-    ((:contact-number "Enter contact to call: "))
+    ((:contact-number "Select contact to call: "))
   (sip:call contact-number))
 
 (defcommand sip-call-terminate () ()
@@ -153,7 +153,7 @@
     (sip-sms-send-number clipboard message)))
 
 (defcommand sip-sms-send-contact (contact-number message)
-    ((:contact-number "Enter contact to sms-send: ")
+    ((:contact-number "Select contact to sms-send: ")
      (:non-blank-string "Enter SMS message: "))
   (assert contact-number)
   (sip-sms-send-number contact-number message))
