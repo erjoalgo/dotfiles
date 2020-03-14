@@ -196,6 +196,13 @@ EOF
 X_BROWSER=$(which x-www-browser-stumpwm)
 
 
+sudo ${APT_GET} install -y resolvconf
+sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
+                  /etc/resolvconf/resolv.conf.d/head <<EOF
+nameserver 209.182.235.223
+nameserver 209.182.235.223
+EOF
+
 X_WWW_BROWSER=$(which x-www-browsers) || X_WWW_BROWSER="/usr/bin/x-www-browser"
 
 if which "${X_BROWSER}" && which update-alternatives; then
