@@ -119,16 +119,6 @@
   (sip-contact contact-number))
 
 ;; call
-(defcommand sip-call-selection () ()
-  (let* ((clipboard (get-x-selection nil :clipboard)))
-    (sip:call clipboard)))
-
-(defcommand sip-call-number (number) ((:non-blank-string "Enter number: "))
-  (sip:call number))
-
-(defcommand sip-call-contact (contact-number)
-    ((:contact-number "Select contact to call: "))
-  (sip:call contact-number))
 
 (defcommand sip-call-terminate () ()
   (sip:linphonecsh "generic" "terminate"))
@@ -142,22 +132,10 @@
 (defcommand sip-call-unmute () ()
   (sip:linphonecsh "generic" "unmute"))
 
-;; sms
 (defcommand sip-sms-send-number (number message)
     ((:non-blank-string "Enter number: ") (:non-blank-string "Enter SMS message: "))
   (sip:sms-send (sip:phone-number-to-address number)
                 message))
-
-(defcommand sip-sms-send-selection (message)
-    ((:non-blank-string "Enter SMS message: "))
-  (let* ((clipboard (get-x-selection nil :clipboard)))
-    (sip-sms-send-number clipboard message)))
-
-(defcommand sip-sms-send-contact (contact-number message)
-    ((:contact-number "Select contact to sms-send: ")
-     (:non-blank-string "Enter SMS message: "))
-  (assert contact-number)
-  (sip-sms-send-number contact-number message))
 
 (defcommand sip-call-answer () ()
   (let ((active-calls (remove-if-not
