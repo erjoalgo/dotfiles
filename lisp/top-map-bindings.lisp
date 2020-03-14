@@ -286,11 +286,10 @@
 (define-key-bindings
     *linphone-map*
     `(
-      ("H-c" "sip-call-contact")
-      ("H-l" "sip-call-selection")
-      ("H-n" "sip-call-number")
+      ("H-c" "sip-contact-contact")
+      ("H-l" "sip-contact-selection")
+      ("H-n" "sip-contact-number")
       ("H-t" "sip-call-terminate")
-      ("H-s" *linphone-sms-map*)
       ("H-d" "sip-call-dtmf")
       ("H-m" "sip-call-mute")
       ("H-M" "sip-call-unmute")

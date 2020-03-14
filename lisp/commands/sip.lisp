@@ -91,6 +91,34 @@
 
 (in-package :stumpwm)
 
+;; contact (either call or text)
+(defun sip-contact (number)
+  (let ((choice (selcand:select
+                 :hints-candidates `(("c" . :call)
+                                     ("t" . :text)
+                                     ("e" . :email))
+                 :read-char-if-possible t
+                 :display-candidates t)))
+    (case choice
+      (:call (message "calling ~A" number) (sip:call number))
+      (:text (let ((cmd (format nil "emacssip ~A" number)))
+               (message "invoking ~A" cmd)
+               (run-shell-command cmd)))
+      (:email (error "email not implemented"))
+      (t (error "Unknown choice: ~A" choice)))))
+
+(defcommand sip-contact-selection () ()
+  (let* ((clipboard (get-x-selection nil :clipboard)))
+    (sip-contact clipboard)))
+
+(defcommand sip-contact-number (number) ((:non-blank-string "Enter number: "))
+  (sip-contact number))
+
+(defcommand sip-contact-contact (contact-number)
+    ((:contact-number "Select contact: "))
+  (sip-contact contact-number))
+
+;; call
 (defcommand sip-call-selection () ()
   (let* ((clipboard (get-x-selection nil :clipboard)))
     (sip:call clipboard)))
