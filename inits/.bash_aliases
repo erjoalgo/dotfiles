@@ -305,7 +305,9 @@ alias git-delete-show-dangling-commits='git fsck --no-reflogs | sed "s/^dangling
 alias git-delete-show-unpublished-commits='git --no-pager log --branches --not --remotes'
 alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
-alias service-tail='sudo journalctl -fu'
+alias sv=service
+alias sv-tail='sudo journalctl -fu'
+
 # Local Variables:
 # mode: sh
 # End:
