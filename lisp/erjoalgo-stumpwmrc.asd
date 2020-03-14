@@ -21,6 +21,7 @@
  :components
  (
   ;; (:file "packages")
+  (:file "commands/selcand")
   (:file "util")
   (:file "defs")
   (:file "xinitrc")
@@ -28,7 +29,6 @@
   (:file "pid-util")
   (:file "mozrepl")
   (:file "defcommands")
-  (:file "commands/selcand")
   (:file "psym")
   (:file "url-launcher")
   (:file "text-shortcuts")
