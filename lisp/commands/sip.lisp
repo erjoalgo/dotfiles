@@ -142,6 +142,7 @@
 (defcommand sip-call-unmute () ()
   (sip:linphonecsh "generic" "unmute"))
 
+;; sms
 (defcommand sip-sms-send-number (number message)
     ((:non-blank-string "Enter number: ") (:non-blank-string "Enter SMS message: "))
   (sip:sms-send (sip:phone-number-to-address number)
