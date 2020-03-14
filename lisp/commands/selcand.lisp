@@ -28,30 +28,59 @@
                         for cand in candidates
                         collect (cons hint cand)))))
 
-(defun select (candidates &optional prompt stringify-fn autoselect-if-single
-                            no-hints)
+(defun select (&key
+                 candidates
+                 hints-candidates
+                 (prompt "select candidate: ")
+                 (stringify-fn #'prin1-to-string)
+                 (autoselect-if-single t)
+                 no-hints
+                 display-candidates
+                 read-char-if-possible)
   "Use PROMPT to prompt for a selection from CANDIDATES."
-  (let* ((sep ") ")
-         (stringify-fn (or stringify-fn #'prin1-to-string))
-         (hints-cands
-          (if no-hints
-              (mapcar
-               (lambda (cand)
-                 (cons (stumpwm::string-trim " " (funcall stringify-fn cand)) cand))
-               candidates)
-              (loop for (hint . cand) in (hints candidates)
-                 collect (cons
-                          (stumpwm::string-trim " "
-                           (concatenate 'string hint
-                                        sep (funcall stringify-fn cand)))
-                          cand))))
+  (assert (not (and candidates hints-candidates)))
+  (let* ((hints-cands
+          (cond
+            (hints-candidates hints-candidates)
+            (no-hints
+             (mapcar
+              (lambda (cand)
+                (cons (stumpwm::string-trim " " (funcall stringify-fn cand)) cand))
+              candidates))
+            (t
+             (loop for (hint . cand) in (hints candidates)
+                collect
+                  (cons
+                   (stumpwm::string-trim
+                    " "
+                    (concatenate
+                     'string hint
+                     ") " (funcall stringify-fn cand)))
+                   cand)))))
          (choices (mapcar #'car hints-cands))
-         (prompt (or prompt "select candidate: "))
-         (hint-selected (if (and autoselect-if-single (null (cdr choices)))
-                            (car choices)
-                            (or (stumpwm:completing-read
-                                 (stumpwm:current-screen) prompt choices)
-                                (throw 'error "Abort."))))
+         (prompt (if (not display-candidates) prompt
+                     (format nil "~A~%~{~A~^~%~}" prompt
+                             hints-cands)))
+         (hint-selected
+          (cond
+            ((and autoselect-if-single (null (cdr choices))) (car choices))
+            ((and read-char-if-possible
+                  (eq 1 (reduce #'max (mapcar #'length choices))))
+             (loop
+                for i below 3
+                as choice = (progn
+                              (stumpwm:message "~D ~A" i prompt)
+                              (format nil "~C"
+                                    (stumpwm:read-one-char
+                                     (stumpwm:current-screen))))
+                while (not (member choice choices :test #'equal))
+                finally
+                  (progn
+                    (stumpwm::unmap-all-message-windows)
+                    (return choice))))
+            (t (or (stumpwm:completing-read
+                    (stumpwm:current-screen) prompt choices)
+                   (throw 'error "Abort.")))))
          (cand (cdr (assoc hint-selected hints-cands :test #'equal))))
     (assert (or (null hint-selected) cand))
     cand))

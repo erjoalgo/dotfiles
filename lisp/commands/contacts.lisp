@@ -73,15 +73,15 @@
          (funcall (gethash :contact stumpwm::*command-type-hash*) input prompt))
         (phones (contact-phones contact))
         (number (selcand:select
-                 phones
-                 "select among multiple phone number: "
-                 #'identity t)))
+                 :candidates phones
+                 :prompt "select among multiple phone number: ")))
      number)
    (throw 'error "Abort")))
 
 (stumpwm:define-stumpwm-type :contact (input prompt)
   (or (stumpwm:argument-pop input)
-      (selcand:select *contacts* prompt #'contact-name nil t)
+      (selcand:select :candidates *contacts* :prompt prompt :stringify-fn #'contact-name
+                      :no-hints t)
       (throw 'error "No contact selected (abort?)")))
 
 (defun contacts-load ()

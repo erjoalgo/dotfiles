@@ -141,10 +141,9 @@
     (if (null active-calls)
         (error "no active calls found")
         (let* ((call (selcand:select
-                      active-calls
-                      "select call to answer: "
-                      #'sip:linphone-call-destination
-                      t)))
+                      :candidates active-calls
+                      :prompt "select call to answer: "
+                      :stringify-fn #'sip:linphone-call-destination)))
           (if (null call)
               (error "no call selected")
               (let* ((call-id (sip:linphone-call-id call))
