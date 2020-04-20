@@ -2,31 +2,16 @@
 
 set -euo pipefail
 
-APP_NAME=linphone-dial
-insert-text-block '# fkp6YNbFENtRk4L1uwh2F43Wa59R0gGh-xdg-open-tel-linphone' \
-                  ${HOME}/.local/share/applications/mimeapps.list \
-                  <<EOF
-[Added Associations]
-x-scheme-handler/tel=${APP_NAME}.desktop
-EOF
+#!/bin/bash -x
 
-DESKTOP_ENTRY=${HOME}/.local/share/applications/${APP_NAME}.desktop
-insert-text-block '# wI6TwywPKAHmIqt50W2P1UwbA0nfQhXv-linphone-dial' \
-                  ${DESKTOP_ENTRY}<<EOF
-[Desktop Entry]
-# Exec=bash -c "linphonecsh dial \$0@sanjose2.voip.ms" %u
-# Exec=echo-args.sh -c 'linphonecsh dial \$0@sanjose2.voip.ms' %u
-Exec=linphone-dial.sh -t %u
-Terminal=false
-Type=Application
-MimeType=x-scheme-handler/tel
-EOF
+set -euo pipefail
 
-sudo ln -sf ${DESKTOP_ENTRY} /usr/share/applications
+install-xdg-open-handler.sh  \
+    -c "linphone-dial.sh -t %u"  \
+    -s tel  \
+    -b "fkp6YNbFENtRk4L1uwh2F43Wa59R0gGh-xdg-open-tel-linphone"
 
-xdg-mime default linphone-dial.desktop x-scheme-handler/tel
-xdg-mime query default x-scheme-handler/tel | grep -F "${APP_NAME}"
-
+# test:
 sh -x $(which xdg-open) "tel:7545818313"
 
 # Local Variables:
