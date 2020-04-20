@@ -286,10 +286,10 @@
       (when-let*
           ((selection
             (selcand:select
-             ,list-form
-             prompt
-             (function ,key-fn)
-             t
-             ,no-hints)))
+             :candidates ,list-form
+             :prompt prompt
+             :stringify-fn (function ,key-fn)
+             :autoselect-if-single t
+             :no-hints ,no-hints)))
         (,value-fn selection))
       (throw 'error "Abort"))))
