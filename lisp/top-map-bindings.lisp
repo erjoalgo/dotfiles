@@ -188,7 +188,8 @@
       ("H-N" "gnext")
       ("H-P" "gprev")
       ("H-d" *games-keymap*)
-      ("H-b" *linphone-map*))
+      ("H-b" *linphone-map*)
+      ("H-B" "sip-main"))
   ;;not efficient nor necessary but only run at initialization
   )
 

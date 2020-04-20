@@ -154,6 +154,25 @@
                      (command (format nil "answer ~D" call-id)))
                 (sip:linphonecsh "generic" command)))))))
 
+(defcommand sip-main () ()
+  (let* ((clipboard-choice
+          (format nil "clipboard: ~A"
+                  (let ((clipboard (get-x-selection nil :clipboard)))
+                    (subseq clipboard 0 (min 10 (length clipboard))))))
+         (choice
+          (selcand:select
+           :hints-candidates `(("l" . ,clipboard-choice)
+                               ("n" . :enter-number)
+                               ("c" . :contact-selection))
+           :read-char-if-possible t
+           :display-candidates t)))
+    (case choice
+      (:enter-number (call-interactively "sip-contact-number"))
+      (:contact-selection (call-interactively "sip-contact-contact"))
+      (t (if (equal choice clipboard-choice)
+             (call-interactively "sip-contact-selection")
+             (error "Unknown choice: ~A" choice))))))
+
 (defcommand sip-init () ()
   (sip:linphonec-init))
 
