@@ -1,0 +1,12 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+install-xdg-open-handler.sh -c "emacs-mail %u" -s mailto -b "enozBICndSJt4WhI5Rh1lcdkBSSR4Mjp-emacs-mail"
+
+# test:
+sh -x $(which xdg-open) "mailto:erjoalgo@gmail.com"
+
+# Local Variables:
+# mode: sh-mode
+# End:
