@@ -278,13 +278,6 @@
                (format nil "set-brightness ~A" percentage))))
 
 (define-key-bindings
-    *linphone-sms-map*
-    `(
-      ("H-c" "sip-sms-send-contact")
-      ("H-l" "sip-sms-send-selection")
-      ("H-n" "sip-sms-send-number")))
-
-(define-key-bindings
     *linphone-map*
     `(
       ("H-c" "sip-contact-contact")
