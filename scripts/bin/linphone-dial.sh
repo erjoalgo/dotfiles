@@ -32,8 +32,8 @@ if command -v x-service-curl; then
                -H"STUMPWM-PROMPT: call (c) or (t) text ${TEL}? ")
 
     if test "${RESP}" = "t"; then
-        if command -v emacssip; then
-            emacssip "${TEL}"
+        if command -v emacs-sip; then
+            emacs-sip "${TEL}"
             exit $?
         fi
         CHAT=$(x-service-curl  \
