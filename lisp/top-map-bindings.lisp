@@ -220,6 +220,7 @@
    ("m" "toggle-magnifier")
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
+   ("H-c" "correct-screen-prompt-display-order")
    ("H-w" "connect-to-internet-maybe")
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)
