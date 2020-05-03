@@ -34,7 +34,9 @@
 (defvar *sip-default-host* "sanjose2.voip.ms")
 
 (defun phone-number-to-address (number &key (sip-host *sip-default-host*))
-  (let* ((number-clean (ppcre:regex-replace-all "[^0-9]" number ""))
+  (let* ((no-alpha
+          (sip-alpha-text-to-phone-number number))
+         (number-clean (ppcre:regex-replace-all "[^0-9]" no-alpha ""))
          (intl-prefix-opt "")
          (sip-address (format nil "sip:~A~A@~A"
                               intl-prefix-opt number-clean sip-host)))
@@ -88,6 +90,46 @@
 (defun linphonec-restart ()
   (stumpwm::run-command-retcode-output "pkill" (list "linphone"))
   (linphonec-init))
+
+
+(defmacro sip-alpha-to-digit (char)
+  (let ((char-sym (gensym "CHAR-")))
+    `(let ((,char-sym ,char))
+       (case (if (characterp ,char-sym)
+                 ,char-sym
+                 (progn
+                   (assert (and (stringp ,char-sym)
+                                (= 1 (length ,char-sym))))
+                   (char ,char-sym 0)))
+         ,@(loop
+              for (chars . digit) in
+                `(("abc" . 2) ("def" . 3)
+                  ("gih" . 4) ("jkl" . 5) ("mno" . 6)
+                  ("pqrs" . 7) ("tuv" . 8) ("xyz" . 9))
+              append (loop for c across
+                          (concatenate 'string
+                                       chars (string-upcase chars))
+                        collect `(,c ,digit)))
+         (t (error "No dial-pad digit for char ~A"
+                   ,char-sym))))))
+
+(defun sip-alpha-text-to-phone-number (text)
+  (loop
+     with as-number = (make-string
+                       (length text)
+                       :initial-element #\Space)
+     for c across text
+     for i from 0
+     as cc = (cond
+               ((alpha-char-p c)
+                (code-char
+                 (+ (char-code #\0)
+                    (sip-alpha-to-digit c))))
+               ((digit-char-p c) c)
+               (t nil))
+     when cc
+     do (setf (aref as-number i) cc)
+     finally (return as-number)))
 
 (in-package :stumpwm)
 
