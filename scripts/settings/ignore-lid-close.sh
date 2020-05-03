@@ -5,6 +5,11 @@ sudo insert-text-block \
      /etc/systemd/logind.conf <<EOF
 HandleLidSwitch=ignore
 HandlePowerKey=ignore
+
+# HandleLidSwitch=suspend
+# HandleLidSwitchExternalPower=suspend
+# HandleLidSwitchDocked=suspend
+# LidSwitchIgnoreInhibited=yes
 EOF
 
 sudo service systemd-logind restart
