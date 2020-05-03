@@ -212,7 +212,7 @@
   (let* ((clipboard-choice
           (format nil "clipboard: ~A"
                   (let ((clipboard (get-x-selection nil :clipboard)))
-                    (subseq clipboard 0 (min 10 (length clipboard))))))
+                    (subseq clipboard 0 (min 15 (length clipboard))))))
          (choice
           (selcand:select
            :hints-candidates `(("l" . ,clipboard-choice)
