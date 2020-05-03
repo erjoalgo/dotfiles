@@ -78,6 +78,15 @@
     calls))
 
 (defun linphonec-init ()
+  (loop
+     for i below 5
+     while
+       (multiple-value-bind (retcode _)
+           (stumpwm::run-command-retcode-output
+            "killall" (list "linphonec"))
+         (declare (ignore _))
+         (not (zerop retcode)))
+     do (sleep 1))
   (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
 
 (defun linphonec-started-p ()
