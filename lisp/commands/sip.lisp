@@ -152,7 +152,7 @@
                  :display-candidates t)))
     (case choice
       (:call (message "calling ~A" number) (sip:call number))
-      (:text (let ((cmd (format nil "emacssip ~A" number)))
+      (:text (let ((cmd (format nil "emacs-sip ~A" number)))
                (message "invoking ~A" cmd)
                (run-shell-command cmd)))
       (:email (error "email not implemented"))
@@ -205,6 +205,9 @@
                      (command (format nil "answer ~D" call-id)))
                 (sip:linphonecsh "generic" command)))))))
 
+(defcommand sip-echo-test () ()
+  (sip:call "4443"))
+
 (defcommand sip-main () ()
   (let* ((clipboard-choice
           (format nil "clipboard: ~A"
@@ -214,12 +217,14 @@
           (selcand:select
            :hints-candidates `(("l" . ,clipboard-choice)
                                ("n" . :enter-number)
-                               ("c" . :contact-selection))
+                               ("c" . :contact-selection)
+                               ("e" . :echo-test))
            :read-char-if-possible t
            :display-candidates t)))
     (case choice
       (:enter-number (call-interactively "sip-contact-number"))
       (:contact-selection (call-interactively "sip-contact-contact"))
+      (::echo-test (call-interactively "sip-echo-test"))
       (t (if (equal choice clipboard-choice)
              (call-interactively "sip-contact-selection")
              (error "Unknown choice: ~A" choice))))))
