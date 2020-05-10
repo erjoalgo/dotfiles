@@ -137,7 +137,7 @@ __git_complete gfr _git_rebase
 alias gkt='__git-commit-interactive-wrapper git checkout'
 __git_complete gkt _git_checkout
 alias gkp='__git-commit-interactive-wrapper git checkout -p'
-alias gcrp='git cherry-pick'
+alias gcrp='__git-commit-interactive-wrapper git cherry-pick'
 __git_complete gcrp _git_cherry_pick
 alias gkp-last='__git-commit-interactive-wrapper git checkout -p HEAD^'
 __git_complete gkp _git_checkout
