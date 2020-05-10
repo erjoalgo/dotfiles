@@ -100,7 +100,7 @@ __git_complete gfc _git_diff
 alias gl='git log'
 __git_complete gl _git_log
 alias grl='git reflog'
-__git_complete gl _git_reflog
+__git_complete grl _git_reflog
 alias ga='git add'
 __git_complete ga _git_add
 alias grv='git remote -vv'
