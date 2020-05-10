@@ -16,8 +16,6 @@
 
 (define-run-or-pull-program "emacs"
     :pull-key "H-E"
-    ;; :cmd "~/git/emacs/src/emacs"
-    ;; :cmd "emacsclient --create-frame"
     :classes emacs-classes)
 
 (let ((eclipse-cmd
@@ -59,9 +57,6 @@
 (defvar *real-top-map* nil)
 (setf *real-top-map* *top-map*)
 
-;; why are we pushing a real copy of top map, which will be discarded?
-;; perhaps to leave us with a usabe top-map if eval of this file fails
-;; before (pop-top-map)
 (push-top-map (make-sparse-keymap))
 
 (defun define-key-bindings (kmap-or-kmap-list bindings)
@@ -225,13 +220,13 @@
    ("H-w" "connect-to-internet-maybe")
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)
-   ("s" "scrot-cmd-anon" )
-   ("S" "scrot-cmd-full-screen-anon" )
+   ("s" "scrot-cmd-anon")
+   ("S" "scrot-cmd-full-screen-anon")
    ("n" "take-scrot-snipit")
-   ("o" "ocr-scrot-clipboard" )
-   ("k" "speak-string" )
-   ("l" "spell-clipboard" )
-   ("H-l" "screen-lock" )
+   ("o" "ocr-scrot-clipboard")
+   ("k" "speak-string")
+   ("l" "spell-clipboard")
+   ("H-l" "screen-lock")
    ;; ("H-e" "echo-current-tab" )
    ("H-e" "emacs-killusr2")
    ("z" "window-sleep-toggle")
