@@ -222,3 +222,17 @@
           (pull-window win)
           (fnext)
           (pull-window win2))))))
+
+(defcommand center-pointer () ()
+  "Move the pointer to the center of the current head."
+  (let* ((head (current-head))
+         (x (/ (head-width head) 2))
+         (y (/ (head-height head) 3))
+         (offset 10)
+         (delay-secs .1))
+    (loop for (dx dy) in '((-1 -1) (1 -1) (-1 1) (1 1) (0 0))
+       do
+         (warp-pointer (current-screen)
+                       (+ x (* dx offset))
+                       (+ y (* dy offset)))
+       do (sleep delay-secs))))

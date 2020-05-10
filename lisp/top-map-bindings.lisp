@@ -239,6 +239,7 @@
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
    ("b" *brightness-map*)
+   ("H-p" "center-pointer")
    ("d" "dict-lookup-command")
    ("D" "cat-message-command ~/vocab")))
 
