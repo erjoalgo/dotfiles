@@ -31,6 +31,7 @@
   (xinitrc-init)
   ;; TODO remove side-effects. add "init" method
   (load-stumpwmrc-file "top-map-bindings.lisp")
+  (init-top-map-bindings)
   (decorations-init)
   (url-launcher-init)
   (text-shortcuts-init)

@@ -294,9 +294,11 @@
       ("H-i" "sip-init")
       ("H-I" "sip-exit")))
 
-;; (url-launcher:search-engines-reload)
-(search-engines-reload)
-(pop-top-map)
-(set-prefix-key (kbd "F19"))
+(defun init-top-map-bindings ()
+  ;; (url-launcher:search-engines-reload)
+  (search-engines-reload)
+  (pop-top-map)
+  (set-prefix-key (kbd "F19")))
 
+(init-top-map-bindings)
 ;; TODO use buttons framework
