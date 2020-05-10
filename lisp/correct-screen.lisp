@@ -128,6 +128,17 @@
       (error "index out of bounds"))
     (correct-screen order)))
 
+(defcommand correct-screen-no-prompt
+    () ()
+    "correct screen without prompt"
+    (let* ((order
+            (loop for display in (remove-if-not
+                                  'xrandr-display-connected-p
+                                  (xrandr-displays))
+               for i from 0
+               collect i)))
+      (correct-screen order)))
+
 (define-stumpwm-type-for-completion
     :xrandr-rot
     '("left" "right" "normal" "inverted"))
