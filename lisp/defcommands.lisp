@@ -236,3 +236,11 @@
                        (+ x (* dx offset))
                        (+ y (* dy offset)))
        do (sleep delay-secs))))
+
+(defcommand ignore-lid-close-temporarily (hours)
+    ((:number "duration in hours: "))
+  "Temporarily do nothing if laptop lid is closed."
+  (let ((timespec (format nil "now + ~D hours" hours)))
+    (run-command-async-notify
+     "ignore-lid-close-temporarily.sh"
+     (list timespec))))
