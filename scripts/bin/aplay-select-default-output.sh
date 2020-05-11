@@ -21,8 +21,6 @@ shift $((OPTIND -1))
 
 if test -z "${SELECTED_DEVICE:-}"; then
     DEVICES=$(aplay -l | grep ^card | sed 's/^card \([0-9]*\).*device \([0-9]*\).*/\1,\2/g')
-    DEVICES=$(aplay -L /3 | grep : | grep , | cut -f2 -d: | sort -u)
-
     TEST_WAV_SOUNDS=$(echo /usr/share/sounds/alsa/Front_{Left,Right}.wav)
 
     for DEVICE in ${DEVICES}; do
