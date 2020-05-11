@@ -69,7 +69,6 @@ sudo mkdir -p $(dirname "${AUTOLOGIN_CONF}")
 sudo insert-text-block '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
      "${AUTOLOGIN_CONF}" <<EOF
 [Service]
-ExecStart=
 ExecStart=-/sbin/agetty --autologin "${USER}" %I
 EOF
 
