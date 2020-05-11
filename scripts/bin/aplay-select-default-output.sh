@@ -26,10 +26,10 @@ if test -z "${SELECTED_DEVICE:-}"; then
     for DEVICE in ${DEVICES}; do
         echo "Testing device ${DEVICE}"
         DEVICE_SPEC="plughw:${DEVICE}"
-        for TEST_WAV in ${TEST_WAV_SOUNDS}; do
-            echo "on device ${DEVICE_SPEC}, playing ${TEST_WAV}"
-            aplay -D ${DEVICE_SPEC} ${TEST_WAV} >& /dev/null
-        done
+        if ! speaker-test -D ${DEVICE_SPEC} -l1; then
+            echo "ERROR: failed to test ${DEVICE_SPEC}"
+            continue
+        fi
 
         if test -z "${NO_PROMPT:-}"; then
             read -p"(s)elect, s(k)ip (q)uit: " OPT
