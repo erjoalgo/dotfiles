@@ -43,6 +43,7 @@ for LINK in \
     .gdbinit \
     .Xdefaults \
     .vimrc \
+    .gitconfig \
     ; do \
     safe_ln "${INITS_TOP}/${LINK}" "${HOME}/"
 done
