@@ -37,6 +37,12 @@ if test -z "${MOUNT_POINT:-}" -o -z "${BLOCK:-}"; then
     exit 1
 fi
 
+if ! command -v vgchange; then
+    echo "install the package lvm2"
+    exit ${LINENO}
+fi
+
+
 if test ${DOMOUNT} = true; then
     mkdir -p ${MOUNT_POINT}
     udisksctl unlock -b ${BLOCK}
