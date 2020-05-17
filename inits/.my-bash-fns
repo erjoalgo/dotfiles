@@ -481,6 +481,9 @@ function strace-cmd  {
   OUT=${OUT:-/tmp/strace-out.log}
   strace -f ${*} |& tee ${OUT}
   echo "wrote to ${OUT}"
+  if command -v emacsclient; then
+      emacsclient ${OUT}
+  fi
   less ${OUT}
 }
 
