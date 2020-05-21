@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "dh:" OPT; do
+while getopts "dh" OPT; do
     case ${OPT} in
     d)
         export IGNORE_DANGLING_COMMITS=true
