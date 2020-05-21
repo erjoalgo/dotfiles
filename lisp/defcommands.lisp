@@ -244,3 +244,10 @@
     (run-command-async-notify
      "ignore-lid-close-temporarily.sh"
      (list timespec))))
+
+(defcommand insert-key-with-delay (key)
+    ((:string "enter xdotool key name: "))
+  "Insert a key by name."
+  (sleep .4)
+  (message "~A" key)
+  (run-shell-command (format nil "xdotool key ~A" key)))
