@@ -287,7 +287,8 @@
       ("H-M" "sip-call-unmute")
       ("H-a" "sip-call-answer")
       ("H-i" "sip-init")
-      ("H-I" "sip-exit")))
+      ("H-I" "sip-exit")
+      ("H-p" "sip-select-default-proxy")))
 
 (defun init-top-map-bindings ()
   ;; (url-launcher:search-engines-reload)

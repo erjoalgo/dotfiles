@@ -8,6 +8,11 @@
    #:phone-number-to-address
    #:sip-sanitize-phone-number
    #:linphonecsh-active-calls
+   #:linphonecsh-proxies
+   #:linphone-proxy-index
+   #:linphone-proxy-identity
+   #:linphonecsh-set-default-proxy-index
+   #:linphone-call-destination
    #:linphone-call-id
    #:linphone-call-destination
    #:linphonec-init
@@ -81,6 +86,38 @@
                                 :flags flags)
             calls))
     calls))
+
+(defstruct linphone-proxy
+  index identity)
+
+(defun linphonecsh-parse-proxies (text)
+  ;; ****** Proxy 0 - this is the default one - *******
+  ;; sip address: <sip:sanjose2.voip.ms>
+  ;; route:
+  ;; identity: sip:263366_xxxxxxxx@sanjose2.voip.ms
+  ;; register: yes
+  ;; expires: 3600
+  ;; registered: yes
+  ;; ****** Proxy 1 *******
+  ;; sip address: <sip:sanjose2.voip.ms>
+  ;; route:
+  ;; identity: sip:263366_yyyyyyyy@sanjose2.voip.ms
+  ;; register: yes
+  ;; expires: 3600
+  ;; registered: yes
+  (let (proxies)
+    (cl-ppcre:do-register-groups (index identity)
+        ((format nil "(?s)[*]{6} Proxy ([0-9]+).*?[*]{6}.*?identity: (.*?)~%")
+         text nil :sharedp t)
+      (push (make-linphone-proxy :index index :identity identity) proxies))
+    proxies))
+
+(defun linphonecsh-proxies ()
+  (let ((output (linphonecsh-sync "generic" "proxy list")))
+    (linphonecsh-parse-proxies output)))
+
+(defun linphonecsh-set-default-proxy-index (index)
+  (linphonecsh-sync "generic" (format nil "proxy use ~D" index)))
 
 (defun linphonec-init ()
   (loop
@@ -210,6 +247,16 @@
               (let* ((call-id (sip:linphone-call-id call))
                      (command (format nil "answer ~D" call-id)))
                 (sip:linphonecsh "generic" command)))))))
+
+(defcommand sip-select-default-proxy () ()
+  (let* ((proxies (let ((sip:linphone-inhibit-command-echo t))
+                    (sip:linphonecsh-proxies)))
+        (selected (selcand:select
+                   :candidates proxies
+                   :prompt "select proxy: "
+                   :stringify-fn #'sip:linphone-proxy-identity)))
+    (assert selected)
+    (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected))))
 
 (defcommand sip-echo-test () ()
   (sip:call "4443"))
