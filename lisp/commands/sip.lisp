@@ -12,6 +12,7 @@
    #:linphone-proxy-index
    #:linphone-proxy-identity
    #:linphonecsh-set-default-proxy-index
+   #:linphonecsh-current-default-proxy
    #:linphone-call-destination
    #:linphone-call-id
    #:linphone-call-destination
@@ -122,6 +123,10 @@
 
 (defun linphonecsh-set-default-proxy-index (index)
   (linphonecsh-sync "generic" (format nil "proxy use ~D" index)))
+
+(defun linphonecsh-current-default-proxy ()
+  (let ((output (linphonecsh-sync "generic" "proxy show default")))
+    (linphonecsh-parse-proxies output)))
 
 (defun linphonec-init ()
   (loop
@@ -261,6 +266,9 @@
                    :stringify-fn #'sip:linphone-proxy-identity)))
     (assert selected)
     (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected))))
+
+(defcommand sip-show-current-default-proxy () ()
+  (message "current proxy: ~A" (sip:linphonecsh-current-default-proxy)))
 
 (defcommand sip-echo-test () ()
   (sip:call "4443"))
