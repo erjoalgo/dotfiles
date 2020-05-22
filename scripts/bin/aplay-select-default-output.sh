@@ -32,13 +32,16 @@ if test -z "${SELECTED_DEVICE:-}"; then
         fi
 
         if test -z "${NO_PROMPT:-}"; then
-            read -p"(s)elect, s(k)ip (q)uit: " OPT
+            read -p"(s)elect, s(k)ip (q)uit, (i)nfloop: " OPT
             case "${OPT}" in
                 s)
                     SELECTED_DEVICE=${DEVICE}
                     break
                     ;;
                 k)
+                    ;;
+                i)
+                    speaker-test -D ${DEVICE_SPEC} -l0
                     ;;
                 q)
                     exit 0
