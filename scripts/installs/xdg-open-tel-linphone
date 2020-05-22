@@ -12,7 +12,7 @@ install-xdg-open-handler.sh  \
     -b "fkp6YNbFENtRk4L1uwh2F43Wa59R0gGh-xdg-open-tel-linphone"
 
 # test:
-sh -x $(which xdg-open) "tel:7545818313"
+sh -x $(which xdg-open) "tel:4443"
 
 # Local Variables:
 # mode: sh-mode
