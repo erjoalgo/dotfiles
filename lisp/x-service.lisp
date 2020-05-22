@@ -113,4 +113,10 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
          :require-match require-match)
         (throw 'error "Abort."))))
 
+(define-regexp-route search-handler ("/search")
+  "Web search"
+  (let ((query (read-header :SEARCH-QUERY))
+        (engine (read-header :SEARCH-ENGINE)))
+    (stumpwm:search-engine-search engine query)))
+
 ;; (x-service:start 1959)
