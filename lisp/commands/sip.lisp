@@ -6,6 +6,7 @@
    #:linphonecsh-sync
    #:sms-send
    #:phone-number-to-address
+   #:sip-sanitize-phone-number
    #:linphonecsh-active-calls
    #:linphone-call-id
    #:linphone-call-destination
@@ -33,10 +34,14 @@
 
 (defvar *sip-default-host* "sanjose2.voip.ms")
 
-(defun phone-number-to-address (number &key (sip-host *sip-default-host*))
+(defun sip-sanitize-phone-number (text)
   (let* ((no-alpha
-          (sip-alpha-text-to-phone-number number))
-         (number-clean (ppcre:regex-replace-all "[^0-9]" no-alpha ""))
+          (sip-alpha-text-to-phone-number text))
+        (number-clean (ppcre:regex-replace-all "[^0-9]" no-alpha "")))
+    number-clean))
+
+(defun phone-number-to-address (number &key (sip-host *sip-default-host*))
+  (let* ((number-clean (sip-sanitize-phone-number number))
          (intl-prefix-opt "")
          (sip-address (format nil "sip:~A~A@~A"
                               intl-prefix-opt number-clean sip-host)))
@@ -149,10 +154,11 @@
                                      ("t" . :text)
                                      ("e" . :email))
                  :read-char-if-possible t
-                 :display-candidates t)))
+                 :display-candidates t))
+        (number-clean (sip:sip-sanitize-phone-number number)))
     (case choice
-      (:call (message "calling ~A" number) (sip:call number))
-      (:text (let ((cmd (format nil "emacs-sip ~A" number)))
+      (:call (message "calling ~A" number) (sip:call number-clean))
+      (:text (let ((cmd (format nil "emacs-sip ~A" number-clean)))
                (message "invoking ~A" cmd)
                (run-shell-command cmd)))
       (:email (error "email not implemented"))
