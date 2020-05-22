@@ -49,12 +49,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (t (-> (hunchentoot:raw-post-data)
           (babel:octets-to-string)))))
 
+(defun read-header (header-sym)
+  (->> (hunchentoot:headers-in*)
+    (assoc header-sym)
+    cdr))
+
 (define-regexp-route notify-handler ("/notify")
     "Issue a notification"
   (let* ((text (hunchentoot-post-data-or-err))
-         (color (->> (hunchentoot:headers-in*)
-                     (assoc :STUMPWM-MESSAGE-COLOR)
-                     cdr)))
+         (color (read-header :STUMPWM-MESSAGE-COLOR)))
     (when color
       (setf text (stumpwm:message-colorize text color)))
     (stumpwm::message-wrapped "~A" text)
@@ -91,28 +94,19 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 (define-regexp-route read-char-handler ("/read-char")
     "Read a single character"
   (let ((prompt
-         (->> (hunchentoot:headers-in*)
-              (assoc :STUMPWM-PROMPT)
-              cdr)))
+         (read-header :STUMPWM-PROMPT)))
     (when prompt
       (stumpwm:message-wrapped (format nil "~A " prompt)))
     (format nil "~C" (stumpwm:read-one-char (stumpwm:current-screen)))))
 
-
 (define-regexp-route read-line-handler ("/read-line")
   "Read a line"
   (let ((prompt
-         (->> (hunchentoot:headers-in*)
-              (assoc :STUMPWM-PROMPT)
-              cdr))
+         (read-header :STUMPWM-PROMPT))
         (completions
-         (->> (hunchentoot:headers-in*)
-              (assoc :STUMPWM-COMPLETIONS)
-              cdr))
+         (read-header :STUMPWM-COMPLETIONS))
         (require-match
-         (->> (hunchentoot:headers-in*)
-              (assoc :STUMPWM-REQUIRE-MATCH)
-              cdr)))
+         (read-header :STUMPWM-REQUIRE-MATCH)))
     (or (stumpwm:read-one-line
          (stumpwm:current-screen) (format nil "~A " prompt)
          :completions completions
