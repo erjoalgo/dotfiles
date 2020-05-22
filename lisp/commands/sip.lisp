@@ -18,6 +18,7 @@
    #:linphonec-init
    #:linphonec-started-p
    #:linphonec-restart
+   #:linphone-inhibit-command-echo
    #:linphone-call-state))
 (in-package :sip)
 
@@ -27,10 +28,13 @@
   (stumpwm:message-wrapped "linphonecsh ~{~A~^ ~}" args)
   (stumpwm::run-command-async "linphonecsh" args nil t))
 
+(defvar linphone-inhibit-command-echo nil)
+
 (defun linphonecsh-sync (&rest args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args)
+  (unless linphone-inhibit-command-echo
+    (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args))
   (multiple-value-bind (retcode output)
       (stumpwm::run-command-retcode-output "linphonecsh" args)
     (if (zerop retcode)
