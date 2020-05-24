@@ -94,15 +94,8 @@
     client))
 
 (defun authinfo-address ()
-  (let* ((app-name "sms-fanout")
-         (alist (or (authinfo:get-by :app app-name)
-                    (error "couldn't find app ~A" app-name)))
-         (machine (or (authinfo:alist-get :machine alist)
-                      (error "couldn't find machine name: ~A" alist)))
-         (password (or (authinfo:alist-get :password alist)
-                       (error "couldn't find password name: ~A" alist)))
-         (address (format nil "wss://~A/fanout?api-key=~A" machine password)))
-    address))
+  (authinfo:get-info-assert-vars :app "sms-fanout" (machine password)
+    (format nil "wss://~A/fanout?api-key=~A" machine password)))
 
 
 (defun syslog-log (priority message)
