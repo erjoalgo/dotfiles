@@ -49,12 +49,13 @@
 (defvar *messages-received* (make-hash-table))
 
 (defun on-message-received (from to message id)
-  (unless (gethash id *messages-received*)
-    (setf (gethash id *messages-received*) t)
-    (let ((text
-           (format nil "sms from ~A (to ~A):~%~A" from to
-                   (stumpwm::message-colorize message :yellow))))
-      (stumpwm:message-wrapped text))))
+  (let ((int-id (parse-integer id)))
+    (unless (gethash int-id *messages-received*)
+      (setf (gethash int-id *messages-received*) t)
+      (let ((text
+             (format nil "sms from ~A (to ~A):~%~A" from to
+                     (stumpwm::message-colorize message :yellow))))
+        (stumpwm:message-wrapped text)))))
 
 (defun connect (address)
   (stumpwm::when-let ((current (connected-p)))
