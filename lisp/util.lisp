@@ -235,7 +235,7 @@
   (let* ((color-sym (-> color princ-to-string string-upcase (intern :keyword)))
          (idx (position color-sym *message-colors*)))
     (if idx
-        (format nil "^~D~A^*" idx msg)
+        (format nil "^~D ~A^*" idx msg)
         (error "no such color: ~A. choices: ~A"
                color
                *message-colors*))))
