@@ -288,8 +288,9 @@
       ("H-a" "sip-call-answer")
       ("H-i" "sip-init")
       ("H-I" "sip-exit")
-      ("H-p" "sip-select-default-proxy")
-      ("H-P" "sip-show-current-default-proxy")))
+      ("H-P" "sip-select-default-proxy")
+      ("H-p" "sip-show-current-default-proxy")
+      ("H-m" "sip-main")))
 
 (defun init-top-map-bindings ()
   ;; (url-launcher:search-engines-reload)
