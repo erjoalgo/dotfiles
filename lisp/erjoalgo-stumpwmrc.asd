@@ -40,6 +40,7 @@
   (:file "correct-screen")
   (:file "brightness")
   (:file "x-service")
+  (:file "authinfo")
   (:file "commands/scrot")
   (:file "commands/battery-notification")
   (:file "commands/contacts")

@@ -9,6 +9,8 @@
 	(setf data (subseq data 0 n)))
       data)))
 
+(export '(file-string) :STUMPWM)
+
 (defun machine-get-uuid ()
   (let ((fstab (file-string #P"/etc/fstab")))
     (cl-ppcre:register-groups-bind
