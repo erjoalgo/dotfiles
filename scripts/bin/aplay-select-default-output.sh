@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-while getopts "nd:h" OPT; do
+ON_FAILURE=exit
+while getopts "nd:ih" OPT; do
     case ${OPT} in
         n)
             NO_PROMPT=true
@@ -10,6 +11,9 @@ while getopts "nd:h" OPT; do
         d)
             # e.g. "0,1" for plughw:0,1
             SELECTED_DEVICE=${OPTARG}
+            ;;
+        i)
+            ON_FAILURE=ignore
             ;;
         h)
             less $0
@@ -24,12 +28,33 @@ if test -z "${SELECTED_DEVICE:-}"; then
     TEST_WAV_SOUNDS=$(echo /usr/share/sounds/alsa/Front_{Left,Right}.wav)
 
     for DEVICE in ${DEVICES}; do
-        echo "Testing device ${DEVICE}"
         DEVICE_SPEC="plughw:${DEVICE}"
-        if ! speaker-test -D ${DEVICE_SPEC} -l1; then
-            echo "ERROR: failed to test ${DEVICE_SPEC}"
-            continue
-        fi
+        CMD="speaker-test -D ${DEVICE_SPEC} -l1"
+
+        echo ""
+        echo ""
+        echo "Testing device ${DEVICE} via ${CMD}"
+        echo ""
+
+        while true; do
+            if ${CMD}; then
+                break
+            else
+                STATUS=$?
+                echo "ERROR: failed to test ${DEVICE_SPEC}"
+                if test "${ON_FAILURE}" = kill-pulseaudio; then
+                    pulseaudio -k
+                elif test "${ON_FAILURE}" = exit; then
+                    exit ${STATUS}
+                elif test "${ON_FAILURE}" = ignore; then
+                    STATUS=0
+                    break
+                else
+                    echo "unknown on-failure action: ${ON_FAILURE}"
+                    exit ${LINENO}
+                fi
+            fi
+        done
 
         if test -z "${NO_PROMPT:-}"; then
             read -p"(s)elect, s(k)ip (q)uit, (i)nfloop: " OPT
