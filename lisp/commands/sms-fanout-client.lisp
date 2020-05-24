@@ -93,6 +93,17 @@
               (setf client nil)))
     client))
 
+(defun authinfo-address ()
+  (let* ((app-name "sms-fanout")
+         (alist (or (authinfo:get-by :app app-name)
+                    (error "couldn't find app ~A" app-name)))
+         (machine (or (authinfo:alist-get :machine alist)
+                      (error "couldn't find machine name: ~A" alist)))
+         (password (or (authinfo:alist-get :password alist)
+                       (error "couldn't find password name: ~A" alist)))
+         (address (format nil "wss://~A/fanout?api-key=~A" machine password)))
+    address))
+
 
 (defun syslog-log (priority message)
   ;; '((:EMERG . 0) (:ALERT . 1) (:CRIT . 2) (:ERR . 3) (:WARNING . 4)
@@ -100,26 +111,31 @@
   (cl-syslog:log "stumpwm/sms-fanout" ':user priority
                  message))
 
-(defun reconnect-loop (address &key (reconnect-delay-mins 1))
-  (loop do
+(defun reconnect-loop (&key
+                         (address (authinfo-address))
+                         (reconnect-delay-secs 60))
+  (loop
+     as connected = (connected-p :client *client*)
+     do (syslog-log ':info
+                    (if connected
+                        "already connected"
+                        "sms-fanout reconnect loop: attempting to reconnect"))
+     unless connected do
+       (handler-case
+           (setf *client* (connect address)
+                 connected (connected-p :client *client*))
+         ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
+           (syslog-log :info (format nil
+                                     "failed to connect to ~A: ~A. "
+                                     address err))))
+     when connected do
        (progn
-         (if (connected-p :client *client*)
-             (syslog-log ':info "already connected")
-             (progn
-               (syslog-log :info "sms-fanout reconnect loop: attempting to reconnect")
-               (handler-case
-                   (setf *client* (connect address))
-                 ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
-                   (syslog-log :info (format nil
-                                             "failed to connect to ~A: ~A. "
-                                             address err))))))
-         (when (connected-p :client *client*)
-           (syslog-log :info (format nil "pinging"))
-           (wsd:send-ping *client*))
-         (unless (sip:linphonec-started-p)
-           (syslog-log :info "restatring linphonec..")
-           (sip:linphonec-restart))
-         (sleep (* reconnect-delay-mins 60)))))
+         (syslog-log :info (format nil "pinging"))
+         (wsd:send-ping *client*))
+     unless (sip:linphonec-started-p) do
+       (progn (syslog-log :info "restatring linphonec..")
+              (sip:linphonec-restart))
+     do (sleep reconnect-delay-secs)))
 
 ;; (connected-p :client *client*)
 ;; (sms-fanout-connect)

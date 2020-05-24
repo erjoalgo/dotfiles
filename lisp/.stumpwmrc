@@ -41,7 +41,7 @@
   (def-thread-start *battery-notification-thread*
     (battery-info-check-notify-loop))
   (def-thread-start *sms-fanout-reconnect-thread*
-    (sms-fanout-client:reconnect-loop *sms-fanout-ws-address*))
+    (sms-fanout-client:reconnect-loop))
   (setf *startup-message* nil)
   (startup-apps-run)
   (safe-init-sexp (assert (psym-records *search-engine-persistent-alist*))))
