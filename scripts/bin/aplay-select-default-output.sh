@@ -82,30 +82,24 @@ fi
 
 
 if test -n "${SELECTED_DEVICE:-}"; then
-    sudo insert-text-block '# 9b5e7d87-021a-4223-add8-a7c8dc34af3a-select-default-alsa-device'  \
-         /etc/asound.conf <<EOF
-pcm.!default {
-        type plug
-        slave {
-                pcm "hw:${SELECTED_DEVICE}"
-        }
-}
-ctl.!default {
-        type hw
-        card $(cut -f1 -d, <<< "${SELECTED_DEVICE:-}")
-}
-EOF
+    DEVICE_SPEC="hw:${SELECTED_DEVICE}"
+    # sink name should have no special chars
+    SINK_NAME="alsa$(sed s/[,:]//g <<< ${DEVICE_SPEC})"
 
-    # read -p"confirm: "
+    if ! pacmd help; then
+        pulseaudio --start
+    fi
 
-    # not sure if all are needed to reload
-    /etc/init.d/alsa-utils restart
-    sudo alsactl restore
-    # this tends to return non-zero exit on success...
-    sudo alsactl init || true
+    pactl unload-module module-alsa-sink
+    pactl load-module module-alsa-sink device=${DEVICE_SPEC} sink_name=${SINK_NAME}
+    pactl set-default-sink ${SINK_NAME}
 
-    for WAV in ${TEST_WAV_SOUNDS}; do
-        aplay ${WAV}
+    pactl upload-sample /usr/share/sounds/alsa/Front_Right.wav sample
+
+    # sometimes the first sample does not play
+    for _ in $(seq 3); do
+        pactl play-sample sample "@DEFAULT_SINK@"
+        sleep 1
     done
 fi
 
