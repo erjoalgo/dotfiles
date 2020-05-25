@@ -15,7 +15,4 @@ select SERVICE in $(sudo service --status-all \
 	esac
 	break #dos
     done
-
 done
-
-
