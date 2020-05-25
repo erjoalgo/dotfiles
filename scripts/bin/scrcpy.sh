@@ -6,11 +6,12 @@ set -euo pipefail
 
 
 # TODO make this into a udev script wrapper
-LOG=/tmp/udev.log
+LOG=/tmp/scrcpy-udev.log
 
 exec 2>&1
 exec >> "${LOG}"
 
+logger "on scrcpy.sh"
 export DISPLAY=:0.0
 export XAUTHORITY=/home/ealfonso/.Xauthority
 
@@ -20,4 +21,4 @@ echo
 
 sleep 2
 
-/usr/local/bin/scrcpy
+/usr/local/bin/scrcpy || true
