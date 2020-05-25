@@ -212,4 +212,7 @@ if which "${X_BROWSER}" && which update-alternatives; then
   # sudo update-alternatives --config x-www-browser
 fi
 
+# set up the nonet user
+./installs/nonet.sh
+
 echo "success"
