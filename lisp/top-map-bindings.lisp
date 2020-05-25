@@ -29,11 +29,6 @@
         :cmd eclipse-cmd
         :raise-key "H-r")))
 
-(define-run-or-pull-program "linphone"
-    :raise-key "H-q"
-    :pull-key "H-Q"
-    :classes '("Linphone" "linphone"))
-
 (define-run-or-pull-program "zathura")
 
 (define-run-or-pull-program "vncviewer")
