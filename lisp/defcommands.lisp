@@ -188,6 +188,14 @@
    "pkill"
    (list "-SIGUSR2" "emacs")))
 
+(defcommand emacs-killusr2-tmux () ()
+  "send the keybinding for tmux to invoke the emacs kill command"
+  (run-command-async-notify
+   "xdotool" (list
+              "keyup" "Hyper_R"
+              "keyup" "Shift_R"
+              "key" "Control+b" "key" "C")))
+
 (defcommand path-append-directory (directory)
     ;; ((:directory "enter directory to append to the path: "))
     ((:string "enter directory to append to the path: "))
