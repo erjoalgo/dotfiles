@@ -90,7 +90,8 @@ if test -n "${SELECTED_DEVICE:-}"; then
         pulseaudio --start
     fi
 
-    pactl unload-module module-alsa-sink
+    # TODO check if module loaded
+    pactl unload-module module-alsa-sink || true
     pactl load-module module-alsa-sink device=${DEVICE_SPEC} sink_name=${SINK_NAME}
     pactl set-default-sink ${SINK_NAME}
 
