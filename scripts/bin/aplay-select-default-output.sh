@@ -92,7 +92,7 @@ if test -n "${SELECTED_DEVICE:-}"; then
 
     # TODO check if module loaded
     pactl unload-module module-alsa-sink || true
-    pactl load-module module-alsa-sink device=${DEVICE_SPEC} sink_name=${SINK_NAME}
+    pactl load-module module-alsa-sink "device=${DEVICE_SPEC}" "sink_name=${SINK_NAME}"
     pactl set-default-sink ${SINK_NAME}
 
     pactl upload-sample /usr/share/sounds/alsa/Front_Right.wav sample
