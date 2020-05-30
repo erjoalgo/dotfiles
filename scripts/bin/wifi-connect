@@ -68,6 +68,8 @@ def iface_default():
     ifaces = iface_list()
     if ifaces:
         return ifaces[0]
+    else:
+        raise ValueError("No wireless interfaces found")
 
 def list_known_essids(directory=CONFIG_DEFAUL_DIRECTORY):
     "read the list of known essids or access points"
