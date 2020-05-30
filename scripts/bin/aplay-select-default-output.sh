@@ -86,7 +86,7 @@ if test -n "${SELECTED_DEVICE:-}"; then
     # sink name should have no special chars
     SINK_NAME="alsa$(sed s/[,:]//g <<< ${DEVICE_SPEC})"
 
-    if ! pacmd help; then
+    if ! pacmd help > /dev/null; then
         pulseaudio --start
     fi
 
