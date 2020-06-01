@@ -101,7 +101,7 @@ alias gl='git log'
 __git_complete gl _git_log
 alias grl='git reflog'
 __git_complete grl _git_reflog
-alias ga='git add'
+alias ga='__git-commit-interactive-wrapper git add'
 __git_complete ga _git_add
 alias grv='git remote -vv'
 # alias gpom='git push origin master'
