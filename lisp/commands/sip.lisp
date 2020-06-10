@@ -147,8 +147,11 @@
     (declare (ignore output))
     (zerop retcode)))
 
+(defun linphonec-kill ()
+  (stumpwm::run-command-retcode-output "pkill" (list "linphone")))
+
 (defun linphonec-restart ()
-  (stumpwm::run-command-retcode-output "pkill" (list "linphone"))
+  (linphonec-kill)
   (linphonec-init))
 
 
