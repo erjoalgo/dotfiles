@@ -5,6 +5,10 @@
       "pattern": "https://cloud.digitalocean.com/droplets/*/console*",
       "passKeys": ""
     }
+    {
+      "pattern": "https://youtube.com/watch/*",
+      "passKeys": ""
+    }
   ],
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
