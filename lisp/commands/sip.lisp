@@ -276,6 +276,9 @@
 (defcommand sip-echo-test () ()
   (sip:call "4443"))
 
+(defcommand espeak (text) ((:string "enter text to speak: "))
+  (stumpwm::run-command-async "espeak" (list text) nil t))
+
 (defcommand sip-main () ()
   (let* ((clipboard-choice
           (format nil "clipboard: ~A"
