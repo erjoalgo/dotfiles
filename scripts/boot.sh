@@ -214,5 +214,9 @@ fi
 
 # set up the nonet user
 ./installs/nonet.sh
+# set up xdg-open configs
+for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
+    ${XDG_OPEN_SCRIPT}
+done
 
 echo "success"
