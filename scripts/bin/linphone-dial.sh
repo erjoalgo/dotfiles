@@ -18,7 +18,13 @@ while getopts "t:h" OPT; do
 done
 shift $((OPTIND -1))
 
-SIP_HOST=${SIP_HOST:-$(grep -Po '(?<=^domain=).*$' ${HOME}/.linphonerc | head -1)}
+SIP_HOST=${SIP_HOST:-$(
+               grep -Po '(?<=@)[a-z0-9.]+' ${HOME}/.linphonerc | \
+                   grep '[a-z]' |  \
+                   sort |  \
+                   uniq |  \
+                   grep -v unknown \
+                   | head -1)}
 TEL=$(sed 's/^tel://'  <<< "${TEL}")
 
 ADDRESS=${TEL}@${SIP_HOST}
