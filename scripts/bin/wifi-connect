@@ -4,12 +4,15 @@
 """a simple standalone script to connect to a WPA, WEP or OPN network"""
 from __future__ import print_function
 
+from __future__ import absolute_import
 import argparse
 import logging
 import os
 import re
 import subprocess
 import time
+from six.moves import range
+from six.moves import input
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
@@ -41,7 +44,7 @@ def selcand(cands, display_fun=str, error="no choices available", sort=False):
         for (i, display_cand) in enumerate(display_cand_sorted):
             display, _ = display_cand
             print("{}: {}".format(box(str(i), 3), display))
-        idx_string = raw_input("enter selection index: ")
+        idx_string = input("enter selection index: ")
         try:
             index = int(idx_string)
             _, cand = display_cand_sorted[index]
@@ -177,7 +180,7 @@ class Cell(object):
         if not os.path.exists(essid_file):
             if self.encryption and not password:
                 # password = getpass.getpass("enter password for {}: ".format(self.essid))
-                password = raw_input("enter password for {}: ".format(self.essid))
+                password = input("enter password for {}: ".format(self.essid))
             with open(essid_file, "w") as fh:
                 if self.is_wpa():
                     subprocess.call(
