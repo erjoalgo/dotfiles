@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
-"""An interactive game to test the user's pitch perception abilities."""
+"""An interactive game to test the user's pitch perception abilities.
+
+
+Inspired by "Measure your pitch perception abilities"
+from http://jakemandell.com/adaptivepitch.
+"""
 
 import contextlib
 import curses
