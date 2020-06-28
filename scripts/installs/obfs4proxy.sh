@@ -7,7 +7,7 @@ sudo apt-get install -y tor obfs4proxy
 which insert-text-block
 
 while true; do
-    PORT=python -c "import random; print(random.randint(1025, 65535))"
+    PORT=$(python -c "import random; print(random.randint(1025, 65535))")
     if ! exec 6<>/dev/tcp/localhost/${PORT}; then
         break
     fi
@@ -15,7 +15,7 @@ done
 
 sudo insert-text-block \
      '# 7c822fec-0e8e-4d13-a28c-2bfe74f4ad29-tor-obfs-bridge' \
-     /etc/tor/.torrc <<EOF
+     /etc/tor/torrc <<EOF
 #Bridge config
 RunAsDaemon 1
 ORPort ${PORT}
@@ -25,7 +25,7 @@ ExtORPort auto
 
 #Set your bridge nickname and contact info
 ContactInfo <your-contact-info>
-Nickname pick-a-nickname
+Nickname pickanickname
 
 PublishServerDescriptor 0
 EOF
