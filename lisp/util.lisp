@@ -249,7 +249,8 @@
                 (sb-thread:thread-alive-p ,thread-var))
        (sb-thread:terminate-thread ,thread-var))
      (setf ,thread-var
-           (sb-thread:make-thread (lambda () ,@body)))))
+           (sb-thread:make-thread (lambda () ,@body)
+                                  :name (symbol-name ,thread-var)))))
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
