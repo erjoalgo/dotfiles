@@ -1,12 +1,12 @@
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
-{
-  LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh || true)
-  printf '%s' "${LAGGING%%A}"
-  echo
-} &
-disown %-
+# {
+#   LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh || true)
+#   printf '%s' "${LAGGING%%A}"
+#   echo
+# } &
+# disown %-
 
-
+source /home/ealfonso/git/erjoalgo-stumpwmrc/inits/.my-bashrc
 
 # Local Variables:
 # mode: sh
