@@ -279,6 +279,9 @@
 (defcommand espeak (text) ((:string "enter text to speak: "))
   (stumpwm::run-command-async "espeak" (list text) nil t))
 
+(defcommand espeak-spell (text) ((:string "enter text to spell: "))
+  (spell-word text))
+
 (defcommand sip-main () ()
   (let* ((clipboard-choice
           (format nil "clipboard: ~A"
@@ -291,7 +294,9 @@
                                ("c" . :contact-selection)
                                ("e" . :echo-test)
                                ("d" . :dtmf)
-                               ("s" . :espeak))
+                               ("s" . :espeak)
+                               ("S" . :espeak-spell)
+                               ("t" . :call-terminate))
            :read-char-if-possible t
            :display-candidates t)))
     (case choice
@@ -300,6 +305,8 @@
       (:echo-test (call-interactively "sip-echo-test"))
       (:dtmf (call-interactively "sip-call-dtmf"))
       (:espeak (call-interactively "espeak"))
+      (:espeak-spell (call-interactively "espeak-spell"))
+      (:call-terminate (call-interactively "sip-call-terminate"))
       (t (if (equal choice clipboard-choice)
              (call-interactively "sip-contact-selection")
              (error "Unknown choice: ~A" choice))))))

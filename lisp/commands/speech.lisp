@@ -77,9 +77,7 @@
 
 (defun spell-word (word)
   (let* ((spelling-lines
-          (loop for c across word collect (spell-char-line c)))
-         (preamble (format nil "spelling ~D characters" (length word))))
-    (speak-string preamble)
+          (loop for c across word collect (spell-char-line c))))
     (sleep 1)
     (speak-string (format nil "~{~A~^, ~}" spelling-lines) :word-gap-ms 30)
     spelling-lines))
