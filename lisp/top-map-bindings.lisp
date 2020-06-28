@@ -74,8 +74,7 @@
   ;; *search-engine-map*
   *commands-map*
   *brightness-map*
-  *linphone-map*
-  *linphone-sms-map*)
+  *linphone-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -178,8 +177,7 @@
       ("H-N" "gnext")
       ("H-P" "gprev")
       ("H-d" *games-keymap*)
-      ("H-b" *linphone-map*)
-      ("H-B" "sip-main"))
+      ("H-b" "sip-main"))
   ;;not efficient nor necessary but only run at initialization
   )
 
