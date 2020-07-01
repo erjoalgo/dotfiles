@@ -122,6 +122,32 @@
                       :direction :output)
     (format fh "~A~%" record)))
 
+(defclass psym-webdav-alist (psym) ()
+  ;; a psym subclass for records as files in a directory
+  )
+
+(defmethod psym-list-serialized-records ((psym psym-dir-alist) pathname-top)
+  (remove-if-not
+   (lambda (pathname) (pathname-name (probe-file pathname)))
+   (directory
+    (make-pathname :name :WILD
+                   :defaults
+                   (uiop:ensure-directory-pathname pathname-top)))))
+
+(defmethod psym-deserialize-record ((psym psym-dir-alist) pathname-record)
+  (cons (pathname-name pathname-record)
+        (file-string pathname-record)))
+
+
+(defmethod psym-serialize-record ((psym psym-dir-alist) pathname record)
+  (destructuring-bind (key . value) record
+    (with-open-file (fh (make-pathname :name key
+                                       :defaults pathname)
+                        :if-does-not-exist :create
+                        :if-exists :SUPERSEDE
+                        :direction :output)
+      (format fh "~A" value))))
+
 (defun alist-get (key alist)
   (let ((key-value (assoc key alist  :test 'equal)))
     (if (not key-value)
