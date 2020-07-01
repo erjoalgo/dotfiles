@@ -290,7 +290,9 @@
                                ("d" . :dtmf)
                                ("s" . :espeak)
                                ("S" . :espeak-spell)
-                               ("t" . :call-terminate))
+                               ("t" . :call-terminate)
+                               ("p" . :proxy-select)
+                               ("r" . :linphonec-restart))
            :read-char-if-possible t
            :display-candidates t)))
     (case choice
@@ -301,6 +303,10 @@
       (:espeak (call-interactively "espeak"))
       (:espeak-spell (call-interactively "espeak-spell"))
       (:call-terminate (call-interactively "sip-call-terminate"))
+      (:proxy-select (call-interactively "sip-select-default-proxy"))
+      (:linphonec-restart
+       '(call-interactively "sip:linphonec-restart")
+       (sip:linphonec-restart))
       (t (if (equal choice clipboard-choice)
              (call-interactively "sip-contact-selection")
              (error "Unknown choice: ~A" choice))))))
