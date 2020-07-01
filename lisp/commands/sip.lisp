@@ -129,15 +129,7 @@
     output))
 
 (defun linphonec-init ()
-  (loop
-     for i below 5
-     while
-       (multiple-value-bind (retcode _)
-           (stumpwm::run-command-retcode-output
-            "killall" (list "linphonec"))
-         (declare (ignore _))
-         (not (zerop retcode)))
-     do (sleep 1))
+  (linphonec-kill)
   (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
 
 (defun linphonec-started-p ()
@@ -148,7 +140,7 @@
     (zerop retcode)))
 
 (defun linphonec-kill ()
-  (stumpwm::run-command-retcode-output "pkill" (list "linphone")))
+  (stumpwm::run-command-retcode-output "sudo" (list "pkill" "-9" "linphone")))
 
 (defun linphonec-restart ()
   (linphonec-kill)
