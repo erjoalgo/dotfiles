@@ -253,17 +253,19 @@
                 (sip:linphonecsh "generic" command)))))))
 
 (defcommand sip-select-default-proxy () ()
-  (let* ((proxies (let ((sip:linphone-inhibit-command-echo t))
-                    (sip:linphonecsh-proxies)))
-        (selected (selcand:select
-                   :candidates proxies
-                   :prompt "select proxy: "
-                   :stringify-fn #'sip:linphone-proxy-identity)))
-    (assert selected)
-    (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected))))
+  (with-message-queuing t
+    (sip-show-current-default-proxy)
+    (let* ((proxies (let ((sip:linphone-inhibit-command-echo t))
+                      (sip:linphonecsh-proxies)))
+           (selected (selcand:select
+                      :candidates proxies
+                      :prompt "select proxy: "
+                      :stringify-fn #'sip:linphone-proxy-identity)))
+      (assert selected)
+      (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected)))))
 
 (defcommand sip-show-current-default-proxy () ()
-  (message "current proxy:~%~%~A" (sip:linphonecsh-current-default-proxy)))
+  (message "current proxy:~%a~%~A" (sip:linphonecsh-current-default-proxy)))
 
 (defcommand sip-echo-test () ()
   (sip:call "4443"))
