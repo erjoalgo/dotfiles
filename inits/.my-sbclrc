@@ -7,7 +7,8 @@
    unintern-shadowing-symbols
    unexport-all-symbols
    sort-by
-   lookup-thread))
+   lookup-thread
+   lookup-terminate-thread))
 
 (in-package #:DBG)
 
@@ -60,6 +61,11 @@ defaults to CHAR= (for case-sensitive comparison)."
           thereis
           (when (substringp pat (format nil "~A" thread))
             thread)))
+
+
+(defun lookup-terminate-thread ()
+  (let ((thread (lookup-thread)))
+     (sb-thread:terminate-thread thread)))
 
 ;; Local Variables:
 ;; mode: lisp
