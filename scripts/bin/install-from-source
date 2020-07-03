@@ -30,7 +30,7 @@ done
 
 INSTALL_DIR=${INSTALL_DIR:-/usr/local/src}
 
-if ! test -n "${URL}"; then
+if ! test -n "${URL:-}"; then
     usage
     exit 1
 fi
@@ -41,11 +41,13 @@ EXT=$(grep -Po "[.](tar.[gx]z|tgz)$" <<< "${URL}")
 FNAME=$(basename ${URL})
 mkdir -p ~/src && cd ~/src
 
-test -f ${FNAME} || wget ${URL}
-DNAME=${DNAME:-$(basename ${FNAME} ${EXT})}
+test -f "${FNAME}" || wget "${URL}"
+DNAME=${DNAME:-$(basename "${FNAME}" ${EXT})}
 
-if ! test -d ${INSTALL_DIR}/${DNAME}; then
-    if test "SKIP" != ${GPG_KEY_ID}; then
+TOP=$(echo ${INSTALL_DIR}/*${DNAME}*)
+
+if ! test -d "${TOP}"; then
+    if test "${SKIP:-}" != "${GPG_KEY_ID}"; then
         test -f ${FNAME}.sig || wget ${URL}.sig
         if test -n "${GPG_KEY_ID}"; then
             gpg --recv-keys "${GPG_KEY_ID}" || \
@@ -56,7 +58,7 @@ if ! test -d ${INSTALL_DIR}/${DNAME}; then
     sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
 fi
 
-cd ${INSTALL_DIR}/${DNAME}
+cd "${TOP}"
 
 if ! test -e ./configure; then
     autoreconf -i
