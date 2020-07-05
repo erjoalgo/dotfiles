@@ -291,6 +291,7 @@
                                ("s" . :espeak)
                                ("S" . :espeak-spell)
                                ("t" . :call-terminate)
+                               ("a" . :call-answer)
                                ("p" . :proxy-select)
                                ("r" . :linphonec-restart))
            :read-char-if-possible t
@@ -303,6 +304,7 @@
       (:espeak (call-interactively "espeak"))
       (:espeak-spell (call-interactively "espeak-spell"))
       (:call-terminate (call-interactively "sip-call-terminate"))
+      (:call-answer (call-interactively "sip-call-answer"))
       (:proxy-select (call-interactively "sip-select-default-proxy"))
       (:linphonec-restart
        '(call-interactively "sip:linphonec-restart")
