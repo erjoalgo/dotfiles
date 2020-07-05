@@ -259,3 +259,9 @@
   (sleep .4)
   (message "~A" key)
   (run-shell-command (format nil "xdotool key ~A" key)))
+
+(defcommand paste-primary () ()
+  "Paste the primary selection."
+  (let ((text (get-x-selection nil '(:PRIMARY))))
+    (sleep .4)
+    (run-shell-command (format nil "xdotool type ~A" text))))
