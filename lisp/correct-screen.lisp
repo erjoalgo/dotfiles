@@ -148,7 +148,7 @@
     ((:xrandr-rot "enter xrandr orientation: "))
   "rotate screen"
   (let ((cmd (format nil
-		     "xrandr --output VGA1 --orientation ~A"
+		     "xrandr --orientation ~A"
 		     orientation)))
     (run-shell-command cmd t)
     cmd))
