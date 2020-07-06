@@ -76,6 +76,11 @@ sudo systemctl enable getty@tty1.service
 
 ./installs/xdg-open-tel-linphone
 
+for SYSTEM in ../lisp/{statusor,cladaver}; do
+    asdf-add-project-to-link-farm $(realpath ${SYSTEM})
+    asdf-system-installed-p ${SYSTEM}
+done
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
