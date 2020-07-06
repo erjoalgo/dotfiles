@@ -122,31 +122,29 @@
                       :direction :output)
     (format fh "~A~%" record)))
 
-(defclass psym-webdav-alist (psym) ()
-  ;; a psym subclass for records as files in a directory
-  )
+(defclass psym-webdav (psym)
+  ((server-info
+    :initarg :server-info
+    :accessor server-info)
+   (root-directory
+    :initarg :root-directory
+    :accessor root-directory)))
 
-(defmethod psym-list-serialized-records ((psym psym-dir-alist) pathname-top)
-  (remove-if-not
-   (lambda (pathname) (pathname-name (probe-file pathname)))
-   (directory
-    (make-pathname :name :WILD
-                   :defaults
-                   (uiop:ensure-directory-pathname pathname-top)))))
+(defmethod psym-list-serialized-records ((psym psym-webdav) pathname-top)
+  (with-slots (server-info root-directory) psym
+    (cladaver:ls server-info (merge-pathnames root-directory pathname-top))))
 
-(defmethod psym-deserialize-record ((psym psym-dir-alist) pathname-record)
-  (cons (pathname-name pathname-record)
-        (file-string pathname-record)))
+(defmethod psym-deserialize-record ((psym psym-webdav) pathname-record)
+  (with-slots (server-info) psym
+    (cons
+     pathname-record
+     (error-to-signal
+      (cladaver:cat server-info pathname-record)))))
 
-
-(defmethod psym-serialize-record ((psym psym-dir-alist) pathname record)
-  (destructuring-bind (key . value) record
-    (with-open-file (fh (make-pathname :name key
-                                       :defaults pathname)
-                        :if-does-not-exist :create
-                        :if-exists :SUPERSEDE
-                        :direction :output)
-      (format fh "~A" value))))
+(defmethod psym-serialize-record ((psym psym-webdav) pathname record)
+  (with-slots (server-info) psym
+    (error-to-signal
+       (cladaver:put server-info pathname record))))
 
 (defun alist-get (key alist)
   (let ((key-value (assoc key alist  :test 'equal)))
