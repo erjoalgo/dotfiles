@@ -8,12 +8,30 @@
    #:search-engines-reload
    #:uri-encode))
 
+(use-package :statusor)
+
 (defparameter *search-history-fn*
   (merge-pathnames "search-history" *data-private-one-way*))
 
-(defvar *webdav-server-info*
-  (cladaver:make-server-info
-   :base-url "https://my.webdav.server"))
+(defvar *webdav-server-base-url* nil)
+
+(defvar *webdav-server-info* nil)
+
+(defun load-webdav-server-info ()
+  (if-let-ok (err (message "unable to load webdav server: ~A" err))
+      ((url (nil-to-error *webdav-server-base-url*))
+       ;; TODO extract actual hostname
+       (auth (nil-to-error (authinfo:get-by :app "webdav")))
+       (user (authinfo:alist-get-or-error :login auth))
+       (password (authinfo:alist-get-or-error :password auth))
+       ;; TODO auth
+       )
+    (setf *webdav-server-info*
+          (cladaver:make-server-info :base-url url
+                                     :username user
+                                     :password password))))
+
+(load-webdav-server-info)
 
 ;; note the trailing slash.
 ;; needed to allow merging additional pathname components
