@@ -11,8 +11,6 @@
   #:drakma
   #:cxml
   #:cxml-stp
-  )
+  #:statusor)
  :components
- (
-  ;; TODO factor out statusor library
-  (:file "cladaver")))
+ ((:file "cladaver")))
