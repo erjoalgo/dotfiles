@@ -11,6 +11,16 @@
 (defstruct server-info
   base-url username password)
 
+(defmacro http-request-or-error (url &rest args)
+  `(multiple-value-bind (body status-code)
+       (drakma:http-request ,url ,@args)
+     (if (= (floor status-code 100) 2)
+         ;; 2xx
+         body
+         (make-error
+          (format nil "non-2xx status code: ~A on url ~A: ~A"
+                  status-code ,url body )))))
+
 (defun ls (info path)
   (with-slots (base-url) info
     (if-let-ok nil
