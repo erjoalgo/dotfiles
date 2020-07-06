@@ -49,10 +49,10 @@
      (error (err-signal)
        (make-error err-signal))))
 
-(defmacro nil-to-error (form)
-  `((or ,form
-        `(make-error
-          ,(or error-message (format nil "~A is nil") ',form)))))
+(defmacro nil-to-error (form &optional error-message)
+  `(or ,form
+       (make-error
+        ,(or error-message (format nil "~A is nil" form)))))
 
 (defmacro ->? (forms &optional on-error-spec)
   (let ((val-var (gensym "val-var-")))
