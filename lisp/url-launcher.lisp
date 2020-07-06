@@ -23,8 +23,6 @@
   (mozrepl:chrome-get-url))
 
 (defun url-launcher-browser-new-tab (url)
-  ;;(mozreplfirefoxnewtab url)
-  ;; (echo (format nil "url is ~A" url))
   (SB-EXT:RUN-PROGRAM *browser-name*
 		      (list url)
 		      :search t
@@ -32,12 +30,10 @@
 		      :output t
 		      :error t))
 
-;;actually load from the file
+;; actually load from the file
 (defparameter *url-command-rules*
   `(
     (".*[.]pdf$" "zathura")
-    ;;(".*[.]pdf" "evince")
-    ;;(".*[.]pdf" "gv")
     ("(^https?://.*|.*[.]html.*).*" ,#'url-launcher-browser-new-tab)
     (".*[.](docx?|odt)$" "libreoffice")
     ("about:config" ,#'mozrepl:firefox-new-tab)))
@@ -80,8 +76,7 @@
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")
      (:string nil ))
-  "read a new key-url pair, defaulting to current (firefox) browser url"
-
+  "Read a new key-url pair, defaulting to current (firefox) browser url"
   (setq url (or url (url-launcher-get-browser-current-url))
 	key (trim-spaces key))
   (if (or (not (and key url))
