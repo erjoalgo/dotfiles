@@ -80,10 +80,22 @@
        (xpath:with-namespaces (("D" "DAV:"))
          (xpath:evaluate "//D:href/text()" doc)))
       (iter (xpath:make-node-set-iterator nodeset)))
-     (loop while (not (xpath:node-set-iterator-end-p iter))
+      (loop
+         with first = nil
+         while (not (xpath:node-set-iterator-end-p iter))
+         for i from 0
         as node = (xpath:node-set-iterator-current iter)
-        as data = (cxml-stp:data node)
-        collect data
+         as pathname = (pathname (cxml-stp:data node))
+         as basename = (pathname-name pathname)
+         do (format t "cladaver 3jp6: value of pathname: ~A~%" pathname)
+         do (assert (if (zerop i)
+                        (prog1
+                            (null basename)
+                          (setf first pathname))
+                        (equal (pathname-directory first)
+                               (pathname-directory pathname))))
+         unless (null basename)
+         collect pathname
         do (setf iter (xpath:node-set-iterator-next iter))))))
 
 (defun cat (info path)
