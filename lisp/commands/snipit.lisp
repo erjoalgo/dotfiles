@@ -8,7 +8,7 @@
     (assert (probe-file png))
     (run-command-async
      "curl"
-     (list "-sF" (format nil "imagedata=@~A" png) *snipit-upload-url*)
+     (list "-sLF" (format nil "imagedata=@~A" png) *snipit-upload-url*)
      (retcode output)
      (let ((url output))
        (set-x-selection url :clipboard)
