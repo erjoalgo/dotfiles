@@ -69,22 +69,21 @@
 (defun ls (info path)
   (with-slots (base-url) info
     (if-let-ok nil
-     ((url (format nil "~A~A" base-url path))
-      (raw-resp
-       (http-request-or-error url
-                              :method :PROPFIND
-                              :additional-headers '(("Depth" . "1"))))
-      (doc (cxml:parse raw-resp
-                       (stp:make-builder)))
-      (nodeset
-       (xpath:with-namespaces (("D" "DAV:"))
-         (xpath:evaluate "//D:href/text()" doc)))
-      (iter (xpath:make-node-set-iterator nodeset)))
+        ((url (format nil "~A~A" base-url path))
+         (raw-resp
+          (http-request-or-error url
+                                 :method :PROPFIND
+                                 :additional-headers '(("Depth" . "1"))))
+         (doc (cxml:parse raw-resp (stp:make-builder)))
+         (nodeset
+          (xpath:with-namespaces (("D" "DAV:"))
+            (xpath:evaluate "//D:href/text()" doc)))
+         (iter (xpath:make-node-set-iterator nodeset)))
       (loop
          with first = nil
          while (not (xpath:node-set-iterator-end-p iter))
          for i from 0
-        as node = (xpath:node-set-iterator-current iter)
+         as node = (xpath:node-set-iterator-current iter)
          as pathname = (pathname (cxml-stp:data node))
          as basename = (pathname-name pathname)
          do (format t "cladaver 3jp6: value of pathname: ~A~%" pathname)
@@ -96,7 +95,7 @@
                                (pathname-directory pathname))))
          unless (null basename)
          collect pathname
-        do (setf iter (xpath:node-set-iterator-next iter))))))
+         do (setf iter (xpath:node-set-iterator-next iter))))))
 
 (defun cat (info path)
   (with-slots (base-url) info
