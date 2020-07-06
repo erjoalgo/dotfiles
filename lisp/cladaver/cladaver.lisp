@@ -22,13 +22,16 @@
                   status-code ,url body )))))
 
 (defun ls (info path)
-  (with-slots (base-url) info
+  (with-slots (base-url username password) info
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
           (http-request-or-error url
                                  :method :PROPFIND
-                                 :additional-headers '(("Depth" . "1"))))
+                                 :additional-headers '(("Depth" . "1"))
+                                 :basic-authorization (when (and username password)
+                                                        (list username password))
+                                 ))
          (doc (cxml:parse raw-resp (stp:make-builder)))
          (nodeset
           (xpath:with-namespaces (("D" "DAV:"))
@@ -52,22 +55,26 @@
          do (setf iter (xpath:node-set-iterator-next iter))))))
 
 (defun cat (info path)
-  (with-slots (base-url) info
+  (with-slots (base-url username password) info
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
-          (http-request-or-error url :method :GET))
+          (http-request-or-error url :method :GET
+                                 :basic-authorization (when (and username password)
+                                                        (list username password))))
          (string (if (stringp raw-resp)
                      raw-resp
                      (babel:octets-to-string raw-resp))))
       string)))
 
 (defun put (info path data)
-  (with-slots (base-url) info
+  (with-slots (base-url username password) info
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
           (http-request-or-error url
                                  :method :PUT
-                                 :content data)))
+                                 :content data
+                                 :basic-authorization (when (and username password)
+                                                        (list username password)))))
       raw-resp)))
