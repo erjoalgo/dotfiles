@@ -103,9 +103,11 @@
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
-          (http-request-or-error url
-                                 :method :GET)))
-      raw-resp)))
+          (http-request-or-error url :method :GET))
+         (string (if (stringp raw-resp)
+                     raw-resp
+                     (babel:octets-to-string raw-resp))))
+      string)))
 
 (defun put (info path data)
   (with-slots (base-url) info
