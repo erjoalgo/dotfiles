@@ -86,7 +86,6 @@
          as node = (xpath:node-set-iterator-current iter)
          as pathname = (pathname (cxml-stp:data node))
          as basename = (pathname-name pathname)
-         do (format t "cladaver 3jp6: value of pathname: ~A~%" pathname)
          do (assert (if (zerop i)
                         (prog1
                             (null basename)
