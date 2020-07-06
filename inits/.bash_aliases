@@ -308,6 +308,9 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 alias sv=service
 alias sv-tail='sudo journalctl -fu'
 
+# https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
+alias strace-attach-stdout='strace -ff -e trace=write -e write=1,2 -s99999 -p'
+
 # Local Variables:
 # mode: sh
 # End:
