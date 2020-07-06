@@ -17,6 +17,8 @@
   #:cl-json ;; sms-fanout
   #:cl-who ;; contacts html rendering
   #:cl-syslog ;; sms-fanout
+  #:cladaver ;; url launcher, etc
+  #:statusor
   )
  :components
  (
