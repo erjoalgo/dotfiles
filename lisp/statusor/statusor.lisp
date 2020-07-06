@@ -9,6 +9,8 @@
    #:nil-to-error
    #:->?))
 
+(in-package #:statusor)
+
 (defmacro if-let-ok (on-error-spec bindings &rest on-success)
   (if (null bindings)
       `(progn ,@on-success)
