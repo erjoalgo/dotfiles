@@ -11,11 +11,13 @@
 (defparameter *search-history-fn*
   (merge-pathnames "search-history" *data-private-one-way*))
 
-(defparameter *launcher-persistent-alist*
-  (make-instance 'psym-dir-alist
-   :pathnames (loop for data-dir in *DATA-DIRS*
-                 collect (merge-pathnames "url-launcher-urls/" data-dir))
-   :short-description "launcher urls"))
+(defvar *webdav-server-info*
+  (cladaver:make-server-info
+   :base-url "https://my.webdav.server"))
+
+;; note the trailing slash.
+;; needed to allow merging additional pathname components
+(defvar webdav-urls-prefix #P"/urls/")
 
 (defun url-launcher-get-browser-current-url ()
   (mozrepl:chrome-get-url))
@@ -45,13 +47,16 @@
      thereis (and (cl-ppcre:scan regexp url) opener)
      finally (return #'url-launcher-browser-new-tab)))
 
-(define-stumpwm-type-with-completion :launcher-url
-    (psym-records *launcher-persistent-alist*)
-  :key-fn car
-  :value-fn cdr)
+(define-stumpwm-type-with-completion :aliased-url
+    (cladaver:ls *webdav-server-info* webdav-urls-prefix)
+  :key-fn file-namestring
+  :value-fn
+  (lambda (webdav-path)
+    (error-to-signal
+     (cladaver:cat *webdav-server-info* webdav-path))))
 
-(defcommand launch-url (url) ((:launcher-url "enter url key: "))
-  "do a completing read of stored keys, then launch url"
+(defcommand launch-url (url) ((:aliased-url "enter url key: "))
+  "Do a completing read of stored keys, then launch url"
   (when url
     (let* ((url (expand-user url))
            (opener (url-command url)))
@@ -85,10 +90,10 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
-        (psym-add *launcher-persistent-alist* (cons key url)
-                  ;; TODO select public or private...
-                  )
-	;;(setq *launcher-alist* (cons key url))
+        (error-to-signal
+         (cladaver:put *webdav-server-info*
+                       (merge-pathnames webdav-urls-prefix key)
+                       url))
 	(echo (format nil "added: ~A" url)))))
 
 ;;search-engine-search
