@@ -217,6 +217,5 @@
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
    :short-description "launcher urls")
-  (psym-load *launcher-persistent-alist*)
   (psym-load *search-engine-persistent-alist*)
   (setf *suppress-deny-messages* t))
