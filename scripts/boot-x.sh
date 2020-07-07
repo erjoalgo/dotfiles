@@ -77,8 +77,9 @@ sudo systemctl enable getty@tty1.service
 ./installs/xdg-open-tel-linphone
 
 for SYSTEM in ../lisp/{statusor,cladaver}; do
-    asdf-add-project-to-link-farm $(realpath ${SYSTEM})
-    asdf-system-installed-p ${SYSTEM}
+  SYSTEM=$(realpath ${SYSTEM})
+  asdf-add-project-to-link-farm ${SYSTEM}
+  asdf-system-installed-p $(basename ${SYSTEM}/*asd .asd)
 done
 
 # TODO wifi-boot
