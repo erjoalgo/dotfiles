@@ -8,7 +8,7 @@
    #:search-engines-reload
    #:uri-encode))
 
-(use-package :statusor)
+;; (use-package :statusor)
 
 (defparameter *search-history-fn*
   (merge-pathnames "search-history" *data-private-one-way*))
@@ -18,10 +18,10 @@
 (defvar *webdav-server-info* nil)
 
 (defun load-webdav-server-info ()
-  (if-let-ok (err (message "unable to load webdav server: ~A" err))
-      ((url (nil-to-error *webdav-server-base-url*))
+  (statusor:if-let-ok (err (format t "unable to load webdav server: ~A" err))
+      ((url (statusor:nil-to-error *webdav-server-base-url*))
        ;; TODO extract actual hostname
-       (auth (nil-to-error (authinfo:get-by :app "webdav")))
+       (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
        (user (authinfo:alist-get-or-error :login auth))
        (password (authinfo:alist-get-or-error :password auth))
        ;; TODO auth
@@ -66,7 +66,7 @@
   :key-fn file-namestring
   :value-fn
   (lambda (webdav-path)
-    (error-to-signal
+    (statusor:error-to-signal
      (cladaver:cat *webdav-server-info* webdav-path))))
 
 (defcommand launch-url (url) ((:aliased-url "enter url key: "))
@@ -103,7 +103,7 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
-        (error-to-signal
+        (statusor:error-to-signal
          (cladaver:put *webdav-server-info*
                        (merge-pathnames webdav-urls-prefix key)
                        url))
