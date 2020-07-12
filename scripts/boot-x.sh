@@ -80,6 +80,7 @@ for SYSTEM in ../lisp/{statusor,cladaver}; do
   SYSTEM=$(realpath ${SYSTEM})
   asdf-add-project-to-link-farm ${SYSTEM}
   asdf-system-installed-p $(basename ${SYSTEM}/*asd .asd)
+  ln -sf ${SYSTEM} ~/quicklisp/local-projects
 done
 
 # TODO wifi-boot
