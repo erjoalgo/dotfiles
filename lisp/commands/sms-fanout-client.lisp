@@ -64,7 +64,6 @@
     (wsd:start-connection client)
     (wsd:on :message client
             (lambda (text)
-              (format t "~&Got: ~A~%" text)
               (alist-let (cl-json:decode-json-from-string text) (status message-type body)
                 (cond
                   ((not (zerop status))
