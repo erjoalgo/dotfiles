@@ -43,7 +43,7 @@
 		      (list url)
 		      :search t
 		      :wait nil
-		      :output t
+                      :output t
 		      :error t))
 
 ;; actually load from the file
