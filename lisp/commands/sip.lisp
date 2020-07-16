@@ -146,7 +146,6 @@
   (linphonec-kill)
   (linphonec-init))
 
-
 (defmacro sip-alpha-to-digit (char)
   (let ((char-sym (gensym "CHAR-")))
     `(let ((,char-sym ,char))
