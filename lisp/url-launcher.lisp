@@ -60,7 +60,8 @@
      finally (return #'url-launcher-browser-new-tab)))
 
 (define-stumpwm-type-with-completion :aliased-url
-    (cladaver:ls *webdav-server-info* webdav-urls-prefix)
+    (statusor:error-to-signal
+     (cladaver:ls *webdav-server-info* webdav-urls-prefix))
   :key-fn file-namestring
   :value-fn
   (lambda (webdav-path)
