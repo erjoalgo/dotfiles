@@ -31,8 +31,6 @@
                                      :username user
                                      :password password))))
 
-(load-webdav-server-info)
-
 ;; note the trailing slash.
 ;; needed to allow merging additional pathname components
 (defvar webdav-urls-prefix #P"/urls/")
@@ -213,6 +211,7 @@
    (uiop:pathname-parent-directory-pathname
     (uiop:ensure-directory-pathname *search-history-fn*))
    :max-parents 2)
+  (load-webdav-server-info)
   (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
