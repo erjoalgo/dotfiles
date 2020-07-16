@@ -48,12 +48,24 @@ seconds ago")
 	       (focus-all cand-no-curr))
 	(unless (and curr-win
 		     (funcall win-matches curr-win))
-	  (let ((proc
-                 ;; this creates an extra shell whose pid doesn't match window pid
-                 ;; (run-shell-command command)
-                 (run-prog command :args nil
-                           :wait nil
-                           :search t)))
+	  (let* ((log-file (merge-pathnames #P"/tmp/"
+                                            (make-pathname
+                                             :name (pathname-name command)
+                                             :type "log")))
+                 (proc
+                  ;; this creates an extra shell whose pid doesn't match window pid
+                  ;; (run-shell-command command)
+                  (with-open-file
+                      (out-fn log-file
+                              :direction :output
+                              :if-exists :append
+                              :if-does-not-exist :create)
+                    (sb-ext:run-program
+                     command  nil
+                     :wait nil
+                     :search t
+                     :output out-fn
+                     :if-output-exists :append))))
             (when raise-window-in-original-group-secs
               (push (cons (sb-ext:process-pid proc)
                           (cons (current-group) (GET-UNIVERSAL-TIME)))
