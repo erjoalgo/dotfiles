@@ -22,7 +22,7 @@
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
        (machine (authinfo:alist-get-or-error :machine auth))
-       (scheme (authinfo:alist-get-or-error :schemea auth))
+       (scheme (authinfo:alist-get-or-error :scheme auth))
        (url (format nil "~A://~A" scheme machine))
        (user (authinfo:alist-get-or-error :login auth))
        (password (authinfo:alist-get-or-error :password auth)))
