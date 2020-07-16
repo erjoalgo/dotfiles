@@ -23,7 +23,7 @@ SIP_HOST=${SIP_HOST:-$(
                    grep '[a-z]' |  \
                    sort |  \
                    uniq |  \
-                   grep -v unknown \
+                   grep -v 'unknown\|invalid' \
                    | head -1)}
 TEL=$(sed 's/^tel://'  <<< "${TEL}")
 
