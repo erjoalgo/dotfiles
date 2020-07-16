@@ -19,13 +19,13 @@
 
 (defun load-webdav-server-info ()
   (statusor:if-let-ok (err (format t "unable to load webdav server: ~A" err))
-      ((url (statusor:nil-to-error *webdav-server-base-url*))
-       ;; TODO extract actual hostname
+      (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
+       (machine (authinfo:alist-get-or-error :machine auth))
+       (scheme (authinfo:alist-get-or-error :schemea auth))
+       (url (format nil "~A://~A" scheme machine))
        (user (authinfo:alist-get-or-error :login auth))
-       (password (authinfo:alist-get-or-error :password auth))
-       ;; TODO auth
-       )
+       (password (authinfo:alist-get-or-error :password auth)))
     (setf *webdav-server-info*
           (cladaver:make-server-info :base-url url
                                      :username user
