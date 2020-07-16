@@ -47,7 +47,7 @@
 (defun sip-sanitize-phone-number (text)
   (let* ((no-alpha
           (sip-alpha-text-to-phone-number text))
-        (number-clean (ppcre:regex-replace-all "[^0-9]" no-alpha "")))
+        (number-clean (ppcre:regex-replace-all "[^0-9]|^[+]1" no-alpha "")))
     number-clean))
 
 (defun phone-number-to-address (number &key (sip-host *sip-default-host*))
