@@ -23,7 +23,9 @@
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
        (machine (authinfo:alist-get-or-error :machine auth))
        (scheme (authinfo:alist-get-or-error :scheme auth))
-       (url (format nil "~A://~A" scheme machine))
+       (port (authinfo:alist-get :port auth))
+       (url (format nil "~A://~A~A" scheme machine
+                    (if port (format nil ":~A" port) "")))
        (user (authinfo:alist-get-or-error :login auth))
        (password (authinfo:alist-get-or-error :password auth)))
     (setf *webdav-server-info*
