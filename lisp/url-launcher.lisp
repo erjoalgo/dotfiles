@@ -18,7 +18,7 @@
 (defvar *webdav-server-info* nil)
 
 (defun load-webdav-server-info ()
-  (statusor:if-let-ok (err (format t "unable to load webdav server: ~A" err))
+  (statusor:if-let-ok nil
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
        (machine (authinfo:alist-get-or-error :machine auth))
@@ -212,7 +212,7 @@
    (uiop:pathname-parent-directory-pathname
     (uiop:ensure-directory-pathname *search-history-fn*))
    :max-parents 2)
-  (load-webdav-server-info)
+  (statusor:error-to-signal (load-webdav-server-info))
   (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
