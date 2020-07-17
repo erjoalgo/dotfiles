@@ -206,14 +206,13 @@
   )
 
 
-(dolist (class *browser-classes*)
-  (push `(:class ,class) stumpwm:*deny-raise-request*))
-
 (defun url-launcher-init ()
   (ensure-directory-exists
    (uiop:pathname-parent-directory-pathname
     (uiop:ensure-directory-pathname *search-history-fn*))
    :max-parents 2)
+  (dolist (class *browser-classes*)
+    (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
   (statusor:error-to-signal (load-webdav-server-info))
   ;; mkdir. may fail if already exists
   (cladaver:mkdir *webdav-server-info* webdav-urls-prefix)
