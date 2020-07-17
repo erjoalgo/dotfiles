@@ -42,7 +42,7 @@
   `(handle-error ,form
                  nil
                  (err
-                  (error "error on ~A: ~A" ',form err))))
+                  (error "error on ~A:~% ~A" ',form err))))
 
 (defmacro signal-to-error (form)
   `(handler-case ,form
