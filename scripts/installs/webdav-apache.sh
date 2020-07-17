@@ -12,7 +12,7 @@ WEBDAV_LOCK=${WEBDAV_LOCK:-/var/www/DavLock}
 sudo apt-get install -y apache2
 
 sudo mkdir -p "${WEBDAV_ROOT}"
-sudo chown -R www-data:www-data "${WEBDAV_ROOT}"
+sudo chown -R www-data:www-data "$(dirname ${WEBDAV_LOCK})"
 
 sudo a2enmod dav
 sudo a2enmod dav_fs
