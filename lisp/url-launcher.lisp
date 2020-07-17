@@ -22,12 +22,12 @@
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
        (machine (authinfo:alist-get-or-error :machine auth))
-       (scheme (authinfo:alist-get-or-error :scheme auth))
+       (scheme (or (authinfo:alist-get :scheme auth) "https"))
        (port (authinfo:alist-get :port auth))
        (url (format nil "~A://~A~A" scheme machine
                     (if port (format nil ":~A" port) "")))
-       (user (authinfo:alist-get-or-error :login auth))
-       (password (authinfo:alist-get-or-error :password auth)))
+       (user (authinfo:alist-get :login auth))
+       (password (authinfo:alist-get :password auth)))
     (setf *webdav-server-info*
           (cladaver:make-server-info :base-url url
                                      :username user
