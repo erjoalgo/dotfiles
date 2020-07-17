@@ -215,6 +215,8 @@
     (uiop:ensure-directory-pathname *search-history-fn*))
    :max-parents 2)
   (statusor:error-to-signal (load-webdav-server-info))
+  ;; mkdir. may fail if already exists
+  (cladaver:mkdir *webdav-server-info* webdav-urls-prefix)
   (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
