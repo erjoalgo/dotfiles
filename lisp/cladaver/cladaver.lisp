@@ -4,7 +4,8 @@
    #:make-server-info
    #:ls
    #:cat
-   #:put))
+   #:put
+   #:mkdir))
 
 (in-package #:cladaver)
 
@@ -77,4 +78,16 @@
                                  :content data
                                  :basic-authorization (when (and username password)
                                                         (list username password)))))
-      raw-resp)))
+        raw-resp)))
+
+(defun mkdir (info path)
+  (with-slots (base-url username password) info
+    (if-let-ok nil
+               ((url (format nil "~A~A" base-url path))
+                (raw-resp
+                 (http-request-or-error
+                  url
+                  :method :MKCOL
+                  :basic-authorization (when (and username password)
+                                         (list username password)))))
+               raw-resp)))
