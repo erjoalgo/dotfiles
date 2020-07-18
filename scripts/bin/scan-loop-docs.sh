@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# SCANNER=gt68xx:libusb:002:005
-# SCANNER=$(sudo scanimage -L | grep Visioneer | cut -f1 -d\' | cut -f2 -d\`)
-# test -n "${SCANNER}" || exit ${LINENO}
-
 if command -v imagescan; then
     SCAN_CMD="/usr/lib/x86_64-linux-gnu/utsushi/utsushi-scan --no-interface"
 elif sudo scanimage -L; then
@@ -31,7 +27,6 @@ while true; do
 
     while true; do
         echo "scanning page ${PAGE_NO} of ${DOC_NAME}..."
-        # time sudo scanimage --device ${SCANNER} --format ${FMT} --mode color > ${PAGE_NO}.${FMT}
         while true; do
             if time ${SCAN_CMD} > ${PAGE_NO}.${FMT}; then
                 break
