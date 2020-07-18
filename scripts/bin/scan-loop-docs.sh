@@ -1,9 +1,14 @@
 #!/bin/bash -x
 
 # SCANNER=gt68xx:libusb:002:005
-SCANNER=$(sudo scanimage -L | grep Visioneer | cut -f1 -d\' | cut -f2 -d\`)
+if command -v imagescan; then
+    SCAN_CMD="/usr/lib/x86_64-linux-gnu/utsushi/utsushi-scan --no-interface"
+elif sudo scanimage -L; then
+    SCAN_CMD="sudo scanimage"
+else
+    echo "unable to find a scanner." && exit ${LINENO}
+fi
 
-test -n "${SCANNER}" || exit ${LINENO}
 DOC_NAME=""
 while true; do
     while test -z ${DOC_NAME}; do
@@ -22,15 +27,25 @@ while true; do
 
     FMT=pnm
     while true; do
-	echo "scanning page ${PAGE} of ${DOC_NAME}..."
-	time sudo scanimage --device ${SCANNER} --format ${FMT} --mode color > ${PAGE}.${FMT}
-	read -p "enter new doc name to scan a new doc, <Return> to scan more ${DOC_NAME} pages, q to quit: " NEW_DOC_NAME
+	echo "scanning page ${PAGE_NO} of ${DOC_NAME}..."
+	# time sudo scanimage --device ${SCANNER} --format ${FMT} --mode color > ${PAGE_NO}.${FMT}
+        while true; do
+	    if time ${SCAN_CMD} > ${PAGE_NO}.${FMT}; then
+                break
+            else
+                echo "retry scan..."
+                sleep 1
+            fi
+        done
+
+	echo "enter new doc name to scan a new doc, "
+        echo "<Return> to scan more ${DOC_NAME} pages, "
+        read -p "q to quit: "  NEW_DOC_NAME
 	test -z "${NEW_DOC_NAME}" || break
-	PAGE=$(expr ${PAGE} + 1)
+	PAGE_NO=$(expr ${PAGE_NO} + 1)
     done
 
-    find . -name "*${FMT}" -exec convert {} -quality 15 {}.jpg \; && \
-    	convert *jpg ${DOC_NAME}.pdf || exit ${LINENO} &
+    convert $(ls -1 *${FMT} | sort -n) ${DOC_NAME}.pdf
 
     cd ..
     test "${NEW_DOC_NAME}" = "q" && break
