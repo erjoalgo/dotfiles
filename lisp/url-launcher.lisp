@@ -215,7 +215,7 @@
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
   (statusor:error-to-signal (load-webdav-server-info))
   ;; mkdir. may fail if already exists
-  (cladaver:mkdir *webdav-server-info* webdav-urls-prefix)
+  '(cladaver:mkdir *webdav-server-info* webdav-urls-prefix)
   (make-instance 'psym-lines-list
    :pathnames (loop for data-dir in *data-dirs*
                  collect (merge-pathnames "url-launcher-urls/" data-dir))
