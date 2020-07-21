@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+# strace wrapper
+
+OUT=${OUT:-/tmp/strace-out.log};
+strace -f ${*} 2>&1 | tee ${OUT};
+RET=$?
+echo "wrote to ${OUT}";
+less ${OUT}
+emacsclient ${OUT} || true
+exit $?
+
+# Local Variables:
+# mode: sh-mode
+# End:
