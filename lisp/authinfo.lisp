@@ -17,7 +17,7 @@
      for line in (ppcre:split #\Newline contents)
      collect
        (loop for (key val . rest)
-          on (ppcre:split #\Space line) by #'cddr
+          on (ppcre:split " +" line :omit-unmatched-p t) by #'cddr
           collect (cons (intern (string-upcase key) :keyword) val))))
 
 
