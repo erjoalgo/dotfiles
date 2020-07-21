@@ -73,8 +73,7 @@
   *special-chars-map*
   ;; *search-engine-map*
   *commands-map*
-  *brightness-map*
-  *linphone-map*)
+  *brightness-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -270,23 +269,6 @@
        collect
          (list (format nil "~C" c)
                (format nil "set-brightness ~A" percentage))))
-
-(define-key-bindings
-    *linphone-map*
-    `(
-      ("H-c" "sip-contact-contact")
-      ("H-l" "sip-contact-selection")
-      ("H-n" "sip-contact-number")
-      ("H-t" "sip-call-terminate")
-      ("H-d" "sip-call-dtmf")
-      ("H-m" "sip-call-mute")
-      ("H-M" "sip-call-unmute")
-      ("H-a" "sip-call-answer")
-      ("H-i" "sip-init")
-      ("H-I" "sip-exit")
-      ("H-P" "sip-select-default-proxy")
-      ("H-p" "sip-show-current-default-proxy")
-      ("H-m" "sip-main")))
 
 (defun init-top-map-bindings ()
   ;; (url-launcher:search-engines-reload)
