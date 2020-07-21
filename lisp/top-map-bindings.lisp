@@ -177,6 +177,7 @@
       ("H-N" "gnext")
       ("H-P" "gprev")
       ("H-d" *games-keymap*)
+      ("H-B" "sip-call-dtmf")
       ("H-b" "sip-main")
       ("H-V" "paste-primary"))
   ;;not efficient nor necessary but only run at initialization
