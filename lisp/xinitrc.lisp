@@ -1,4 +1,5 @@
 (in-package :stumpwm)
+
 ;; things that used to be run by .xinitrc
 ;; TODO this file should be loadable as an sbcl script with no extra dependencies
 
