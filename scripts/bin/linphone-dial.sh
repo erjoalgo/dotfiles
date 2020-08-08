@@ -25,7 +25,7 @@ SIP_HOST=${SIP_HOST:-$(
                    uniq |  \
                    grep -v 'unknown\|invalid' \
                    | head -1)}
-TEL=$(sed -e 's/^tel://' -e 's/^[+]1//' <<< "${TEL}")
+TEL=$(sed -e 's/^tel://' -e 's/^[+]1\|[.]//g' <<< "${TEL}")
 
 ADDRESS=${TEL}@${SIP_HOST}
 
