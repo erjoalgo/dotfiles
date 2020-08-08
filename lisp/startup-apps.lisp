@@ -4,8 +4,7 @@
   (correct-screen-fix-display-prefs)
   (raise-window-browser)
   (raise-window-x-terminal-emulator)
-  (emacs)
-  (connect-to-internet-maybe))
+  (emacs))
 
 (defun startup-apps-run ()
   (let ((hostname-specific-apps-pathname
