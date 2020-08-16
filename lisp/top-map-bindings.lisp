@@ -1,10 +1,7 @@
 (in-package :STUMPWM)
 
 (define-run-or-pull-program "BROWSER"
-    :cmd
-  (if (ppcre:scan "chrom" *browser-name*)
-      (format nil "~A --click-to-call-ui=false" *browser-name*)
-      *browser-name*)
+    :cmd *browser-name*
     :raise-key "H-f"
     :pull-key "H-F"
     :classes *browser-classes*)
