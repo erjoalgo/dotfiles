@@ -30,7 +30,7 @@ seconds ago")
 
 (add-hook stumpwm:*new-window-hook* 'raise-window-in-original-group)
 
-(defun raise-pull-or-run-win (win-classes command &optional pull-p all-screens)
+(defun raise-pull-or-run-win (win-classes cmd-line &optional pull-p all-screens)
   (let* ((win-list (if all-screens (screen-windows (current-screen))
 		       (group-windows (current-group))))
 	 (curr-win (current-window))
@@ -40,7 +40,8 @@ seconds ago")
 	 (cands (remove-if-not
 		 win-matches
 		 win-list))
-	 (cand-no-curr (car (remove curr-win cands))))
+	 (cand-no-curr (car (remove curr-win cands)))
+         (cmd-list (ppcre:split " +" cmd-line)))
     (if cand-no-curr
 	(progn (funcall (if pull-p 'pull-window
 			    'raise-window)
@@ -48,28 +49,29 @@ seconds ago")
 	       (focus-all cand-no-curr))
 	(unless (and curr-win
 		     (funcall win-matches curr-win))
-	  (let* ((log-file (merge-pathnames #P"/tmp/"
-                                            (make-pathname
-                                             :name (pathname-name command)
-                                             :type "log")))
-                 (proc
-                  ;; this creates an extra shell whose pid doesn't match window pid
-                  ;; (run-shell-command command)
-                  (with-open-file
-                      (out-fn log-file
-                              :direction :output
-                              :if-exists :append
-                              :if-does-not-exist :create)
-                    (sb-ext:run-program
-                     command  nil
-                     :wait nil
-                     :search t
-                     :output out-fn
-                     :if-output-exists :append))))
-            (when raise-window-in-original-group-secs
-              (push (cons (sb-ext:process-pid proc)
-                          (cons (current-group) (GET-UNIVERSAL-TIME)))
-                    pid-original-group-alist)))))))
+          (destructuring-bind (command . args) cmd-list
+	    (let* ((log-file (merge-pathnames #P"/tmp/"
+                                              (make-pathname
+                                               :name (pathname-name command)
+                                               :type "log")))
+                   (proc
+                    ;; this creates an extra shell whose pid doesn't match window pid
+                    ;; (run-shell-command command)
+                    (with-open-file
+                        (out-fn log-file
+                                :direction :output
+                                :if-exists :append
+                                :if-does-not-exist :create)
+                      (sb-ext:run-program
+                       command args
+                       :wait nil
+                       :search t
+                       :output out-fn
+                       :if-output-exists :append))))
+              (when raise-window-in-original-group-secs
+                (push (cons (sb-ext:process-pid proc)
+                            (cons (current-group) (GET-UNIVERSAL-TIME)))
+                      pid-original-group-alist))))))))
 
 (defmacro define-run-or-pull-program (name
 				      &key
