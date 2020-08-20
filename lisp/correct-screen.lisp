@@ -5,7 +5,7 @@
   (run-shell-command cmd collect-output-p))
 
 (defstruct xrandr-display id state mode modes connected-p extra)
-(defstruct xrandr-mode width height rates active-p preferred-p
+(defstruct xrandr-mode width height rates active preferred
   resolution-string)
 
 (defun xrandr-parse-mode (mode-line)
@@ -19,8 +19,8 @@
     :resolution-string (format nil "~Dx~D" w h)
     :rates (mapcar #'read-from-string
                    (ppcre:all-matches-as-strings "[0-9]+[.][0-9]+" mode-line))
-    :preferred-p (not (null (ppcre:scan "[+]" mode-line)))
-    :active-p (not (null (ppcre:scan "[*]" mode-line))))))
+    :preferred (not (null (ppcre:scan "[+]" mode-line)))
+    :active (not (null (ppcre:scan "[*]" mode-line))))))
 
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
@@ -43,7 +43,7 @@
                                      :connected-p (equal state "connected")
                                      :extra extra
                                      :mode (loop for mode in modes thereis
-                                                                   (and (xrandr-mode-active-p mode) mode)))))))
+                                                                   (and (xrandr-mode-active mode) mode)))))))
 
 (defun xrandr-display-prefs (&key (prefs-file #P"~/.xdisplays"))
   (when (probe-file prefs-file)
