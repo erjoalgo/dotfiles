@@ -6,7 +6,7 @@
 # } &
 # disown %-
 
-source /home/ealfonso/git/erjoalgo-stumpwmrc/inits/.my-bashrc
+source ${HOME}/git/erjoalgo-stumpwmrc/inits/.my-bashrc
 
 # Local Variables:
 # mode: sh
