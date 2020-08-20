@@ -140,6 +140,32 @@
       (message "~D output~:P detected" (length order))
       (correct-screen order)))
 
+(defcommand correct-screen-select-mode () ()
+  "select a mode for current displays"
+  (let* ((display (selcand:select :candidates
+                                 (remove-if-not 'xrandr-display-connected-p
+                                                (xrandr-displays))
+                                 :prompt "select display: "
+                                 :stringify-fn #'XRANDR-DISPLAY-ID))
+         (mode-stringify
+          (lambda (mode)
+            (with-slots (width height active) mode
+              (format nil "~A~Dx~D"
+                      (if active "*" "")
+                      width height))))
+        (mode (selcand:select :candidates (XRANDR-DISPLAY-MODES display)
+                              :prompt "select mode: "
+                              :stringify-fn
+                              (lambda (mode)
+                                (with-slots (width height active) mode
+                                  (format nil "~A~Dx~D"
+                                          (if active "*" "")
+                                          width height)))
+                              :display-candidates t)))
+    (run-command-async-notify "xrandr"
+                              (list "--output" (XRANDR-DISPLAY-ID display)
+                                    "--mode" (funcall mode-stringify mode)))))
+
 (define-stumpwm-type-for-completion
     :xrandr-rot
     '("left" "right" "normal" "inverted"))
