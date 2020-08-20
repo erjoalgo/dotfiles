@@ -59,8 +59,8 @@
                    cand)))))
          (choices (mapcar #'car hints-cands))
          (prompt (if (not display-candidates) prompt
-                     (format nil "~A~%~{~A~^~%~}" prompt
-                             hints-cands)))
+                     (format nil "~A~%~{~A~^~%~}~% " prompt
+                             choices)))
          (hint-selected
           (cond
             ((and autoselect-if-single (null (cdr choices))) (car choices))
