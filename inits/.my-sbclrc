@@ -54,13 +54,15 @@ defaults to CHAR= (for case-sensitive comparison)."
           :test test))
 
 (defun lookup-thread ()
-  (format t "~{~A~^~%~}" (sb-thread:list-all-threads))
-  (format t "~%~%enter any thread pattern: ")
-  (loop with pat = (read-line)
-        for thread in (sb-thread:list-all-threads)
-          thereis
-          (when (substringp pat (format nil "~A" thread))
-            thread)))
+  (let ((threads (sb-thread:list-all-threads)))
+  (loop
+     for thread in threads
+     for i from 0
+       do (format t "~A: ~A: ~%" i thread))
+  (format t "~%~%enter thread index: ")
+  (let* ((line (read-line))
+        (idx (parse-integer line)))
+    (nth idx threads))))
 
 
 (defun lookup-terminate-thread ()
