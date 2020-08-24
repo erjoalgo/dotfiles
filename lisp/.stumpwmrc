@@ -47,6 +47,5 @@
   (setf *startup-message* nil)
   (startup-apps-run)
   (safe-init-sexp (assert (psym-records *search-engine-persistent-alist*)))
-  (decorations-init))
-
-;; (sb-thread:terminate-thread *sms-fanout-reconnect-thread*)
+  (decorations-init)
+  (message "done loading .stumpwmrc"))
