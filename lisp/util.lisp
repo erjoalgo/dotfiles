@@ -250,9 +250,7 @@
        (sb-thread:terminate-thread ,thread-var))
      (setf ,thread-var
            (sb-thread:make-thread (lambda () ,@body)
-                                  :name (or
-                                         (symbol-name ,thread-var)
-                                         "unnamed thread!")))))
+                                  :name (symbol-name ',thread-var)))))
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
