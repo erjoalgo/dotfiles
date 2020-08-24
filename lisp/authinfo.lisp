@@ -26,7 +26,10 @@
 
 (defun alist-get-or-error (key alist)
   (or (cdr (assoc key alist))
-      (error "no value for ~A in ~A" key alist)))
+      (error (format nil "no value for ~A in alist with keys: ~A" key
+                     ;; don't show passwords in error message
+                     (mapcar #'car alist)))))
+
 
 (defun get-by (authinfo-key value)
   (loop for alist in (parse)
