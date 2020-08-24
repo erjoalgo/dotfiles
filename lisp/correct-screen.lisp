@@ -86,7 +86,7 @@
                (run-shell-command-print cmd)
                (incf pos-x (xrandr-mode-width mode))))))
 
-(defcommand correct-screen-fix-display-prefs () ()
+(defun correct-screen-fix-display-prefs ()
   (loop with fixes = nil
         with id-mode-prefs = (xrandr-display-prefs)
         for display in (xrandr-displays) do
