@@ -178,7 +178,8 @@
       ("H-d" *games-keymap*)
       ("H-B" "sip-call-dtmf")
       ("H-b" "sip-main")
-      ("H-V" "paste-primary"))
+      ("H-V" "paste-primary")
+      ("H-T" "openproject-create-personal-task"))
   ;;not efficient nor necessary but only run at initialization
   )
 

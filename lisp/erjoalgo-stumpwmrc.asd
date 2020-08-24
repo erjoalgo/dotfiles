@@ -19,6 +19,8 @@
   #:cl-syslog ;; sms-fanout
   #:cladaver ;; url launcher, etc
   #:statusor
+  #:access
+  #:drakma ;; TODO factor-out openproject.lisp
   )
  :components
  (
