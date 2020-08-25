@@ -21,12 +21,13 @@
 
 (defun request (path &key method json content-type (url-encoder #'drakma:url-encode))
   (statusor:if-let-ok nil
-                      ((machine "project.erjoalgo.com")
-                       (auth (statusor:nil-to-error
-                              (authinfo:get-by :machine machine)))
+                      ((auth (statusor:nil-to-error
+                              (authinfo:get-by :app "openproject-personal")))
+                       (machine (authinfo:alist-get-or-error :machine auth))
+                       (scheme (authinfo:alist-get-or-error :scheme auth))
                        (api-key (authinfo:alist-get-or-error :apikey auth))
                        (url (format nil "~A~A"
-                                    (or *debug-url* (format nil "https://~A" machine))
+                                    (or *debug-url* (format nil "~A://~A" scheme machine))
                                     path))
                        (content (when json (json:encode-json-to-string json)))
                        (content-type (or content-type (if content "application/hal+json")))
