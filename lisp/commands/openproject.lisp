@@ -112,7 +112,7 @@
 ;; TODO move openproject to its own system, move out config below
 (in-package :stumpwm)
 (defcommand openproject-create-personal-task (subject) ((:string "enter task subject: "))
-  (statusor:if-let-ok (err (statusor:error-to-signal err))
+  (statusor:if-let-ok (err (message "error creating task: ~A" err))
                       ((resp (openproject-client:create-work-package
                               subject
                               :description ""
