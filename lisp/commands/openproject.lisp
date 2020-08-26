@@ -24,7 +24,7 @@
                       ((auth (statusor:nil-to-error
                               (authinfo:get-by :app "openproject-personal")))
                        (machine (authinfo:alist-get-or-error :machine auth))
-                       (scheme (authinfo:alist-get-or-error :scheme auth))
+                       (scheme (or (authinfo:alist-get :scheme auth) "https"))
                        (api-key (authinfo:alist-get-or-error :apikey auth))
                        (url (format nil "~A~A"
                                     (or *debug-url* (format nil "~A://~A" scheme machine))
