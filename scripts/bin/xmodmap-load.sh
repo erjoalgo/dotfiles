@@ -34,4 +34,4 @@ xset r rate 170 50 # kbd delay, repeat rate
 xset m 10 1 # mouse accel, thresh
 
 # run this last as it may fail
-sudo solaar config 1 fn-swap off
+sudo $(which solaar) config 1 fn-swap off
