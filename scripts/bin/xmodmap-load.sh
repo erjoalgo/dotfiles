@@ -14,7 +14,8 @@ set -euo pipefail
     echo
 }
 
-if ! test "${USER}" = ealfonso && ! su ealfonso < /dev/null; then
+NON_ROOT_USER=$(ls /home)
+if ! test "${USER}" = "${NON_ROOT_USER}" && ! su "${NON_ROOT_USER}" < /dev/null; then
     echo "warn: unable to switch user"
     exit 0
 fi
