@@ -182,10 +182,12 @@
 (defcommand-alias engsearch search-engine-search)
 
 (defvar *search-engine-map* (make-sparse-keymap) "")
+(defvar *search-engine-by-letter-alist* (make-sparse-keymap) "")
 
 (defcommand search-engines-reload () ()
   "reload search engines from file"
   (psym-load *search-engine-persistent-alist*)
+  (setf *search-engine-by-letter-alist* nil)
   (loop
     with used-letters = nil
     for (eng . fmt) in (psym-records *search-engine-persistent-alist*)
@@ -197,7 +199,13 @@
            (progn
 	     (define-key *search-engine-map* (kbd (format nil "~A" letter))
 	       (format nil "engsearch ~A" eng))
-	     (push letter used-letters)))))
+	     (push letter used-letters)
+             (push (cons letter eng) *search-engine-by-letter-alist*)))))
+
+(defun look-up-engine-by-letter (letter)
+  (cdr (alist-get letter *search-engine-by-letter-alist*)))
+
+(export '(look-up-engine-by-letter) :stumpwm)
 
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO

@@ -114,9 +114,13 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
         (throw 'error "Abort."))))
 
 (define-regexp-route search-handler ("/search")
-  "Web search"
-  (let ((query (read-header :SEARCH-QUERY))
-        (engine (read-header :SEARCH-ENGINE)))
+    "Web search"
+  (let ((query (hunchentoot-post-data-or-err))
+        (engine (or (read-header :ENGINE)
+                    (let* ((letter (read-header :ENGINE-LETTER))
+                          (char (aref letter 0)))
+                      (assert (eq (length letter) 1))
+                      (stumpwm:look-up-engine-by-letter char)))))
     (stumpwm:search-engine-search engine query)))
 
 ;; (x-service:start 1959)
