@@ -194,7 +194,7 @@
                                      ("t" . :text)
                                      ("e" . :email))
                  :read-char-if-possible t
-                 :display-candidates t))
+                 :display-candidates :include-values))
         (number-clean (sip:sip-sanitize-phone-number number)))
     (case choice
       (:call (message "calling ~A" number) (sip:call number-clean))
@@ -294,7 +294,7 @@
                                ("p" . :proxy-select)
                                ("r" . :linphonec-restart))
            :read-char-if-possible t
-           :display-candidates t)))
+           :display-candidates :include-values)))
     (case choice
       (:enter-number (call-interactively "sip-contact-number"))
       (:contact-selection (call-interactively "sip-contact-contact"))

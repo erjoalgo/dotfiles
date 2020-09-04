@@ -60,7 +60,9 @@
          (choices (mapcar #'car hints-cands))
          (prompt (if (not display-candidates) prompt
                      (format nil "~A~%~{~A~^~%~}~% " prompt
-                             choices)))
+                             (if (eq display-candidates :include-values)
+                                 hints-cands
+                                 choices))))
          (hint-selected
           (cond
             ((and autoselect-if-single (null (cdr choices))) (car choices))
