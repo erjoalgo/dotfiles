@@ -312,7 +312,7 @@
        (sip:linphonec-restart))
       (t (if (equal choice clipboard-choice)
              (call-interactively "sip-contact-selection")
-             (error "Unknown choice: ~A" choice))))))
+             (call-interactively (symbol-name choice)))))))
 
 (defcommand sip-init () ()
   (sip:linphonec-init))
