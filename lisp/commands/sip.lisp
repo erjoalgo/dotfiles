@@ -292,7 +292,9 @@
                                ("t" . :call-terminate)
                                ("a" . :call-answer)
                                ("p" . :proxy-select)
-                               ("r" . :linphonec-restart))
+                               ("r" . :linphonec-restart)
+                               ("m" . :sip-call-mute)
+                               ("M" . :sip-call-unmute))
            :read-char-if-possible t
            :display-candidates :include-values)))
     (case choice
