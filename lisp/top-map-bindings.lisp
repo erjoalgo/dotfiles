@@ -59,8 +59,11 @@
 			     kmap-or-kmap-list
 			     (list kmap-or-kmap-list))
      for kmap in kmap-list do
-       (loop for (key action) in bindings do
-	    (define-key kmap (kbd key) action))))
+       (loop for (key action) in bindings
+          as kbd = (if (stringp key) (kbd key)
+                       key)
+          do
+	    (define-key kmap kbd action))))
 
 
 (defmacro def-several-vars (value-form &rest vars)
