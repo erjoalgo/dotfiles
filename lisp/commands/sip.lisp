@@ -43,7 +43,15 @@
         output
         (error "non-zero exit status: ~A ~A" retcode output))))
 
-(defvar *sip-default-host* "sanjose2.voip.ms")
+(defun sip-current-identity ()
+  (let* ((output (linphonecsh-sync "generic" "proxy show default")))
+    (or
+     (ppcre:register-groups-bind (user host) ("identity: sip:(.*)@(.*).*" output)
+       (list user host))
+     (error "unable to determine default proxy: ~A" output))))
+
+(defun sip-default-host ()
+  (second (sip-current-identity)))
 
 (defun sip-sanitize-phone-number (text)
   (let* ((no-alpha
@@ -51,7 +59,7 @@
         (number-clean (ppcre:regex-replace-all "[^0-9]|^[+]1" no-alpha "")))
     number-clean))
 
-(defun phone-number-to-address (number &key (sip-host *sip-default-host*))
+(defun phone-number-to-address (number &key (sip-host (sip-default-host)))
   (let* ((number-clean (sip-sanitize-phone-number number))
          (intl-prefix-opt "")
          (sip-address (format nil "sip:~A~A@~A"
