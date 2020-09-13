@@ -46,6 +46,7 @@
     (sms-fanout-client:reconnect-loop))
   (setf *startup-message* nil)
   (startup-apps-run)
-  (safe-init-sexp (assert (psym-records *search-engine-persistent-alist*)))
+  (safe-init-sexp
+    (assert (psym-records *search-engine-persistent-alist*)))
   (decorations-init)
   (message "done loading .stumpwmrc"))
