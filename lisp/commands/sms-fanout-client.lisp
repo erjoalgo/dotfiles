@@ -3,7 +3,9 @@
   (:export
    #:connect
    #:connected-p
-   #:reconnect-loop))
+   #:reconnect-loop
+   #:linphone-pause
+   #:linphone-resume))
 (in-package :sms-fanout-client)
 
 ;; (ql:quickload :websocket-driver-client)
@@ -13,6 +15,7 @@
 (defvar *client-last-pong* nil)
 
 (defvar sms-fanout-connected-p-timeout-seconds 3)
+(defvar sms-fanout-connected-inhibit-restart nil)
 
 (defun connected-p (&key (client *client*))
   (let ((client (or client *client*)))
@@ -125,10 +128,20 @@
        (progn
          (syslog-log :info (format nil "pinging"))
          (wsd:send-ping *client*))
-     unless (sip:linphonec-started-p) do
+     unless (or sms-fanout-connected-inhibit-restart
+                (sip:linphonec-started-p))
+     do
        (progn (syslog-log :info "restatring linphonec..")
               (sip:linphonec-restart))
      do (sleep reconnect-delay-secs)))
+
+(defun linphone-pause ()
+  (setf sms-fanout-connected-inhibit-restart t)
+  (sip:linphonec-kill))
+
+(defun linphone-resume ()
+  (setf sms-fanout-connected-inhibit-restart nil)
+  (sip:linphonec-restart))
 
 ;; (connected-p :client *client*)
 ;; (sms-fanout-connect)

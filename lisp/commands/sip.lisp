@@ -18,6 +18,7 @@
    #:linphone-call-destination
    #:linphonec-init
    #:linphonec-started-p
+   #:linphonec-kill
    #:linphonec-restart
    #:linphone-inhibit-command-echo
    #:linphone-call-state))
