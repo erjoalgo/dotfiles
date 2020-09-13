@@ -185,7 +185,8 @@
       ("H-T" "openproject-create-personal-task")
       ("H-q" "run-last-kbd-macro")
       ("H-Q" "run-kbd-macro")
-      (,(make-key :keysym 65258) "middle-click"))
+      (,(make-key :keysym 65258) "middle-click")
+      (,(make-key :keysym 65535) "middle-click"))
   ;;not efficient nor necessary but only run at initialization
   )
 
