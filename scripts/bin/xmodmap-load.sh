@@ -14,11 +14,6 @@ set -euo pipefail
     echo
 }
 
-NON_ROOT_USER=$(ls /home)
-if ! test "${USER}" = "${NON_ROOT_USER}" && ! su "${NON_ROOT_USER}" < /dev/null; then
-    echo "warn: unable to switch user"
-    exit 0
-fi
 
 export DISPLAY=:0.0
 export XAUTHORITY=~/.Xauthority
