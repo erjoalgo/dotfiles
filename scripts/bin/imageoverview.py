@@ -35,6 +35,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         threading.Thread(target=self.crawl_images).start()
 
     def __call__(self, *args, **kwargs):
+        # https://stackoverflow.com/a/58909293/1941755
         super(ImageOverviewHandler, self).__init__(*args, **kwargs)
 
 
