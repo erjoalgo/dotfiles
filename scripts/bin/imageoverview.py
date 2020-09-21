@@ -182,7 +182,9 @@ def main():
     parser.add_argument("--port", help="port number", default=6969)
     parser.add_argument("-d", "--images_directory",
                         help="directory with images", default=os.getcwd())
-    parser.add_argument("-D", "--dimensions", help="image grid dimensions", default=(4, 10),
+    parser.add_argument("-D", "--dimensions",
+                        help="image grid dimensions, in ROWSxCOLS format, e.g. 10x10",
+                        default=(4, 10),
                         type=parse_dimensions_spec)
     parser.add_argument("-s", "--image_size", help="html image size", default=40)
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
