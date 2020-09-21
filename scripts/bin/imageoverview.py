@@ -34,12 +34,11 @@ def MakeImageOverviewHandler(directory, dimensions, image_size):
     images_queue = queue.Queue()
     threading.Thread(target=crawl_images, kwargs=
                      {"directory":directory, "images_queue":images_queue}).start()
-
+    images = []
     class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         """A web server to serve info about a chrome browser instance."""
 
         def __init__(self, *args, **kwargs):
-            self.images = []
             self.images_queue = images_queue
             # self.dimensions = dimensions
             # self.image_size = image_size
@@ -55,7 +54,7 @@ def MakeImageOverviewHandler(directory, dimensions, image_size):
                     if image is None:
                         self.images_queue = None
                     else:
-                        self.images.append(image)
+                        images.append(image)
 
         def respond(self, status, body):
             """Sends an http response."""
@@ -74,7 +73,7 @@ def MakeImageOverviewHandler(directory, dimensions, image_size):
                 rows, cols = dimensions
                 images_per_page = rows * cols
                 self.flush_images_queue()
-                page_images = self.images[
+                page_images = images[
                     (page_number-1)*images_per_page:
                     (page_number)*images_per_page]
                 table = """<table>"""
