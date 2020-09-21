@@ -29,6 +29,9 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
 
     def __init__(self, directory, dimensions, image_size):
         self.images = []
+        self.directory = directory
+        self.dimensions = dimensions
+        self.image_size = image_size
         threading.Thread(target=self.crawl_images).start()
 
     def __call__(self, *args, **kwargs):
@@ -40,18 +43,6 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             for filename in files:
                 if re.search(image_regexp, filename):
                     self.images.append(os.path.join(root, filename))
-
-    def flush_images_queue(self):
-        if self.images_queue is not None:
-            while True:
-                try:
-                    image = self.images_queue.get(block=False)
-                except queue.Empty:
-                    break
-                if image is None:
-                    self.images_queue = None
-                else:
-                    images.append(image)
 
     def respond(self, status, body):
         """Sends an http response."""
@@ -70,8 +61,8 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             self.serve_page(int(m.group(1)))
         elif self.path in ("/", ""):
             self.serve_page(1)
-        elif self.path.startswith(FILE_PREFIX):
-            filename = urllib.parse.unquote(self.path[len(FILE_PREFIX):])
+        elif self.path.startswith(self.FILE_PREFIX):
+            filename = urllib.parse.unquote(self.path[len(self.FILE_PREFIX):])
             self.serve_file(filename)
         elif self.path == "/version":
             self.respond(200, __version__)
@@ -79,11 +70,9 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             self.respond(400, "unknown route: {}".format(self.path))
 
     def serve_page(self, page_number):
-        page_number = int(m.group(1)) if m else 1
-        rows, cols = dimensions
+        rows, cols = self.dimensions
         images_per_page = rows * cols
-        self.flush_images_queue()
-        page_images = images[
+        page_images = self.images[
             (page_number-1)*images_per_page:
             (page_number)*images_per_page]
         table = """<table>"""
@@ -94,8 +83,8 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
                 """<td><a href="{filename_href}">
                 <img src="{filename_href}" width="{image_size}" height="{image_size}">
                 </a></td>\n""".format(
-                    filename_href="{}{}".format(FILE_PREFIX, filename),
-                    image_size=image_size)
+                    filename_href="{}{}".format(self.FILE_PREFIX, filename),
+                    image_size=self.image_size)
             )
             if i % cols == cols - 1:
                 table += "</tr>\n\n"
@@ -162,7 +151,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
     def serve_file(self, filename):
         with open(filename, "rb") as fh:
             self.send_response(200)
-            ext = filename.split(".")[-1].lower()
+            ext = ".{}".format(filename.split(".")[-1].lower())
             content_type = mimetypes.types_map.get(ext)
             if content_type:
                 self.send_header("Content-type", content_type)
@@ -171,17 +160,19 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             self.send_header("Cache-Control", "private")
             self.end_headers()
             shutil.copyfileobj(fh, self.wfile)
-            self.wfile.write(str(ex).encode())
 
-def parse_dimensions_spec(spec):
-    m = re.match("([0-9]+)x([0-9]+)", spec)
-    if not m:
-        raise ValueError("invalid dimension spec: {}".format(spec))
-    dimensions = (int(m.group(1)), int(m.group(2)))
-    return dimensions
+    def log_request(self, *args):
+        """Reduce verbose logging."""
+        pass
 
 def main():
-    import argparse
+    def parse_dimensions_spec(spec):
+        m = re.match("([0-9]+)x([0-9]+)", spec)
+        if not m:
+            raise ValueError("invalid dimension spec: {}".format(spec))
+        dimensions = (int(m.group(1)), int(m.group(2)))
+        return dimensions
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="port number", default=6969)
     parser.add_argument("-d", "--images_directory",
@@ -202,9 +193,9 @@ def main():
 
     server_address = ('', args.port)
     httpd = http.server.HTTPServer(server_address,
-                                   MakeImageOverviewHandler(directory=args.images_directory,
-                                                            dimensions=args.dimensions,
-                                                            image_size=args.image_size))
+                                   ImageOverviewHandler(directory=args.images_directory,
+                                                        dimensions=args.dimensions,
+                                                        image_size=args.image_size))
     logging.info("starting http server on %s", server_address)
     httpd.serve_forever()
 
