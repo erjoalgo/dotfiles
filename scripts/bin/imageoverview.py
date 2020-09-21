@@ -8,8 +8,12 @@ Display all images recursively contained in a directory on a web browser.
 import argparse
 import http.server
 import logging
+import mimetypes
 import os
 import re
+import shutil
+import traceback
+import urllib.parse
 
 try:
     from .version import __version__
@@ -29,6 +33,7 @@ def shutdown():
 images = []
 image_size = None
 dimensions = None
+images_directory = None
 
 def init_images(directory, image_regexp="(?i)[.](jpe?g|png|mp4)$"):
     images = []
@@ -50,6 +55,7 @@ class ChromeInfoServiceHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Handle GET requests."""
+        FILE_PREFIX = "/file"
         print ("DEBUG imageoverview 3mxp: value of self.path: {}".format(self.path))
         m = re.match("/page/([0-9]+)$", self.path)
         if m or self.path in ("/", ""):
@@ -68,7 +74,7 @@ class ChromeInfoServiceHandler(http.server.BaseHTTPRequestHandler):
                     """<td><a href="{filename_href}">
                     <img src="{filename_href}" width="{image_size}" height="{image_size}">
                     </a></td>\n""".format(
-                        filename_href="file://{}".format(filename),
+                        filename_href="{}{}".format(FILE_PREFIX, filename),
                         image_size=image_size)
                 )
                 if i % cols == cols - 1:
@@ -132,6 +138,22 @@ class ChromeInfoServiceHandler(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write(doc.encode())
+        elif self.path.startswith(FILE_PREFIX):
+            try:
+                filename = urllib.parse.unquote(self.path[len(FILE_PREFIX):])
+                with open(filename, "rb") as fh:
+                    self.send_response(200)
+                    ext = filename.split(".")[-1]
+                    content_type = mimetypes.types_map.get(ext)
+                    if content_type:
+                        self.send_header("Content-type", content_type)
+                    self.send_header("Cache-Control", "private")
+                    self.end_headers()
+                    shutil.copyfileobj(fh, self.wfile)
+            except Exception as ex:
+                traceback.print_exc()
+                self.send_response(500)
+                self.wfile.write(str(ex).encode())
         elif self.path == "/version":
             self.respond(200, __version__)
         else:
@@ -145,7 +167,7 @@ def parse_dimensions_spec(spec):
     return (int(m.group(1), m.group(2)))
 
 def main():
-    global images, dimensions
+    global images, dimensions, images_directory
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", help="port number", default=6969)
@@ -161,6 +183,7 @@ def main():
         log_level = logging.INFO
     logging.getLogger(__name__).setLevel(log_level)
 
+    images_directory = args.images_directory
     images = init_images(args.images_directory)
     dimensions = args.dimensions
 
