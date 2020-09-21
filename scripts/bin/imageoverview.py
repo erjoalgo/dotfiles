@@ -123,7 +123,7 @@ class ChromeInfoServiceHandler(http.server.BaseHTTPRequestHandler):
 {table}
 <script>{javascript}</script>
 <br>
- <a href={prev_page_href}>Prev</a> hola <a href={next_page_href}>Next</a>
+ <a href={prev_page_href}>Prev</a> <a href="/page/1"> Home </a> <a href={next_page_href}>Next</a>
   </body>
 </html>
 """.format(title="Images in {}: page {}".format(
