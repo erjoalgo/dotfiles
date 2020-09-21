@@ -66,7 +66,6 @@ def MakeImageOverviewHandler(directory, dimensions, image_size):
         def do_GET(self):
             """Handle GET requests."""
             FILE_PREFIX = "/file"
-            print ("DEBUG imageoverview 3mxp: value of self.path: {}".format(self.path))
             m = re.match("/page/([0-9]+)$", self.path)
             if m or self.path in ("/", ""):
                 page_number = int(m.group(1)) if m else 1
