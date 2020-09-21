@@ -79,7 +79,6 @@ def MakeImageOverviewHandler(directory, dimensions, image_size):
                 for (i, filename) in enumerate(page_images):
                     if i%cols == 0:
                         table += "<tr>"
-                    image_size = 40
                     table += (
                         """<td><a href="{filename_href}">
                         <img src="{filename_href}" width="{image_size}" height="{image_size}">
