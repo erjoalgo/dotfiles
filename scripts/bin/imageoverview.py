@@ -201,13 +201,6 @@ def main():
                                                             dimensions=args.dimensions,
                                                             image_size=args.image_size))
     logging.info("starting http server on %s", server_address)
-    logging.info("""
-// place this in the prefs.js of the firefox profile:
-user_pref("capability.policy.policynames", "localfilelinks");
-user_pref("capability.policy.localfilelinks.sites", "http://localhost:6969");
-user_pref("capability.policy.localfilelinks.checkloaduri.enabled", "allAccess");
-""")
-
     httpd.serve_forever()
 
 
