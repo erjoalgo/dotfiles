@@ -292,7 +292,7 @@ alias wte='EDITOR=true VISUAL=true'
 complete -F _command wte
 
 alias xinitrc-reload='sbcl --script ~/.stumpwmrc.d/lisp/xinitrc.lisp'
-alias xdotool-press-capslock='xdotool key Caps_Lock'
+alias XDOTOOL-PRESS-CAPSLOCK='xdotool key Caps_Lock'
 alias mic-check="arecord -vv -f dat /dev/null"
 alias tma='tmux-attach'
 alias dd-status='watch -n 20 sudo kill -USR1 $(pidof dd)'
