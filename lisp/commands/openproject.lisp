@@ -77,11 +77,11 @@
                        (project (cond
                                   ((null filtered-users)
                                    (statusor:make-error
-                                    (format nil "no users with email ~A" project-name)))
+                                    (format nil "no users with email ~A" email)))
                                   ((cdr filtered-users)
                                    (statusor:make-error
                                     (format nil "more than one project with email ~A"
-                                            project-name)))
+                                            email)))
                                   (t (car filtered-users)))))
                       project))
 
