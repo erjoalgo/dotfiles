@@ -1,0 +1,10 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+xdotool key Caps_Lock
+
+# Local Variables:
+# mode: sh-mode
+# End:
+
