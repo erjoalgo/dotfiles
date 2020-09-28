@@ -9,9 +9,10 @@ cd ${EXTENSION_TOP}/..
 BASE=$(basename "${EXTENSION_TOP}")
 test -d ${BASE}
 
+VERSION=$(jq .version ${EXTENSION_TOP}/src/manifest.json | tr -d '"')
 
 rm ${BASE}*.zip || true
-ZIP=${BASE}-$(date -I).zip
+ZIP=${BASE}-$(date -I)-v${VERSION}.zip
 cd ${BASE}
 zip -r ${ZIP} *
 mv ${ZIP} ..
