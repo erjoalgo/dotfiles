@@ -151,12 +151,13 @@
   :no-hints nil)
 
 (defcommand search-engine-search
-    (engine terms)
-    ((:search-engine "search engine: ")
-     (:string "query: "))
-
+    (engine &optional terms)
+    ((:search-engine "search engine: "))
   "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
-
+  (unless terms
+    (setf terms
+          (read-one-line (current-screen)
+                         (format nil "enter ~A search query: " engine))))
   (when (and engine terms)
     (let ((engine-fmt
             (if (consp engine)
