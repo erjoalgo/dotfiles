@@ -1,6 +1,8 @@
 (defpackage :openproject-client
   (:use :cl)
-  (:export #:request #:create-work-package))
+  (:export #:request #:create-work-package
+           #:find-project
+           #:find-user))
 
 (in-package :openproject-client)
 
@@ -61,6 +63,26 @@
                                    (statusor:make-error
                                     (format nil "more than one project named ~A" project-name)))
                                   (t (car filtered-projects)))))
+                      project))
+
+(defun find-user (email)
+  (statusor:if-let-ok nil
+                      ((users
+                        (openproject-client:request "/api/v3/users"))
+                       (filtered-users
+                        (remove-if-not
+                         (lambda (project)
+                           (equal (access:access project :email) email))
+                         (access:accesses users :--EMBEDDED :ELEMENTS)))
+                       (project (cond
+                                  ((null filtered-users)
+                                   (statusor:make-error
+                                    (format nil "no users with email ~A" project-name)))
+                                  ((cdr filtered-users)
+                                   (statusor:make-error
+                                    (format nil "more than one project with email ~A"
+                                            project-name)))
+                                  (t (car filtered-users)))))
                       project))
 
 (defun form-remove-null-links (form-json)
