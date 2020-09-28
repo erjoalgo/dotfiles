@@ -51,9 +51,7 @@
      (error "unable to determine default proxy: ~A" output))))
 
 (defun sip-default-host ()
-  (second (sip-current-identity))
-  "sanjose2.voip.ms"
-  )
+  (second (sip-current-identity)))
 
 (defun sip-sanitize-phone-number (text)
   (let* ((no-alpha

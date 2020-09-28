@@ -22,19 +22,15 @@
                       body))))))
 
 (defun request (path &key method json content-type (url-encoder #'drakma:url-encode))
-  (format t "openproject 3haq: value of path: ~A~%" path)
   (statusor:if-let-ok nil
                       ((auth (statusor:nil-to-error
                               (authinfo:get-by :app "openproject-personal")))
                        (machine (authinfo:alist-get-or-error :machine auth))
                        (scheme (or (authinfo:alist-get :scheme auth) "https"))
                        (api-key (authinfo:alist-get-or-error :apikey auth))
-                       (url (progn
-                              (format t "openproject ooqv: value of *debug-url*: ~A~%"
-                                      *debug-url*)
-                              (format nil "~A~A"
+                       (url (format nil "~A~A"
                                     (or *debug-url* (format nil "~A://~A" scheme machine))
-                                    path)))
+                                    path))
                        (content (when json (json:encode-json-to-string json)))
                        (content-type (or content-type (if content "application/hal+json")))
                        (resp-raw
@@ -47,6 +43,8 @@
                          :url-encoder url-encoder))
                        (resp-string (babel:octets-to-string resp-raw)))
                       (json:decode-json-from-string resp-string)))
+
+
 
 (defun find-project (project-name)
   (statusor:if-let-ok nil
@@ -125,14 +123,11 @@
                        (filled-form (request "/api/v3/work_packages/form"
                                              :json post-data
                                              :content-type "application/json")))
-                      (let ((*debug-url* "http://localhost:1234"))
-                        (format t "openproject mean: value of *debug-url*: ~A~%" *debug-url*)
                       (request "/api/v3/work_packages"
                                :json (form-remove-null-links
                                       (access:accesses filled-form :--EMBEDDED :PAYLOAD))
                                :method :post
-                               :content-type "application/json"))))
-
+                               :content-type "application/json")))
 
 ;; (setf *debug-url* "http://localhost:1234")
 
