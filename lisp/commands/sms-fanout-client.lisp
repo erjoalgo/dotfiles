@@ -58,7 +58,7 @@
       (let ((text
              (format nil "sms from ~A (to ~A):~%~A" from to
                      (stumpwm::message-colorize message :yellow))))
-        (stumpwm:message-wrapped text)))))
+        '(stumpwm:message-wrapped text)))))
 
 (defun connect (address)
   (stumpwm::when-let ((current (connected-p)))
