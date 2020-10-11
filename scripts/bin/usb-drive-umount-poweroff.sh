@@ -36,12 +36,9 @@ fi
 test -e "${PARTITION}"
 BLOCK_DEVICE="/dev/$(lsblk -no pkname ${PARTITION})"
 
-if test -z "${MOUNT_POINT}"; then
-    MOUNT_POINT=$(sudo mount | grep -Po "(?<=${PARTITION} on )[^ ]+") || true
-fi
-
-if test -e "${MOUNT_POINT}"; then
+for MOUNT_POINT in \
+    $(sudo mount | grep -Po "(?<=${BLOCK_DEVICE}[0-9] on )[^ ]+" | tr '\n' ' '); do
     sudo umount ${MOUNT_POINT}
-fi
+done
 
 sudo udisksctl power-off --block-device ${BLOCK_DEVICE}
