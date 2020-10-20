@@ -24,7 +24,7 @@ function urldecode() {: "${*//+/ }"; echo -e "${_//%/\\x}";}
 
 TEL=$(urldecode "${TEL}")
 SIP_HOST=$(linphone-default-host.sh)
-TEL=$(sed -e 's/^tel://' -e 's/^[+]1\|[.]//g' -e 's/[^0-9]//g' <<< "${TEL}")
+TEL=$(sed -e 's/^tel://' -e 's/^[+]1//g' -e 's/[^0-9]//g' <<< "${TEL}")
 
 ADDRESS=${TEL}@${SIP_HOST}
 
