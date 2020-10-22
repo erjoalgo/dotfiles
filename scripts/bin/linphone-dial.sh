@@ -19,8 +19,8 @@ done
 shift $((OPTIND -1))
 
 
-# https://stackoverflow.com/questions/6250698/
-function urldecode() {: "${*//+/ }"; echo -e "${_//%/\\x}";}
+# https://stackoverflow.com/a/37840948/1941755
+function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 TEL=$(urldecode "${TEL}")
 SIP_HOST=$(linphone-default-host.sh)
