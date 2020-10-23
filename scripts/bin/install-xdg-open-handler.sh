@@ -23,9 +23,10 @@ shift $((OPTIND -1))
 
 APP_NAME=$(grep -Po '^[^ ]+' <<< "${COMMAND_LINE}")
 
-insert-text-block "# ${BLOCK_ID}" \
-                  ${HOME}/.local/share/applications/mimeapps.list \
-                  <<EOF
+MIMEAPPS=${HOME}/.local/share/applications/mimeapps.list
+
+mkdir -p $(dirname "${MIMEAPPS}")
+insert-text-block "# ${BLOCK_ID}" "${MIMEAPPS}" <<EOF
 [Added Associations]
 x-scheme-handler/mailto=${APP_NAME}.desktop
 EOF
