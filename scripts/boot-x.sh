@@ -85,6 +85,11 @@ for SYSTEM in ../lisp/{statusor,cladaver}; do
   ln -sf ${SYSTEM} ~/quicklisp/local-projects
 done
 
+# set up xdg-open configs
+for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
+    ${XDG_OPEN_SCRIPT}
+done
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
