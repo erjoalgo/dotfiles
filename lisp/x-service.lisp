@@ -97,7 +97,9 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
          (read-header :STUMPWM-PROMPT)))
     (when prompt
       (stumpwm:message-wrapped (format nil "~A " prompt)))
-    (format nil "~C" (stumpwm:read-one-char (stumpwm:current-screen)))))
+    (prog1
+        (format nil "~C" (stumpwm:read-one-char (stumpwm:current-screen)))
+      (stumpwm::unmap-all-message-windows))))
 
 (define-regexp-route read-line-handler ("/read-line")
   "Read a line"
