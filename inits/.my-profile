@@ -1,4 +1,4 @@
-SCRIPTS="${HOME}/git/erjoalgo-stumpwmrc/scripts/bin"
+SCRIPTS="${HOME}/git/dotfiles/scripts/bin"
 
 export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${HOME}/.local/bin:${SCRIPTS}
 export LISP=sbcl

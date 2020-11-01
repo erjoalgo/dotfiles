@@ -53,7 +53,7 @@ GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 
 for REPO in  \
-    erjoalgo-stumpwmrc \
+    dotfiles \
 	dotemacs \
         githost \
     ; do
@@ -64,7 +64,7 @@ for REPO in  \
     git config user.email ${GIT_EMAIL}
 done
 
-SCRIPTS_BIN="${HOME}/git/erjoalgo-stumpwmrc/scripts/bin"
+SCRIPTS_BIN="${HOME}/git/dotfiles/scripts/bin"
 test -d "${SCRIPTS_BIN}"
 export PATH=$PATH:${SCRIPTS_BIN}
 
@@ -96,7 +96,7 @@ pip install getchwrap --user
 sudo update-alternatives --set editor /usr/bin/vim --verbose || true
 
 # link inits
-cd ~/git/erjoalgo-stumpwmrc/scripts/
+cd ~/git/dotfiles/scripts/
 for SCRIPT in  \
     link-inits.sh\
         gen-git-config.sh \
@@ -187,7 +187,7 @@ EOF
 insert-text-block ';; 5ef52c11-e976-4eb5-90fa-38795231059d-load-my-sbclrc' \
    ${HOME}/.sbclrc <<EOF
   ;; #-dbg
-  (let ((my-sbclrc (merge-pathnames "git/erjoalgo-stumpwmrc/inits/.my-sbclrc"
+  (let ((my-sbclrc (merge-pathnames "git/dotfiles/inits/.my-sbclrc"
                                          (user-homedir-pathname))))
     (when (probe-file my-sbclrc)
       (load my-sbclrc)))
