@@ -47,7 +47,11 @@ mkdir -p ~/src && cd ~/src
 test -f "${FNAME}" || wget "${URL}"
 DNAME=${DNAME:-$(basename "${FNAME}" ${EXT})}
 
-TOP=$(echo ${INSTALL_DIR}/*${DNAME}*)
+function top_dir () {
+    echo ${INSTALL_DIR}/*${DNAME}*
+}
+
+TOP=$(top_dir)
 
 if ! test -d "${TOP}"; then
     if test "${SKIP:-}" != "${GPG_KEY_ID}"; then
@@ -60,6 +64,8 @@ if ! test -d "${TOP}"; then
     fi
     sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
 fi
+
+TOP=$(top_dir)
 
 cd "${TOP}"
 
