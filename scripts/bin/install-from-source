@@ -7,7 +7,7 @@ function usage {
 }
 
 GPG_KEY_ID=""
-while getopts "hu:d:g:D:" OPT; do
+while getopts "hu:d:g:D:c:" OPT; do
     case ${OPT} in
         u)
             URL=${OPTARG}
@@ -20,6 +20,9 @@ while getopts "hu:d:g:D:" OPT; do
             ;;
         g)
             GPG_KEY_ID=${OPTARG}
+            ;;
+        c)
+            CONFIGURE_FLAGS=${OPTARG}
             ;;
         h)
             usage
@@ -65,7 +68,7 @@ if ! test -e ./configure; then
     test -e ./configure
 fi
 
-sudo ./configure
+sudo ./configure ${CONFIGURE_FLAGS:-}
 sudo make
 sudo make install
 
