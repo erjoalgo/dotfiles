@@ -68,8 +68,8 @@ if ! test -e ./configure; then
     test -e ./configure
 fi
 
-sudo ./configure ${CONFIGURE_FLAGS:-}
-sudo make
+./configure ${CONFIGURE_FLAGS:-}
+make
 sudo make install
 
 # Local Variables:
