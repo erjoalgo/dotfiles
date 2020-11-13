@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # coding=utf-8
 
 """A simple standalone script to connect to a WPA, WEP or OPN network."""
@@ -6,8 +6,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
-from six.moves import input
-from six.moves import range
 
 import argparse
 import logging
@@ -60,7 +58,7 @@ def box(s, n):
 def iface_list():
     "discover the available wifi interfaces"
     ifconfig_out = check_output(["ip", "link"])
-    m = re.findall("(?m)^wlan[0-9]+|wlp[^:]+", ifconfig_out)
+    m = re.findall("(?m)wlan[0-9]+|wlp[^:]+", ifconfig_out.decode())
     return list(set(m))
 
 def config_list(directory=CONFIG_DEFAUL_DIRECTORY):
@@ -136,13 +134,13 @@ class Cell(object):
         return int(percent)
 
     def __repr__(self):
-        bars = self.signal_percent()/10
+        bars = self.signal_percent()//10
         return u"{essid: >10}\t{encryption}\t{signal} ({signal_percent}%) {bssid}".format(
             encryption=box(self.encryption or "OPEN", 5),
             essid=box(self.essid or "<HIDDEN>", 20),
             signal=box(u"⬛"*bars, 10),
             signal_percent=self.signal_percent(),
-            bssid=self.bssid).encode("utf8")
+            bssid=self.bssid)
 
     @staticmethod
     def scan_essids(iface,
@@ -151,7 +149,7 @@ class Cell(object):
         "scan for available access points or cells"
         for _ in range(scan_attempts):
             try:
-                iw_out = check_output(["sudo", "iw", "dev", iface, "scan"])
+                iw_out = check_output(["sudo", "iw", "dev", iface, "scan"]).decode()
             except subprocess.CalledProcessError as ex:
                 logger.error("error scanning: %s retrying...", ex)
             else:
