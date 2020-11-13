@@ -6,6 +6,7 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 
 sudo apt-get install -y dirmngr || true
 
+./installs/sbcl.sh
 ./installs/install-stumpwm.sh
 if ! emacs --version | grep "26\\|27"; then
   if ! ./installs/emacs-install.sh; then
