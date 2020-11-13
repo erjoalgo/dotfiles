@@ -356,6 +356,8 @@ def main():
 
     logger.setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
+    if not hasattr(args, "func"):
+        raise ValueError("missing subcommand")
     fn = globals().get(args.func)
     assert fn, "function {} not defined".format(args.func)
     del args.func
