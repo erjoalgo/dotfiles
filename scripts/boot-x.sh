@@ -11,7 +11,7 @@ sudo apt-get install -y dirmngr || true
 if ! emacs --version | grep "26\\|27"; then
   if ! ./installs/emacs-install.sh; then
     echo "warning: failed to build emacs from source"
-    which emacs
+    which emacs || true
   fi
 fi
 
