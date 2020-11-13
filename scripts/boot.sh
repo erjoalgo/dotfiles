@@ -220,7 +220,7 @@ if which "${X_BROWSER}" && which update-alternatives; then
 fi
 
 # set up the nonet user
-./installs/nonet.sh
+./installs/nonet.sh || true
 
 # forked from github.com/a-rodin
 git clone https://github.com/erjoalgo/tmux-session-spectrum  \
