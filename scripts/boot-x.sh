@@ -89,7 +89,7 @@ done
 
 # set up xdg-open configs
 for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
-    ${XDG_OPEN_SCRIPT}
+    ${XDG_OPEN_SCRIPT} || true
 done
 
 python3 -m pip install pyudev
