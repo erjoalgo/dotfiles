@@ -79,7 +79,6 @@ EOF
 
 sudo systemctl enable getty@tty1.service
 
-./installs/xdg-open-tel-linphone
 
 for SYSTEM in ../lisp/{statusor,cladaver}; do
   SYSTEM=$(realpath ${SYSTEM})
