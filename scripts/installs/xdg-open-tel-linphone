@@ -11,6 +11,11 @@ install-xdg-open-handler.sh  \
     -s tel  \
     -b "fkp6YNbFENtRk4L1uwh2F43Wa59R0gGh-xdg-open-tel-linphone"
 
+install-xdg-open-handler.sh  \
+    -c "linphone-dial.sh -t %u"  \
+    -s sms  \
+    -b "5qFPC6LIciYZCDu7h3yf9V5tas4l2VUI-xdg-open-sms-linphone"
+
 # test:
 # sh -x $(which xdg-open) "tel:4443"
 
