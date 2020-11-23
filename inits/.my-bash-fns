@@ -379,7 +379,7 @@ function ps-tree	{
 }
 
 function gg    {
-    git grep ${*} $(git rev-list --all)
+    git rev-list --all | xargs git grep ${*}
 }
 
 function git-merge-base-show    {
