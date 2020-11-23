@@ -2,7 +2,6 @@ ddg	https://duckduckgo.com/lite/?q=~A
 wiki	https://en.wikipedia.org/w/index.php?search=~A
 youtube	https://www.youtube.com/results?search_query=~A
 soverflow	http://stackoverflow.com/search?q=~A
-music	http://erjoalgo.com:11407/by-lyrics?lyrics=~A
 bingimg	http://www.bing.com/images/search?q=~A
 bingimg	https://www.google.com/search?tbm=isch&q=~A
 wordreference	http://www.wordreference.com/es/translation.asp?tranword=~A
@@ -14,9 +13,9 @@ r-word-reference	http://www.wordreference.com/es/translation.asp?tranword=~A
 baidu	https://www.baidu.com/s?wd=~A
 R-spanishdict	http://www.spanishdict.com/examples/~A
 L-linguee	https://www.linguee.com/english-spanish/search?source=auto&query=~A
-mvnrepository	http://mvnrepository.com/search?q=~A
 Google	https://www.google.com/search?num=20&q=~A
-Moma	https://moma.corp.google.com/search?q=~A
+moma	https://moma.corp.google.com/search?q=~A
+mvnrepository	http://mvnrepository.com/search?q=~A
 Who	https://moma.corp.google.com/person/~A
 Yaqs	https://yaqs.googleplex.com/eng?query=~A
 codesearch	https://cs.corp.google.com/?q=~A
