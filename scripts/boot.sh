@@ -53,7 +53,7 @@ GIT_HOME=${HOME}/git
 mkdir -p ${GIT_HOME}
 
 ERJOALGO_STUMPWMRC=${GIT_HOME}/erjoalgo-stumpwmrc
-DOTFILES=${GIT_HOME}/dotfifles
+DOTFILES=${GIT_HOME}/dotfiles
 if test -e "${ERJOALGO_STUMPWMRC}" -a ! -e "${DOTFILES}"; then
   mv "${ERJOALGO_STUMPWMRC}" "${DOTFILES}"
   ln -s "${DOTFILES}" "${ERJOALGO_STUMPWMRC}"
