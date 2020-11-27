@@ -43,7 +43,9 @@ sudo $(which update-config-file-key-value) \
 sudo service systemd-logind restart
 
 KONSOLERC=${HOME}/.config/konsolerc
-sed -i '/^DefaultProfile=/d' ${KONSOLERC}
+if test -e "$KONSOLERC"; then
+    sed -i '/^DefaultProfile=/d' ${KONSOLERC}
+fi
 
 insert-text-block '# eab944d5-9973-4f44-b2e0-1b168f164397-konsolerc-defaults'  \
                   ${KONSOLERC} -b << EOF
