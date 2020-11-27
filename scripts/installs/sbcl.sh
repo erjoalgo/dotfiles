@@ -33,7 +33,7 @@ if ! command -v sbcl; then
     sudo apt-get install -y zlib1g-dev
     sudo apt-get install -y sbcl
     sh make.sh --fancy
-    sudo apt-get purge sbcl
+    sudo apt-get purge -y sbcl
     sudo sh ./install.sh
 fi
 
