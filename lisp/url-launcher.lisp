@@ -64,16 +64,41 @@
      thereis (and (cl-ppcre:scan regexp url) opener)
      finally (return #'url-launcher-browser-new-tab)))
 
+(defvar *url-keys-cache* nil)
+(defvar *url-values-cache* nil)
+
+(defun url-launcher-list-url-keys (&key skip-cache)
+  (if (and (not skip-cache) *url-keys-cache*)
+      (prog1
+          *url-keys-cache*
+        (lparallel:future
+         (url-launcher-list-url-keys
+                :skip-cache t)))
+      (setf *url-keys-cache*
+            (cladaver:ls *webdav-server-info* webdav-urls-prefix))))
+
+(defun url-launcher-cat-webdav-path (webdav-path &key skip-cache)
+  (let ((val
+          (and (not skip-cache)
+               (cdr
+                (assoc webdav-path *url-values-cache* :test #'equal)))))
+    (if val
+        (prog1 val
+          (lparallel:future
+            (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
+        (prog1
+            (setf val (cladaver:cat *webdav-server-info* webdav-path))
+          (pushnew (cons webdav-path val) *url-values-cache*)))))
+
 (define-stumpwm-type-with-completion :aliased-url
     (progn
       (statusor:error-to-signal (webdav-maybe-init))
-      (statusor:error-to-signal
-       (cladaver:ls *webdav-server-info* webdav-urls-prefix)))
+      (statusor:error-to-signal (url-launcher-list-url-keys)))
   :key-fn file-namestring
   :value-fn
   (lambda (webdav-path)
     (statusor:error-to-signal
-     (cladaver:cat *webdav-server-info* webdav-path))))
+     (url-launcher-cat-webdav-path webdav-path))))
 
 (defcommand launch-url (url) ((:aliased-url "enter url key: "))
   "Do a completing read of stored keys, then launch url"

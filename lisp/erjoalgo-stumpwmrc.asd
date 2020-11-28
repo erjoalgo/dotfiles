@@ -21,6 +21,7 @@
   #:statusor
   #:access
   #:drakma ;; TODO factor-out openproject.lisp
+  #:lparallel
   )
  :components
  (
