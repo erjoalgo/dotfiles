@@ -22,11 +22,11 @@
           collect (cons (intern (string-upcase key) :keyword) val))))
 
 
-(defun alist-get (key alist)
-  (cdr (assoc key alist)))
+(defmacro alist-get (key alist)
+  `(cdr (assoc ,key ,alist)))
 
 (defun alist-get-or-error (key alist)
-  (or (cdr (assoc key alist))
+  (or (alist-get key alist)
       (error (format nil "no value for ~A in alist with keys: ~A" key
                      ;; don't show passwords in error message
                      (mapcar #'car alist)))))
