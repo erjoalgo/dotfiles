@@ -26,8 +26,6 @@
 
 (with-message-queuing t
   (setf lparallel:*kernel* (lparallel:make-kernel 4))
-  ;; file may not exist
-  (safe-init-sexp (load-stumpwmrc-file "defs-secret.lisp"))
   (swank-start)
   (xinitrc-init)
   ;; TODO remove side-effects. add "init" method
