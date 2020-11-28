@@ -19,7 +19,7 @@
   "newTabUrl": "about:newtab",
   "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",
   "previousPatterns": "prev,previous,back,older,<,‹,←,«,≪,<<",
-  "regexFindMode": false,
+  "regexFindMode": true,
   "ignoreKeyboardLayout": false,
   "scrollStepSize": 60,
   "smoothScroll": true,
