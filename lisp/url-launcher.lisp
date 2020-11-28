@@ -16,6 +16,11 @@
 (defvar *webdav-server-info* nil)
 
 (defun load-webdav-server-info ()
+  ;; may be interactive
+  (unless (authinfo:get-by :app "webdav")
+    (authinfo:persist-authinfo-line
+     :line-prefix "app webdav"
+     :required-keys '("machine" "login" "password")))
   (statusor:if-let-ok nil
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
@@ -60,8 +65,10 @@
      finally (return #'url-launcher-browser-new-tab)))
 
 (define-stumpwm-type-with-completion :aliased-url
-    (statusor:error-to-signal
-     (cladaver:ls *webdav-server-info* webdav-urls-prefix))
+    (progn
+      (statusor:error-to-signal (webdav-maybe-init))
+      (statusor:error-to-signal
+       (cladaver:ls *webdav-server-info* webdav-urls-prefix)))
   :key-fn file-namestring
   :value-fn
   (lambda (webdav-path)
@@ -213,6 +220,12 @@
   )
 
 
+(defun webdav-maybe-init ()
+  (unless *webdav-server-info*
+    (statusor:return-if-error (load-webdav-server-info) WEBDAV-MAYBE-INIT)
+    ;; mkdir. may fail if already exists
+    '(cladaver:mkdir *webdav-server-info* webdav-urls-prefix)))
+
 (defun url-launcher-init ()
   (ensure-directory-exists
    (uiop:pathname-parent-directory-pathname
@@ -220,12 +233,5 @@
    :max-parents 2)
   (dolist (class *browser-classes*)
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
-  (statusor:error-to-signal (load-webdav-server-info))
-  ;; mkdir. may fail if already exists
-  '(cladaver:mkdir *webdav-server-info* webdav-urls-prefix)
-  (make-instance 'psym-lines-list
-   :pathnames (loop for data-dir in *data-dirs*
-                 collect (merge-pathnames "url-launcher-urls/" data-dir))
-   :short-description "launcher urls")
   (psym-load *search-engine-persistent-alist*)
   (setf *suppress-deny-messages* t))
