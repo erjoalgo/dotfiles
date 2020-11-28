@@ -80,7 +80,6 @@
   (when url
     (let* ((url (expand-user url))
            (opener (url-command url)))
-
       (if (functionp opener)
           (funcall opener url)
           (progn
