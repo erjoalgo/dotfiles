@@ -7,7 +7,8 @@
    #:alist-get
    #:alist-get-or-error
    #:get-info-assert-vars
-   #:parse))
+   #:parse
+   #:persist-authinfo-line))
 (in-package :authinfo)
 
 (defun parse (&key (filename "~/.authinfo"))
@@ -51,3 +52,35 @@
                  as sym = (intern (symbol-name var) :keyword)
                 collect (list var `(alist-get-or-error ,sym ,alist-sym))))
        ,@body)))
+
+(defun persist-authinfo-line (
+                              &key
+                              required-keys
+                              optional-keys
+                              line-prefix
+                              ;; (noecho-keys '(:password))
+                              (authinfo-filename
+                               (make-pathname :name ".authinfo"
+                                              :defaults (user-homedir-pathname))))
+  (loop with strings
+        for key in (append required-keys optional-keys)
+        as name = (if (symbolp key)
+                      (string-downcase (symbol-name key))
+                      key)
+        ;; TODO check if (find key-sym noecho-keys)
+        as value = (stumpwm:read-one-line
+                    (stumpwm:current-screen)
+                    (format nil "enter ~A (~A): " name line-prefix))
+        if value
+          do (push (format nil "~A ~A" name value) strings)
+        else if (member key required-keys :test #'equal)
+               do (error "required key not provided: ~A" key)
+        finally
+           (when line-prefix (push line-prefix strings))
+           (with-open-file (fh authinfo-filename
+                               :if-does-not-exist :create
+                               :if-exists :append
+                               :direction :output)
+             ;; (format fh "~&~{~A~^ ~}~%" strings)
+             (format fh "~%~{~A~^ ~}~%" strings))
+        (parse)))
