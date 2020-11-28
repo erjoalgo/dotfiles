@@ -7,7 +7,8 @@
    #:error-to-signal
    #:signal-to-error
    #:nil-to-error
-   #:->?))
+   #:->?
+   #:return-if-error))
 
 (in-package #:statusor)
 
@@ -65,3 +66,9 @@
             (signal-to-error (,(car second) ,first ,@(cdr second)))
             (,val-var (->? ,val-var ,@rest))
             ,on-error-spec)))))
+
+(defmacro return-if-error (form &optional block-name)
+  `(handle-error ,form (success-val success-val)
+                 (err ,(if block-name
+                           `(return-from ,block-name (make-error err))
+                           `(return (make-error err))))))
