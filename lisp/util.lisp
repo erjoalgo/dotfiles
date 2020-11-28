@@ -214,8 +214,8 @@
   (let* ((text (apply #'format nil fmt args))
          (screen (current-screen))
          (pixels-per-char (text-line-width
-                          (screen-font screen) "a"
-                          :translate #'translate-id))
+                           (screen-font screen) "a"
+                           :translate #'translate-id))
          (pixels-per-line (screen-width screen))
          (chars-per-line (floor pixels-per-line pixels-per-char)))
     (assert (> chars-per-line 0))
