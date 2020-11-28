@@ -13,8 +13,6 @@
 (defparameter *search-history-fn*
   (merge-pathnames "search-history" *data-private-one-way*))
 
-(defvar *webdav-server-base-url* nil)
-
 (defvar *webdav-server-info* nil)
 
 (defun load-webdav-server-info ()
