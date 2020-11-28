@@ -198,6 +198,18 @@
                       command args
                       ret out)))
 
+(defun wrap-text (text &optional max-chars-per-line)
+  (loop for text in (ppcre:split #\Newline text)
+        with chunks
+        do
+           (loop with len = (length text)
+                 with idx = 0
+                 while (< idx len)
+                 as new-idx = (+ idx max-chars-per-line)
+                 do (push (subseq text idx (min len new-idx)) chunks)
+                 do (setf idx new-idx))
+        finally (return (nreverse chunks))))
+
 (defun message-wrapped (fmt &rest args)
   (let* ((text (apply #'format nil fmt args))
          (screen (current-screen))
@@ -207,16 +219,7 @@
          (pixels-per-line (screen-width screen))
          (chars-per-line (floor pixels-per-line pixels-per-char)))
     (assert (> chars-per-line 0))
-    (loop for text in (ppcre:split #\Newline text)
-       with chunks
-         do
-    (loop with len = (length text)
-          with idx = 0
-          while (< idx len)
-       as new-idx = (+ idx chars-per-line)
-          do (push (subseq text idx (min len new-idx)) chunks)
-       do (setf idx new-idx))
-       finally (echo-string-list screen (nreverse chunks)))))
+    (echo-string-list screen (wrap-text text chars-per-line))))
 
 (export '(message-wrapped) :STUMPWM)
 
