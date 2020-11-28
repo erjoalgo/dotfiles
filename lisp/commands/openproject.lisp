@@ -21,10 +21,19 @@
                       (babel:octets-to-string body)
                       body))))))
 
+(defvar app-name "openproject-personal")
+
+(defun maybe-init-authinfo ()
+  (unless (authinfo:get-by :app app-name)
+    (authinfo:persist-authinfo-line
+     :line-prefix (format nil "app ~A" app-name)
+     :required-keys '("machine" "apikey"))))
+
 (defun request (path &key method json content-type (url-encoder #'drakma:url-encode))
+  (maybe-init-authinfo)
   (statusor:if-let-ok nil
                       ((auth (statusor:nil-to-error
-                              (authinfo:get-by :app "openproject-personal")))
+                              (authinfo:get-by :app app-name)))
                        (machine (authinfo:alist-get-or-error :machine auth))
                        (scheme (or (authinfo:alist-get :scheme auth) "https"))
                        (api-key (authinfo:alist-get-or-error :apikey auth))
