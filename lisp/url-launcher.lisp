@@ -258,4 +258,5 @@
   (dolist (class *browser-classes*)
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
   (psym-load *search-engine-persistent-alist*)
+  (assert (psym-records *search-engine-persistent-alist*))
   (setf *suppress-deny-messages* t))
