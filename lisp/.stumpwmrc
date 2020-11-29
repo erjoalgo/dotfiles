@@ -27,6 +27,7 @@
 (with-message-queuing t
   (setf lparallel:*kernel* (lparallel:make-kernel 4))
   (swank-start)
+  (decorations-init)
   (xinitrc-init)
   ;; TODO remove side-effects. add "init" method
   (load-stumpwmrc-file "top-map-bindings.lisp")
@@ -48,5 +49,4 @@
   (startup-apps-run)
   (safe-init-sexp
     (assert (psym-records *search-engine-persistent-alist*)))
-  (decorations-init)
   (message "done loading .stumpwmrc"))
