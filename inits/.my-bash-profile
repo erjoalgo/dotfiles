@@ -6,7 +6,6 @@
 # } &
 # disown %-
 
-source ${HOME}/git/dotfiles/inits/.my-bashrc
 
 # Local Variables:
 # mode: sh
