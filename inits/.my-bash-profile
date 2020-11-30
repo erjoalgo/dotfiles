@@ -1,10 +1,10 @@
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
-# {
-#   LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh || true)
-#   printf '%s' "${LAGGING%%A}"
-#   echo
-# } &
-# disown %-
+{
+  LAGGING=$(env IGNORE_DANGLING_COMMITS=true vacate.sh || true)
+  printf '%s' "${LAGGING%%A}"
+  echo
+} &
+disown %-
 
 
 # Local Variables:
