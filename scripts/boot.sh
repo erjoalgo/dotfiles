@@ -156,7 +156,7 @@ fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
     <(crontab -l 2>/dev/null) -o >(crontab) <<EOF
-30 10 * * * bash -c '${SCRIPTS_BIN}/git-notify-lagging-repos.sh ~/git/*'
+30 10 * * * bash -c '${SCRIPTS_BIN}/git-notify-lagging-repos.sh ~/git/* 2>&1 > ~/.git-lagging-repos-report'
 EOF
 
 mkdir -p ${HOME}/.ssh
