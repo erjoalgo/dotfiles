@@ -11,6 +11,7 @@ for PROFILE_FILE in \
         ${HOME}/.profile-env \
     ; do
     test -w ${PROFILE_FILE} && SUDOOPT="" || SUDOOPT="sudo"
+    set +e
     ${SUDOOPT} insert-text-block \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                ${PROFILE_FILE} <<"EOF"
@@ -18,7 +19,18 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 EOF
+    STATUS=$?
+    set -e
+    if test ${STATUS} = 0; then
+        NVM_PROFILE_INTSALLED=true
+        break
+    fi
 done
+
+if ! test "${NVM_PROFILE_INTSALLED:-}" = true; then
+    echo "failed to install nvm to a bash .profile" && exit ${LINENO}
+fi
+
 source "${NVM_SH}"
 
 nvm install stable
