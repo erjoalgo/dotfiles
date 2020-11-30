@@ -27,7 +27,7 @@
   (or
    (pathname-name
     (string-trim '(#\newline)
-                 (run-shell-command "which chromium chromium-browser chrome google-chrome" t)))
+                 (run-shell-command "which chromium-browser chrome google-chrome chromium" t)))
    "chromium"))
 
 (defparameter emacs-classes
