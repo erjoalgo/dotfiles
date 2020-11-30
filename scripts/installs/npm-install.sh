@@ -16,8 +16,13 @@ for PROFILE_FILE in \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                ${PROFILE_FILE} <<"EOF"
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+function nmv_load  {
+    # This loads nvm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
+    # This loads nvm bash_completion
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+alias npm='nmv_load && unalias npm'
 EOF
     STATUS=$?
     set -e
