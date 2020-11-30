@@ -6,7 +6,7 @@ git status &> /dev/null
 
 
 # check all remotes are up, since data pushed only to dead remotes will be lost
-git fetch --all
+test "${GIT_NO_FETCH:-}" = true || git fetch --all
 
 LOST=""
 
