@@ -28,7 +28,6 @@ EOF
     set -e
     if test ${STATUS} = 0; then
         NVM_PROFILE_INTSALLED=true
-        break
     fi
 done
 
