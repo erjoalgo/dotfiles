@@ -1,6 +1,5 @@
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
 {
-    # TODO cat a report file generated via crontab
     LAGGING_REPOS_REPORT=${HOME}/.git-lagging-repos-report
     if test -e "${LAGGING_REPOS_REPORT}"; then
         LAGGING=$(cat "${LAGGING_REPOS_REPORT}")
