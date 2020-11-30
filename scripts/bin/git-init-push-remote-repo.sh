@@ -39,7 +39,7 @@ done
 
 REPO_NAME=${REPO_NAME:-$(basename $(pwd))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
-if test -z "${SSH_USERHOST}" -o -z "${REMOTE_NAME}"; then
+if test -z "${SSH_USERHOST:-}" -o -z "${REMOTE_NAME:-}"; then
     usage
     exit 1
 fi
