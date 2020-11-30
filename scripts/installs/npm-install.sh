@@ -37,10 +37,10 @@ fi
 
 source "${NVM_SH}"
 
-set +x
+set +xu
 nvm install stable
 nvm alias default node
-set -x
+set -xu
 
 if ! command -v npm; then
     npm --version
