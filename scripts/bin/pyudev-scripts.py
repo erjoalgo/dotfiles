@@ -31,24 +31,34 @@ def notify_send(message, color=None):
   if ret:
     logging.error("failed to notify-send: %s", ret)
 
-async def xmodmap(timeout_secs=30):
-    notify_send("please touch any key on the keyboard...")
+
+async def call_until_success(fn, timeout_secs=30):
     start = time.time()
-    while (time.time() - start) < timeout_secs:
-        filename = os.path.expanduser(
-            "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
-        logging.info("running xmodmap %s", filename)
-        ret = subprocess.call([filename])
-        if ret == 0:
-            logging.info("success with xmodmap")
-            notify_send("success with xmodmap", color="green")
-            break
-        logging.info("return status: %s", ret)
-        time.sleep(1)
+    count = 0
+    while count == 0 or (time.time() - start) < timeout_secs:
+        try:
+          fn()
+          break
+        except Exception as ex:
+          logging.info("failed: %s", ex)
+          time.sleep(1)
+    assert ex
+    notify_send(str(error_msg), color="red")
+
+
+def configure_xmodmap():
+    notify_send("please touch any key on the keyboard...")
+    filename = os.path.expanduser(
+        "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+    logging.info("running xmodmap %s", filename)
+    ret = subprocess.call([filename])
+    if ret == 0:
+        logging.info("success with xmodmap")
+        notify_send("success with xmodmap", color="green")
     else:
-      error_msg = "failed to set up keyboard layout with xmodmap"
-      logging.error(error_msg)
-      notify_send(error_msg, color="red")
+      raise Exception(
+          "failed to set up keyboard layout with xmodmap. "
+          "exit status: {}".format(ret))
 
 
 def udev_monitor():
@@ -86,6 +96,7 @@ def udev_monitor():
                 logging.debug("%s: %s", k, device.get(k))
             logging.debug("device.tags: %s", list(device.tags))
             # import pdb;pdb.set_trace()
-            asyncio.run_coroutine_threadsafe(xmodmap(), loop)
+            asyncio.run_coroutine_threadsafe(
+                call_until_success(configure_xmodmap), loop)
 
 udev_monitor()
