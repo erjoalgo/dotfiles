@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 import asyncio
-import getpass
 import logging
 import os
-import pyudev
 import subprocess
 import threading
 import time
 
-logging.basicConfig(level=logging.DEBUG)
+import pyudev
+
+logging.basicConfig(level=logging.INFO)
 
 def x_service_curl(path, post_data=None, headers=None):
     script = os.path.expanduser(
@@ -84,21 +84,22 @@ def udev_monitor():
         if device.action == "remove":
             logging.info("skipping remove event")
             continue
-        elif not device.is_initialized:
+        if not device.is_initialized:
             # ensure the KB is initialized -- not sure if this is actually a needed check
             logging.info("skipping non-initialized device")
             continue
+
+        for key in device.keys():
+          logging.debug("%s: %s", key, device.get(key))
+        logging.debug("device.tags: %s", list(device.tags))
+
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
         devname = device.get("DEVNAME")
-        # logitech keyboard, from the output of `lsusb`
-        if ("046d:c52b" == vendor_product
-            and devname
-            and not "mouse" in devname):
+        LOGITECH_KEYBOARD_VENDOR_PRODUCT = "046d:c52b"
+        if (LOGITECH_KEYBOARD_VENDOR_PRODUCT == vendor_product
+            and devname and not "mouse" in devname):
             logging.info("detected adding logitech keyboard")
-            for k in list(device.properties):
-                logging.debug("%s: %s", k, device.get(k))
-            logging.debug("device.tags: %s", list(device.tags))
             # import pdb;pdb.set_trace()
             asyncio.run_coroutine_threadsafe(
                 call_until_success(configure_xmodmap), loop)
@@ -108,8 +109,5 @@ def udev_monitor():
               call_until_success(configure_monitor), loop)
         else:
           continue
-
-        for key in device.keys():
-          logging.debug("%s: %s", key, device.get(key))
 
 udev_monitor()
