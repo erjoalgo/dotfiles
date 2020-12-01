@@ -125,4 +125,9 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                       (stumpwm:look-up-engine-by-letter char)))))
     (stumpwm:search-engine-search engine query)))
 
+(define-regexp-route run-handler ("/run")
+    "Run command"
+  (let ((command (hunchentoot-post-data-or-err)))
+    (stumpwm::eval-command command t)))
+
 ;; (x-service:start 1959)
