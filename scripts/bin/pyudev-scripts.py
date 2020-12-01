@@ -32,18 +32,19 @@ def notify_send(message, color=None):
     logging.error("failed to notify-send: %s", ret)
 
 
-async def call_until_success(fn, timeout_secs=30):
-    start = time.time()
-    count = 0
-    while count == 0 or (time.time() - start) < timeout_secs:
-        try:
-          fn()
-          break
-        except Exception as ex:
-          logging.info("failed: %s", ex)
-          time.sleep(1)
-    assert ex
-    notify_send(str(error_msg), color="red")
+async def call_until_success(fn, timeout_secs=30, _lock = threading.Lock()):
+    with _lock:
+        start = time.time()
+        count = 0
+        while count == 0 or (time.time() - start) < timeout_secs:
+            try:
+              fn()
+              break
+            except Exception as ex:
+              logging.info("failed: %s", ex)
+              time.sleep(1)
+        assert ex
+        notify_send(str(error_msg), color="red")
 
 
 def configure_xmodmap():
@@ -98,7 +99,8 @@ def udev_monitor():
         devname = device.get("DEVNAME")
         LOGITECH_KEYBOARD_VENDOR_PRODUCT = "046d:c52b"
         if (LOGITECH_KEYBOARD_VENDOR_PRODUCT == vendor_product
-            and devname and not "mouse" in devname):
+            and devname and not "mouse" in devname
+            and device.device_path.split("/")[-1].startswith("event")):
             logging.info("detected adding logitech keyboard")
             # import pdb;pdb.set_trace()
             asyncio.run_coroutine_threadsafe(
