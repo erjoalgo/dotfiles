@@ -1,5 +1,5 @@
 [Appearance]
-ColorScheme=Solarized
+ColorScheme=SolarizedLight
 Font=monospace,20,-1,2,50,0,0,0,0,0
 
 [General]
