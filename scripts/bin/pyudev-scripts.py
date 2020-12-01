@@ -106,6 +106,7 @@ def udev_monitor():
             asyncio.run_coroutine_threadsafe(
                 call_until_success(configure_xmodmap), loop)
         elif device.get("SUBSYSTEM") == "drm":
+          logging.info("detected adding or removing monitor")
           # a monitor
           asyncio.run_coroutine_threadsafe(
               call_until_success(configure_monitor), loop)
