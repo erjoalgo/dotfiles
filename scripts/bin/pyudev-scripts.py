@@ -61,36 +61,40 @@ def configure_xmodmap():
           "exit status: {}".format(ret))
 
 
+def configure_monitor():
+    notify_send("atempting to set up external monitor")
+    ret = x_service_curl("/run",
+                         "correct-screen-no-prompt")
+    if ret:
+      raise Exception("correct-screen failed: {}".format(
+          ret))
+    notify_send("successfully set up external monitor")
+
+
 def udev_monitor():
     ctx = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(ctx)
-    monitor.filter_by("input")
 
     loop = asyncio.new_event_loop()
     threading.Thread(target=loop.run_forever).start()
 
     for device in iter(monitor.poll, None):
         # there might be a way to add the action condition to the filter, but I couldn't find it
-        if device.action != "add":
-            logging.info("skipping non-add action")
+        logging.info("got new event: %s %s", device.action, device)
+        if device.action == "remove":
+            logging.info("skipping remove event")
             continue
         elif not device.is_initialized:
             # ensure the KB is initialized -- not sure if this is actually a needed check
             logging.info("skipping non-initialized device")
             continue
-        logging.info("got new device: %s", device)
-        devname = device.get("DEVNAME")
-        if not devname or "mouse" in devname:
-            logging.info("skipping mouse")
-            continue
-        # my keyboard, from the output of `lsusb`
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
-
-        if "046d:c52b" == vendor_product:
-            for key in device.keys():
-                logging.debug("%s: %s", key, device.get(key))
-            # it's the keyboard being added.
+        devname = device.get("DEVNAME")
+        # logitech keyboard, from the output of `lsusb`
+        if ("046d:c52b" == vendor_product
+            and devname
+            and not "mouse" in devname):
             logging.info("detected adding logitech keyboard")
             for k in list(device.properties):
                 logging.debug("%s: %s", k, device.get(k))
@@ -98,5 +102,14 @@ def udev_monitor():
             # import pdb;pdb.set_trace()
             asyncio.run_coroutine_threadsafe(
                 call_until_success(configure_xmodmap), loop)
+        elif device.get("SUBSYSTEM") == "drm":
+          # a monitor
+          asyncio.run_coroutine_threadsafe(
+              call_until_success(configure_monitor), loop)
+        else:
+          continue
+
+        for key in device.keys():
+          logging.debug("%s: %s", key, device.get(key))
 
 udev_monitor()
