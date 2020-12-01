@@ -11,12 +11,23 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
+def x_service_curl(path, post_data=None, headers=None):
+    script = os.path.expanduser(
+              "~/.stumpwmrc.d/scripts/bin/x-service-curl")
+    cmd = [script, path]
+    if post_data:
+        cmd.extend(["-d", post_data])
+    for (k, v) in (headers or []):
+        cmd.extend(["-H", k, v])
+    return subprocess.call(cmd)
+
+
 def notify_send(message, color=None):
-  script = os.path.expanduser(
-            "~/.stumpwmrc.d/scripts/bin/x-service-curl")
-  cmd = ([script, "/notify", "-d", message] +
-         (["-HSTUMPWM-MESSAGE-COLOR:{}".format(color)] if color else []))
-  ret = subprocess.call(cmd)
+  ret = x_service_curl(
+      "/notify", post_data=message,
+      headers=
+      {"STUMPWM-MESSAGE-COLOR": color}
+      if color else None)
   if ret:
     logging.error("failed to notify-send: %s", ret)
 
