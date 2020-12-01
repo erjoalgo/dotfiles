@@ -13,7 +13,9 @@ async def xmodmap():
     while True:
         logging.info("running xmodmap")
         time.sleep(2) # not sure if there's a race here, but it feels like there could be.
-        ret = subprocess.call(["/home/ealfonso/.stumpwmrc.d/scripts/bin/xmodmap-load.sh"])
+        ret = subprocess.call([
+            os.expanduser("~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+        ])
         if ret == 0:
             logging.info("success with xmodmap")
             break
