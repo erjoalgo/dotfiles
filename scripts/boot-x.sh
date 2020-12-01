@@ -93,6 +93,8 @@ for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
 done
 
 python3 -m pip install pyudev
+# for the logitech wireless keyboard
+sudo python3 -m pip install solaar
 
 install-systemd-service.sh pyudev-scripts <<EOF
 [Unit]
