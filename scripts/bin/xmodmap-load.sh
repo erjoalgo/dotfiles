@@ -2,19 +2,6 @@
 
 set -euo pipefail
 
-# exec >> /tmp/xmodmap-load-${USER}.log
-# exec 2>&1
-
-{
-    echo $0 args
-    echo ${*}
-    date
-    env
-    echo
-    echo
-}
-
-
 export DISPLAY=:0.0
 export XAUTHORITY=~/.Xauthority
 

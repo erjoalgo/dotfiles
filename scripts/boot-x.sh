@@ -92,6 +92,17 @@ for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
     ${XDG_OPEN_SCRIPT}
 done
 
+python3 -m pip install pyudev
+
+install-systemd-service.sh pyudev-scripts <<EOF
+[Unit]
+Description=Run custom udev scripts via pyudev
+
+[Service]
+ExecStart=$(pwd)/bin/pyudev-scripts.py
+
+EOF
+
 # TODO wifi-boot
 # TODO automate vimium installation
 echo success
