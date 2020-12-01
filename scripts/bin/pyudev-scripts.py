@@ -17,8 +17,8 @@ def x_service_curl(path, post_data=None, headers=None):
     cmd = [script, path]
     if post_data:
         cmd.extend(["-d", post_data])
-    for (k, v) in (headers or []):
-        cmd.extend(["-H", k, v])
+    for (k, v) in (headers or {}).items():
+        cmd.append("-H{}:{}".format(k, v))
     return subprocess.call(cmd)
 
 
