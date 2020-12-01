@@ -11,19 +11,24 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
-async def xmodmap():
-    while True:
-        filename = os.path.expanduser("~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+async def xmodmap(timeout_secs=10):
+    start = time.time()
+    while (time.time() - start) < timeout_secs:
+        filename = os.path.expanduser(
+            "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
         logging.info("running xmodmap %s", filename)
-        time.sleep(2) # not sure if there's a race here, but it feels like there could be.
         ret = subprocess.call([filename])
         if ret == 0:
             logging.info("success with xmodmap")
+            subprocess.call(
+                ["notify-send-stumpwm", "-m", "xmodmap success", "-c", "green"])
             break
-        else:
-            logging.info("return status: %s", ret)
-    subprocess.call(["notify-send-stumpwm", "-m", "xmodmap success",
-                     "-c", "green"])
+        logging.info("return status: %s", ret)
+        time.sleep(1)
+    else:
+      error_msg = "failed to set up keyboard layout with xmodmap"
+      logging.error(error_msg)
+      subprocess.call(["notify-send-stumpwm", "-m", error_msg, "-c", "red"])
 
 
 def udev_monitor():
@@ -52,7 +57,6 @@ def udev_monitor():
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
 
-
         if "046d:c52b" == vendor_product:
             for key in device.keys():
                 logging.debug("%s: %s", key, device.get(key))
@@ -63,7 +67,5 @@ def udev_monitor():
             logging.debug("device.tags: %s", list(device.tags))
             # import pdb;pdb.set_trace()
             asyncio.run_coroutine_threadsafe(xmodmap(), loop)
-
-        time.sleep(1)
 
 udev_monitor()
