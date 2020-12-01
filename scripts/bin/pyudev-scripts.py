@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import asyncio
+import getpass
 import logging
+import os
 import pyudev
 import subprocess
 import threading
@@ -11,11 +13,10 @@ logging.basicConfig(level=logging.DEBUG)
 
 async def xmodmap():
     while True:
-        logging.info("running xmodmap")
+        filename = os.path.expanduser("~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+        logging.info("running xmodmap %s", filename)
         time.sleep(2) # not sure if there's a race here, but it feels like there could be.
-        ret = subprocess.call([
-            os.expanduser("~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
-        ])
+        ret = subprocess.call([filename])
         if ret == 0:
             logging.info("success with xmodmap")
             break

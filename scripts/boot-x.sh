@@ -100,6 +100,7 @@ Description=Run custom udev scripts via pyudev
 
 [Service]
 ExecStart=$(pwd)/bin/pyudev-scripts.py
+User=$(whoami)
 
 EOF
 
