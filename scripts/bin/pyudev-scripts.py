@@ -11,7 +11,7 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
-async def xmodmap(timeout_secs=10):
+async def xmodmap(timeout_secs=30):
     start = time.time()
     while (time.time() - start) < timeout_secs:
         filename = os.path.expanduser(
