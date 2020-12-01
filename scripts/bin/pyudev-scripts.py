@@ -11,7 +11,17 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
+def notify_send(message, color=None):
+  script = os.path.expanduser(
+            "~/.stumpwmrc.d/scripts/bin/x-service-curl")
+  cmd = ([script, "/notify", "-d", message] +
+         (["-HSTUMPWM-MESSAGE-COLOR:{}".format(color)] if color else []))
+  ret = subprocess.call(cmd)
+  if ret:
+    logging.error("failed to notify-send: %s", ret)
+
 async def xmodmap(timeout_secs=30):
+    notify_send("please touch any key on the keyboard...")
     start = time.time()
     while (time.time() - start) < timeout_secs:
         filename = os.path.expanduser(
@@ -20,15 +30,14 @@ async def xmodmap(timeout_secs=30):
         ret = subprocess.call([filename])
         if ret == 0:
             logging.info("success with xmodmap")
-            subprocess.call(
-                ["notify-send-stumpwm", "-m", "xmodmap success", "-c", "green"])
+            notify_send("success with xmodmap", color="green")
             break
         logging.info("return status: %s", ret)
         time.sleep(1)
     else:
       error_msg = "failed to set up keyboard layout with xmodmap"
       logging.error(error_msg)
-      subprocess.call(["notify-send-stumpwm", "-m", error_msg, "-c", "red"])
+      notify_send(error_msg, color="red")
 
 
 def udev_monitor():
