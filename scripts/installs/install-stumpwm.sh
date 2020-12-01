@@ -18,7 +18,7 @@ sudo ${APT_GET} install -y xinit x11-xserver-utils \
 SBCLRC="${HOME}/.sbclrc"
 command -v sbcl || ./sbcl.sh
 sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
-(mapcar 'ql:quickload
+        (mapcar 'ql:quickload
 	'(
 "clx"
 "cl-ppcre"
