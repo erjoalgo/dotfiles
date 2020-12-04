@@ -96,12 +96,12 @@ python3 -m pip install pyudev
 # for the logitech wireless keyboard
 sudo python3 -m pip install solaar
 
-install-systemd-service.sh pyudev-scripts <<EOF
+install-systemd-service.sh pyudevs <<EOF
 [Unit]
 Description=Run custom udev scripts via pyudev
 
 [Service]
-ExecStart=$(pwd)/bin/pyudev-scripts.py
+ExecStart=$(pwd)/bin/pyudevs.py
 User=$(whoami)
 
 EOF

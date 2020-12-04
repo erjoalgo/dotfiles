@@ -110,8 +110,7 @@ def udev_monitor():
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
         devname = device.get("DEVNAME")
-        LOGITECH_KEYBOARD_VENDOR_PRODUCT = "046d:c52b"
-        if (LOGITECH_KEYBOARD_VENDOR_PRODUCT == vendor_product
+        if ("046d:c52b" == vendor_product
             and devname and not "mouse" in devname
             and device.device_path.split("/")[-1].startswith("event")):
             logging.info("detected adding logitech keyboard")
