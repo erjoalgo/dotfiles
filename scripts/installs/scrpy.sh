@@ -13,7 +13,7 @@ sudo apt install -y make gcc git pkg-config meson ninja-build \
 which meson ninja
 
 # server build dependencies
-sudo apt install -y openjdk-8-jdk
+# sudo apt install -y openjdk-11-jdk
 
 cd ${HOME}/git
 URL=https://github.com/Genymobile/scrcpy
