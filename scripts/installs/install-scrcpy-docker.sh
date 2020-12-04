@@ -25,4 +25,5 @@ if ! test -d "${GIT_REPO}"; then
 fi
 
 cd "${GIT_REPO}"
-sudo env SCRCPY_GRAPHICS_TYPE=intel docker-compose run --rm scrcpy scrcpy
+sudo env SCRCPY_GRAPHICS_TYPE=intel docker-compose run --rm scrcpy  \
+     scrcpy --show-touches
