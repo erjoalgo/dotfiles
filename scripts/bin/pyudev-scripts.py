@@ -67,9 +67,8 @@ def configure_monitor():
     ret = x_service_curl("/run",
                          "correct-screen-no-prompt")
     if ret:
-      raise Exception("correct-screen failed: {}".format(
-          ret))
-    notify_send("successfully set up external monitor")
+      raise Exception("correct-screen failed: {}".format(ret))
+    notify_send("successfully set up external monitor", color=green)
 
 
 def udev_monitor():
