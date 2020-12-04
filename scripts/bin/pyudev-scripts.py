@@ -9,7 +9,7 @@ import time
 
 import pyudev
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 def x_service_curl(path, post_data=None, headers=None):
     script = os.path.expanduser(
