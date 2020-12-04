@@ -32,60 +32,122 @@ def notify_send(message, color=None):
     logging.error("failed to notify-send: %s", ret)
 
 
-async def call_until_success(fn, timeout_secs=30, _lock = threading.Lock()):
-    with _lock:
-        start = time.time()
-        count = 0
-        while count == 0 or (time.time() - start) < timeout_secs:
+class DeviceHandler(object):
+    locks = {}
+    handlers = []
+
+    def __init__(self):
+        self.last_triggered = None
+
+    def matches(self, device):
+        raise NotImplementedError()
+
+    async def run(self):
+        class_name = self.__class__.__name__
+        if self.last_triggered and (time.time() - self.lat_triggered)<1:
+            logging.info("skipping multiple %s triggers within 1s", class_name)
+            return
+        self.last_triggered = time.time()
+        with DeviceHandler.locks.get(class_name, threading.Lock()):
+            logging.info("running handler for %s", class_name)
+            # force only one handler at a time per class
+            self.__retry__(self.retry, name=class_name)
+
+
+    @staticmethod
+    def notify_info(text):
+        logging.info(text)
+        return notify_send(text)
+
+    @staticmethod
+    def notify_error(text):
+        logging.info(text)
+        return notify_send(text, color="red")
+
+    @staticmethod
+    def notify_success(text):
+        logging.info(text)
+        return notify_send(text, color="green")
+
+    @staticmethod
+    def __retry__(retriable_fn, max_retries=5, delay_secs=2, name=""):
+        error = None
+        for retry in range(max_retries):
             try:
-              fn()
-              break
+              retriable_fn()
+              DeviceHandler.notify_success("success: {}".format(name))
+              return True
             except Exception as ex:
               logging.info("failed: %s", ex)
-              time.sleep(1)
-        assert ex
-        notify_send(str(error_msg), color="red")
+              time.sleep(delay_secs)
+              error = ex
+        assert error
+        DeviceHandler.notify_error("{} failed: {}".format(name, str(error)))
+
+    @staticmethod
+    def check_call(cmd, name=""):
+        ret = subprocess.call(cmd)
+        if ret != 0:
+          raise Exception(
+              "failed: {}. exit status: {}".format(
+                  name or str(cmd), ret))
 
 
-def configure_xmodmap():
-    notify_send("please touch any key on the keyboard...")
-    filename = os.path.expanduser(
-        "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
-    logging.info("running xmodmap %s", filename)
-    ret = subprocess.call([filename])
-    if ret == 0:
-        logging.info("success with xmodmap")
-        notify_send("success with xmodmap", color="green")
-    else:
-      raise Exception(
-          "failed to set up keyboard layout with xmodmap. "
-          "exit status: {}".format(ret))
+
+class KeyboardHandler(DeviceHandler):
+
+    def matches(self, device):
+        vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
+                                        device.get("ID_MODEL_ID"))
+        devname = device.get("DEVNAME")
+        return ("046d:c52b" == vendor_product
+                and devname and not "mouse" in devname
+                and device.device_path.split("/")[-1].startswith("event"))
+
+    def retry(self):
+        self.notify_info("please touch any key on the keyboard...")
+        filename = os.path.expanduser(
+            "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+        logging.info("running xmodmap %s", filename)
+        self.check_call([filename])
 
 
-def configure_monitor():
-    notify_send("atempting to set up external monitor")
-    ret = x_service_curl("/run",
-                         "correct-screen-no-prompt")
-    if ret:
-      raise Exception("correct-screen failed: {}".format(ret))
-    notify_send("successfully set up external monitor", color=green)
+DeviceHandler.handlers.append(KeyboardHandler())
 
 
-async def configure_scrcpy():
-    notify_send("setting up scrcpy...")
-    script = os.path.expanduser(
-        "~/.stumpwmrc.d/scripts/installs/install-scrcpy-docker.sh")
-    if not os.path.exists(script):
-        logging.info("scrcpy not found: %s", script)
-    def call():
-        ret = subprocess.call([script])
+class MonitorHandler(DeviceHandler):
+
+    def matches(self, device):
+        return device.get("SUBSYSTEM") == "drm"
+
+    def retry(self):
+        self.notify_info("atempting to set up external monitor")
+        ret = x_service_curl("/run", "correct-screen-no-prompt")
         if ret:
-            raise Exception("scrcpy failed: {}".format(ret))
-    await call_until_success(call)
-    notify_send("successfully set up scrcpy")
+          raise Exception("correct-screen failed: {}".format(ret))
 
 
-def udev_monitor():
+DeviceHandler.handlers.append(MonitorHandler())
+
+
+class ScrcpyHandler(DeviceHandler):
+
+    def matches(self, device):
+        return device.action == "bind" and device.get("adb_user") == "yes"
+
+    def retry(self):
+        script = os.path.expanduser(
+            "~/.stumpwmrc.d/scripts/installs/install-scrcpy-docker.sh")
+        if not os.path.exists(script):
+            logging.info("scrcpy not found: %s", script)
+            return
+        self.check_call([script])
+
+
+DeviceHandler.handlers.append(ScrcpyHandler())
+
+
+def monitor_forever():
     ctx = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(ctx)
 
@@ -99,33 +161,20 @@ def udev_monitor():
             logging.info("skipping remove event")
             continue
         if not device.is_initialized:
-            # ensure the KB is initialized -- not sure if this is actually a needed check
             logging.info("skipping non-initialized device")
             continue
 
+        logging.debug("")
         for key in device.keys():
           logging.debug("%s: %s", key, device.get(key))
-        logging.debug("device.tags: %s", list(device.tags))
+        logging.debug("")
 
-        vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
-                                        device.get("ID_MODEL_ID"))
-        devname = device.get("DEVNAME")
-        if ("046d:c52b" == vendor_product
-            and devname and not "mouse" in devname
-            and device.device_path.split("/")[-1].startswith("event")):
-            logging.info("detected adding logitech keyboard")
-            # import pdb;pdb.set_trace()
-            asyncio.run_coroutine_threadsafe(
-                call_until_success(configure_xmodmap), loop)
-        elif device.get("SUBSYSTEM") == "drm":
-          logging.info("detected adding or removing monitor")
-          # a monitor
-          asyncio.run_coroutine_threadsafe(
-              call_until_success(configure_monitor), loop)
-        elif device.action == "bind" and device.get("adb_user") == "yes":
-            logging.info("detected android phone")
-            asyncio.run_coroutine_threadsafe(configure_scrcpy(), loop)
+        for handler in DeviceHandler.handlers:
+            if handler.matches(device):
+                asyncio.run_coroutine_threadsafe(
+                    handler.run(), loop)
+                break
         else:
-          continue
+            logging.info("nothing matched: %s", device)
 
-udev_monitor()
+monitor_forever()
