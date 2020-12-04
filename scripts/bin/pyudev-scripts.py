@@ -71,6 +71,20 @@ def configure_monitor():
     notify_send("successfully set up external monitor", color=green)
 
 
+async def configure_scrcpy():
+    notify_send("setting up scrcpy...")
+    script = os.path.expanduser(
+        "~/.stumpwmrc.d/scripts/installs/install-scrcpy-docker.sh")
+    if not os.path.exists(script):
+        logging.info("scrcpy not found: %s", script)
+    def call():
+        ret = subprocess.call([script])
+        if ret:
+            raise Exception("scrcpy failed: {}".format(ret))
+    await call_until_success(call)
+    notify_send("successfully set up scrcpy")
+
+
 def udev_monitor():
     ctx = pyudev.Context()
     monitor = pyudev.Monitor.from_netlink(ctx)
@@ -109,6 +123,9 @@ def udev_monitor():
           # a monitor
           asyncio.run_coroutine_threadsafe(
               call_until_success(configure_monitor), loop)
+        elif device.action == "bind" and device.get("adb_user") == "yes":
+            logging.info("detected android phone")
+            asyncio.run_coroutine_threadsafe(configure_scrcpy(), loop)
         else:
           continue
 
