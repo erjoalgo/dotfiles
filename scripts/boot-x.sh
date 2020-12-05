@@ -103,6 +103,8 @@ Description=Run custom udev scripts via pyudev
 [Service]
 ExecStart=$(pwd)/bin/pyudevs.py
 User=$(whoami)
+Restart=on-failure
+RestartSec=5s
 
 EOF
 
