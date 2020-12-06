@@ -22,7 +22,6 @@ test -d "${BASE}" || git clone "${URL}"
 cd "${BASE}"
 
 meson x --buildtype release --strip -Db_lto=true || true
-cd x
 ninja
 
 command -v scrcpy
