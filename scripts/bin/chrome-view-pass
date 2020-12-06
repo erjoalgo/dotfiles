@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "nh:" OPT; do
+while getopts "n:h" OPT; do
     case ${OPT} in
         n)
             WEBSITE_HOSTNAME=${OPTARG}
