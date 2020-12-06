@@ -1,0 +1,36 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "nh:" OPT; do
+    case ${OPT} in
+        n)
+            WEBSITE_HOSTNAME=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+if test -z "${WEBSITE_HOSTNAME+x}"; then
+    echo "usage: chrome-view-pass -n <WEBSITE_HOSTNAME>"
+    exit ${LINENO}
+fi
+
+SQLITE_LOGIN_DATA="${HOME}/.config/chromium/Default/Login Data"
+TMPFILE=$(mktemp)
+cp "${SQLITE_LOGIN_DATA}" "${TMPFILE}"
+
+sqlite3 "${TMPFILE}" <<EOF
+select username_value, origin_url, password_value
+from logins
+where origin_url like '%${WEBSITE_HOSTNAME}%';
+EOF
+
+
+# Local Variables:
+# mode: sh-mode
+# End:
