@@ -1,7 +1,0 @@
-# auto-generated rule to mount device at mount point
-ACTION=="add", ENV{ID_SERIAL_SHORT}="ZY224C7JXT", RUN+="/home/ealfonso/.stumpwmrc.d/scripts/bin/scrcpy.sh"
-
-# Local Variables:
-# compile-command: "udevadm test /devices/pci0000:00/0000:00:14.0/usb1/1-6"
-# "
-# End:
