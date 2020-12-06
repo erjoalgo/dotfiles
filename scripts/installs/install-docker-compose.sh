@@ -6,6 +6,8 @@ URL="https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$
 sudo curl -L  "${URL}" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
+SELFD=$(dirname "${BASH_SOURCE[0]}")
+
 if ! command -v docker; then
-    sudo apt-get install -y docker
+    ${SELFD}/install-docker.sh
 fi
