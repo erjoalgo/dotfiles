@@ -210,6 +210,8 @@
                  do (setf idx new-idx))
         finally (return (nreverse chunks))))
 
+(defvar *message-lock* (bt:make-lock))
+
 (defun message-wrapped (fmt &rest args)
   (let* ((text (apply #'format nil fmt args))
          (screen (current-screen))
@@ -219,7 +221,8 @@
          (pixels-per-line (screen-width screen))
          (chars-per-line (floor pixels-per-line pixels-per-char)))
     (assert (> chars-per-line 0))
-    (echo-string-list screen (wrap-text text chars-per-line))))
+    (bt:with-lock-held (*message-lock*)
+      (echo-string-list screen (wrap-text text chars-per-line)))))
 
 (export '(message-wrapped) :STUMPWM)
 
