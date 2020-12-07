@@ -100,9 +100,10 @@ class KeyboardHandler(DeviceHandler):
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
         devname = device.get("DEVNAME")
-        return ("046d:c52b" == vendor_product
-                and devname and not "mouse" in devname
-                and device.device_path.split("/")[-1].startswith("event"))
+        matches =  (device.get("ID_VENDOR") == "Logitech" and
+                    devname and "mouse" not in devname
+                    and device.device_path.split("/")[-1].startswith("event"))
+        return matches
 
     def retry(self):
         self.notify_info("please touch any key on the keyboard...")
