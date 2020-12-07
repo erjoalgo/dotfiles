@@ -44,14 +44,8 @@ class DeviceHandler(object):
 
     async def run(self):
         class_name = self.__class__.__name__
-        if self.last_triggered and (time.time() - self.lat_triggered)<1:
-            logging.info("skipping multiple %s triggers within 1s", class_name)
-            return
-        self.last_triggered = time.time()
-        with DeviceHandler.locks.get(class_name, threading.Lock()):
-            logging.info("running handler for %s", class_name)
-            # force only one handler at a time per class
-            self.__retry__(self.retry, name=class_name)
+        logging.info("running handler for %s", class_name)
+        self.__retry__(self.retry, name=class_name)
 
 
     @staticmethod
@@ -172,6 +166,7 @@ def monitor_forever():
 
         for handler in DeviceHandler.handlers:
             if handler.matches(device):
+                logging.info("matched: %s", handler)
                 asyncio.run_coroutine_threadsafe(
                     handler.run(), loop)
                 break
