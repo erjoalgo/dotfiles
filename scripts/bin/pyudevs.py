@@ -23,13 +23,13 @@ def x_service_curl(path, post_data=None, headers=None):
 
 
 def notify_send(message, color=None):
-  ret = x_service_curl(
-      "/notify", post_data=message,
-      headers=
-      {"STUMPWM-MESSAGE-COLOR": color}
+    ret = x_service_curl(
+        "/notify", post_data=message,
+        headers=
+        {"STUMPWM-MESSAGE-COLOR": color}
       if color else None)
-  if ret:
-    logging.error("failed to notify-send: %s", ret)
+    if ret:
+        logging.error("failed to notify-send: %s", ret)
 
 
 class DeviceHandler(object):
