@@ -75,7 +75,8 @@
          (url-launcher-list-url-keys
                 :skip-cache t)))
       (setf *url-keys-cache*
-            (cladaver:ls *webdav-server-info* webdav-urls-prefix))))
+            (statusor:error-to-signal
+             (cladaver:ls *webdav-server-info* webdav-urls-prefix)))))
 
 (defun url-launcher-cat-webdav-path (webdav-path &key skip-cache)
   (let ((val
