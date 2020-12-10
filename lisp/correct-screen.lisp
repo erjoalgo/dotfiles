@@ -137,7 +137,7 @@
                                   (xrandr-displays))
                for i from 0
                collect i)))
-      (message "~D output~:P detected" (length order))
+      (message-wrapped "~D output~:P detected" (length order))
       (correct-screen order)))
 
 (defcommand correct-screen-select-mode () ()
