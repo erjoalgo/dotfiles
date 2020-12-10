@@ -238,12 +238,13 @@
 
 (export '(look-up-engine-by-letter) :stumpwm)
 
+(psym-load *search-engine-persistent-alist*)
+
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
   ;;automatically find the best key for a set of named commands
   ;;for use the first character in the command name that hasn't been used
   )
-
 
 (defun webdav-maybe-init ()
   (unless *webdav-server-info*
@@ -258,6 +259,4 @@
    :max-parents 2)
   (dolist (class *browser-classes*)
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
-  (psym-load *search-engine-persistent-alist*)
-  (assert (psym-records *search-engine-persistent-alist*))
   (setf *suppress-deny-messages* t))
