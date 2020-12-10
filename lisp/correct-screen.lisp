@@ -93,9 +93,12 @@
           (with-slots (id mode state) display
             (when (equal state "connected")
               (let* ((id-mode-pref (assoc id id-mode-prefs :test #'equal))
-                     (mode-pref (cdr id-mode-pref)))
-                (when (and mode-pref (not (equal (xrandr-mode-resolution-string mode-pref)
-                                                 (xrandr-mode-resolution-string (xrandr-display-mode display)))))
+                     (mode-pref (cdr id-mode-pref))
+                     (mode-current (xrandr-display-mode display)))
+                (when (and mode-pref
+                           (or (null mode-current)
+                               (not (equal (xrandr-mode-resolution-string mode-pref)
+                                           (xrandr-mode-resolution-string mode-current)))))
                   (push (format nil "--output ~A --mode ~A" id (xrandr-mode-resolution-string mode-pref))
                         fixes)))))
         finally (when fixes
