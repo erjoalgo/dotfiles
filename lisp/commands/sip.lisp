@@ -36,7 +36,7 @@
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
   (unless linphone-inhibit-command-echo
-    (stumpwm:message "running: linphonecsh ~{~A~^ ~}" args))
+    (stumpwm:message-wrapped "running: linphonecsh ~{~A~^ ~}" args))
   (multiple-value-bind (retcode output)
       (stumpwm::run-command-retcode-output "linphonecsh" args)
     (if (zerop retcode)
@@ -209,9 +209,9 @@
                  :display-candidates :include-values))
         (number-clean (sip:sip-sanitize-phone-number number)))
     (case choice
-      (:call (message "calling ~A" number) (sip:call number-clean))
+      (:call (message-wrapped "calling ~A" number) (sip:call number-clean))
       (:text (let ((cmd (format nil "emacs-sip ~A" number-clean)))
-               (message "invoking ~A" cmd)
+               (message-wrapped "invoking ~A" cmd)
                (run-shell-command cmd)))
       (:email (error "email not implemented"))
       (t (error "Unknown choice: ~A" choice)))))
@@ -276,7 +276,7 @@
       (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected)))))
 
 (defcommand sip-show-current-default-proxy () ()
-  (message "current proxy:~%a~%~A" (sip:linphonecsh-current-default-proxy)))
+  (message-wrapped "current proxy:~%a~%~A" (sip:linphonecsh-current-default-proxy)))
 
 (defcommand sip-echo-test () ()
   (sip:call "4443"))

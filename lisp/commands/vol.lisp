@@ -81,13 +81,13 @@
 
 (defcommand vol-up ()() "volume up"
             (vol :up)
-            (message "volup"))
+            (message-wrapped "volup"))
 
 (defcommand vol-down ()() "volume down"
             (vol :down)
-            (message "voldown"))
+            (message-wrapped "voldown"))
 
 (defcommand vol-mute-toggle ()() "volume mute"
             (let ((muted (vol :mute-toggle)))
-              (message "vol ~Amute"
+              (message-wrapped "vol ~Amute"
                        (if muted "" "un"))))

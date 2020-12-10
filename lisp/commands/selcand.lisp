@@ -71,7 +71,7 @@
              (loop
                 for i below 3
                 as choice = (progn
-                              (stumpwm:message "~D ~A" i prompt)
+                              (stumpwm:message-wrapped "~D ~A" i prompt)
                               (format nil "~C"
                                       (or
                                        (stumpwm:read-one-char
