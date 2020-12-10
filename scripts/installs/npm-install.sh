@@ -22,12 +22,13 @@ function my_nmv_load  {
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
     # This loads nvm bash_completion
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    unalias npm 2>/dev/null
+    unalias npm node 2>/dev/null
     nvm install stable
     nvm alias default node
     npm ${*}
 }
 alias npm='my_nmv_load'
+alias node='my_nmv_load'
 
 EOF
     STATUS=$?
