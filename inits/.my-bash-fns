@@ -620,3 +620,8 @@ function melpa-test-recipe  {
         make recipes/${RECIPE} \
         && EMACS_COMMAND='emacs -Q' make sandbox INSTALL=${RECIPE}
 }
+
+function x2x-north  {
+    SSH_ARGS=${*} && shift
+    ssh ${SSH_ARGS} x2x -north -to :0.0
+}
