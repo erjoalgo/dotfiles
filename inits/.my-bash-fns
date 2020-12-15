@@ -623,5 +623,5 @@ function melpa-test-recipe  {
 
 function x2x-north  {
     SSH_ARGS=${*} && shift
-    ssh ${SSH_ARGS} x2x -north -to :0.0
+    ssh -XC ${SSH_ARGS} x2x -north -to :0.0
 }
