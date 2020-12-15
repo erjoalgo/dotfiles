@@ -14,7 +14,7 @@ if ! emacs --version | grep "26\\|27"; then
   fi
 fi
 
-sudo apt-get install -y zathura konsole pass keynav at
+sudo apt-get install -y zathura konsole pass keynav at x2x
 sudo apt-get install -y eog scrot
 test -n "$(which google-chrome)" || sudo apt-get install -y chromium
 
