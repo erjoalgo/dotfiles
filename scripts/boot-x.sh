@@ -81,6 +81,11 @@ sudo insert-text-block '# bZkpjy56EU9dBbdNDTk0zmMVGWJLzK9e-ssh' \
 XAuthLocation /opt/X11/bin/xauth
 EOF
 
+insert-text-block '# yTyIZrilAW59XgITTlNwLp3VdhMn9k7R-enable-sysrq' \
+                  /etc/sysctl.d/99-sysctl.conf<<EOF
+kernel.sysrq = 1
+EOF
+
 sudo systemctl enable getty@tty1.service
 
 
