@@ -207,7 +207,8 @@ class Cell(object):
             logger.info("calling: %s", " ".join(args))
             p=subprocess.Popen(args,
                                stdout=subprocess.PIPE)
-            for line in iter(p.stdout.readline, ""):
+            for line_bytes in iter(p.stdout.readline, ""):
+                line = line_bytes.decode()
                 print (line)
                 if "CTRL-EVENT-CONNECTED" in line:
                     break
