@@ -76,6 +76,11 @@ sudo insert-text-block '# e8a6c230-997f-4dd5-9b57-7e3b31ab67bc'  \
 ExecStart=-/sbin/agetty --autologin "${USER}" %I
 EOF
 
+sudo insert-text-block '# bZkpjy56EU9dBbdNDTk0zmMVGWJLzK9e-ssh' \
+     "${HOME}/.ssh/config" <<EOF
+XAuthLocation /opt/X11/bin/xauth
+EOF
+
 sudo systemctl enable getty@tty1.service
 
 
