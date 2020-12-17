@@ -63,6 +63,7 @@ for REPO in  \
     dotfiles \
 	dotemacs \
         githost \
+        autobuild \
     ; do
     cd ${GIT_HOME}
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
