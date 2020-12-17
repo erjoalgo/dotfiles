@@ -116,7 +116,7 @@ After=systemd-udevd.service
 ExecStart=$(pwd)/bin/pyudevs.py
 User=$(whoami)
 Restart=always
-RestartSec=5s
+RestartSec=5
 StartLimitInterval=0
 
 EOF
