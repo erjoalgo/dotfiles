@@ -58,7 +58,7 @@ def box(s, n):
 def iface_list():
     "discover the available wifi interfaces"
     ifconfig_out = check_output(["ip", "link"])
-    m = re.findall("(?m)wlan[0-9]+|wlp[^:]+", ifconfig_out.decode())
+    m = re.findall("(?m)wlan[0-9]+|wlp[^:]+|wlx[^:]+", ifconfig_out.decode())
     return list(set(m))
 
 def config_list(directory=CONFIG_DEFAUL_DIRECTORY):
