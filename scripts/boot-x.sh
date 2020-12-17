@@ -109,6 +109,8 @@ sudo python3 -m pip install solaar
 install-systemd-service.sh pyudevs <<EOF
 [Unit]
 Description=Run custom udev scripts via pyudev
+Requires=systemd-udevd.service
+After=systemd-udevd.service
 
 [Service]
 ExecStart=$(pwd)/bin/pyudevs.py
