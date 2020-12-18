@@ -60,8 +60,11 @@
   (let* ((displays (xrandr-displays))
          (connected (remove-if-not 'xrandr-display-connected-p
                                    displays))
-         (to-connect-ordered (if order (loop for ith in order
-                                             collect (nth ith connected))
+         (to-connect-ordered (or (loop for ith in order
+                                    collect
+                                      (if (numberp ith)
+                                          (nth ith connected)
+                                          ith))
                                  connected))
          (to-disconnect (remove-if (lambda (display)
                                      (member display to-connect-ordered))
