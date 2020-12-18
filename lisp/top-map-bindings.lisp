@@ -76,7 +76,8 @@
   *special-chars-map*
   ;; *search-engine-map*
   *commands-map*
-  *brightness-map*)
+  *brightness-map*
+  *correct-screen-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -210,15 +211,22 @@
          (list (list key command))))
 
 (define-key-bindings
+    *correct-screen-map*
+    `(
+      ("H-p" "correct-screen-prompt-display-order")
+      ("H-a" "correct-screen-all-connected-displays")
+      ("H-1" "correct-screen-only-current-display")
+      ("H-m" "correct-screen-select-mode")))
+
+(define-key-bindings
  *utils-map*
  '(
    ("i" "invert-screen")
    ("M" "echo-pointer")
    ("m" "toggle-magnifier")
+   ("H-c" *correct-screen-map*)
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
-   ("H-C" "correct-screen-prompt-display-order")
-   ("H-c" "correct-screen-all-connected-displays")
    ("H-w" "connect-to-internet-maybe")
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)
