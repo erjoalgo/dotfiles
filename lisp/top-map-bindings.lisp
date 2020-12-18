@@ -218,7 +218,7 @@
    ("r" *screen-rotation-map*)
    ("c" *special-chars-map*)
    ("H-C" "correct-screen-prompt-display-order")
-   ("H-c" "correct-screen-no-prompt")
+   ("H-c" "correct-screen-all-connected-displays")
    ("H-w" "connect-to-internet-maybe")
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)

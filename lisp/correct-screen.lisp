@@ -144,7 +144,7 @@
       (error "index out of bounds"))
     (correct-screen order)))
 
-(defcommand correct-screen-no-prompt
+(defcommand correct-screen-all-connected-displays
     () ()
     "correct screen without prompt"
     (let* ((order
