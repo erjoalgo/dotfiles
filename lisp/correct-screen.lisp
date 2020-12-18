@@ -71,26 +71,35 @@
                                  connected))
          (to-disconnect (remove-if (lambda (display)
                                      (member display to-connect-ordered))
-                                   displays)))
+                                   displays))
+         cmd)
     ;; disconnect
-    (mapc (lambda (off-display)
-            (run-shell-command-print
-             (format nil "xrandr --output ~A --off"
-                     (xrandr-display-id off-display))))
-          to-disconnect)
+    (loop for off-display in to-disconnect
+       do (setf cmd
+                (nconc cmd (list
+                            "--output"
+                            (xrandr-display-id off-display)
+                            "--off"))))
     ;; connect displays in order
     (loop for display in to-connect-ordered
-          with pos-x = 0
-          with display-mode-prefs = (xrandr-display-prefs)
-          as mode = (or (cdr (assoc (xrandr-display-id display) display-mode-prefs :test #'equal))
-                        (car (xrandr-display-modes display)))
-          do (let* ((id (xrandr-display-id display))
-                    (mode-string (xrandr-mode-resolution-string mode))
-                    (pos-string (format nil "~Dx0" pos-x))
-                    (cmd (format nil "xrandr --output ~A --mode ~A --pos ~A"
-                                 id mode-string pos-string )))
-               (run-shell-command-print cmd)
-               (incf pos-x (xrandr-mode-width mode))))))
+       with pos-x = 0
+       with display-mode-prefs = (xrandr-display-prefs)
+       ;; with cmd = nil
+       as mode =
+         (or (cdr (assoc (xrandr-display-id display) display-mode-prefs
+                         :test #'equal))
+             (car (xrandr-display-modes display)))
+       as args =
+         (let* ((id (xrandr-display-id display))
+                (mode-string (xrandr-mode-resolution-string mode))
+                (pos-string (format nil "~Dx0" pos-x)))
+           (list
+            "--output" id
+            "--mode" mode-string
+            "--pos" pos-string))
+       do (setf cmd (nconc cmd args))
+       do (incf pos-x (xrandr-mode-width mode)))
+    (run-shell-command-print (format nil "xrandr ~{~A~^ ~}" cmd))))
 
 (defun correct-screen-fix-display-prefs ()
   (loop with fixes = nil
