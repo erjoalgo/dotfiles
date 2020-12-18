@@ -56,10 +56,13 @@
                           (cl-ppcre:split #\Tab line)
                         (cons display (xrandr-parse-mode mode)))))))
 
+(defun xrandr-connected-displays ()
+  (remove-if-not 'xrandr-display-connected-p (xrandr-displays)))
+
 (defun correct-screen (&optional order)
+  "Order is a list of indices into the current (xrandr-connected-displays)."
   (let* ((displays (xrandr-displays))
-         (connected (remove-if-not 'xrandr-display-connected-p
-                                   displays))
+         (connected (xrandr-connected-displays))
          (to-connect-ordered (or (loop for ith in order
                                     collect
                                       (if (numberp ith)
@@ -110,10 +113,8 @@
                     (run-shell-command cmd)))))
 
 (defcommand correct-screen-prompt-display-order () ()
-  "correct screen, prompting for display order"
-  (let* ((displays (remove-if-not
-                    'xrandr-display-connected-p
-                    (xrandr-displays)))
+  "Correct screen, prompting for display order"
+  (let* ((displays (xrandr-connected-displays))
          (prompt (format nil "~{~{~a: \"~a\"~}~^, ~}: "
                          (loop for display in (mapcar 'xrandr-display-id displays)
                                for i from 0
@@ -138,9 +139,7 @@
     () ()
     "correct screen without prompt"
     (let* ((order
-            (loop for display in (remove-if-not
-                                  'xrandr-display-connected-p
-                                  (xrandr-displays))
+            (loop for display in (xrandr-connected-displays)
                for i from 0
                collect i)))
       (message-wrapped "~D output~:P detected" (length order))
@@ -149,8 +148,7 @@
 (defcommand correct-screen-select-mode () ()
   "select a mode for current displays"
   (let* ((display (selcand:select :candidates
-                                 (remove-if-not 'xrandr-display-connected-p
-                                                (xrandr-displays))
+                                  (xrandr-connected-displays)
                                  :prompt "select display: "
                                  :stringify-fn #'XRANDR-DISPLAY-ID))
          (mode-stringify
