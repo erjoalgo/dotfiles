@@ -220,9 +220,15 @@
                            :translate #'translate-id))
          (pixels-per-line (screen-width screen))
          (chars-per-line (floor pixels-per-line pixels-per-char)))
-    (assert (> chars-per-line 0))
-    (bt:with-lock-held (*message-lock*)
-      (echo-string-list screen (wrap-text text chars-per-line)))))
+    (if (zerop chars-per-line)
+        (progn
+          (warn "no usable displays?")
+          (bt:with-lock-held (*message-lock*)
+            (messaage (apply #'format nil fmt args))))
+        (progn
+          (assert (> chars-per-line 0))
+          (bt:with-lock-held (*message-lock*)
+            (echo-string-list screen (wrap-text text chars-per-line)))))))
 
 (export '(message-wrapped) :STUMPWM)
 
