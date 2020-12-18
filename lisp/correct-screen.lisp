@@ -154,6 +154,14 @@
       (message-wrapped "~D output~:P detected" (length order))
       (correct-screen order)))
 
+(defcommand correct-screen-only-current-display
+    () ()
+    "turn off all other displays"
+    (let* ((head-number (head-number (current-head)))
+           (head (nth head-number (xrandr-displays))))
+      (message-wrapped "selecting only display: ~A" head-number)
+      (correct-screen (list head))))
+
 (defcommand correct-screen-select-mode () ()
   "select a mode for current displays"
   (let* ((display (selcand:select :candidates
