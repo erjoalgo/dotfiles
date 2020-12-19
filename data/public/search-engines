@@ -21,3 +21,4 @@ Yaqs	https://yaqs.googleplex.com/eng?query=~A
 codesearch	https://cs.corp.google.com/?q=~A
 t-contacts	http://localhost:1959/contacts
 z-amazon	https://www.amazon.com/s?k=~A
+f-whole-foods	https://www.amazon.com/s?i=wholefoods&k=~A
