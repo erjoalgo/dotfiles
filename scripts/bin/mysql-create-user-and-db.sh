@@ -42,7 +42,7 @@ fi
 if test -n "${DROP}"; then
     sudo mysql <<EOF
 GRANT USAGE ON *.* TO '${DBUSER}'@'localhost';
-drop USER '${USER}'@'localhost';
+drop USER '${DBUSER}'@'localhost';
 drop database if exists ${DBNAME};
 FLUSH PRIVILEGES;
 EOF
