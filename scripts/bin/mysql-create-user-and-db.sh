@@ -40,7 +40,7 @@ if grep '-' <<< "${DBNAME}"; then
 fi
 
 if test -n "${DROP}"; then
-    sudo mysql -uroot -p <<EOF
+    sudo mysql <<EOF
 GRANT USAGE ON *.* TO '${DBUSER}'@'localhost';
 drop USER '${USER}'@'localhost';
 drop database if exists ${DBNAME};
