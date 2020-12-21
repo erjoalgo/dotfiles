@@ -55,7 +55,7 @@ else
     fi
 
     sudo mysql <<EOF
--- CREATE DATABASE ${DBNAME};
+CREATE DATABASE ${DBNAME};
 CREATE USER '${DBUSER}'@'localhost' IDENTIFIED BY '${PASS}';
 GRANT ALL PRIVILEGES ON ${DBNAME}.* TO '${DBUSER}'@'localhost';
 FLUSH PRIVILEGES;
