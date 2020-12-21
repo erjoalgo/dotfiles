@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "d:u:h" OPT; do
+while getopts "d:u:t:ph" OPT; do
     case ${OPT} in
     d)
         DBNAME=${OPTARG}
