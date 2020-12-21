@@ -28,6 +28,7 @@ DBUSER=${DBUSER:-${DBNAME:-}}
 HOST=${HOST:-localhost}
 DROP=${DROP:-}
 
+command -v mysql
 
 if ! test -n "${DBNAME:-}" -a -n "${DBUSER:-}" -a -n "${HOST:}"; then
     echo "missing arguments"
