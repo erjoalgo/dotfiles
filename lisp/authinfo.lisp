@@ -80,6 +80,5 @@
                                :if-does-not-exist :create
                                :if-exists :append
                                :direction :output)
-             ;; (format fh "~&~{~A~^ ~}~%" strings)
              (format fh "~%~{~A~^ ~}~%" strings))
         (parse)))
