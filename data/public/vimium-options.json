@@ -6,7 +6,11 @@
       "passKeys": ""
     },
     {
-      "pattern": "https://youtube.com/watch*",
+      "pattern": "https?://youtube.com/watch*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://www.youtube.com/watch*",
       "passKeys": ""
     }
   ],
