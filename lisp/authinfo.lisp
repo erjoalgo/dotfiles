@@ -12,14 +12,13 @@
 (in-package :authinfo)
 
 (defun parse (&key (filename "~/.authinfo"))
-  (assert (probe-file filename) (filename)
-          "authinfo doesn't exist: ~A" filename)
-  (loop with contents = (stumpwm:file-string filename)
-     for line in (ppcre:split #\Newline contents)
-     collect
-       (loop for (key val . rest)
-          on (ppcre:split " +" line :omit-unmatched-p t) by #'cddr
-          collect (cons (intern (string-upcase key) :keyword) val))))
+  (when (probe-file filename)
+    (loop with contents = (stumpwm:file-string filename)
+          for line in (ppcre:split #\Newline contents)
+          collect
+          (loop for (key val . rest)
+                  on (ppcre:split " +" line :omit-unmatched-p t) by #'cddr
+                collect (cons (intern (string-upcase key) :keyword) val)))))
 
 
 (defmacro alist-get (key alist)
