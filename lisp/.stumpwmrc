@@ -12,6 +12,7 @@
     (load (merge-pathnames relative-path source-directory))))
 
 (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
+
 (ql:quickload :erjoalgo-stumpwmrc)
 
 (defvar *init-errors* nil)
