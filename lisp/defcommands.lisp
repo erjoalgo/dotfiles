@@ -265,3 +265,7 @@
   (let ((text (get-x-selection nil '(:PRIMARY))))
     (sleep .4)
     (run-shell-command (format nil "xdotool type ~A" text))))
+
+(defcommand double-click-and-ctrl-c () ()
+  "Double click and ctrl+c"
+  (run-shell-command "xdotool click 1 click 1 key ctrl+c"))

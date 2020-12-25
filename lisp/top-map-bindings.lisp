@@ -77,7 +77,8 @@
   ;; *search-engine-map*
   *commands-map*
   *brightness-map*
-  *correct-screen-map*)
+  *correct-screen-map*
+  *click-map*)
 
 (defun all-top-maps ()
   (append (list *real-top-map*)
@@ -247,7 +248,8 @@
    ("b" *brightness-map*)
    ("H-p" "center-pointer")
    ("d" "dict-lookup-command")
-   ("D" "cat-message-command ~/vocab")))
+   ("D" "cat-message-command ~/vocab")
+   ("H-m" *click-map*)))
 
 
 (define-key-bindings *screen-rotation-map*
@@ -269,6 +271,12 @@
       ("~" "insert-key-with-delay degree")
       ("$" "insert-key-with-delay EuroSign")
       ))
+
+(define-key-bindings
+    *click-map*
+    `(
+      ("H-d" "double-click-and-ctrl-c")))
+
 
 (define-key *help-map* (kbd "g") "echo-current-group-name")
 ;;(define-key *special-characters-map* (kbd "?") "run-shell-command xdotool key ¿")
