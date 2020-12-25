@@ -275,8 +275,7 @@
 
 (define-key-bindings
     *click-map*
-    `(
-      ("H-d" "double-click-and-ctrl-c")))
+    `(("H-d" "double-click-and-ctrl-c")))
 
 
 (define-key *help-map* (kbd "g") "echo-current-group-name")
@@ -284,10 +283,7 @@
 
 (define-key-bindings
     *brightness-map*
-    (loop
-       for c across (concat "`1234"
-                            "56789"
-                            "0")
+    (loop for c across (concat "`1234" "56789" "0")
        for percentage in '(.01 .05 .1 .5 .8
                            1 30 50 70 90
                            100)
