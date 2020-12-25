@@ -30,7 +30,7 @@ done
 
 shift $((OPTIND -1))
 
-if test ${USAGE} = true -o -z "${1:-}"; then
+if test ${USAGE} = true; then
     echo "usage: ssh-copy-id-to-user [-p REMOTE_PRIVILEGED_USER] [-o ssh_extra_opts] \
 -t SSH_USER_HOST_PORT [-i IDENTITY_FILE] [CP_DEST_USER...]"
     exit 1
