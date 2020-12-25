@@ -621,7 +621,13 @@ function melpa-test-recipe  {
         && EMACS_COMMAND='emacs -Q' make sandbox INSTALL=${RECIPE}
 }
 
-function x2x-north  {
+function _x2x-orientation  {
     SSH_ARGS=${*} && shift
-    ssh -XC ${SSH_ARGS} x2x -north -to :0.0
+    ORIENTATION=${ORIENTATION:-north}
+    ssh -XC ${SSH_ARGS} x2x -${ORIENTATION} -to :0.0
 }
+
+alias x2x-south='ORIENTATION=south _x2x-orientation'
+alias x2x-north='ORIENTATION=north _x2x-orientation'
+alias x2x-east='ORIENTATION=east _x2x-orientation'
+alias x2x-west='ORIENTATION=west _x2x-orientation'
