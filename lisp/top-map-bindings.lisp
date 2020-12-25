@@ -116,6 +116,7 @@
       ("H-X" *commands-map*)
       ;; ("H-z" *commands-map*)
       ("H-u" *utils-map*)
+      ("F12" "run-shell-command find-cursor")
 
       ("H-/" "pull-hidden-other")
       ("H--" "fclear")
