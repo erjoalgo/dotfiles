@@ -100,9 +100,6 @@ test 0 -ne "${EUID}"
 sudo ${APT_GET} install -y python python-setuptools python3-pip vim
 pip3 install getchwrap -U --user
 
-# set default cmd line editor to vi
-sudo update-alternatives --set editor /usr/bin/vim --verbose || true
-
 # link inits
 cd ~/git/dotfiles/scripts/
 for SCRIPT in  \
@@ -111,6 +108,13 @@ for SCRIPT in  \
     ;do
     ./${SCRIPT}
 done
+
+# set default cmd line editor to vi
+sudo update-alternatives --set editor /usr/bin/vim --verbose || true
+sudo insert-text-block  \
+     '# xUxm084v1yfXHaLwwMFubYIub1eOsvKo-system-wide-vi-settings'  \
+     /usr/share/vim/vimrc \
+    < ${HOME}/.vimrc
 
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
