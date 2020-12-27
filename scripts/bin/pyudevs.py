@@ -150,7 +150,8 @@ def monitor_forever():
     threading.Thread(target=loop.run_forever).start()
 
     for device in iter(monitor.poll, None):
-        # there might be a way to add the action condition to the filter, but I couldn't find it
+        # there might be a way to add the action condition
+        # to the filter, but I couldn't find it
         logging.info("got new event: %s %s", device.action, device)
         if device.action in ("remove", "unbind"):
             logging.info("skipping remove event")
