@@ -117,7 +117,7 @@ class MonitorHandler(DeviceHandler):
 
     def retry(self):
         self.notify_info("atempting to set up external monitor")
-        ret = x_service_curl("/run", "correct-screen-no-prompt")
+        ret = x_service_curl("/run", "correct-screen-newly-connected-displays")
         if ret:
           raise Exception("correct-screen failed: {}".format(ret))
 
