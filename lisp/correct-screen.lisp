@@ -115,7 +115,8 @@
                            (or (null mode-current)
                                (not (equal (xrandr-mode-resolution-string mode-pref)
                                            (xrandr-mode-resolution-string mode-current)))))
-                  (push (format nil "--output ~A --mode ~A" id (xrandr-mode-resolution-string mode-pref))
+                  (push (format nil "--output ~A --mode ~A" id
+                                (xrandr-mode-resolution-string mode-pref))
                         fixes)))))
         finally (when fixes
                   (let ((cmd (format nil "xrandr ~{~A~^ ~}" fixes)))
@@ -138,8 +139,7 @@
                    (read-one-line (current-screen)
                                   prompt)))
          (order (loop for c across line
-                      collect (- (char-code c) (char-code #\0))))
-         )
+                      collect (- (char-code c) (char-code #\0)))))
     (when (and order
                (>= (apply 'max order) (length displays)))
       (error "index out of bounds"))
