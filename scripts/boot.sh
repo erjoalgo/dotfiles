@@ -226,9 +226,6 @@ fi
 
 # set up the nonet user
 ./installs/nonet.sh
-
-# forked from github.com/a-rodin
-git clone https://github.com/erjoalgo/tmux-session-spectrum  \
-  "${HOME}/.tmux/plugins/tmux-session-spectrum"
+./installs/tmux-session-spectrum.sh
 
 echo "success"
