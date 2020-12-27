@@ -112,7 +112,7 @@ done
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim --verbose || true
 sudo insert-text-block  \
-     '# xUxm084v1yfXHaLwwMFubYIub1eOsvKo-system-wide-vi-settings'  \
+     '"xUxm084v1yfXHaLwwMFubYIub1eOsvKo-system-wide-vi-settings"'  \
      /usr/share/vim/vimrc \
     < ${HOME}/.vimrc
 
