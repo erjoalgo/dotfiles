@@ -113,13 +113,13 @@ install-systemd-service.sh pyudevs <<EOF
 Description=Run custom udev scripts via pyudev
 Requires=systemd-udevd.service
 After=systemd-udevd.service
+StartLimitInterval=0
 
 [Service]
 ExecStart=$(pwd)/bin/pyudevs.py
 User=$(whoami)
 Restart=always
 RestartSec=5
-StartLimitInterval=0
 
 EOF
 
