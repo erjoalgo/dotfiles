@@ -59,7 +59,7 @@
 (defun xrandr-connected-displays ()
   (remove-if-not 'xrandr-display-connected-p (xrandr-displays)))
 
-(defun correct-screen (&optional order)
+(defun correct-screen (&key order skip-off-commands)
   "Order is a list of indices into the current (xrandr-connected-displays)."
   (let* ((displays (xrandr-displays))
          (connected (xrandr-connected-displays))
@@ -74,12 +74,13 @@
                                    displays))
          cmd)
     ;; disconnect
-    (loop for off-display in to-disconnect
-       do (setf cmd
-                (nconc cmd (list
-                            "--output"
-                            (xrandr-display-id off-display)
-                            "--off"))))
+    (unless skip-off-commands
+      (loop for off-display in to-disconnect
+         do (setf cmd
+                  (nconc cmd (list
+                              "--output"
+                              (xrandr-display-id off-display)
+                              "--off")))))
     ;; connect displays in order
     (loop for display in to-connect-ordered
        with pos-x = 0
@@ -142,7 +143,7 @@
     (when (and order
                (>= (apply 'max order) (length displays)))
       (error "index out of bounds"))
-    (correct-screen order)))
+    (correct-screen :order order)))
 
 (defcommand correct-screen-all-connected-displays
     () ()
@@ -152,7 +153,20 @@
                for i from 0
                collect i)))
       (message-wrapped "~D output~:P detected" (length order))
-      (correct-screen order)))
+      (correct-screen :order order)))
+
+(defcommand correct-screen-newly-connected-displays
+    () ()
+  "only add newly connected displays"
+  (let ((new-displays (remove-if-not (lambda (display)
+                                   (and (xrandr-display-connected-p display)
+                                        (null (xrandr-display-mode display))))
+                                   (xrandr-connected-displays))))
+    (message-wrapped "~D new output~:P detected" (length new-displays))
+    (when new-displays
+      (correct-screen :order (xrandr-connected-displays)
+                      :skip-off-commands t))))
+
 
 (defcommand correct-screen-only-current-display
     () ()
@@ -160,7 +174,7 @@
     (let* ((head-number (head-number (current-head)))
            (head (nth head-number (xrandr-displays))))
       (message-wrapped "selecting only display: ~A" head-number)
-      (correct-screen (list head))))
+      (correct-screen :order (list head))))
 
 (defcommand correct-screen-select-mode () ()
   "select a mode for current displays"

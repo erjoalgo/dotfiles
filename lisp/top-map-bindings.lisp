@@ -217,6 +217,7 @@
     `(
       ("H-p" "correct-screen-prompt-display-order")
       ("H-a" "correct-screen-all-connected-displays")
+      ("H-n" "correct-screen-newly-connected-displays")
       ("H-1" "correct-screen-only-current-display")
       ("H-m" "correct-screen-select-mode")))
 
