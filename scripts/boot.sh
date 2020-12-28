@@ -41,7 +41,7 @@ if which apt-get; then
     sudo apt-get install -y apt-file unattended-upgrades
     sudo apt-file update
     if sudo grep ^deb\ cdrom /etc/apt/sources.list; then
-        sudo ./update-sources-list.sh
+        sudo ./installs/update-sources-list.sh
         sudo apt-get update
     fi
 fi
@@ -103,8 +103,8 @@ pip3 install getchwrap -U --user
 # link inits
 cd ~/git/dotfiles/scripts/
 for SCRIPT in  \
-    link-inits.sh\
-        gen-git-config.sh \
+    ./installs/link-inits.sh \
+        ./installs/gen-git-config.sh \
     ;do
     ./${SCRIPT}
 done

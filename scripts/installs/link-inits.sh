@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -euo pipefail
 
 READLINK_PY='import os, sys; print(os.path.realpath(sys.argv[1]))'
-STUMPWM_TOP=$(dirname $(dirname $(python -c "${READLINK_PY}" $0)))
+STUMPWM_TOP=$(dirname $(dirname $(dirname $(python -c "${READLINK_PY}" $0))))
 INITS_TOP="${STUMPWM_TOP}/inits"
 
 function safe_ln	{
