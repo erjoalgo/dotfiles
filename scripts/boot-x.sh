@@ -120,6 +120,10 @@ ExecStart=$(pwd)/bin/pyudevs.py
 User=$(whoami)
 Restart=always
 RestartSec=5
+Environment=PATH=$PATH:$(pwd)/bin
+
+[Install]
+WantedBy=graphical.target
 
 EOF
 

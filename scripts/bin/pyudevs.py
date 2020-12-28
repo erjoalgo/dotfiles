@@ -12,8 +12,7 @@ import pyudev
 logging.basicConfig(level=logging.DEBUG)
 
 def x_service_curl(path, post_data=None, headers=None):
-    script = os.path.expanduser(
-              "~/.stumpwmrc.d/scripts/bin/x-service-curl")
+    script = "x-service-curl"
     cmd = [script, path]
     if post_data:
         cmd.extend(["-d", post_data])
@@ -101,8 +100,7 @@ class KeyboardHandler(DeviceHandler):
 
     def retry(self):
         self.notify_info("please touch any key on the keyboard...")
-        filename = os.path.expanduser(
-            "~/.stumpwmrc.d/scripts/bin/xmodmap-load.sh")
+        filename = "xmodmap-load.sh"
         logging.info("running xmodmap %s", filename)
         self.check_call([filename])
 
@@ -131,8 +129,7 @@ class ScrcpyHandler(DeviceHandler):
         return device.action == "bind" and device.get("adb_user") == "yes"
 
     def retry(self):
-        script = os.path.expanduser(
-            "~/.stumpwmrc.d/scripts/installs/install-scrcpy-docker.sh")
+        script = "install-scrcpy-docker.sh"
         if not os.path.exists(script):
             logging.info("scrcpy not found: %s", script)
             return
