@@ -45,12 +45,12 @@ fi
 # explicitly-ignored files, warning only
 IGNORED=$(git clean -ndX | wc -l)
 if test ${IGNORED} != 0; then
-    echo "WARN: ${IGNORED} ignored files would be lost in $(pwd)"
+    echo "$(pwd): ${IGNORED} ignored files would be lost"
 fi
 
 if test -n "${LOST}"; then
     MESSAGE=$(sed 's/, \(, \)*/\n - /g' <<< "${LOST}")
-    echo "WARN: data would be lost if $(pwd) was deleted: "
+    echo "$(pwd): data would be lost"
     echo "${MESSAGE}"
     exit ${LINENO}
 fi

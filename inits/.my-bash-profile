@@ -7,6 +7,7 @@
         LAGGING=$(IGNORE_DANGLING_COMMITS=true GIT_NO_FETCH=true \
                                          vacate.sh 2>&1 || true)
     fi
+  echo
   printf '%s' "${LAGGING%%A}"
   echo
 } &

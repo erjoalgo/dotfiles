@@ -17,7 +17,7 @@ shift $((OPTIND -1))
 
 # consider directories in reverse mtime order, so that newly-edited/fixed repos
 # are considered last
-for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d |  \
+for DIR in $(find ${HOME}/git/ /opt/git -maxdepth 1 -mindepth 1 -type d 2> /dev/null |  \
                  xargs ls -1trd) ${*}; do
     if test -n "${SKIP_NON_GIT_REPOS:-}" -a ! -d "${DIR}"; then
         continue
