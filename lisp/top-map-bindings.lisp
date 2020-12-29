@@ -251,6 +251,8 @@
    ("H-p" "center-pointer")
    ("d" "dict-lookup-command")
    ("D" "cat-message-command ~/vocab")
+   ("H-v" "pulseaudio-load-module-loopback")
+   ("H-V" "pulseaudio-unload-module-loopback")
    ("H-m" *click-map*)))
 
 

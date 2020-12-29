@@ -269,3 +269,12 @@
 (defcommand double-click-and-ctrl-c () ()
   "Double click and ctrl+c"
   (run-shell-command "xdotool click 1 click 1 key ctrl+c"))
+
+(defcommand pulseaudio-load-module-loopback () ()
+  "Double click and ctrl+c"
+  (run-shell-command "pactl load-module module-loopback")
+  (run-shell-command "pactl load-module module-echo-cancel"))
+
+(defcommand pulseaudio-unload-module-loopback () ()
+  "Double click and ctrl+c"
+  (run-shell-command "pactl unload-module module-loopback"))
