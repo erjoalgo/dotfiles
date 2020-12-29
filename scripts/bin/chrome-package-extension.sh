@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-EXTENSION_TOP=$(realpath ${1}) && shift
+EXTENSION_TOP=$(realpath ${1:-.})
 test -d ${EXTENSION_TOP}
 
 cd ${EXTENSION_TOP}/..
