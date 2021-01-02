@@ -38,7 +38,8 @@ class DeviceHandler(object):
     def __init__(self):
         self.last_triggered = None
 
-    def matches(self, device):
+    @staticmethod
+    def matches(device):
         raise NotImplementedError()
 
     async def run(self):
@@ -89,20 +90,29 @@ class DeviceHandler(object):
 
 class KeyboardHandler(DeviceHandler):
 
-    def matches(self, device):
+    def __init__(self, is_logitech=False):
+        self.is_logitech = is_logitech
+
+    @staticmethod
+    def matches(device):
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
         devname = device.get("DEVNAME")
-        matches =  (device.get("ID_VENDOR") == "Logitech" and
-                    devname and "mouse" not in devname
+        matches =  (devname
+                    and "mouse" not in devname
                     and device.device_path.split("/")[-1].startswith("event"))
-        return matches
+        if matches:
+            is_logitech = device.get("ID_VENDOR") == "Logitech"
+            return KeyboardHandler(is_logitech=is_logitech)
 
     def retry(self):
         self.notify_info("please touch any key on the keyboard...")
         filename = "xmodmap-load.sh"
         logging.info("running xmodmap %s", filename)
-        self.check_call([filename])
+        cmd = [filename]
+        if self.is_logitech:
+            cmd.push(["-l"])
+        self.check_call(cmd)
 
 
 DeviceHandler.handlers.append(KeyboardHandler())
@@ -110,8 +120,10 @@ DeviceHandler.handlers.append(KeyboardHandler())
 
 class MonitorHandler(DeviceHandler):
 
-    def matches(self, device):
-        return device.get("SUBSYSTEM") == "drm"
+    @staticmethod
+    def matches(device):
+        if device.get("SUBSYSTEM") == "drm":
+            return MonitorHandler()
 
     def retry(self):
         self.notify_info("atempting to set up external monitor")
@@ -125,8 +137,10 @@ DeviceHandler.handlers.append(MonitorHandler())
 
 class ScrcpyHandler(DeviceHandler):
 
-    def matches(self, device):
-        return device.action == "bind" and device.get("adb_user") == "yes"
+    @staticmethod
+    def matches(device):
+        if device.action == "bind" and device.get("adb_user") == "yes":
+            return ScrcpyHandler()
 
     def retry(self):
         script = "install-scrcpy-docker.sh"
