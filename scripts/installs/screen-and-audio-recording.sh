@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-simplescreenrecorder
+sudo apt-get install -y simplescreenrecorder
