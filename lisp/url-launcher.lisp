@@ -134,6 +134,8 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
+        (unless *webdav-server-info* (load-webdav-server-info))
+        (assert *webdav-server-info*)
         (statusor:error-to-signal
          (cladaver:put *webdav-server-info*
                        (merge-pathnames webdav-urls-prefix key)
