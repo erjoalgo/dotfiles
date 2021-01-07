@@ -26,6 +26,12 @@
               :selection :fullscreen
               :show t))
 
+(defcommand scrot-cmd-current-window-anon () ()
+  "take an anonymous screen shot of the current window"
+  (take-scrot (time-format *scrot-date-format*)
+              :selection :window
+              :show t))
+
 (defun mouse-available-p ()
   (remove-if-not (lambda (pathname)
                    (ppcre:scan "mouse" (pathname-name pathname)))

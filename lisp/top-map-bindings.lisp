@@ -234,7 +234,7 @@
    ("w" "connect-to-internet-maybe")
    ("h" *help-map*)
    ("s" "scrot-cmd-anon")
-   ("S" "scrot-cmd-full-screen-anon")
+   ("S" "scrot-cmd-current-window-anon")
    ("n" "take-scrot-snipit")
    ("o" "ocr-scrot-clipboard")
    ("k" "speak-string")
