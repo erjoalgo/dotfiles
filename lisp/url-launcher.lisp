@@ -240,8 +240,6 @@
 
 (export '(look-up-engine-by-letter) :stumpwm)
 
-(psym-load *search-engine-persistent-alist*)
-
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
   ;;automatically find the best key for a set of named commands
@@ -261,4 +259,5 @@
    :max-parents 2)
   (dolist (class *browser-classes*)
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
+  (psym-load *search-engine-persistent-alist*)
   (setf *suppress-deny-messages* t))
