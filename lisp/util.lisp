@@ -224,7 +224,7 @@
         (progn
           (warn "no usable displays?")
           (bt:with-lock-held (*message-lock*)
-            (messaage (apply #'format nil fmt args))))
+            (STUMPWM::messaage (apply #'format nil fmt args))))
         (progn
           (assert (> chars-per-line 0))
           (bt:with-lock-held (*message-lock*)
