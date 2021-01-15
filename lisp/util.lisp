@@ -308,3 +308,6 @@
              :no-hints ,no-hints)))
         (,value-fn selection))
       (throw 'error "Abort"))))
+
+(defun visible-window-pids ()
+  (mapcar #'window-pid (top-windows)))
