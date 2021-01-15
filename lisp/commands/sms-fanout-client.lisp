@@ -82,7 +82,11 @@
                          (error "0 messages in body"))
                        (loop for message in body do
                             (alist-let message (to from message id)
-                              (on-message-received from to message id)))))
+                              (handler-case
+                                  (on-message-received from to message id)
+                                (error (err)
+                                  (format t "failed to parse message: ~A"
+                                          message)))))))
                   (t
                    (wsd:close-connection client)
                    (error "unexpected message type: ~A" message-type))))))
