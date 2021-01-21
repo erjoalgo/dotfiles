@@ -36,6 +36,8 @@
         ,(or on-error-spec
              (let ((sym (gensym "err-var-"))) `(,sym (make-error ,sym)))))
     `(multiple-value-bind (,var ,err-var) ,form
+       ,@(when (equal "_" (symbol-name var))
+           `((declare (ignore ,var))))
        (if (null ,err-var) ,on-success
            ,on-error))))
 
