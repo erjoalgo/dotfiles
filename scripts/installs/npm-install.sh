@@ -16,7 +16,7 @@ for PROFILE_FILE in \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                ${PROFILE_FILE} <<"EOF"
 export NVM_DIR="$HOME/.nvm"
-function my_nmv_load  {
+function my_nvm_load  {
     echo "loading nvm"
     # This loads nvm
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
@@ -27,8 +27,8 @@ function my_nmv_load  {
     nvm alias default node
     npm ${*}
 }
-alias npm='my_nmv_load'
-alias node='my_nmv_load'
+alias npm='my_nvm_load'
+alias node='my_nvm_load'
 
 EOF
     STATUS=$?
