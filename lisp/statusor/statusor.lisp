@@ -15,10 +15,10 @@
 (defmacro if-let-ok (on-error-spec bindings &rest on-success)
   (if (null bindings)
       `(progn ,@on-success)
-      (destructuring-bind ((val-var val-or-err) . rest) bindings
+      (destructuring-bind ((var val-or-err) . rest) bindings
         `(handle-error
           (signal-to-error ,val-or-err)
-          (,val-var (if-let-ok ,on-error-spec ,rest ,@on-success))
+          (,var (if-let-ok ,on-error-spec ,rest ,@on-success))
           ,on-error-spec))))
 
 (defmacro make-error (error-message)
@@ -29,13 +29,13 @@
                           on-success-spec
                           on-error-spec)
   (destructuring-bind
-        ((val-var on-success) (err-var on-error))
+        ((var on-success) (err-var on-error))
       `(
         ,(or on-success-spec
-             (let ((sym (gensym "val-var-"))) `(,sym ,sym)))
+             (let ((sym (gensym "var-"))) `(,sym ,sym)))
         ,(or on-error-spec
              (let ((sym (gensym "err-var-"))) `(,sym (make-error ,sym)))))
-    `(multiple-value-bind (,val-var ,err-var) ,form
+    `(multiple-value-bind (,var ,err-var) ,form
        (if (null ,err-var) ,on-success
            ,on-error))))
 
@@ -56,15 +56,15 @@
         ,(or error-message (format nil "~A is nil" form)))))
 
 (defmacro ->? (forms &optional on-error-spec)
-  (let ((val-var (gensym "val-var-")))
+  (let ((var (gensym "var-")))
     (if (null (cadr forms))
         `(handle-error ,(car forms)
-                       (,val-var ,val-var)
+                       (,var ,var)
                        ,on-error-spec)
         (destructuring-bind (first second . rest) forms
           `(handle-error
             (signal-to-error (,(car second) ,first ,@(cdr second)))
-            (,val-var (->? ,val-var ,@rest))
+            (,var (->? ,var ,@rest))
             ,on-error-spec)))))
 
 (defmacro return-if-error (form &optional block-name)
