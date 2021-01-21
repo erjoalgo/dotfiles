@@ -47,10 +47,15 @@
                  (err
                   (error "error on ~A:~% ~A" ',form err))))
 
-(defmacro signal-to-error (form)
-  `(handler-case ,form
-     (error (err-signal)
-       (make-error err-signal))))
+(defmacro signal-to-error (form &optional error-message-prefix)
+  (let ((error-signal-sym (gensym "error-signal-")))
+    `(handler-case ,form
+       (error (,error-signal-sym)
+         (make-error
+          ,(if error-message-prefix
+               `(format nil "~A: ~A" ,error-message-prefix ,error-signal-sym)
+               error-signal-sym))))))
+
 
 (defmacro nil-to-error (form &optional error-message)
   `(or ,form
