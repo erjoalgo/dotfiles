@@ -56,7 +56,6 @@
                `(format nil "~A: ~A" ,error-message-prefix ,error-signal-sym)
                error-signal-sym))))))
 
-
 (defmacro nil-to-error (form &optional error-message)
   `(or ,form
        (make-error
