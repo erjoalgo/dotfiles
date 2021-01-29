@@ -24,7 +24,6 @@ while getopts "r:l:h" OPT; do
 done
 shift $((OPTIND -1))
 
-
 if test -z "${SSH_HOST_SPEC:-}" -o -z "${REMOTE_SERVICE_PORT}"; then
     usage
     exit ${LINENO}
