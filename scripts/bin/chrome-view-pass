@@ -24,12 +24,13 @@ SQLITE_LOGIN_DATA="${HOME}/.config/chromium/Default/Login Data"
 TMPFILE=$(mktemp)
 cp "${SQLITE_LOGIN_DATA}" "${TMPFILE}"
 
-sqlite3 "${TMPFILE}" <<EOF
+CMD=$(cat <<EOF
 select username_value, origin_url, password_value
 from logins
 where origin_url like '%${WEBSITE_HOSTNAME}%';
 EOF
-
+   )
+sqlite3 "${TMPFILE}" "${CMD}"
 
 # Local Variables:
 # mode: sh-mode
