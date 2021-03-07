@@ -4,9 +4,19 @@ set -euo pipefail
 
 while getopts "l:d:h" OPT; do
     case ${OPT} in
-    p)
-        PARTITION=${OPTARG}
-        ;;
+        p)
+            PARTITION=${OPTARG}
+            ;;
+        l)
+            SYMLINK=${OPTARG}
+            ;;
+        d)
+            HOMEDIR_PATH=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 
@@ -19,7 +29,8 @@ if test -z "${PARTITION:-}"; then
 fi
 
 
-MOUNT_POINT=$(udev-gen-rule-for-stick.sh -M -p "${PARTITION}" | tee /dev/stderr |  \
+MOUNT_POINT=$(udev-gen-rule-for-stick.sh -M -p "${PARTITION}" |  \
+                  tee /dev/stderr |  \
                   grep -Po "(?<=mounting to ).*")
 
 test -d ${MOUNT_POINT}
