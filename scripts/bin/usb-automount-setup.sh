@@ -4,22 +4,22 @@ set -euo pipefail
 
 while getopts "l:d:h" OPT; do
     case ${OPT} in
-    l)
-        SYMLINK=${OPTARG}
-        ;;
-    d)
-        HOMEDIR_PATH=${OPTARG}
-        ;;
-    h)
-        less $0
-        exit 0
+    p)
+        PARTITION=${OPTARG}
         ;;
     esac
 done
 
 
 SYMLINK=${SYMLINK:-${HOME}/.usb-drive-symlink}
-MOUNT_POINT=$(udev-gen-rule-for-stick.sh -M | tee /dev/stderr |  \
+if test -z "${PARTITION:-}"; then
+    select PARTITION in $(sudo blkid | cut -f1 -d:); do
+        break
+    done
+fi
+
+
+MOUNT_POINT=$(udev-gen-rule-for-stick.sh -M -p "${PARTITION}" | tee /dev/stderr |  \
                   grep -Po "(?<=mounting to ).*")
 
 test -d ${MOUNT_POINT}
@@ -35,6 +35,8 @@ if test -n "${SYMLINK:-}"; then
        ln -sf "${HOMEDIR}" "${SYMLINK}";
    fi
 fi
+
+sudo mount "${PARTITION}" "${MOUNT_POINT}" || true
 
 for SECRET in \
     .password-store \

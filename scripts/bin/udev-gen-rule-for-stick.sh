@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-while getopts "d:m:o:l:Mh" OPT; do
+while getopts "p:m:o:l:Mh" OPT; do
     case ${OPT} in
-    d)
+    p)
         PARTITION=${OPTARG}
         ;;
     m)
