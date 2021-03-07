@@ -37,7 +37,7 @@ test -d ${MOUNT_POINT}
 
 if test -n "${SYMLINK:-}"; then
    test -L "${SYMLINK}" && sudo unlink "${SYMLINK}"
-   if ! test -e "${SYMLINK}" \); then
+   if ! test -e "${SYMLINK}"; then
        test -n "${HOMEDIR_PATH:-}" ||  \
            read -p"enter relative path to home directory within external drive: " \
                 HOMEDIR_PATH
