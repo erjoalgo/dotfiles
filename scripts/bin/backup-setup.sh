@@ -295,4 +295,11 @@ backup	${LOCAL_DOCS_PATH}		localhost/
 #backup	rsync://rsync.samba.org/rsyncftp/	rsync.samba.org/rsyncftp/
 
 EOF
+    sudo insert-text-block '# 8b41c80e-a8c1-4596-a7d9-035accc811a8-rsnapshot-crontab' \
+         /etc/cron.d/rsnapshot \
+         <<EOF
+0 */4 * * *     /usr/bin/rsnapshot alpha
+50 23 * * *     /usr/bin/rsnapshot beta
+00 22 1 * *     /usr/bin/rsnapshot delta
+EOF
 fi
