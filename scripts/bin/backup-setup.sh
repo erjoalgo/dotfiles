@@ -21,18 +21,21 @@ while getopts "csh:" OPT; do
 done
 shift $((OPTIND -1))
 
-mkdir -p "${MOUNT_POINT}"
-
 if test "${MODE}" = "client"; then
     read -p"Enter backup server hostname: " SSHFS_SERVER
     read -p"Enter backup server port: " SSHFS_PORT
+
+    read -p"Enter local backup server hostname: " SSHFS_SERVER_LOCAL
+    read -p"Enter local backup server port: " SSHFS_PORT_LOCAL
     SSHFS_PATH=${SSHFS_PATH:-docs}
     USERNAME=${USERNAME:-ealfonso}
+    mkdir -p "${MOUNT_POINT}"{,.local}
 
     sudo insert-text-block  \
          '# a62a6d16-6dae-4fdd-b42c-94d72bd8ec60-sshfs-backup-automount' \
          /etc/fstab<<EOF
 ${USERNAME}@${SSHFS_SERVER}:${SSHFS_PATH} ${MOUNT_POINT} fuse.sshfs _netdev,user,idmap=user,transform_symlinks,identityfile=/home/${USERNAME}/.ssh/id_rsa,allow_other,default_permissions,port=${SSHFS_PORT} 0
+${USERNAME}@${SSHFS_SERVER_LOCAL}:${SSHFS_PATH} ${MOUNT_POINT}.local fuse.sshfs _netdev,user,idmap=user,transform_symlinks,identityfile=/home/${USERNAME}/.ssh/id_rsa,allow_other,default_permissions,port=${SSHFS_PORT_LOCAL} 0
 EOF
     sudo mount -av
 elif test "${MODE}" = "server"; then
