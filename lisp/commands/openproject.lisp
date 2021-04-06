@@ -38,7 +38,9 @@
 
 (defun request (path &key method json content-type (url-encoder #'drakma:url-encode))
   (maybe-init-authinfo)
-  (statusor:if-let-ok nil
+  (statusor:if-let-ok
+   ;; (err (statusor:make-error (format nil "request failed: ~A ~A: ~A" method path err)))
+   nil
                       ((auth (statusor:nil-to-error
                               (authinfo:get-by :app app-name)))
                        (machine (authinfo:alist-get-or-error :machine auth))
