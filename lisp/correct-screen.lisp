@@ -69,8 +69,11 @@
                                           (nth ith connected)
                                           ith))
                                  connected))
+         (to-connect-ids (mapcar #'xrandr-display-id to-connect-ordered))
          (to-disconnect (remove-if (lambda (display)
-                                     (member display to-connect-ordered))
+                                     (member (xrandr-display-id display)
+                                             to-connect-ids
+                                             :test #'equal))
                                    displays))
          cmd)
     ;; disconnect
