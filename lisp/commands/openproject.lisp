@@ -9,17 +9,24 @@
 (defvar *debug-url* nil)
 
 (defmacro drakma-http-request-or-error (url &rest args)
-  `(multiple-value-bind (body status-code)
-       (drakma:http-request ,url ,@args)
-     (if (= (floor status-code 100) 2)
-         ;; 2xx
-         body
-         (statusor:make-error
-          (format nil "non-2xx status code: ~A on url ~A: ~A"
-                  status-code ,url
-                  (if (vectorp body)
-                      (babel:octets-to-string body)
-                      body))))))
+  `(statusor:if-let-ok
+    (err (statusor:make-error (format nil "error in request to ~A: ~A" ,url err)))
+    (
+     (status-code nil)
+     (body (statusor:signal-to-error
+            (multiple-value-bind (body code)
+                (drakma:http-request ,url ,@args)
+              (setf status-code code)
+              body)))
+     (_ (unless (= (floor status-code 100) 2)
+          ;; non-2xx
+          (statusor:make-error
+           (format nil "non-2xx status code: ~A on url ~A: ~A"
+                   status-code ,url
+                   (if (vectorp body)
+                       (babel:octets-to-string body)
+                       body))))))
+    body))
 
 (defvar app-name "openproject-personal")
 
