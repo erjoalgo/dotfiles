@@ -51,9 +51,10 @@
                                     path))
                        (content (when json (json:encode-json-to-string json)))
                        (content-type (or content-type (if content "application/hal+json")))
+                       (method (or method (if content :post :get)))
                        (resp-raw
                         (drakma-http-request-or-error
-                         url :method (or method (if content :post :get))
+                         url :method method
                          :basic-authorization (list "apikey" api-key)
                          :content content
                          :content-type content-type
