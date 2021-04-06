@@ -18,7 +18,7 @@ echo ${FIND_ARGS}
 
 adb shell command -v find
 
-sudo adb shell find ${FIND_ARGS} \
-    | sed 's/[[:space:]]//g' \
-    | tee -a $(basename ${0}).log \
-    | xargs -rL1 adb-pull-rm.sh
+OLDIFS=$IFS
+export ADB_CMD=adb
+sudo adb shell find ${FIND_ARGS} -print0 \
+     | xargs -r0 -I Z sh -c "sudo $(which adb-pull-rm.sh) 'Z'"
