@@ -22,6 +22,8 @@ done
 shift $((OPTIND -1))
 
 if test "${MODE}" = "client"; then
+    # fail early before prompts if mount point is unavailable
+    mkdir -p "${MOUNT_POINT}"{,.local}
     read -p"Enter backup server hostname: " SSHFS_SERVER
     read -p"Enter backup server port: " SSHFS_PORT
 
@@ -29,7 +31,6 @@ if test "${MODE}" = "client"; then
     read -p"Enter local backup server port: " SSHFS_PORT_LOCAL
     SSHFS_PATH=${SSHFS_PATH:-docs}
     USERNAME=${USERNAME:-ealfonso}
-    mkdir -p "${MOUNT_POINT}"{,.remote}
 
     sudo insert-text-block  \
          '# a62a6d16-6dae-4fdd-b42c-94d72bd8ec60-sshfs-backup-automount' \
