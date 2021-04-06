@@ -30,8 +30,8 @@
 
 (defvar app-name "openproject-personal")
 
-(defun maybe-init-authinfo ()
-  (unless (authinfo:get-by :app app-name)
+(defun maybe-init-authinfo (&key force)
+  (when (or force (null (authinfo:get-by :app app-name)))
     (authinfo:persist-authinfo-line
      :line-prefix (format nil "app ~A" app-name)
      :required-keys '("machine" "apikey"))))
