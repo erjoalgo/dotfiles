@@ -17,10 +17,6 @@ if test -z "${DB_PASS:-}"; then
   read -sp"enter postgres password: " DB_PASS
 fi
 
-# psql-create-user-and-db.sh -u ${DB_USER}
-# 604 ponderosa
-# # sudo -upostgres createdb -O ${DB_USER} openproject_test
-
 sudo -upostgres psql<<EOF
 create user ${DB_USER} password '${DB_PASS}';
 CREATE DATABASE ${DB_NAME} OWNER ${DB_USER};
