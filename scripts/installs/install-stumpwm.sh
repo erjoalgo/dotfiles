@@ -69,3 +69,8 @@ Exec=/usr/local/bin/stumpwm
 Type=Application
 EOF
 fi
+
+GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
+if sudo test -e "${GDM_CONFIG_FILENAME}"; then
+  sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
+fi
