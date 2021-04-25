@@ -10,15 +10,17 @@
 
 (defun xrandr-parse-mode (mode-line)
   (ppcre:register-groups-bind
-   ((#'parse-integer w) (#'parse-integer h) rest)
-   ("^ *([0-9]+)x([0-9]+) *(.*)$" mode-line)
-   (declare (ignore rest))
+   ((#'parse-integer w) (#'parse-integer h) qualifier rest)
+   ("^ *([0-9]+)x([0-9]+)([iR])? *(.*)$" mode-line)
+   (declare (ignore rest qualifier))
    (make-xrandr-mode
     :width w
     :height h
     :resolution-string (format nil "~Dx~D" w h)
     :rates (mapcar #'read-from-string
-                   (ppcre:all-matches-as-strings "[0-9]+[.][0-9]+" mode-line))
+                   (ppcre:all-matches-as-strings
+                    "[0-9]+[.][0-9]+"
+                    mode-line))
     :preferred (not (null (ppcre:scan "[+]" mode-line)))
     :active (not (null (ppcre:scan "[*]" mode-line))))))
 
