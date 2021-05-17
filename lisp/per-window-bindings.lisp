@@ -128,7 +128,7 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 (add-hook STUMPWM:*focus-frame-hook* 'focus-frame-hook)
 
-(defun focus-group-hook-update-env (new old)
+(defun focus-group-hook-update-env (new &optional old)
   (declare (ignore old))
   (let ((group-number (STUMPWM:group-number new)))
     (sb-posix:setenv "DESKTOP_GROUP_NUMBER"
@@ -137,3 +137,4 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 
 (add-hook STUMPWM:*FOCUS-GROUP-HOOK* 'focus-group-hook-update-env)
+(add-hook STUMPWM:*START-HOOK* 'focus-group-hook-update-env)
