@@ -1,5 +1,5 @@
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
-{
+function notify_lagging_repos {
     LAGGING_REPOS_REPORT=${HOME}/.git-lagging-repos-report
     if test -e "${LAGGING_REPOS_REPORT}"; then
         LAGGING=$(cat "${LAGGING_REPOS_REPORT}")
@@ -10,8 +10,8 @@
   echo
   printf '%s' "${LAGGING%%A}"
   echo
-} &
-disown %-
+} 
+notify_lagging_repos & ; disown %-
 
 source ${HOME}/git/dotfiles/inits/.my-bashrc
 
