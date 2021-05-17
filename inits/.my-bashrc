@@ -43,7 +43,18 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     exec xinit;
 fi
 
-if ( ! command -v prodcertstatus || prodcertstatus ) \
-     && tmux list-sessions &> /dev/null; then
-  tmux attach
+if ( ! command -v gcertstatus || gcertstatus ); then
+  if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
+    if test ${DESKTOP_GROUP_NUMBER} -lt 0 -o \
+      ${DESKTOP_GROUP_NUMBER} -gt 10; then
+      echo "DESKTOP_GROUP_NUMBER out of range: ${DESKTOP_GROUP_NUMBER}"
+    else
+      while $(tmux list-sessions | wc -l) -lt ${DESKTOP_GROUP_NUMBER}; do
+        tmux new-session -d
+      done
+      tmux attach -t $((${DESKTOP_GROUP_NUMBER} - 1))
+    fi
+  elif tmux list-sessions &> /dev/null; then
+    tmux attach
+  fi
 fi
