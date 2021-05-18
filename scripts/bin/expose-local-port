@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
 
@@ -23,7 +23,6 @@ while getopts "r:l:h" OPT; do
     esac
 done
 shift $((OPTIND -1))
-
 
 if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_SERVICE_PORT:-}"; then
     usage
