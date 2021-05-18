@@ -10,8 +10,9 @@ function notify_lagging_repos {
   echo
   printf '%s' "${LAGGING%%A}"
   echo
-} 
-notify_lagging_repos & ; disown %-
+}
+
+notify_lagging_repos & disown %-
 
 source ${HOME}/git/dotfiles/inits/.my-bashrc
 
