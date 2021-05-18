@@ -49,7 +49,7 @@ if ( ! command -v gcertstatus || gcertstatus ); then
       ${DESKTOP_GROUP_NUMBER} -gt 10; then
       echo "DESKTOP_GROUP_NUMBER out of range: ${DESKTOP_GROUP_NUMBER}"
     else
-      while $(tmux list-sessions | wc -l) -lt ${DESKTOP_GROUP_NUMBER}; do
+      while test $(tmux list-sessions | wc -l) -lt ${DESKTOP_GROUP_NUMBER}; do
         tmux new-session -d
       done
       tmux attach -t $((${DESKTOP_GROUP_NUMBER} - 1))
