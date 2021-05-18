@@ -207,6 +207,12 @@ EOF
 
 X_BROWSER=$(which x-www-browser-stumpwm)
 
+insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-group-number"  \
+  "${HOME}/.ssh/config" << EOF
+Match host *
+    SendEnv DESKTOP_GROUP_NUMBER
+EOF
+
 SSHD_CONFIG=/etc/ssh/sshd_config
 if test -f "${SSHD_CONFIG}"; then
   sudo insert-text-block  \
