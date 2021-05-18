@@ -224,11 +224,14 @@ EOF
 fi
 
 sudo ${APT_GET} install -y resolvconf
-sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
-                  /etc/resolvconf/resolv.conf.d/head <<EOF
+
+if ! command -v glinux-updater; then
+  sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
+    /etc/resolvconf/resolv.conf.d/head <<EOF
 nameserver 209.182.235.223
 nameserver 209.182.235.223
 EOF
+fi
 
 X_WWW_BROWSER=$(which x-www-browsers) || X_WWW_BROWSER="/usr/bin/x-www-browser"
 
