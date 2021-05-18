@@ -137,4 +137,3 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 
 
 (add-hook STUMPWM:*FOCUS-GROUP-HOOK* 'focus-group-hook-update-env)
-(add-hook STUMPWM:*START-HOOK* 'focus-group-hook-update-env)

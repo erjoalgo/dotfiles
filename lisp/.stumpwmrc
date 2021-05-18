@@ -47,5 +47,6 @@
   (def-thread-start *sms-fanout-reconnect-thread*
     (sms-fanout-client:reconnect-loop))
   (setf *startup-message* nil)
+  (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
   (startup-apps-run)
   (message "done loading .stumpwmrc"))
