@@ -71,6 +71,7 @@ for REPO in  \
     cd ${REPO}
     git config user.name "${GIT_NAME}"
     git config user.email ${GIT_EMAIL}
+    git pull --ff-only
 done
 
 SCRIPTS_BIN="${HOME}/git/dotfiles/scripts/bin"
