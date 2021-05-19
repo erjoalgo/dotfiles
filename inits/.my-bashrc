@@ -43,9 +43,4 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     exec xinit;
 fi
 
-if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
-  tmux set-option -ga update-environment ' DESKTOP_GROUP_NUMBER'
-  tmux new-session -A -s "group-${DESKTOP_GROUP_NUMBER}"
-elif tmux list-sessions &> /dev/null; then
-  tmux attach
-fi
+tmux attach

@@ -483,6 +483,11 @@ function pidof-ls-open-files  {
 complete -F _command strace-cmd
 
 function tmux-attach  {
+  if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
+    tmux set-option -ga update-environment ' DESKTOP_GROUP_NUMBER'
+    tmux new-session -A -s "group-${DESKTOP_GROUP_NUMBER}"
+    return
+  fi
   local COUNT=$(tmux list-session | wc -l)
   if test 0 = ${COUNT}; then
     echo "no tmux sessions"
