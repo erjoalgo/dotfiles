@@ -1,3 +1,4 @@
+# executed once per login
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
 function notify_lagging_repos {
     LAGGING_REPOS_REPORT=${HOME}/.git-lagging-repos-report
@@ -14,6 +15,7 @@ function notify_lagging_repos {
 
 notify_lagging_repos & disown %-
 
+# executed once per session
 source ${HOME}/git/dotfiles/inits/.my-bashrc
 
 # Local Variables:
