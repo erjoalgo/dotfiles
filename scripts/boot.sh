@@ -64,6 +64,7 @@ for REPO in  \
 	dotemacs \
         githost \
         autobuild \
+        tmux-session-spectrum \
     ; do
     cd ${GIT_HOME}
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
@@ -244,6 +245,5 @@ fi
 
 # set up the nonet user
 ./installs/nonet.sh
-./installs/tmux-session-spectrum.sh
 
 echo "success"

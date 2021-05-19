@@ -57,6 +57,7 @@ safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
 safe_ln "${INITS_TOP}/keynavs/.keynavrc.mine" "${HOME}/.keynavrc"
 safe_ln "${STUMPWM_TOP}/lisp/.stumpwmrc" "${HOME}/"
 safe_ln "${HOME}/git/dotemacs/lisp/.emacs" "${HOME}/"
+safe_ln "${HOME}/git/tmux_session_spectrum" "${HOME}/.tmux/plugins"
 safe_ln "${INITS_TOP}/.my-bash-fns" "${HOME}/.bash-fns/"
 safe_ln "${INITS_TOP}/konsole" "${HOME}/.local/share/"
 
