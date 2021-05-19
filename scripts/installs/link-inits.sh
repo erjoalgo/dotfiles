@@ -51,6 +51,7 @@ done
 mkdir -p ${HOME}/.config
 mkdir -p ${HOME}/.bash-fns
 mkdir -p ${HOME}/.local/share
+mkdir -p ${HOME}/.tmux/plugins
 
 safe_ln "${INITS_TOP}/zathurarc" "${HOME}/.config/zathura/"
 safe_ln "${INITS_TOP}/roxterm.sourceforge.net" "${HOME}/.config/"
