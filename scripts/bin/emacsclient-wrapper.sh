@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+REAL_EMACSCLIENT=/usr/bin/emacsclient.emacs
+
 if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
   SERVER_DIRECTORY=$(emacs -q --batch  \
     --eval "(require 'server)"  \
@@ -11,9 +13,9 @@ if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
   EMACS_SOCKET_NAME="${SERVER_DIRECTORY}/${DESKTOP_GROUP_NUMBER}"
   if test -e "${EMACS_SOCKET_NAME}"; then
     echo "attempting to connect to ${EMACS_SOCKET_NAME}"
-    EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} emacsclient ${*}
+    EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} "${REAL_EMACSCLIENT}" ${*}
     exit $?
   fi
 fi
 
-emacsclient ${*}
+"${REAL_EMACSCLIENT}" ${*}
