@@ -45,7 +45,7 @@ fi
 
 
 # skip auto tmux-attach on non-servers
-if test -z "${TMUX}" &&  \
+if test -z "${TMUX}" -a -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
   ! grep -F $(hostname | sha256sum | cut -f1 -d' ')<<EOF > /dev/null; then
 c792c60e7e3ccae6da5c908b3b14ed0364f64bd0f9666e35cb23dcc5d65a1fc5
 EOF
