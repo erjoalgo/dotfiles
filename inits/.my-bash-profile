@@ -13,7 +13,8 @@ function notify_lagging_repos {
   echo
 }
 
-notify_lagging_repos & disown %-
+# TODO this shouldn't appear on every new tmux session
+# notify_lagging_repos & disown %-
 
 # executed once per session
 source ${HOME}/git/dotfiles/inits/.my-bashrc
