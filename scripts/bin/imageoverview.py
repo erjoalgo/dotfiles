@@ -19,7 +19,7 @@ import urllib.parse
 try:
     from .version import __version__
 except Exception as ex:
-    logging.error("unable to determine version: %s", ex)
+    logging.warning("unable to determine version: %s", ex)
     __version__ = "unknown"
 
 class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
