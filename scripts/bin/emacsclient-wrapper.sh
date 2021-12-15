@@ -13,9 +13,11 @@ if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
   EMACS_SOCKET_NAME="${SERVER_DIRECTORY}/${DESKTOP_GROUP_NUMBER}"
   if test -e "${EMACS_SOCKET_NAME}"; then
     echo "attempting to connect to ${EMACS_SOCKET_NAME}"
-    EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} "${REAL_EMACSCLIENT}" ${*}
+    EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
+                     "${REAL_EMACSCLIENT}"  \
+                     "--socket-name=${EMACS_SOCKET_NAME}" "${@}"
     exit $?
   fi
 fi
 
-"${REAL_EMACSCLIENT}" ${*}
+"${REAL_EMACSCLIENT}" "${@}"
