@@ -527,7 +527,7 @@ function emacs-attach-loop  {
 
 function ec-which {
   PROGRAMS=${1} && shift
-  emacsclient -n $(which ${PROGRAMS})
+  emacsclient-wrapper.sh -n $(which ${PROGRAMS})
 }
 complete -F _command ec-which
 
