@@ -9,7 +9,6 @@ function usage  {
 PATH_PREFIX=""
 ADB_CMD=${ADB_CMD:-"adb"}
 
-export IFS=$'\n'
 FILE="${*}"
 echo ${FILE}
 ANDROID_PATH="${PATH_PREFIX}/$(tr -d '\r' <<< ${FILE})"

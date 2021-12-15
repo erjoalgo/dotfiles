@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 while getopts "h" OPT; do
     case ${OPT} in
@@ -13,12 +13,8 @@ done
 shift $((OPTIND -1))
 
 
-FIND_ARGS=${*}
-echo ${FIND_ARGS}
-
 adb shell command -v find
 
-OLDIFS=$IFS
 export ADB_CMD=adb
-sudo adb shell find ${FIND_ARGS} -print0 \
-     | xargs -r0 -I Z sh -c "sudo $(which adb-pull-rm.sh) 'Z'"
+sudo adb shell "find ${@}" \
+     | xargs -L1 $(which adb-pull-rm.sh)
