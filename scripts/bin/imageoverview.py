@@ -8,6 +8,7 @@ Display all images recursively contained in a directory on a web browser.
 import argparse
 import http.server
 import logging
+import math
 import mimetypes
 import os
 import queue
@@ -76,6 +77,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         page_images = self.images[
             (page_number-1)*images_per_page:
             (page_number)*images_per_page]
+        total_pages = math.ceil(len(self.images)/images_per_page)
         table = """<table>"""
         for (i, filename) in enumerate(page_images):
             if i%cols == 0:
@@ -93,7 +95,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         prev_page_href = "/page/{}".format(page_number - 1)
         next_page_href = "/page/{}".format(page_number + 1)
 
-        javascript = """
+        javascript = f"""
             window.addEventListener("keydown", function (event) {{
   if (event.defaultPrevented) {{
     return; // Do nothing if the event was already processed
@@ -120,10 +122,10 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
 
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
-}}, true);""".format(next_page_href=next_page_href,
-                     prev_page_href=prev_page_href)
+}}, true);"""
+        title = f"Page {page_number}/{total_pages} of {self.directory}"
 
-        doc = """<!DOCTYPE html>
+        doc = f"""<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -136,14 +138,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
  <a href={prev_page_href}>Prev</a> <a href="/page/1"> Home </a> <a href={next_page_href}>Next</a>
   </body>
 </html>
-""".format(title="Images in {}: page {}".format(
-    "TODO",
-    page_number),
-           table=table,
-           javascript = javascript,
-           next_page_href=next_page_href,
-           prev_page_href=prev_page_href
-)
+"""
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
