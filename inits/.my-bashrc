@@ -48,6 +48,7 @@ fi
 if test -z "${TMUX}" -a -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
   ! grep -F $(hostname | sha256sum | cut -f1 -d' ')<<EOF > /dev/null; then
 c792c60e7e3ccae6da5c908b3b14ed0364f64bd0f9666e35cb23dcc5d65a1fc5
+9ff9c025f12b7af0518927433dd3fdfd2573825aa2dd04a302fc4ac45cac5f1b
 EOF
   tmux-attach
 fi
