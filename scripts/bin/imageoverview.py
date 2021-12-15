@@ -182,11 +182,8 @@ def main():
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     args = parser.parse_args()
 
-    if args.verbose:
-        log_level = logging.DEBUG
-    else:
-        log_level = logging.INFO
-    logging.getLogger(__name__).setLevel(log_level)
+    logging.getLogger(__name__).setLevel(logging.DEBUG if args.verbose
+                                         else logging.INFO)
 
     server_address = ('', args.port)
     httpd = http.server.HTTPServer(server_address,
