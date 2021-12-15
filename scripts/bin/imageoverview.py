@@ -14,6 +14,7 @@ import os
 import queue
 import re
 import shutil
+import subprocess
 import threading
 import urllib.parse
 
@@ -193,6 +194,7 @@ def main():
                                                         dimensions=args.dimensions,
                                                         image_size=args.image_size))
     logging.info("starting http server on %s", server_address)
+    subprocess.Popen(["x-www-browser", f"http://localhost:{args.port}"])
     httpd.serve_forever()
 
 
