@@ -187,8 +187,9 @@ fi
 
 chmod 600 ~/.ssh/config
 
-if ! test -e ~/.ssh/id_rsa.pub; then
-    ssh-keygen -t rsa -b 4096 -o -a 100
+SSH_KEY_PATH=~/.ssh/id_rsa.pub
+if ! test -e ${SSH_KEY_PATH}; then
+    ssh-keygen -t rsa -b 4096 -o -a 100 -N '' -f ${SSH_KEY_PATH}
 fi
 
 insert-text-block '# 9f56be79-fa85-4ec0-ab4f-a9d3df5fef76-maybe-add-gopath' ~/.profile-env  \
