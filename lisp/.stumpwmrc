@@ -1,6 +1,8 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+(setq *timeout-wait* 120) ;; allow me to see and debug error messages
+
 (defun source-shell-vars (filename)
   (ppcre:do-register-groups (key val)
       ("(?m)^([A-Z_]+)=(.*)$"
@@ -66,4 +68,5 @@
   (setf *startup-message* nil)
   (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
   (startup-apps-run)
+  (setq *timeout-wait* 5) ;; reset back to a reasonable value
   (message "done loading .stumpwmrc"))

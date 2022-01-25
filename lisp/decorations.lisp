@@ -1,7 +1,6 @@
 (in-package :STUMPWM)
 
 (defparameter *font-size* 40)
-(setq *timeout-wait* 5)
 (define-key *input-map* (kbd "C-v") 'input-yank-selection)
 (defvar *background-image-fn*
       (merge-pathnames  ".background-image-symlink" (user-homedir-pathname)))
