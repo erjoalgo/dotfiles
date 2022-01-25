@@ -254,4 +254,8 @@ fi
 # set up the nonet user
 ./installs/nonet.sh
 
+cd ~/git/githost
+python3 setup.py install --user
+
+
 echo "success"
