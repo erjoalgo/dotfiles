@@ -47,7 +47,7 @@ function complete-alias  {
 alias cdrealpath='pwd; cd $(realpath .); pwd'
 alias cdpushd='pushd .; cd'
 alias j='jobs'
-alias e='emacsclient -n'
+alias e='emacsclient-wrapper.sh -n'
 alias enw='emacs -nw'
 alias g='grep'
 alias l='less -R'
