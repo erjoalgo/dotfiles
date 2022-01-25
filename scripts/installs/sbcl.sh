@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if ! command -v sbcl || test -n "${FORCE:-}"; then
+if ! which sbcl | grep local || test -n "${FORCE:-}"; then
     URL=http://prdownloads.sourceforge.net/sbcl/sbcl-2.2.0-source.tar.bz2
 
     BASE=$(basename "${URL}")
