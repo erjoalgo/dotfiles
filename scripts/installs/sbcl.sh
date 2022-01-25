@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if ! command -v sbcl || test -n "${FORCE:-}"; then
-    URL=http://prdownloads.sourceforge.net/sbcl/sbcl-1.5.9-source.tar.bz2
+    URL=http://prdownloads.sourceforge.net/sbcl/sbcl-2.2.0-source.tar.bz2
 
     BASE=$(basename "${URL}")
     DIR_PREFIX=$(grep -o "sbcl-[0-9.]*"  <<< "${BASE}")
