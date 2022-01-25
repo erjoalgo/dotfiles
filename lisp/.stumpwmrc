@@ -1,7 +1,27 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
-(defparameter *font-size* 40)
+(defun message-wrapped (fmt &rest args)
+  (let* ((text (apply #'format nil fmt args))
+         (screen (current-screen))
+         (pixels-per-char (text-line-width
+                           (screen-font screen) "a"
+                           :translate #'translate-id))
+         (pixels-per-line (screen-width screen))
+         (chars-per-line (floor pixels-per-line pixels-per-char)))
+    (if (zerop chars-per-line)
+        (progn
+          (warn "no usable displays?")
+          (bt:with-lock-held (*message-lock*)
+            (STUMPWM::message (apply #'format nil fmt args))))
+        (progn
+          (assert (> chars-per-line 0))
+          (bt:with-lock-held (*message-lock*)
+            (echo-string-list screen (wrap-text text chars-per-line)))))))
+
+(handler-case
+    (progn
+      (defparameter *font-size* 40)
 (defvar *background-image-fn* #P"~/.background-image-symlink")
 
 (defun decorations-init (&key debugging)
@@ -88,3 +108,5 @@
   (startup-apps-run)
   (decorations-init)
   (message "done loading .stumpwmrc"))
+(error (err)
+  (message-wrapped "~A" err)))
