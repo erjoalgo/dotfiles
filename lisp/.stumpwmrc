@@ -1,6 +1,23 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+(defun source-shell-vars (filename)
+  (ppcre:do-register-groups (key val)
+      ("(?m)^([A-Z_]+)=(.*)$"
+       (with-output-to-string (string)
+         (sb-ext:run-program
+          "bash"
+          `("-ac" ,(format nil "source ~A; env" filename))
+          :search t
+          :wait t
+          :output string
+          :error string)
+         string))
+    (format t "setting ~A to ~A~%" key val)
+    (sb-posix:setenv key val 1)))
+
+(source-shell-vars #P"~/.profile")
+
 ;; sbclrc gives us quickload
 (load (merge-pathnames ".sbclrc" (user-homedir-pathname)))
 
