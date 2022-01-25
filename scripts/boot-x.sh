@@ -17,6 +17,8 @@ Type=Application
 DesktopNames=STUMPWM
 EOF
 
+sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
+
 if ! emacs --version | grep "26\\|27"; then
   if ! ./installs/emacs-install.sh; then
     echo "warning: failed to build emacs from source"
