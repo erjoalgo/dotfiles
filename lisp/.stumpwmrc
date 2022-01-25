@@ -1,7 +1,25 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
-(setq *timeout-wait* 120) ;; allow me to see and debug error messages
+(defparameter *font-size* 40)
+(defvar *background-image-fn* #P"~/.background-image-symlink")
+
+(defun decorations-init (&key debugging)
+  (setq *message-window-gravity* :center)
+  (setq *input-window-gravity* :center)
+  (setq *run-or-raise-all-groups* nil)
+  (setq *timeout-wait* (if debugging 120 5))
+  (set-font (format nil "-*-*-bold-r-*-*-~D-240-*-*-*-*-*-*"
+		    *font-size*))
+  (if (not *background-image-fn*)
+      (print (concat "no background image found at" *background-image-fn*))
+      (run-shell-command
+       (format nil
+	       "display -window root ~A"
+	       *background-image-fn*)))
+  (define-key *input-map* (kbd "C-v") 'input-yank-selection))
+
+(decorations-init :debugging t)
 
 (defun source-shell-vars (filename)
   (ppcre:do-register-groups (key val)
@@ -68,5 +86,5 @@
   (setf *startup-message* nil)
   (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
   (startup-apps-run)
-  (setq *timeout-wait* 5) ;; reset back to a reasonable value
+  (decorations-init)
   (message "done loading .stumpwmrc"))
