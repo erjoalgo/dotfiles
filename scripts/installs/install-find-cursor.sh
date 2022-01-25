@@ -3,6 +3,7 @@
 set -euo pipefail
 
 if ! command -v find-cursor; then
+    sudo apt-get install -y libxdamage-dev libxrender-dev
     URL=https://github.com/arp242/find-cursor
     GIT_REPO="${HOME}/git/$(basename ${URL})"
     if ! test -d "${GIT_REPO}"; then
