@@ -7,6 +7,16 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 sudo apt-get install -y dirmngr || true
 
 ./installs/install-stumpwm.sh
+
+sudo insert-text-block insert-text-block  \
+     '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' <<EOF
+[Desktop Entry]
+Exec=/usr/local/bin/stumpwm
+Icon=/usr/share/icons/stumpwm-logo-stripe.png
+Type=Application
+DesktopNames=STUMPWM
+EOF
+
 if ! emacs --version | grep "26\\|27"; then
   if ! ./installs/emacs-install.sh; then
     echo "warning: failed to build emacs from source"
