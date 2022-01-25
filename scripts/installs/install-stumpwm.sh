@@ -16,7 +16,10 @@ sudo ${APT_GET} install -y xinit x11-xserver-utils \
      xbacklight xcalib xsel upower xscreensaver
 
 SBCLRC="${HOME}/.sbclrc"
-command -v sbcl || ./sbcl.sh
+if ! sbcl --script /dev/stdin <<< '(ql:system-apropos "vecto")'; then
+    ./sbcl.sh
+fi
+
 sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
         (mapcar 'ql:quickload
 	'(
