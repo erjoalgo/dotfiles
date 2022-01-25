@@ -2,9 +2,11 @@
 
 set -euo pipefail
 
-URL=${1} && shift
+URL=${1:-} && shift
 
-x-service-curl "/browse" -d "${URL}"
+x-service-curl "/browse" -d "${URL}" ||  \
+    chromium-browser "${URL}" ||  \
+    firefox "${URL}"
 
 # Local Variables:
 # mode: sh-mode
