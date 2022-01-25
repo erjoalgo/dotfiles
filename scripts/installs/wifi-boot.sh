@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-LINE=$(lspci | grep -i network)
+LSPCI=$(lspci)
 
 function add_non-free_apt_source {
     sudo tee /etc/apt/sources.list.d/non-free.list <<EOF
@@ -12,16 +12,17 @@ EOF
     sudo apt-get update
 }
 
-if grep -i centrino <<< "$LINE"; then
+if grep -i centrino <<< "$LSPCI"; then
     add_non-free_apt_source
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
     sudo modprobe iwlwifi
-elif false; then
-    echo false
+elif grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
+    add_non-free_apt_source
+    sudo apt-get install -uy firmware-bnx2
 else
-    echo "unknown wifi card: ${LINE}"
-    exit $LINENO
+    echo "unknown network card: ${LSPCI}"
+    exit $LSPCI
 fi
 sudo apt-get install -y wireless-tools iw wpasupplicant
 
