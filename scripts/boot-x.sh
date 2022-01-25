@@ -22,6 +22,9 @@ sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
 sudo sed -i 's/^Exec=.*/Exec=stumpwm/'  \
     /usr/share/xsessions/lightdm-xsession.desktop
 
+sudo update-alternatives --install /usr/bin/x-window-manager x-window-manager $(which stumpwm) 200
+sudo update-alternatives --set x-window-manager $(which stumpwm)
+
 if ! emacs --version | grep "26\\|27"; then
   if ! ./installs/emacs-install.sh; then
     echo "warning: failed to build emacs from source"
