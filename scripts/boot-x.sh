@@ -8,8 +8,9 @@ sudo apt-get install -y dirmngr || true
 
 ./installs/install-stumpwm.sh
 
-sudo insert-text-block insert-text-block  \
-     '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' <<EOF
+sudo insert-text-block  \
+     '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
+     /usr/share/xsessions/stumpwm.desktop <<EOF
 [Desktop Entry]
 Exec=/usr/local/bin/stumpwm
 Icon=/usr/share/icons/stumpwm-logo-stripe.png
