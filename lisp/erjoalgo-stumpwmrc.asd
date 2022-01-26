@@ -55,4 +55,5 @@
   (:file "commands/sms-fanout-client")
   (:file "commands/snipit")
   (:file "commands/openproject")
-  (:file "commands/middle-click")))
+  (:file "commands/middle-click")
+  (:file "init")))
