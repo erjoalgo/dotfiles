@@ -6,12 +6,12 @@ set -euo pipefail
 # URL=http://gnu.mirrors.hoobly.com/emacs/emacs-25.2.tar.gz
 # URL=http://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.xz
 
-URL=https://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz
+EMACS_VERSION=27.2
+URL=https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz
 EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
 
-VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
-if false && emacs --version | grep -F "${VERSION}"; then
-    echo emacs ${VERSION} already installed
+if false && emacs --version | grep -F "${EMACSS_VERSION}"; then
+    echo emacs ${EMACS_VERSION} already installed
     exit 0
 fi
 
@@ -32,15 +32,12 @@ if command -v yum; then
     sudo yum install -y hunspell{,-es}
     sudo yum install -y uuid-runtime
 elif command -v apt-get; then
-    sudo apt-get build-dep -y emacs25
+    sudo apt-get build-dep -y emacs
     sudo apt-get install -y aspell-es emacs-goodies-el
     sudo apt-get install -y uuid-runtime || true
     curl -sSL https://www.gnutls.org/pgpkey-nmav.txt | gpg --import -
-
     sudo apt-get install -y libgmp-dev
-
     sudo apt-get install -y gnutls-dev libncurses5-dev
-    install-from-source -u https://ftp.gnu.org/gnu/nettle/nettle-3.4.1-1.tar.gz \ -i 28C67298
     sudo apt-get install -y uuid-runtime
 
     # install-from-source -u "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.5.tar.xz"
