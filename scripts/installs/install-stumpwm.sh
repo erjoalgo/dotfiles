@@ -43,9 +43,10 @@ fi
 STUMPWM="$(pwd)/stumpwm"
 cd stumpwm
 
-if ! command -v stumpwm; then #the executable
+if ! command -v stumpwm || test -n "${FORCE:-}"; then #the executable
     ./autogen.sh
     ./configure
+    make clean
     make
     test -d ~/bin || mkdir ~/bin
     sudo make install
