@@ -20,7 +20,8 @@
                            (screen-font screen) "a"
                            :translate #'translate-id))
          (pixels-per-line (screen-width screen))
-         (chars-per-line (floor pixels-per-line pixels-per-char)))
+         (chars-per-line (floor pixels-per-line pixels-per-char))
+         (chars-per-line (round (* chars-per-line .8))))
     (if (zerop chars-per-line)
         (progn
           (warn "no usable displays?")
