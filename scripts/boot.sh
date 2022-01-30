@@ -255,7 +255,9 @@ if which "${X_BROWSER}" && which update-alternatives; then
 fi
 
 # set up the nonet user
-./installs/nonet.sh
+if ! ./installs/nonet.sh; then
+    echo "WARNING: failed to install nonent"
+fi
 
 cd ~/git/githost
 python3 setup.py install --user
