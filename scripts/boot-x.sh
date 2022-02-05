@@ -20,9 +20,15 @@ Type=Application
 DesktopNames=STUMPWM
 EOF
 
-sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
-sudo sed -i 's/^Exec=.*/Exec=stumpwm/'  \
-    /usr/share/xsessions/lightdm-xsession.desktop
+if test -e ~/.dmrc; then
+    sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
+fi
+
+if test -e /usr/share/xsessions/lightdm-xsession.desktop; then
+    sudo sed -i 's/^Exec=.*/Exec=stumpwm/'  \
+         /usr/share/xsessions/lightdm-xsession.desktop
+fi
+
 
 sudo update-alternatives --install /usr/bin/x-window-manager x-window-manager $(which stumpwm) 200
 sudo update-alternatives --set x-window-manager $(which stumpwm)
