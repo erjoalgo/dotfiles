@@ -107,8 +107,12 @@ function pass-show-xs	{
 
 
 function test-port	{
-    HOST="${1}"
-    PORT="${2}"
+    if test $# = 1; then
+        HOST=localhost
+    else
+        HOST="${1}" && shift
+    fi
+    PORT="${1}"
     # http://stackoverflow.com/questions/9609130/quick-way-to-find-if-a-port-is-open-on-linux
     # echo -e "GET / HTTP/1.0\n" >&6
     # cat <&6
