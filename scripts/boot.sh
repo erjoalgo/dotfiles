@@ -235,7 +235,7 @@ AcceptEnv DESKTOP_GROUP_NUMBER
 EOF
 fi
 
-sudo ${APT_GET} install -y resolvconf
+sudo ${APT_GET} install -y resolvconf net-tools
 
 if ! command -v glinux-updater; then
   sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
