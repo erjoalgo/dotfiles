@@ -8,6 +8,8 @@ sudo apt-get install -y dirmngr || true
 
 ./installs/install-stumpwm.sh
 
+sudo mkdir -p /usr/share/xsessions
+
 sudo insert-text-block  \
      '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
      /usr/share/xsessions/stumpwm.desktop <<EOF
