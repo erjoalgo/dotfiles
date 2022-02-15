@@ -154,6 +154,6 @@ WantedBy=graphical.target
 
 EOF
 
-# TODO wifi-boot
-# TODO automate vimium installation
+mkdir -p ~/pictures/auto-scrots
+
 echo success
