@@ -276,3 +276,8 @@
 (defcommand pulseaudio-unload-module-loopback () ()
   "Double click and ctrl+c"
   (run-shell-command "pactl unload-module module-loopback"))
+
+(defcommand toggle-screen-key () ()
+  "Toggle the screenkey utility"
+  (run-shell-command
+   "bash -c 'if pgrep screenkey; then pkill screenkey; else screenkey; fi '"))

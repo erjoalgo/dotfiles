@@ -247,6 +247,7 @@
    ("H-t" "tmp")
    ("H-b" "byzanz-record-auto")
    ("H-B" "byzanz-record-auto-stop")
+   ("H-s" "toggle-screen-key")
    ("b" *brightness-map*)
    ("H-p" "center-pointer")
    ("d" "dict-lookup-command")
