@@ -311,7 +311,8 @@ alias sv-tail='sudo journalctl -fu'
 alias strace-attach-stdout='strace -ff -e trace=write -e write=1,2 -s99999 -p'
 
 alias luks-add-key="sudo cryptsetup luksAddKey"
-
+alias lsdisk="sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT"
+alias ifconfig="ip address show"
 
 # Local Variables:
 # mode: sh
