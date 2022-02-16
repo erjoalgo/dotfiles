@@ -227,6 +227,8 @@ Match host *
     RemoteForward /tmp/.x-service-$(hostname).sock localhost:1959
 EOF
 
+sudo ${APT_GET} install -y openssh-server
+
 SSHD_CONFIG=/etc/ssh/sshd_config
 if test -f "${SSHD_CONFIG}"; then
   sudo insert-text-block  \
