@@ -62,7 +62,9 @@ def main():
   path = sys.argv[1]
   sockets = glob.glob("/tmp/.x-service-*.sock") + [1959]
   rest = sys.argv[2:]
+  print("reading input...")
   stdin_bytes = maybe_read_stdin()
+  print(f"read {stdin_bytes and len(stdin_bytes)} bytes")
   return x_service_curl(sockets, path, rest, stdin_bytes)
 
 if __name__ == "__main__":
