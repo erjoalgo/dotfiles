@@ -130,4 +130,50 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (let ((command (hunchentoot-post-data-or-err)))
     (stumpwm::eval-command command t)))
 
+(defvar *socket-name-to-socat-proc* ())
+
+(defun start-inotify-service (&key
+                                (directory #P"~/.x-service/")
+                                (tcp-port 1959))
+  (unless (probe-file directory)
+    (SB-POSIX:MKDIR directory #o775))
+  (cl-inotify:with-inotify (inotify T ((truename directory) '(:create :delete)))
+    (cl-inotify:do-events (event inotify :blocking-p T)
+      (format t "x-service 9aby: value of *socket-name-to-socat-proc*: ~A~%"
+              *socket-name-to-socat-proc*)
+      (let ((mask (CL-INOTIFY::INOTIFY-EVENT-MASK event))
+            (pathname (merge-pathnames
+                       directory (CL-INOTIFY::INOTIFY-EVENT-NAME event))))
+        (cond
+          ((find :create mask)
+           (push (cons
+                  pathname
+                  (start-socket-proxy pathname tcp-port))
+                 *socket-name-to-socat-proc*))
+          ((find :delete mask)
+           (let ((item (assoc pathname *socket-name-to-socat-proc*
+                              :test #'equal)))
+             (if (not item)
+                 (stumpwm::message-wrapped
+                  "no proc found for deleted x-service socket: ~A"
+                  pathname)
+                 (destructuring-bind (pathname . proc) item
+                   (declare (ignore pathname))
+                   (sb-ext:process-kill proc 9)
+                 (setf *socket-name-to-socat-proc*
+                       (remove item *socket-name-to-socat-proc*))))))
+          (t (error "unknown mask: ~A" mask))))
+      (format t "x-service op6r: value of *socket-name-to-socat-proc*: ~A~%"
+              *socket-name-to-socat-proc*))))
+
+(defun start-socket-proxy (unix-socket tcp-port)
+  (sb-ext:run-program
+   "socat" (list
+            (format nil "UNIX-LISTEN:~A,reuseaddr,fork" unix-socket)
+            (format nil "TCP:localhost:~A" tcp-port))
+   :search t
+   :wait nil
+   :output t
+   :error t))
+
 ;; (x-service:start 1959)
