@@ -119,10 +119,6 @@ function test-port	{
     exec 6<>/dev/tcp/"${HOST}/${PORT}"
 }
 
-function test-local-port	{
-    test-port localhost ${*}
-}
-
 function beep-on-success {
     until ${*}; do
         sleep 1
