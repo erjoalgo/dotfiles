@@ -4,6 +4,21 @@ set -euo pipefail
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+if ! ls ~openproject; then
+  sudo groupadd openproject
+  sudo useradd --create-home --gid openproject openproject
+  sudo passwd openproject #(enter desired password)
+fi
+
+sudo apt-get install -y zlib1g-dev build-essential           \
+  libssl-dev libreadline-dev                      \
+  libyaml-dev libgdbm-dev                         \
+  libncurses5-dev automake                        \
+  libtool bison libffi-dev git curl               \
+  poppler-utils unrtf tesseract-ocr catdoc        \
+  libxml2 libxml2-dev libxslt1-dev # nokogiri     \
+  imagemagick memcached postgresql postgresql-contrib \
+  libpq-dev
 
 sudo apt-get install -y postgresql postgresql-client
 sudo apt-get install -y libpq-dev
@@ -14,7 +29,12 @@ DB_USER=${DB_NAME:-openproject}
 DB_NAME=${DB_NAME:-openproject_dev}
 DB_NAME_TEST=${DB_NAME_TEST:-openproject_test}
 if test -z "${DB_PASS:-}"; then
-  read -sp"enter postgres password: " DB_PASS
+  if ! DB_PASS=$(grep openproject-postgres-db ~/.authinfo |  \
+    grep -Po "(?<=password )([^ ]+)"); then
+    echo "place password line below in ~/.authinfo:"
+    echo "app openproject-postgres-db password <PASSWORD>"
+    exit ${LINENO}
+  fi
 fi
 
 sudo -upostgres psql<<EOF
@@ -60,9 +80,21 @@ test -d "${OPENPROJECT_SRC}" ||  \
 
 cd "${OPENPROJECT_SRC}"
 
-rbenv install -s $(cat .ruby-version)
+LATEST_RELEASE_VERSION=$(
+  git ls-remote | grep 'refs/tags/v' | cut -f2 -dv | sort -n | tail -1)
+TAG="v${LATEST_RELEASE_VERSION}"
+git fetch --tags origin "tags/${TAG}"
+git checkout "${TAG}"
+
+# RUBY_VERSION=$(rbenv install -l | grep -v - | tail -1)
+RUBY_VERSION=$(grep ^ruby Gemfile | grep -oP '[0-9.]+')
+git -C ~/.rbenv/plugins/ruby-build pull
+rbenv install -s "${RUBY_VERSION}"
+rbenv reshash
+rbenv global "${RUBY_VERSION}"
 # Install gem dependencies
-# If you get errors here, you're likely missing a development dependency for your distribution
+# If you get errors here, you're likely missing a development dependency
+# for your distribution
 bundle install
 
 # Install node_modules
@@ -87,8 +119,22 @@ test:
   database: ${DB_NAME_TEST}
 EOF
 
-RAILS_ENV=development bin/rails db:migrate
-RAILS_ENV=development bin/rails db:seed
+RAILS_ENV=development bin/rake db:create
+RAILS_ENV=development bin/rake db:migrate
+RAILS_ENV=development bin/rake db:seed
+RAILS_ENV=development bin/rake assets:precompile
+
+PROFILE_ENV=${HOME}/.profile-env
+
+if ! grep "^export SECRET_KEY_BASE" ${PROFILE_ENV}; then
+  insert-text-block  \
+    '# 7bdb5111-396b-4f30-a2d7-a79fcfae82ed-env-var-secret-key-base'  \
+    ${PROFILE_ENV} <<EOF
+export SECRET_KEY_BASE=$(./bin/rake secret)
+EOF
+fi
+
+source ${PROFILE_ENV}
 
 gem install foreman
 
