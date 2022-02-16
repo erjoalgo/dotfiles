@@ -1,13 +1,22 @@
 #!/usr/bin/python3
 
+import glob
 import os
+import select
 import socket
 import subprocess
 import sys
 
-def socket_open_p(host, port):
+def socket_open_tcp(port):
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  result = sock.connect_ex((host,port))
+  result = sock.connect_ex(("localhost",port))
+  sock.close()
+  return result == 0
+
+
+def socket_open_unix(unix_socket):
+  sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+  result = sock.connect_ex(unix_socket)
   sock.close()
   return result == 0
 
@@ -16,29 +25,45 @@ def http_request(url, method, data, headers):
   # TODO(ejalfonso) migrate to requests librart, make this a python package
   pass
 
-def x_service_curl(host, ports, path, rest):
+def x_service_curl(specs, path, rest, stdin_bytes):
   gret = 0
   cnt = 0
-  for port in ports:
-    if socket_open_p(host, port):
-      cnt += 1
-      url = "{}:{}{}".format(host, port, path)
-      cmd = ["timeout", "5s", "curl", "-s", url] + rest
-      p = subprocess.Popen(cmd)
-      ret = 0
-      gret |= ret
+  for spec in specs:
+    if isinstance(spec, int):
+        port = spec
+        socket = None
+    else:
+        port = None
+        socket = spec
+    if port and socket_open_tcp(port) or socket_open_unix(socket):
+          cnt += 1
+          if port:
+              url = f"localhost:{port}{path}"
+              cmd = ["timeout", "5s", "curl", "-s", url] + rest
+          else:
+              cmd = ["timeout", "5s", "curl", "-s", "--no-buffer",
+                     "--unix-socket", socket,
+                     f"http://localhost{path}"] + rest
+          p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+          if stdin_bytes:
+              p.communicate(input=stdin_bytes)
+          ret = 0
+          gret |= ret
   return gret if cnt else 1
+
+def maybe_read_stdin():
+    if select.select([sys.stdin, ], [], [], 0.0)[0]:
+        return sys.stdin.buffer.read()
 
 def main():
   if len(sys.argv) < 2 or set(("-h", "--help")).intersection(sys.argv):
     print ("usage: x-service /PATH [CURL_FLAGS...]")
     exit(1)
   path = sys.argv[1]
-  host="localhost"
-  x_service_ports_str=(os.getenv("X_SERVICE_PORTS") or "1959,1960,1961,1962")
-  ports = map(int, x_service_ports_str.split(","))
+  sockets = glob.glob("/tmp/.x-service-*.sock") + [1959]
   rest = sys.argv[2:]
-  return x_service_curl(host, ports, path, rest)
+  stdin_bytes = maybe_read_stdin()
+  return x_service_curl(sockets, path, rest, stdin_bytes)
 
 if __name__ == "__main__":
   exit(main())
