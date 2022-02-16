@@ -36,7 +36,7 @@ def x_service_curl(specs, path, rest, stdin_bytes):
         port = None
         socket = spec
     is_open = socket_open_tcp(port) if port else socket_open_unix(socket)
-    if not is_open
+    if not is_open:
         continue
     cnt += 1
     if port:
