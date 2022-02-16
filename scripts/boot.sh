@@ -224,6 +224,7 @@ insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-g
   "${HOME}/.ssh/config" << EOF
 Match host *
     SendEnv DESKTOP_GROUP_NUMBER
+    RemoteForward /tmp/.x-service-$(hostname).sock localhost:1959
 EOF
 
 SSHD_CONFIG=/etc/ssh/sshd_config
@@ -233,6 +234,8 @@ if test -f "${SSHD_CONFIG}"; then
     "${SSHD_CONFIG}"  \
     <<EOF
 AcceptEnv DESKTOP_GROUP_NUMBER
+# https://unix.stackexchange.com/questions/427189/
+StreamLocalBindUnlink yes
 EOF
 fi
 
