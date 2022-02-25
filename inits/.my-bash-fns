@@ -642,3 +642,16 @@ alias x2x-south='ORIENTATION=south _x2x-orientation'
 alias x2x-north='ORIENTATION=north _x2x-orientation'
 alias x2x-east='ORIENTATION=east _x2x-orientation'
 alias x2x-west='ORIENTATION=west _x2x-orientation'
+
+function list-active-sessions {
+    loginctl list-sessions
+    SESSIONS=$(
+        loginctl list-sessions | tr -s ' ' | cut -f2 -d' ' |  \
+            tail '+2' | head -n -2)
+    for SESSION in ${SESSIONS}; do
+        if loginctl show-session -p Display -p Active ${SESSION} |  \
+                grep -P "Display=.+" > /dev/null; then
+            echo "session ${SESSION} has a display"
+        fi
+    done
+}
