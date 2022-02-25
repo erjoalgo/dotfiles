@@ -247,6 +247,8 @@ alias ssh-ecdsa-fingerprint-md5='ssh-ecdsa-fingerprint -Emd5'
 alias ssh-ecdsa-fingerprint-sha256='ssh-ecdsa-fingerprint -Esha256'
 alias ssh-ecdsa-fingerprint-sha256-old-ssh="awk '{print \$2}' /etc/ssh/ssh_host_ecdsa_key.pub | base64 -d | sha256sum -b | awk '{print \$1}' | xxd -r -p | base64"
 alias pem-sha256='openssl x509 -noout -fingerprint -sha256 -in'
+alias cert-fingerprint-sha256='openssl x509 -noout -fingerprint -sha256 -in'
+alias cert-fingerprint-sha1='openssl x509 -noout -fingerprint -sha1 -in'
 
 # command defaults
 if ls --color=auto &> /dev/null; then
