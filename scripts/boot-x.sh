@@ -92,7 +92,7 @@ EOF
 
 sudo insert-text-block '# Zss7UaEgcFtP1T8JPS7h77vOaQlYDR3H-enable-autologin' \
      /etc/systemd/logind.conf<<EOF
-NAutoVTs=1
+NAutoVTs=3
 EOF
 
 AUTOLOGIN_CONF=/etc/systemd/system/getty@tty1.service.d/autologin.conf
