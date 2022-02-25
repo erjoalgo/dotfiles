@@ -6,8 +6,6 @@ function usage  {
     echo "expose-port <SSH_HOST> -l <LOCAL_SERVICE_PORT> [-r <REMOTE_LISTEN_PORT>]"
 }
 
-SSH_HOST_SPEC="${1}" && shift
-
 while getopts "r:l:h" OPT; do
     case ${OPT} in
         l)
@@ -23,6 +21,8 @@ while getopts "r:l:h" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+SSH_HOST_SPEC="${1}" && shift
 
 if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_SERVICE_PORT:-}"; then
     usage
