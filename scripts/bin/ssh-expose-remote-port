@@ -7,13 +7,15 @@ function usage  {
 }
 
 
+FORWARD_SPEC=""
+
 while getopts "r:l:h" OPT; do
     case ${OPT} in
-        l)
-            LOCAL_LISTEN_PORT=${OPTARG}
-            ;;
         r)
-            REMOTE_SERVICE_PORT=${OPTARG}
+            REMOTE_SERVICE_PORT=$(cut -d: -f1  <<< "${OPTARG}")
+            LOCAL_LISTEN_PORT=$(cut -d: -f2  <<< "${OPTARG}")
+            LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
+            FORWARD_SPEC+="-L ${LOCAL_LISTEN_PORT}:localhost:${REMOTE_SERVICE_PORT} "
             ;;
         h)
             less $0
@@ -39,7 +41,8 @@ if test -z "${SSH_AUTH_SOCK:-}" -a -e ${SOCK}; then
   export SSH_AUTH_SOCK=${SOCK}
 fi
 
-ssh ${SSH_HOST_SPEC} -L ${LOCAL_LISTEN_PORT}:localhost:${REMOTE_SERVICE_PORT} -N
+ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
+    
 
 # Local Variables:
 # mode: sh-mode
