@@ -155,7 +155,9 @@ EOF
     fi
 done
 
+# remove any limits on bash history
 sed -i '/^HIST\(FILE\)\?SIZE=[0-9]*/d' "${HOME}/.bashrc" || true
+
 # set GRUB timeout to zero
 GRUB_FILE=/etc/default/grub
 if test -e ${GRUB_FILE} &&  \
