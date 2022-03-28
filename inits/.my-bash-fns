@@ -1,4 +1,7 @@
 #!/bin/bash
+
+test -n "${DEBUG_INIT:-}" && echo "loading $BASH_SOURCE (f2n9)"
+
 function find-iregex {
     find ${PWD} -iregex ".*$*.*"
 }

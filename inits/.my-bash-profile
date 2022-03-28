@@ -1,3 +1,5 @@
+test -n "${DEBUG_INIT:-}" && echo "loading $BASH_SOURCE (v1fA)"
+
 # executed once per login
 # git-notify-lagging-repos.sh ${HOME}/git/* | sponge &
 function notify_lagging_repos {

@@ -1,3 +1,5 @@
+test -n "${DEBUG_INIT:-}" && echo "loading $BASH_SOURCE (PBQ3)"
+
 SCRIPTS="${HOME}/git/dotfiles/scripts/bin"
 
 export PATH=$PATH:/sbin:/usr/sbin:${HOME}/bin:${HOME}/.local/bin:${SCRIPTS}

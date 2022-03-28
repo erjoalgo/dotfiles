@@ -125,10 +125,16 @@ sudo insert-text-block  \
     < ${HOME}/.vimrc
 
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
-		  ${HOME}/.bashrc <<<"source ${HOME}/.my-bashrc"
+		  ${HOME}/.bashrc <<EOF
+test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (uzvr)"
+source ${HOME}/.my-bashrc
+EOF
 
 insert-text-block '# jPC5VOJsRIpcLjXh9o0mJMgPknbejdjl-source-my-bash-profile'  \
-                  "${HOME}/.bash_profile" <<< "source ${HOME}/.my-bash-profile"
+                  "${HOME}/.bash_profile" <<EOF
+test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (hWc1)"
+source ${HOME}/.my-bash-profile
+EOF
 
 XSESSIONRC=${HOME}/.xsessionrc
 touch ${XSESSIONRC}
@@ -142,7 +148,10 @@ for SHADOWER in ~/.profile  \
                 ; do
     if test -e $SHADOWER; then
 	insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-profile'  \
-		          -b ${SHADOWER} <<< "source ${HOME}/.my-profile"
+		          -b ${SHADOWER}<<EOF
+test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (JvtE)"
+source ${HOME}/.my-profile
+EOF
     fi
 done
 
