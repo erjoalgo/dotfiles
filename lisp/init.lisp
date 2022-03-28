@@ -1,9 +1,10 @@
 (in-package :STUMPWM)
 
+(defparameter *font-size* 40)
+(defvar *background-image-fn* #P"~/.background-image-symlink")
+(defvar *init-errors* nil)
+
 (defun init ()
-  (defparameter *font-size* 40)
-  (defvar *background-image-fn* #P"~/.background-image-symlink")
-  (defvar *init-errors* nil)
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
   (with-message-queuing t
     (swank-start)
