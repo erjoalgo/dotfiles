@@ -40,6 +40,7 @@ if command -v x-service-curl; then
                -H"STUMPWM-PROMPT: call (c) or (t) text ${TEL}? ")
 
     if test "${RESP}" = "t"; then
+        # text
         if command -v emacs-sip; then
             emacs-sip "${TEL}"
             exit $?
@@ -50,6 +51,7 @@ if command -v x-service-curl; then
         LINPHONE_COMMAND="generic"
         LINPHONE_COMMAND_ARGS="chat ${ADDRESS} ${CHAT}"
     elif test "${RESP}" = "c"; then
+        # call
         if test -n "${USE_GOOGLE_VOICE}"; then
             x-www-browser "https://voice.google.com/u/0/calls?a=nc,%2B%201${TEL}"
             exit
