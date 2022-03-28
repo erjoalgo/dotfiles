@@ -71,7 +71,12 @@
 
 (ql:quickload :erjoalgo-stumpwmrc)
 
-(handler-case
-    (funcall (find-symbol "INIT" "STUMPWM"))
-(error (err)
-  (message-wrapped "~A" err)))
+(defmacro safe-sexp (&body body)
+    "evaluate an expression, handling and recording errors"
+    `(handler-case
+         (progn ,@body)
+       (error (err)
+         (push (list ',body err) *init-errors*)
+         (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
+
+(safe-sexp (funcall (find-symbol "INIT" "STUMPWM")))
