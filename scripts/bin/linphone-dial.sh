@@ -23,13 +23,16 @@ shift $((OPTIND -1))
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 TEL=$(urldecode "${TEL}")
-SIP_HOST=$(linphone-default-host.sh)
 TEL=$(sed -e 's/^tel://' -e 's/^[+]1//g' -e 's/[^0-9]//g' <<< "${TEL}")
-
-ADDRESS=${TEL}@${SIP_HOST}
-
-LINPHONE_COMMAND="dial"
-LINPHONE_COMMAND_ARGS="${ADDRESS}"
+if hostname | md5sum | grep -F 24e9ebe4849f568cda45d05f4884ffbd; then
+    USE_GOOGLE_VOICE=true
+else
+    USE_GOOGLE_VOICE=""
+    SIP_HOST=$(linphone-default-host.sh)
+    ADDRESS=${TEL}@${SIP_HOST}
+    LINPHONE_COMMAND="dial"
+    LINPHONE_COMMAND_ARGS="${ADDRESS}";
+fi
 
 if command -v x-service-curl; then
     RESP=$(x-service-curl  \
@@ -47,8 +50,13 @@ if command -v x-service-curl; then
         LINPHONE_COMMAND="generic"
         LINPHONE_COMMAND_ARGS="chat ${ADDRESS} ${CHAT}"
     elif test "${RESP}" = "c"; then
-        LINPHONE_COMMAND="dial"
-        LINPHONE_COMMAND_ARGS="${ADDRESS}"
+        if test -n "${USE_GOOGLE_VOICE}"; then
+            x-www-browser "https://voice.google.com/u/0/calls?a=nc,%2B%201${TEL}"
+            exit
+        else
+            LINPHONE_COMMAND="dial"
+            LINPHONE_COMMAND_ARGS="${ADDRESS}"
+        fi
     else
         echo "unknown option: ${RESP}"
         exit ${LINENO}
