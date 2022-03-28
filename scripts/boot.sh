@@ -247,6 +247,7 @@ if test -f "${SSHD_CONFIG}"; then
     "${SSHD_CONFIG}"  \
     <<EOF
 AcceptEnv DESKTOP_GROUP_NUMBER
+AcceptEnv DEBUG_INIT
 # https://unix.stackexchange.com/questions/427189/
 StreamLocalBindUnlink yes
 EOF
