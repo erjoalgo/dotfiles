@@ -6,6 +6,8 @@
 
   (defvar *init-errors* nil)
 
+  (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
+
   (defmacro safe-init-sexp (&body body)
     "evaluate an expression, handling and recording errors"
     `(handler-case
