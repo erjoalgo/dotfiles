@@ -31,4 +31,6 @@
     (decorations-init)
     (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
     (setf lparallel:*kernel* (lparallel:make-kernel 3))
-    (message "done loading .stumpwmrc")))
+    (message "done loading .stumpwmrc. ~D errors:~%~{~A~^~%~}"
+             (length *init-errors*)
+             *init-errors*)))
