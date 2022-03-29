@@ -78,3 +78,30 @@ GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
 if sudo test -e "${GDM_CONFIG_FILENAME}"; then
   sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
 fi
+
+
+sudo mkdir -p /usr/share/xsessions
+
+sudo insert-text-block  \
+     '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
+     /usr/share/xsessions/stumpwm.desktop <<EOF
+[Desktop Entry]
+Exec=/usr/local/bin/stumpwm
+Icon=/usr/share/icons/stumpwm-logo-stripe.png
+Type=Application
+DesktopNames=STUMPWM
+DesktopNames=XFCE
+EOF
+
+if test -e ~/.dmrc; then
+    sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
+fi
+
+if test -e /usr/share/xsessions/lightdm-xsession.desktop; then
+    sudo sed -i 's/^Exec=.*/Exec=stumpwm/'  \
+         /usr/share/xsessions/lightdm-xsession.desktop
+fi
+
+
+sudo update-alternatives --install /usr/bin/x-window-manager x-window-manager $(which stumpwm) 200
+sudo update-alternatives --set x-window-manager $(which stumpwm)
