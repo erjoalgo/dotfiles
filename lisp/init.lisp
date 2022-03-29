@@ -3,6 +3,13 @@
 (defparameter *font-size* 40)
 (defvar *background-image-fn* #P"~/.background-image-symlink")
 (defvar *init-errors* nil)
+(defmacro safe-sexp (&body body)
+  "evaluate an expression, handling and recording errors"
+  `(handler-case
+       (progn ,@body)
+     (error (err)
+       (push (list ',body err) *init-errors*)
+       (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
 
 (defun init ()
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)

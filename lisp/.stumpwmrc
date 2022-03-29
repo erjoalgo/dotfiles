@@ -71,6 +71,8 @@
 
 (ql:quickload :erjoalgo-stumpwmrc)
 
+(in-package :STUMPWM)
+
 (defmacro safe-sexp (&body body)
     "evaluate an expression, handling and recording errors"
     `(handler-case
