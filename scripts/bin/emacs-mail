@@ -1,7 +1,10 @@
 #!/bin/bash
 # taken from https://www.emacswiki.org/emacs/MailtoHandler
 
-emacsclient-wrapper.sh --eval "(raise-frame)" --eval "(browse-url-mail \"$@\")"
+emacsclient-wrapper.sh  \
+    --eval "(raise-frame)" \
+    --eval "(gnus-goto-inbox)" \
+    --eval "(browse-url-mail \"$@\")"
 
 # Local Variables:
 # mode: sh
