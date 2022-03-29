@@ -28,7 +28,7 @@ MIMEAPPS=${HOME}/.local/share/applications/mimeapps.list
 mkdir -p $(dirname "${MIMEAPPS}")
 insert-text-block "# ${BLOCK_ID}" "${MIMEAPPS}" <<EOF
 [Added Associations]
-x-scheme-handler/mailto=${APP_NAME}.desktop
+x-scheme-handler/${SCHEME}=${APP_NAME}.desktop
 EOF
 
 DESKTOP_ENTRY=${HOME}/.local/share/applications/${APP_NAME}.desktop
