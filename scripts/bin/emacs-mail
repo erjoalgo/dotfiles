@@ -1,6 +1,10 @@
 #!/bin/bash
 # taken from https://www.emacswiki.org/emacs/MailtoHandler
 
+if ! pgrep emacs; then
+    emacs
+fi
+
 emacsclient-wrapper.sh  \
     --eval "(raise-frame)" \
     --eval "(gnus-goto-inbox)" \
