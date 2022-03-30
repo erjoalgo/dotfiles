@@ -15,6 +15,6 @@ if ! command -v twine; then
     pip install --user twine
 fi
 
-CMD=$(echo twine upload ${TARGZ}{,.asc})
+CMD=$(echo twine upload -uejalfonso ${TARGZ}{,.asc})
 read -p "${CMD} :"
 ${CMD}
