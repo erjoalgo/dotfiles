@@ -5,7 +5,7 @@
 (defvar *sms-fanout-reconnect-thread*)
 
 (defmacro safe-sexp (&body body)
-  "evaluate an expression, handling and recording errors"
+  "Evaluate an expression, handling and recording errors"
   `(handler-case
        (progn ,@body)
      (error (err)
