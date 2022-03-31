@@ -122,8 +122,8 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                     (let* ((letter (read-header :ENGINE-LETTER))
                           (char (aref letter 0)))
                       (assert (eq (length letter) 1))
-                      (stumpwm:look-up-engine-by-letter char)))))
-    (stumpwm:search-engine-search engine query)))
+                      (stumpwm::search-engine-find-by-key char)))))
+    (stumpwm::search-engine-search-noninteractive query engine)))
 
 (define-regexp-route run-handler ("/run")
     "Run command"

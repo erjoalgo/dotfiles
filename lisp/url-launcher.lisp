@@ -4,14 +4,9 @@
   (:export
    #:launch-url
    #:launcher-append-url
-   #:search-engine-search
-   #:search-engines-reload
    #:uri-encode))
 
-;; (use-package :statusor)
-
-(defparameter *search-history-fn*
-  (merge-pathnames "search-history" *data-private-one-way*))
+(use-package :CL)
 
 (defvar *webdav-server-info* nil)
 
@@ -142,21 +137,6 @@
                        url))
 	(echo (format nil "added: ~A" url)))))
 
-;;search-engine-search
-(defparameter *search-engine-persistent-alist*
-  (make-instance 'psym-tsv
-   :pathnames (loop for data-dir in *data-dirs*
-                 collect (merge-pathnames "search-engines" data-dir))
-   :short-description "search engines"))
-
-(defun uri-encode (search-terms)
-  (reduce
-   (lambda (string from-to)
-     (ppcre:regex-replace-all (car from-to) string (cdr from-to)))
-   '(("%" "%25")
-     (" " "%20")
-     ("[+]" "%2B"))
-   :initial-value search-terms))
 
 (defun uri-decode (url)
   (reduce
@@ -176,70 +156,6 @@
     ;((:string "enter search engine to use: ")
      ;(:string "enter search terms: "))
 
-(define-stumpwm-type-with-completion :search-engine
-    (psym-records *search-engine-persistent-alist*)
-  :key-fn car
-  :value-fn cdr
-  :no-hints nil)
-
-(defcommand search-engine-search
-    (engine &optional terms)
-    ((:search-engine "search engine: "))
-  "completing-read prompt for search engine if not provided. then use its format string to construct a url by uri-encoding search terms"
-  (unless terms
-    (setf terms
-          (read-one-line (current-screen)
-                         (format nil "enter ~A search query: " engine))))
-  (when (and engine terms)
-    (let ((engine-fmt
-            (if (consp engine)
-                (cadr engine)
-                (cdr (alist-get engine (psym-records *search-engine-persistent-alist*))))))
-      (if (not engine-fmt)
-	  (error "no such engine: '~A'" engine)
-	  (let* (
-	         (args (ppcre:regex-replace-all "\\n" (trim-spaces terms) " "))
-	         (query (uri-encode args))
-	         (url (format nil engine-fmt query)))
-	    (url-launcher-browser-new-tab url)
-	    (log-entry-timestamped (format nil "~A:~A" engine terms)
-			         *search-history-fn*))))))
-
-(defparameter *default-search-engine* "ddg")
-
-(defcommand search-engine-search-clipboard () ()
-  "search the clipboard contents"
-  (search-engine-search *default-search-engine* (get-x-selection )))
-
-;; make command name shorter to make help-map (?) more useful
-(defcommand-alias engsearch search-engine-search)
-
-(defvar *search-engine-map* (make-sparse-keymap) "")
-(defvar *search-engine-by-letter-alist* (make-sparse-keymap) "")
-
-(defcommand search-engines-reload () ()
-  "reload search engines from file"
-  (psym-load *search-engine-persistent-alist*)
-  (setf *search-engine-by-letter-alist* nil)
-  (loop
-    with used-letters = nil
-    for (eng . fmt) in (psym-records *search-engine-persistent-alist*)
-    as letter = (loop for letter across eng
-		      unless (member letter used-letters :test 'eql)
-		        return letter)
-    do (if (not letter)
-           (warn "unable to find a letter for engine ~A" eng)
-           (progn
-	     (define-key *search-engine-map* (kbd (format nil "~A" letter))
-	       (format nil "engsearch ~A" eng))
-	     (push letter used-letters)
-             (push (cons letter eng) *search-engine-by-letter-alist*)))))
-
-(defun look-up-engine-by-letter (letter)
-  (cdr (alist-get letter *search-engine-by-letter-alist*)))
-
-(export '(look-up-engine-by-letter) :stumpwm)
-
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
   ;;automatically find the best key for a set of named commands
@@ -255,9 +171,8 @@
 (defun url-launcher-init ()
   (ensure-directory-exists
    (uiop:pathname-parent-directory-pathname
-    (uiop:ensure-directory-pathname *search-history-fn*))
+    (uiop:ensure-directory-pathname *search-history-filename*))
    :max-parents 2)
   (dolist (class *browser-classes*)
     (pushnew `(:class ,class) stumpwm:*deny-raise-request*))
-  (psym-load *search-engine-persistent-alist*)
   (setf *suppress-deny-messages* t))

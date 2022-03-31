@@ -36,6 +36,8 @@
   (:file "defcommands")
   (:file "psym")
   (:file "authinfo")
+  (:file "search-engine-search")
+  (:file "search-engines")
   (:file "url-launcher")
   (:file "text-shortcuts")
   (:file "startup-apps")
