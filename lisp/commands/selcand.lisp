@@ -4,7 +4,6 @@
    #:select))
 (in-package :selcand)
 
-
 (defvar *default-hints*
   "1234acdefqrstvwxz"
   "Default hint chars.")
