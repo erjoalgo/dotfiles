@@ -28,7 +28,7 @@
                  (setf *stumpwm-log-stream*
                        (open *stumpwm-log-filename*
                              :direction :output
-                             :if-exists :overwrite
+                             :if-exists :append
                              :if-does-not-exist :create)))
                (format *stumpwm-log-stream* "~A" msg))
            (error (err)
