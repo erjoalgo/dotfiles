@@ -94,6 +94,18 @@
 ;; sbclrc gives us quickload
 (load #P"~/.sbclrc")
 
+(ql:quickload :swank)
+
+(defun start-swank (&key (port 4005))
+  (message "attempting to start swank at port ~A" port)
+  (safe-sexp
+   (progn
+     (funcall (find-symbol "CREATE-SERVER" "SWANK")
+              :port port :dont-close t)
+     (message "swank started at port ~A" port))))
+
+(start-swank)
+
 (defun load-stumpwmrc-file (relative-path)
   (let ((source-directory
           (or *load-truename*
