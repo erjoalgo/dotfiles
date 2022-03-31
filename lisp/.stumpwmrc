@@ -1,6 +1,39 @@
 ;; -*- mode: lisp; -*-
 (in-package :stumpwm)
 
+(defvar *init-errors* nil)
+
+(defvar *stumpwm-log-filename* #P"/tmp/stumpwm.log")
+
+(defvar *stumpwm-log-stream* nil)
+
+(defmacro safe-sexp (&body body)
+  "Evaluate an expression, handling and recording errors."
+  `(handler-case
+       (progn ,@body)
+     (error (err)
+       (push (list ',body err) *init-errors*)
+       (let ((message-fn (if (fboundp 'message-wrapped)
+                             'message-wrapped
+                             'message))
+             (msg (format nil "error while loading: ~A~%: '~A'" ',body err)))
+
+         (format t "~A" msg)
+         (funcall message-fn "~A" msg)
+         (handler-case
+             (when *stumpwm-log-filename*
+               (unless *stumpwm-log-stream*
+                 (setf *stumpwm-log-stream*
+                       (open *stumpwm-log-filename*
+                             :direction :output
+                             :if-exists :overwrite
+                             :if-does-not-exist :create)))
+               (format *stumpwm-log-stream* "~A" msg))
+           (error (err) (format t "error logging to ~A: ~A"
+                                *stumpwm-log-filename* err)))
+         nil))))
+
+;; without message wrapping, we won't be able to read long messages
 (defun wrap-text (text &optional max-chars-per-line)
   (loop for text in (ppcre:split #\Newline text)
         with chunks
@@ -73,12 +106,5 @@
 
 (in-package :STUMPWM)
 
-(defmacro safe-sexp (&body body)
-    "evaluate an expression, handling and recording errors"
-    `(handler-case
-         (progn ,@body)
-       (error (err)
-         (push (list ',body err) *init-errors*)
-         (message-wrapped "error while loading: ~A~%: '~A'" ',body err))))
 
 (safe-sexp (funcall (find-symbol "INIT" "STUMPWM")))
