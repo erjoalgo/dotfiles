@@ -43,7 +43,7 @@ if test -z "${SSH_AUTH_SOCK:-}" -a -e ${SOCK}; then
 fi
 
 ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
-    
+
 
 # Local Variables:
 # mode: sh-mode
