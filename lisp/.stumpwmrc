@@ -113,7 +113,6 @@
               "~/.stumpwmrc.d/lisp/")))
     (load (merge-pathnames relative-path source-directory))))
 
-(in-package :STUMPWM)
 (safe-sexp
   (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd"))
 
