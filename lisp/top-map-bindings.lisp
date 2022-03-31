@@ -1,5 +1,10 @@
 (in-package :STUMPWM)
 
+;;to avoid sync-keys on every define-key
+(defvar *real-top-map* nil)
+
+(setf *real-top-map* *top-map*)
+
 (define-run-or-pull-program "BROWSER"
     :cmd *browser-name*
     :raise-key "H-f"
@@ -47,10 +52,6 @@
   :classes '("signal" "Signal"))
 
 (per-window-bindings-reload-from-fn)
-
-;;to avoid sync-keys on every define-key
-(defvar *real-top-map* nil)
-(setf *real-top-map* *top-map*)
 
 (push-top-map (make-sparse-keymap))
 
@@ -298,9 +299,7 @@
 
 (defun init-top-map-bindings ()
   ;; (url-launcher:search-engines-reload)
-  (search-engines-reload)
-  (pop-top-map)
   (set-prefix-key (kbd "F19")))
 
-(init-top-map-bindings)
+(pop-top-map)
 ;; TODO use buttons framework

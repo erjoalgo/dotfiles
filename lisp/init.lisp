@@ -19,7 +19,6 @@
     (safe-sexp (xinitrc-init))
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
-    (init-top-map-bindings)
     ;; url-launcher may fail if not connected to the internet, .authinfo doesn't exist, etc
     (safe-sexp (url-launcher-init))
     (text-shortcuts-init)
