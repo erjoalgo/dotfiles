@@ -20,6 +20,8 @@
 
          (format t "~A" msg)
          (funcall message-fn "~A" msg)
+         ;; allow the user to see the error before it is overwritten
+         (sleep 5)
          (handler-case
              (when *stumpwm-log-filename*
                (unless *stumpwm-log-stream*
