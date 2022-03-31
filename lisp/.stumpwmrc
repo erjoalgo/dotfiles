@@ -113,11 +113,11 @@
               "~/.stumpwmrc.d/lisp/")))
     (load (merge-pathnames relative-path source-directory))))
 
-(load-stumpwmrc-file "erjoalgo-stumpwmrc.asd")
-
-(ql:quickload :erjoalgo-stumpwmrc)
-
 (in-package :STUMPWM)
+(safe-sexp
+  (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd"))
 
+(safe-sexp
+  (ql:quickload :erjoalgo-stumpwmrc))
 
 (safe-sexp (funcall (find-symbol "INIT" "STUMPWM")))
