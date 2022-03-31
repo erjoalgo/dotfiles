@@ -1,7 +1,5 @@
 (in-package :STUMPWM)
 
-(defparameter *font-size* 40)
-(defvar *background-image-fn* #P"~/.background-image-symlink")
 (defmacro safe-sexp (&body body)
   "evaluate an expression, handling and recording errors"
   `(handler-case
