@@ -48,6 +48,7 @@
 			     #\Linefeed #\Page #\Return #\Rubout))
 (defun trim-spaces (str)
   (string-trim '(#\space #\tab #\newline) str))
+(export '(trim-spaces) :STUMPWM)
 
 (defun string-blank-p (string)
   (zerop (length (trim-spaces string))))
