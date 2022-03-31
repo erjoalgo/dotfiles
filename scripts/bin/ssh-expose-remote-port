@@ -9,6 +9,8 @@ function usage  {
 
 FORWARD_SPEC=""
 
+SSH_HOST_SPEC="${1}" && shift
+
 while getopts "r:l:h" OPT; do
     case ${OPT} in
         r)
@@ -25,9 +27,8 @@ while getopts "r:l:h" OPT; do
 done
 shift $((OPTIND -1))
 
-SSH_HOST_SPEC="${1}" && shift
 
-if test -z "${SSH_HOST_SPEC:-}" -o -z "${REMOTE_SERVICE_PORT}"; then
+if test -z "${SSH_HOST_SPEC:-}" -o -z "${REMOTE_SERVICE_PORT:-}"; then
     usage
     exit ${LINENO}
 fi
