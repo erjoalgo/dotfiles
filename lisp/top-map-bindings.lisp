@@ -297,9 +297,6 @@
          (list (format nil "~C" c)
                (format nil "set-brightness ~A" percentage))))
 
-(defun init-top-map-bindings ()
-  ;; (url-launcher:search-engines-reload)
-  (set-prefix-key (kbd "F19")))
-
+(set-prefix-key (kbd "F19"))
 (pop-top-map)
 ;; TODO use buttons framework
