@@ -16,12 +16,12 @@
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
   (with-message-queuing t
     (swank-start)
-    (xinitrc-init)
+    (safe-sexp (xinitrc-init))
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
     (init-top-map-bindings)
     ;; url-launcher may fail if not connected to the internet, .authinfo doesn't exist, etc
-    (url-launcher-init)
+    (safe-sexp (url-launcher-init))
     (text-shortcuts-init)
     (brightness-init)
     (x-service:start 1959)
