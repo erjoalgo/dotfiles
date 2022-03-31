@@ -3,7 +3,7 @@
 set -euo pipefail
 
 function usage  {
-    echo "expose-remote-port <SSH_HOST> -r <REMOTE_SERVICE_PORT> -l <LOCAL_LISTEN_PORT> "
+    echo "usage: expose-remote-port <SSH_HOST> -r <REMOTE_SERVICE_PORT>[:<LOCAL_LISTEN_PORT>]"
 }
 
 
