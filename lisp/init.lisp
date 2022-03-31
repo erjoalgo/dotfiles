@@ -14,7 +14,6 @@
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
   (with-message-queuing t
     (swank-start)
-    (decorations-init)
     (xinitrc-init)
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
@@ -34,7 +33,6 @@
     (setf *startup-message* nil)
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
     (startup-apps-run)
-    (decorations-init)
     (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
     (setf lparallel:*kernel* (lparallel:make-kernel 3))
     (message "done loading .stumpwmrc. ~D errors:~%~{~A~^~%~}"

@@ -63,7 +63,8 @@
           (assert (> chars-per-line 0))
           (echo-string-list screen (wrap-text text chars-per-line))))))
 
-(defun decorations-init (&key debugging (font-size 40))
+;; apply font size options
+(defun style-options-init (&key debugging (font-size 40))
     (setq *message-window-gravity* :center)
     (setq *input-window-gravity* :center)
     (setq *run-or-raise-all-groups* nil)
@@ -71,8 +72,6 @@
     (set-font (format nil "-*-*-bold-r-*-*-~D-240-*-*-*-*-*-*"
 		      font-size))
     (define-key *input-map* (kbd "C-v") 'input-yank-selection))
-
-(decorations-init :debugging t)
 
 (defun source-shell-vars (filename)
   (ppcre:do-register-groups (key val)
@@ -105,6 +104,8 @@
      (message "swank started at port ~A" port))))
 
 (start-swank)
+
+(style-options-init :debugging t)
 
 (defun load-stumpwmrc-file (relative-path)
   (let ((source-directory
