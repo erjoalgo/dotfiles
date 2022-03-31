@@ -115,7 +115,7 @@
               :input t)
             nil ))
       ;;log to different file? or at least add tags
-      (log-entry-timestamped url *search-history-fn*))))
+      (log-timestamped-entry url *search-history-filename*))))
 
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")

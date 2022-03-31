@@ -52,7 +52,7 @@
 (defun string-blank-p (string)
   (zerop (length (trim-spaces string))))
 
-(defun log-entry-timestamped (entry fn)
+(defun log-timestamped-entry (entry fn)
   (with-open-file (fh fn
 		      :if-does-not-exist :create
 		      :if-exists :append
@@ -62,6 +62,7 @@
 			  entry
 			  (coerce '(#\Tab) 'string)
 			  (time-date-and-time))))
+(export '(log-timestamped-entry) :STUMPWM)
 
 (defmacro define-stumpwm-type-for-completion
     (sym completion-form)
