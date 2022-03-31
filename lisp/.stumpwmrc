@@ -98,21 +98,18 @@
 
 (ql:quickload :swank)
 
-(defun socket-listening-p (host port)
-  (handler-case (usocket:socket-connect host port)
-    (USOCKET:CONNECTION-REFUSED-ERROR (ex)
-      (declare (ignore ex)) nil)))
-
 (defun start-swank (&key (port 4005))
-  (if (socket-listening-p port)
-      (message "swank appears to already be listening on port ~A" port)
+  (let ((conn (car (symbol-value (find-symbol "*CONNECTIONS*" :SWANK)))))
+  (if conn
+      (message "swank appears to already be running: ~A"
+               (slot-value conn (intern "SOCKET" :SWANK)))
       (progn
         (message "attempting to start swank at port ~A" port)
         (safe-sexp
           (progn
             (funcall (find-symbol "CREATE-SERVER" "SWANK")
                      :port port :dont-close t)
-            (message "swank started at port ~A" port))))))
+            (message "swank started at port ~A" port)))))))
 
 (start-swank)
 
