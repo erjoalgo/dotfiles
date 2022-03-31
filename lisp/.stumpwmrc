@@ -111,7 +111,7 @@
                      :port port :dont-close t)
             (message "swank started at port ~A" port)))))))
 
-(start-swank)
+(safe-sexp (start-swank))
 
 (style-options-init :debugging t)
 
