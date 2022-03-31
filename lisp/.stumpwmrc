@@ -31,8 +31,9 @@
                              :if-exists :overwrite
                              :if-does-not-exist :create)))
                (format *stumpwm-log-stream* "~A" msg))
-           (error (err) (format t "error logging to ~A: ~A"
-                                *stumpwm-log-filename* err)))
+           (error (err)
+             (format t "error logging to ~A: ~A" *stumpwm-log-filename* err)
+             (push err *init-errors*)))
          nil))))
 
 ;; without message wrapping, we won't be able to read long messages
