@@ -63,13 +63,11 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (stumpwm::message-wrapped "~A" text)
     ""))
 
-;; (defalias url-browse url-launcher-browser-new-tab)
-
 (define-regexp-route browse-handler ("/browse")
     "Browse to a URL"
   (let ((url (hunchentoot-post-data-or-err)))
     (format t "x-service: value of url: ~A~%" url)
-    (stumpwm::url-launcher-browser-new-tab url)
+    (stumpwm::x-www-browser url)
     ""))
 
 (define-regexp-route clipboard-handler ("/clipboard")

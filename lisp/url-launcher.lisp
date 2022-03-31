@@ -38,26 +38,18 @@
 (defun url-launcher-get-browser-current-url ()
   (mozrepl:chrome-get-url))
 
-(defun url-launcher-browser-new-tab (url)
-  (SB-EXT:RUN-PROGRAM *browser-name*
-		      (list url)
-		      :search t
-		      :wait nil
-                      :output t
-		      :error t))
-
 ;; actually load from the file
 (defparameter *url-command-rules*
   `(
     (".*[.]pdf$" "zathura")
-    ("(^https?://.*|.*[.]html.*).*" ,#'url-launcher-browser-new-tab)
+    ("(^https?://.*|.*[.]html.*).*" ,#'x-www-browser)
     (".*[.](docx?|odt)$" "libreoffice")
     ("about:config" ,#'mozrepl:firefox-new-tab)))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
      thereis (and (cl-ppcre:scan regexp url) opener)
-     finally (return #'url-launcher-browser-new-tab)))
+     finally (return #'x-www-browser)))
 
 (defvar *url-keys-cache* nil)
 (defvar *url-values-cache* nil)
