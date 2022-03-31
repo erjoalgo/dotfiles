@@ -32,7 +32,7 @@
     (setf *startup-message* nil)
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
     (startup-apps-run)
-    (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
+    ;; (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
     (setf lparallel:*kernel* (lparallel:make-kernel 3))
     (message "done loading .stumpwmrc. ~D errors:~%~{~A~^~%~}"
              (length *init-errors*)
