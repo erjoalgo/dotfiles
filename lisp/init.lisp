@@ -1,5 +1,9 @@
 (in-package :STUMPWM)
 
+(defvar *battery-notification-thread*)
+
+(defvar *sms-fanout-reconnect-thread*)
+
 (defmacro safe-sexp (&body body)
   "evaluate an expression, handling and recording errors"
   `(handler-case
@@ -22,8 +26,6 @@
     (brightness-init)
     (x-service:start 1959)
     ;; TODO remove these
-    (defvar *battery-notification-thread*)
-    (defvar *sms-fanout-reconnect-thread*)
     (def-thread-start *battery-notification-thread*
         (battery-info-check-notify-loop))
     (def-thread-start *sms-fanout-reconnect-thread*
