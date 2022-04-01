@@ -27,11 +27,9 @@
      do (STUMPWM::if-let ((conflicting-engine (search-engine-find-by-key key)))
           (if (equalp conflicting-engine engine)
               (setf engine nil)
-              (progn
-                (warn
-                 "Key ~A for engine ~A conflicts with key binding of another distinct engine: ~A"
-                 key engine-id conflicting-engine)
-                (push (cons conflicting-engine engine) stumpwm::dbg))))
+            (warn
+             "Key ~A for engine ~A conflicts with key binding of another distinct engine: ~A"
+             key engine-id conflicting-engine)))
      when engine
      do  (push engine *search-engines*))
   (search-engine-install-keymap))
