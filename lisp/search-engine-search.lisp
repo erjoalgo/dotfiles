@@ -25,7 +25,7 @@
      as key-sanitized = (sanitize-key key)
      as engine = (make-search-engine :id engine-id :key key :url-template fmt)
      do (STUMPWM::if-let ((conflicting-engine (search-engine-find-by-key key)))
-          (if (equal conflicting-engine engine)
+          (if (equalp conflicting-engine engine)
               (setf engine nil)
             (warn
              "Key ~A for engine ~A conflicts with key binding of another distinct engine: ~A"
