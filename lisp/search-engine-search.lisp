@@ -20,17 +20,18 @@
   URL-TEMPLATE should contain the '~A' format specifier, to be replaced by the
   search query. The first search engine in the list is used as the default
   if no explicit engine is specified."
-  (setf *search-engines* nil)
   (loop
      for (key engine-id fmt) in spec
      as key-sanitized = (sanitize-key key)
+     as engine = (make-search-engine :id engine-id :key key :url-template fmt)
      do (STUMPWM::if-let ((conflicting-engine (search-engine-find-by-key key)))
-          (warn
-           "Key ~A for engine ~A conflicts with key binding of another engine: ~A"
-           key engine-id conflicting-engine))
-     do
-       (push (make-search-engine :id engine-id :key key :url-template fmt)
-             *search-engines*))
+          (if (equal conflicting-engine engine)
+              (setf engine nil)
+            (warn
+             "Key ~A for engine ~A conflicts with key binding of another distinct engine: ~A"
+             key engine-id conflicting-engine)))
+     when engine
+     do  (push engine *search-engines*))
   (search-engine-install-keymap))
 
 '(define-search-engines
