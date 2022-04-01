@@ -57,6 +57,7 @@
   "Use search ENGINE to execute search QUERY in a new browser tab or otherwise.
 
   Tab completion is available if engine is not provided."
+  (declare (ignore no-clipboard))
   (let* ((engine-id
           (or engine-id
               (STUMPWM:completing-read (STUMPWM:current-screen) "Select search engine: "
@@ -68,7 +69,8 @@
                  (STUMPWM:current-screen)
                  (format nil "~A query: ~%" engine-id)
                  :initial-input
-                 (unless no-clipboard (STUMPWM:get-x-selection)))))
+                 ;; (unless no-clipboard (STUMPWM:get-x-selection))
+                 "")))
     (when query
       (search-engine-search-noninteractive query engine))))
 
