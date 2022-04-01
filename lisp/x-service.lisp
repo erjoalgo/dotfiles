@@ -118,9 +118,10 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (let ((query (hunchentoot-post-data-or-err))
         (engine (or (read-header :ENGINE)
                     (let* ((letter (read-header :ENGINE-LETTER))
-                          (char (aref letter 0)))
+                           (char (aref letter 0))
+                           (as-string (format nil "~C" char)))
                       (assert (eq (length letter) 1))
-                      (stumpwm::search-engine-find-by-key char)))))
+                      (stumpwm::search-engine-find-by-key as-string)))))
     (stumpwm::search-engine-search-noninteractive query engine)))
 
 (define-regexp-route run-handler ("/run")
