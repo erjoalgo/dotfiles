@@ -39,13 +39,15 @@ def x_service_curl(specs, path, rest, stdin_bytes):
     if not is_open:
         continue
     cnt += 1
+    headers = [f"-H{name}:{val}" for (name, val) in os.environ.items()
+               if name.startswith("STUMPWM")]
     if port:
         url = f"localhost:{port}{path}"
-        cmd = ["timeout", "5s", "curl", "-s", url] + rest
+        cmd = ["timeout", "5s", "curl", "-s", url] + headers + rest
     else:
         cmd = ["timeout", "5s", "curl", "-s", "--no-buffer",
                "--unix-socket", socket,
-               f"http://localhost{path}"] + rest
+               f"http://localhost{path}"] + headers + rest
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     if stdin_bytes:
         p.communicate(input=stdin_bytes)
