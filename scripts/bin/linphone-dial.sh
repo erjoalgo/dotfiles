@@ -60,7 +60,7 @@ if command -v x-service-curl; then
             LINPHONE_COMMAND_ARGS="${ADDRESS}"
         fi
     else
-        echo "unknown option: ${RESP}"
+        echo "unknown dial option: ${RESP}"
         exit ${LINENO}
     fi
 fi
