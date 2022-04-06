@@ -65,9 +65,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (define-regexp-route browse-handler ("/browse")
     "Browse to a URL"
-  (let ((url (hunchentoot-post-data-or-err)))
+  (let ((url (hunchentoot-post-data-or-err))
+        (raise-browser-window (read-header :STUMPWM-RAISE-BROWSER-WINDOW)))
     (format t "x-service: value of url: ~A~%" url)
     (stumpwm::x-www-browser url)
+    (when (and raise-browser-window (string-equal raise-browser-window "TRUE"))
+      (funcall (find-symbol "RAISE-WINDOW-BROWSER" "STUMPWM")))
     ""))
 
 (define-regexp-route clipboard-handler ("/clipboard")
