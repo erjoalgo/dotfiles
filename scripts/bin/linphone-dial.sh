@@ -52,7 +52,8 @@ if command -v x-service-curl; then
     elif test "${RESP}" = "c"; then
         # call
         if test -n "${USE_GOOGLE_VOICE}"; then
-            x-www-browser "https://voice.google.com/u/0/calls?a=nc,%2B%201${TEL}"
+            env STUMPWM-RAISE-BROWSER-WINDOW=true \
+              x-www-browser "https://voice.google.com/u/0/calls?a=nc,%2B%201${TEL}"
             exit
         else
             LINPHONE_COMMAND="dial"
