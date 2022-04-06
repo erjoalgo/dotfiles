@@ -24,7 +24,7 @@ function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
 TEL=$(urldecode "${TEL}")
 TEL=$(sed -e 's/^tel://' -e 's/^[+]1//g' -e 's/[^0-9]//g' <<< "${TEL}")
-if hostname | md5sum | grep -F 24e9ebe4849f568cda45d05f4884ffbd; then
+if hostname | md5sum | grep -F 24e9ebe4849f568cda45d05f4884ffbd > /dev/null; then
     USE_GOOGLE_VOICE=true
 else
     USE_GOOGLE_VOICE=""
