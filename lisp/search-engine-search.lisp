@@ -97,7 +97,7 @@
 
 (defun search-engine-install-keymap ()
  "Install search engines into *search-engine-map*"
- (loop for engine in *search-engines*
+ (loop for engine in (reverse *search-engines*)
     do (STUMPWM:define-key *search-engine-map* (sanitize-key (search-engine-key engine))
 	 (format nil "engsearch2 ~A" (search-engine-id engine)))))
 
