@@ -124,7 +124,9 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                            (char (aref letter 0))
                            (as-string (format nil "~C" char)))
                       (assert (eq (length letter) 1))
-                      (stumpwm::search-engine-find-by-key as-string)))))
+                      (or
+                       (stumpwm::search-engine-find-by-key as-string)
+                       (error "No engine found for key ~A" letter))))))
     (stumpwm::search-engine-search-noninteractive query engine)))
 
 (define-regexp-route run-handler ("/run")
