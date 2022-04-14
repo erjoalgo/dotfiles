@@ -281,3 +281,10 @@
   "Toggle the screenkey utility"
   (run-shell-command
    "bash -c 'if pgrep screenkey; then pkill screenkey; else screenkey; fi '"))
+
+(defcommand beep () ()
+  "Fake a pcspkr beep using alsa speaker-test.
+
+   Avoids issues with beep permissions"
+  (run-shell-command
+   "timeout .25 speaker-test -t sine -f 880 -l 1"))

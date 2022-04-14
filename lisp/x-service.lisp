@@ -134,4 +134,9 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (let ((command (hunchentoot-post-data-or-err)))
     (stumpwm::eval-command command t)))
 
+(define-regexp-route beep-handler ("/beep")
+    "Run command"
+  (stumpwm::beep)
+  "")
+
 ;; (x-service:start 1959)
