@@ -123,7 +123,7 @@ function test-port	{
 }
 
 function beep-on-success {
-    until ${*}; do
+    until "$@"; do
         sleep 1
     done
     for _ in $(seq 3); do
