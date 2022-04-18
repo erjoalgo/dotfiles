@@ -4,10 +4,9 @@ set -euo pipefail
 
 TOP=${HOME}/git/openproject-deploy
 
-if ! test -d openproject; then
+if ! test -d "${TOP}"; then
   git clone https://github.com/opf/openproject-deploy \
-    --depth=1 --branch=stable/12 openproject  \
-    "${TOP}"
+    --depth=1 --branch=stable/12 "${TOP}"
 fi
 
 cd "${TOP}/compose"
