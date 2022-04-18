@@ -55,7 +55,9 @@ alias c='cat'
 alias gi='grep -i'
 alias gol='grep -o'
 alias grepc='grep --color=always'
-if command -v xsel > /dev/null; then
+if command -v x-service-curl > /dev/null; then
+    alias xs='x-service-curl /clipboard -XPOST -d @-'
+elif command -v xsel > /dev/null; then
     alias xs='xsel -ib'
 elif command -v pbcoby; then
     alias xs='pbcopy'
