@@ -29,19 +29,19 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
     Display all images recursively contained in a directory on a web browser.
     """
 
-    def __init__(self, directory, dimensions, image_size):
+    def __init__(self, directory, dimensions, image_size, image_regexp):
         self.images = []
         self.directory = directory
         self.dimensions = dimensions
         self.image_size = image_size
-        threading.Thread(target=self.crawl_images).start()
+        threading.Thread(target=self.crawl_images, args=(image_regexp, )).start()
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
         super(ImageOverviewHandler, self).__init__(*args, **kwargs)
 
 
-    def crawl_images(self, image_regexp="(?i)[.](jpe?g|png|mp4)$"):
+    def crawl_images(self, image_regexp):
         for (root, dirs, files) in os.walk(self.directory):
             for filename in files:
                 if re.search(image_regexp, filename):
@@ -179,6 +179,9 @@ def main():
                         default=(4, 10),
                         type=parse_dimensions_spec)
     parser.add_argument("-s", "--image_size", help="html image size", default=40)
+    parser.add_argument("-x", "--image_regexp",
+                        help="regexp used to filter image files",
+                        default="(?i)[.](jpe?g|png|mp4)$")
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     args = parser.parse_args()
 
@@ -189,7 +192,8 @@ def main():
     httpd = http.server.HTTPServer(server_address,
                                    ImageOverviewHandler(directory=args.images_directory,
                                                         dimensions=args.dimensions,
-                                                        image_size=args.image_size))
+                                                        image_size=args.image_size,
+                                                        image_regexp=args.image_regexp))
     logging.info("starting http server on %s", server_address)
     subprocess.Popen(["x-www-browser", f"http://localhost:{args.port}"])
     httpd.serve_forever()
