@@ -45,6 +45,8 @@ if ! test "${NVM_PROFILE_INTSALLED:-}" = true; then
 fi
 
 source "${NVM_SH}"
+source ${HOME}/.profile-env
+nvm-load
 
 set +xu
 nvm install stable
