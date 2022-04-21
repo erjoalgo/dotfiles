@@ -14,22 +14,24 @@ for PROFILE_FILE in \
     set +e
     ${SUDOOPT} insert-text-block \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
-               ${PROFILE_FILE} <<"EOF"
-export NVM_DIR="$HOME/.nvm"
-function my_nvm_load  {
+               ${PROFILE_FILE} <<EOF
+export NVM_DIR="\$HOME/.nvm"
+function nvm-load  {
     echo "loading nvm"
     # This loads nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
+    [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh" --no-use
     # This loads nvm bash_completion
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    unalias npm node 2>/dev/null
+    [ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"
     nvm install stable
-    nvm alias default node
-    npm ${*}
+    # nvm alias default node
+    NODE_DIR=\$(dirname \$(which node))
+    insert-text-block \
+      '# DAb44TrrbZ9qvuqy3C2He81kPX0NzUJB-export-current-node-location' \
+       ${PROFILE_FILE} <<EOFF
+export PATH=\\\$PATH:\${NODE_DIR}
+EOFF
+    echo "Added \${NODE_DIR} to PATH in ${PROFILE_FILE}"
 }
-alias npm='my_nvm_load'
-alias node='my_nvm_load'
-
 EOF
     STATUS=$?
     set -e
