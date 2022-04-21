@@ -32,7 +32,7 @@ HOST=${HOST:-localhost}
 test -n "${DBNAME}" -a -n "${USER}"
 
 if grep '-' <<< "${DBNAME}"; then
-    echo "dbname cannot have hyphens" && exit ${LINENO}
+    echo "dbname may not contain hyphens" && exit ${LINENO}
 fi
 
 DROP=${DROP:-}
