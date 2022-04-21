@@ -207,6 +207,12 @@ fi
 touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
+insert-text-block -b '# -*- mode: sh -*-'  \
+                  ~/.profile-env  \
+  <<EOF
+
+EOF
+
 insert-text-block '# 9f56be79-fa85-4ec0-ab4f-a9d3df5fef76-maybe-add-gopath' ~/.profile-env  \
   <<EOF
 if test -d ~/go/bin/; then
