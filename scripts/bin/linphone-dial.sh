@@ -45,8 +45,15 @@ if command -v x-service-curl; then
     if test "${RESP}" = "t"; then
         # text
         if command -v emacs-sip; then
-            emacs-sip "${TEL}"
-            exit $?
+            set +e
+            OUTPUT=$(emacs-sip "${TEL}" 2>&1)
+            RET=$?
+            set -e
+            if test $RET -ne 0; then
+                xmessage "emacs-sip failed: ${OUTPUT}"
+                exit ${LINENO}
+            fi
+            exit 0
         fi
         CHAT=$(x-service-curl  \
                /read-line  \
