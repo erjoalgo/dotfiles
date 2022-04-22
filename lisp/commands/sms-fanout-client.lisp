@@ -118,18 +118,17 @@
                          (reconnect-delay-secs 60))
   (loop
      as connected = (connected-p :client *client*)
-     do (syslog-log ':info
-                    (if connected
-                        "already connected"
-                        "sms-fanout reconnect loop: attempting to reconnect"))
      unless connected do
+       (progn
+         (syslog-log ':info
+                      "sms-fanout reconnect loop: attempting to reconnect")
        (handler-case
            (setf *client* (connect address)
                  connected (connected-p :client *client*))
          ((or USOCKET:NS-TRY-AGAIN-CONDITION error) (err)
            (syslog-log :info (format nil
                                      "failed to connect to ~A: ~A. "
-                                     address err))))
+                                     address err)))))
      when connected do
        (progn
          (syslog-log :info (format nil "pinging"))
