@@ -3,7 +3,7 @@
 
 emacsclient-wrapper.sh \
     --eval "(sip-chat \"$@\")" \
-    --eval "(raise-frame)"
+    --eval "(unless sip-autosend-message (raise-frame))"
 
 # Local Variables:
 # mode: sh
