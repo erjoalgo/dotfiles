@@ -1,10 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
-
-LOGFILE=/tmp/linphone-dial-$(date '+%s')
-
-exec > $LOGFILE 2>&1
 
 while getopts "t:h" OPT; do
     case ${OPT} in
