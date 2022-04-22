@@ -36,9 +36,9 @@
 
 (defun battery-info-check-notify-loop (&key
                                          (percentage-thresh 20)
-                                         (interval-mins 5))
+                                         (interval-mins .5))
   (loop
-     with MINS = 60
+     with MINS-TO-SECS = 60
      do
        (let* ((info (battery-info))
               (state  (cdr (assoc :STATE info)))
@@ -48,5 +48,9 @@
              (let ((percentage (parse-integer percentage-string :junk-allowed t)))
                (when (and (equal state "discharging")
                           (<= percentage percentage-thresh))
-                 (message-no-timeout (format nil "^1 warning: battery discharging (~D%)^*" percentage))))))
-     do (sleep (* interval-mins MINS))))
+                 (message-no-timeout
+                  (format nil "^1 warning: battery discharging (~D%)^*" percentage))
+                 (when (<= percentage 5)
+                   (beep)
+                   (run-shell-command "xmessage battery low!"))))))
+     do (sleep (* interval-mins MINS-TO-SECS))))
