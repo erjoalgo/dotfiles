@@ -287,4 +287,4 @@
 
    Avoids issues with beep permissions"
   (run-shell-command
-   "timeout .25 speaker-test -t sine -f 880 -l 1"))
+   "timeout -s9 .25 speaker-test -t sine -f 880 -l 1"))
