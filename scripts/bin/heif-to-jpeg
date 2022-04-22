@@ -1,0 +1,14 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+HEIC="${1}" && shift
+JPEG=$(sed s/HEIC$/jpg/i <<< "${HEIC}")
+test "${HEIC}" != "${JPEG}"
+heif-convert "${HEIC}" -q100 "${JPEG}"
+rm "${HEIC}"
+
+# Local Variables:
+# mode: sh-mode
+# mode: sh
+# End:
