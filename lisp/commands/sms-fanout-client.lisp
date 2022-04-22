@@ -87,8 +87,8 @@
                               (handler-case
                                   (on-message-received from to message id)
                                 (error (err)
-                                  (format t "failed to parse message: ~A"
-                                          message)))))))
+                                  (format t "failed to parse message: ~A: ~A"
+                                          message err)))))))
                   (t
                    (wsd:close-connection client)
                    (error "unexpected message type: ~A" message-type))))))
