@@ -78,5 +78,5 @@ fi
 
 
 if ! linphonecsh ${LINPHONE_COMMAND} "${LINPHONE_COMMAND_ARGS}" 2>&1; then
-    xmessage ${ERROR} -timeout 2 || true
+    xmessage "error" -timeout 2 || true
 fi
