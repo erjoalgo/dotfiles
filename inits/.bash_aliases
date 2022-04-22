@@ -323,6 +323,7 @@ alias luks-add-key="sudo cryptsetup luksAddKey"
 alias lsdisk="sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT"
 alias ifconfig="ip address show"
 
+alias sudo='sudo ' # allow combining sudo with aliases
 # Local Variables:
 # mode: sh
 # End:
