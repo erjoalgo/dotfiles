@@ -106,7 +106,6 @@
   (authinfo:get-info-assert-vars :app "sms-fanout" (machine password)
     (format nil "wss://~A/fanout?api-key=~A" machine password)))
 
-
 (defun syslog-log (priority message)
   ;; '((:EMERG . 0) (:ALERT . 1) (:CRIT . 2) (:ERR . 3) (:WARNING . 4)
   ;;   (:NOTICE . 5) (:INFO . 6) (:DEBUG . 7))
