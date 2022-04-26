@@ -92,6 +92,13 @@ EOF
 
 sudo systemctl enable getty@tty1.service
 
+LOCAL_USOCKET=${HOME}/git/usocket
+
+if ! test -d "${LOCAL_USOCKET}"; then
+  git clone https://github.com/usocket/usocket "${LOCAL_USOCKET}"
+fi
+
+quicklisp-register-local-project "${LOCAL_USOCKET}"
 
 for DIR in ../lisp{/statusor,/cladaver,}; do
   ASD=$(realpath $(echo "${DIR}/*asd"))
