@@ -1,0 +1,25 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+install-systemd-service.sh webdav-tunnel <<EOF
+
+[Unit]
+Description=ssh tunnel to workstation to expose webdav service
+# Requires=systemd-networkd-wait-online.service
+# After=systemd-networkd-wait-online.service
+
+[Service]
+ExecStart=/home/ejalfonso/git/erjoalgo-stumpwmrc/scripts/bin/ssh-expose-remote-port <CORP_HOSTNAME> -r 81:8081
+User=ejalfonso
+Restart=on-failure
+RestartSec=30s
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Local Variables:
+# mode: sh-mode
+# End:
