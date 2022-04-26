@@ -1,4 +1,6 @@
-'(define-search-engines
+(in-package :STUMPWM)
+
+(define-search-engines
     '(
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")
       ("w" "wiki" "https://en.wikipedia.org/w/index.php?search=~A")
