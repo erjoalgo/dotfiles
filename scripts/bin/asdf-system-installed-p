@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SYSTEM=${1} && shift
-sbcl --eval "(ql:quickload '${SYSTEM})" --non-interactive
+sbcl --eval "(require '${SYSTEM})" --non-interactive
 
 # Local Variables:
 # mode: sh-mode
