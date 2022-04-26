@@ -93,7 +93,7 @@ EOF
 sudo systemctl enable getty@tty1.service
 
 
-for DIR in ../lisp{,/statusor,/cladaver}; do
+for DIR in ../lisp{/statusor,/cladaver,}; do
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
   asdf-add-project-to-link-farm $(dirname "${ASD}")
