@@ -12,12 +12,11 @@
   `(handler-case
        (progn ,@body)
      (error (err)
-       (push (list ',body err) *init-errors*)
+       (push (list ',body err) (cdr (last *init-errors*)))
        (let ((message-fn (if (fboundp 'message-wrapped)
                              'message-wrapped
                              'message))
              (msg (format nil "error while loading: ~A~%: '~A'" ',body err)))
-
          (format t "~A" msg)
          (funcall message-fn "~A" msg)
          ;; allow the user to see the error before it is overwritten
