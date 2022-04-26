@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+DIRECTORY=$(realpath ${1})
+
+QUICKLISP_DIR=${HOME}/quicklisp/local-projects
+ln -sf ${DIRECTORY} ${QUICKLISP_DIR}
+
+sbcl --eval "(ql:register-local-projects)"  \
+     --eval '(format t "~{~A~^~%~}" (ql:list-local-projects))' \
+     --quit | \
+    grep -F "${QUICKLISP_DIR}/$(basename ${DIRECTORY})"
+
+# Local Variables:
+# mode: sh-mode
+# End:
