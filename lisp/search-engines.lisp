@@ -1,4 +1,4 @@
-(define-search-engines
+'(define-search-engines
     '(
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")
       ("w" "wiki" "https://en.wikipedia.org/w/index.php?search=~A")
