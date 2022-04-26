@@ -285,5 +285,13 @@ fi
 cd ~/git/githost
 python3 setup.py install --user
 
+sudo insert-text-block \
+  '# ac25d55a-723b-4da2-bfa6-674c51e7eefb-max-out-virtual-terminal-size' \
+  /etc/default/console-setup<<EOF
+FONTFACE="TerminusBold"
+FONTSIZE="16x32"
+EOF
+
+sudo service console-setup restart
 
 echo "success"
