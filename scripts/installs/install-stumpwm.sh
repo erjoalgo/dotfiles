@@ -68,11 +68,31 @@ fi
 
 sudo mkdir -p /usr/share/xsessions
 
+WRAPPER=/usr/local/bin/stumpwm-wrapper
+cat <<EOF | sudo tee "${WRAPPER}" > /dev/null
+#!/bin/bash
+
+exec > /tmp/.stumpwm.log
+exec 2>&1
+
+echo "running stumpwm on $(date)"
+
+if ! /usr/local/bin/stumpwm; then
+  echo "stumpwm failed!"
+fi
+
+# Local Variables:
+# mode: sh-mode
+# End:
+EOF
+
+sudo chmod +x "${WRAPPER}"
+
 sudo insert-text-block  \
      '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
      /usr/share/xsessions/stumpwm.desktop <<EOF
 [Desktop Entry]
-Exec=/usr/local/bin/stumpwm
+Exec=${WRAPPER}
 Icon=/usr/share/icons/stumpwm-logo-stripe.png
 Type=Application
 DesktopNames=STUMPWM
