@@ -80,7 +80,7 @@
             (setf *message-window-timer* nil))
     (progn (unmap-all-message-windows) (unmap-all-message-windows)))
 
-(defun last-msgs ()
+(defun last-messages ()
   (reverse (screen-last-msg (current-screen))))
 
 (defun expand-user (fn)
