@@ -96,7 +96,6 @@ Exec=${WRAPPER}
 Icon=/usr/share/icons/stumpwm-logo-stripe.png
 Type=Application
 DesktopNames=STUMPWM
-DesktopNames=XFCE
 EOF
 
 if test -e ~/.dmrc; then
