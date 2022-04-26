@@ -108,5 +108,6 @@ if test -e /usr/share/xsessions/lightdm-xsession.desktop; then
 fi
 
 
-sudo update-alternatives --install /usr/bin/x-window-manager x-window-manager $(which stumpwm) 200
+sudo update-alternatives --install /usr/bin/x-window-manager \
+  x-window-manager $(which stumpwm) 200
 sudo update-alternatives --set x-window-manager $(which stumpwm)
