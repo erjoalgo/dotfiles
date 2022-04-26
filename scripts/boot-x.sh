@@ -97,7 +97,7 @@ for DIR in ../lisp{/statusor,/cladaver,}; do
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
   asdf-add-project-to-link-farm $(dirname "${ASD}")
-  sbcl --eval "(ql:quickload :${SYSTEM})"
+  sbcl --eval "(ql:quickload :${SYSTEM})" --quit
   asdf-system-installed-p "${SYSTEM}"
 done
 
