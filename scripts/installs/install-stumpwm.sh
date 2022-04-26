@@ -86,7 +86,7 @@ fi
 # End:
 EOF
 
-sudo chmod +x "${WRAPPER}"
+sudo chmod a+rx "${WRAPPER}"
 
 sudo insert-text-block  \
      '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
