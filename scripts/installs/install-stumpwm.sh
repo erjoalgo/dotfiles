@@ -93,7 +93,7 @@ sudo insert-text-block  \
      /usr/share/xsessions/stumpwm.desktop <<EOF
 [Desktop Entry]
 Exec=${WRAPPER}
-Icon=/usr/share/icons/stumpwm-logo-stripe.png
+Icon=$(realpath ../../data/public/stumpwm-icon.png)
 Type=Application
 DesktopNames=STUMPWM
 EOF
