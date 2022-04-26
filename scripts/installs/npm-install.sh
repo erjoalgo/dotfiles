@@ -16,7 +16,7 @@ for PROFILE_FILE in \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                ${PROFILE_FILE} <<EOF
 export NVM_DIR="\$HOME/.nvm"
-function nvm-load  {
+function nvmload  {
     echo "loading nvm"
     # This loads nvm
     [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh" --no-use
