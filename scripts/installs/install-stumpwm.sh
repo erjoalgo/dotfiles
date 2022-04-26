@@ -20,20 +20,6 @@ if ! sbcl --eval '(ql:system-apropos :vecto)' --quit; then
     ./sbcl.sh
 fi
 
-sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
-        (mapcar 'ql:quickload
-	'(
-"clx"
-"cl-ppcre"
-"swank"
-"quicklisp-slime-helper"
-"usocket"
-"alexandria"
-"cl-csv" ;; for contacts.csv support
-"websocket-driver-client" ;; for fanout client
-))
-EOF
-
 mkdir -p "${HOME}/src" && cd "${HOME}/src"
 
 if ! test -d stumpwm; then
