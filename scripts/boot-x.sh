@@ -132,4 +132,6 @@ EOF
 
 mkdir -p ~/pictures/auto-scrots
 
+sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
+
 echo success
