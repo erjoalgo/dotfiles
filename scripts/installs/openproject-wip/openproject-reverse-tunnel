@@ -1,0 +1,23 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+install-systemd-service.sh openproject-tunnel <<EOF
+
+[Unit]
+Description=ssh tunnel to workstation to expose openproject api
+
+[Service]
+ExecStart=/home/ejalfonso/git/erjoalgo-stumpwmrc/scripts/bin/ssh-expose-remote-port ejalfonso.svl.corp.google.com -r 8080 -l 8080
+User=ejalfonso
+Restart=always
+RestartSec=30
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Local Variables:
+# mode: sh-mode
+# End:
