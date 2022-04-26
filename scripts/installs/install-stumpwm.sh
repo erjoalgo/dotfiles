@@ -16,7 +16,7 @@ sudo ${APT_GET} install -y xinit x11-xserver-utils \
      xbacklight xcalib xsel upower xscreensaver
 
 SBCLRC="${HOME}/.sbclrc"
-if ! sbcl --script /dev/stdin <<< '(ql:system-apropos "vecto")'; then
+if ! sbcl --eval '(ql:system-apropos :vecto)' --quit; then
     ./sbcl.sh
 fi
 
