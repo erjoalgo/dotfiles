@@ -93,11 +93,12 @@ EOF
 sudo systemctl enable getty@tty1.service
 
 
-for SYSTEM in ../lisp/{statusor,cladaver}; do
-  SYSTEM=$(realpath ${SYSTEM})
-  asdf-add-project-to-link-farm ${SYSTEM}
-  asdf-system-installed-p $(basename ${SYSTEM}/*asd .asd)
-  ln -sf ${SYSTEM} ~/quicklisp/local-projects
+for DIR in ../lisp{,/statusor,/cladaver}; do
+  ASD=$(realpath $(echo "${DIR}/*asd"))
+  SYSTEM=$(basename ${ASD} .asd)
+  asdf-add-project-to-link-farm $(dirname "${ASD}")
+  sbcl --eval "(ql:quickload :${SYSTEM})"
+  asdf-system-installed-p "${SYSTEM}"
 done
 
 # set up xdg-open configs
