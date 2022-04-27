@@ -67,7 +67,7 @@
                  do
                     (progn
                       (message
-                       "^1 warning: battery discharging (~D%)^*" 10)
+                       "^1 warning: battery discharging (~D%)^*" percentage)
                       (sleep .5)
                       (unmap-all-message-windows)
                       (sleep .5))))
