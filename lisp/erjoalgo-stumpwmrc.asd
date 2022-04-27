@@ -22,6 +22,7 @@
   #:access
   #:drakma ;; TODO factor-out openproject.lisp
   #:lparallel
+  #:erjoalgo-webutil
   )
  :components
  (
