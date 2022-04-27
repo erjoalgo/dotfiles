@@ -1,4 +1,3 @@
-
 (asdf:defsystem
  :cladaver
  :serial t
