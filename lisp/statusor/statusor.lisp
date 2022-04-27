@@ -15,10 +15,10 @@
 (defmacro if-let-ok (on-error-spec bindings &rest on-success)
   (if (null bindings)
       `(progn ,@on-success)
-      (destructuring-bind ((var val-or-err) . rest) bindings
+      (destructuring-bind ((var-ok val-or-err) . rest) bindings
         `(handle-error
           (signal-to-error ,val-or-err)
-          (,var (if-let-ok ,on-error-spec ,rest ,@on-success))
+          (,var-ok (if-let-ok ,on-error-spec ,rest ,@on-success))
           ,on-error-spec))))
 
 (defmacro make-error (error-message)
