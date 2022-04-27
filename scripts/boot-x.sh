@@ -64,13 +64,17 @@ Favorites=
 ShowMenuBarByDefault=false
 EOF
 
-LOCAL_USOCKET=${HOME}/git/usocket
-
-if ! test -d "${LOCAL_USOCKET}"; then
-  git clone https://github.com/usocket/usocket "${LOCAL_USOCKET}"
-fi
-
-quicklisp-register-local-project "${LOCAL_USOCKET}"
+for URL in \
+  https://github.com/usocket/usocket \
+  https://github.com/erjoalgo/erjoalgo-webutil \
+  ; do
+  NAME=$(basename "${URL}")
+  DIR=${HOME}/git/${NAME}
+  if ! test -d "${DIR}"; then
+    git clone "${URL}" "${DIR}"
+    quicklisp-register-local-project "${DIR}"
+  fi
+done
 
 for DIR in ../lisp{/statusor,/cladaver,}; do
   ASD=$(realpath $(echo "${DIR}/*asd"))
