@@ -292,6 +292,12 @@ FONTFACE="TerminusBold"
 FONTSIZE="16x32"
 EOF
 
+sudo insert-text-block  \
+     '# noWi7x9LqUydfbQnf47g7hpMvD4SMcnx-caps-lock-to-ctrl' \
+     /etc/default/keyboard <<EOF
+XKBOPTIONS=ctrl:nocaps
+EOF
+
 sudo service console-setup restart
 
 echo "success"
