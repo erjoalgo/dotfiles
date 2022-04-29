@@ -110,6 +110,7 @@ function pass-show-xs	{
 
 
 function test-port	{
+    PROTOCOL=${PROTOCOL:-tcp}
     if test $# = 1; then
         HOST=localhost
     else
@@ -119,8 +120,10 @@ function test-port	{
     # http://stackoverflow.com/questions/9609130/quick-way-to-find-if-a-port-is-open-on-linux
     # echo -e "GET / HTTP/1.0\n" >&6
     # cat <&6
-    exec 6<>/dev/tcp/"${HOST}/${PORT}"
+    exec 6<>/dev/${PROTOCOL}/${HOST}/${PORT}
 }
+
+alias test-port-udp='PROTOCOL=udp test-port'
 
 function beep-on-success {
     until "$@"; do
