@@ -15,7 +15,7 @@ MYSELF=$(which "$0" 2>/dev/null)
 test -n "$JAVA_HOME" && JAVA="$JAVA_HOME/bin/java"
 JAVA=${JAVA:-java}
 exec "$JAVA" $java_args -jar $MYSELF "$@"
-exit 1 
+exit 1
 EOF
 
 chmod +x "${EXE}"
