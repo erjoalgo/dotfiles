@@ -257,6 +257,12 @@ function openssl-https-server-fingerprint  {
 }
 
 
+function cert-list-ssh-host-key-fingerprints {
+    for FILE in /etc/ssh/*pub; do
+        ssh-keygen -lf ${FILE} -E sha256;
+    done
+}
+
 # command defaults
 if ls --color=auto &> /dev/null; then
     alias ls='ls --color=auto'
