@@ -52,6 +52,7 @@
    (:file "commands/scrot")
    (:file "commands/battery-notification")
    (:file "commands/contacts")
+   (:file "commands/voipms-helper")
    (:file "commands/sip")
    (:file "commands/speech")
    (:file "commands/vol")
