@@ -256,6 +256,13 @@ function cert-https-server-fingerprint  {
         openssl x509 -fingerprint -noout -in /dev/stdin
 }
 
+function cert-https-server-print  {
+    SERVER=${1} && shift
+    FILENAME=${1} && shift
+    echo -n | openssl s_client -connect ${SERVER} \
+        | openssl x509
+}
+
 
 function cert-list-ssh-host-key-fingerprints {
     for FILE in /etc/ssh/*pub; do
