@@ -250,7 +250,7 @@ alias ssh-ecdsa-fingerprint-md5='ssh-ecdsa-fingerprint -Emd5'
 alias ssh-ecdsa-fingerprint-sha256='ssh-ecdsa-fingerprint -Esha256'
 alias ssh-ecdsa-fingerprint-sha256-old-ssh="awk '{print \$2}' /etc/ssh/ssh_host_ecdsa_key.pub | base64 -d | sha256sum -b | awk '{print \$1}' | xxd -r -p | base64"
 
-function openssl-https-server-fingerprint  {
+function cert-https-server-fingerprint  {
     SERVER=${1} && shift
     openssl s_client -connect ${SERVER} < /dev/null 2>/dev/null |  \
         openssl x509 -fingerprint -noout -in /dev/stdin
