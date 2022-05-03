@@ -11,9 +11,18 @@
    #:persist-authinfo-line))
 (in-package :authinfo)
 
+(defun file-string (path)
+  (with-open-file (stream path)
+    (let* ((n-estimate (file-length stream))
+	  (data (make-string n-estimate))
+	  (n (read-sequence data stream)))
+      (unless (= n n-estimate)
+	(setf data (subseq data 0 n)))
+      data)))
+
 (defun parse (&key (filename "~/.authinfo"))
   (when (probe-file filename)
-    (loop with contents = (stumpwm:file-string filename)
+    (loop with contents = (file-string filename)
           for line in (ppcre:split #\Newline contents)
           collect
           (loop for (key val . rest)
@@ -58,6 +67,7 @@
                               optional-keys
                               line-prefix
                               ;; (noecho-keys '(:password))
+                              prompt-fn
                               (authinfo-filename
                                (make-pathname :name ".authinfo"
                                               :defaults (user-homedir-pathname))))
@@ -67,9 +77,8 @@
                       (string-downcase (symbol-name key))
                       key)
         ;; TODO check if (find key-sym noecho-keys)
-        as value = (stumpwm:read-one-line
-                    (stumpwm:current-screen)
-                    (format nil "enter ~A (~A): " name line-prefix))
+        as value = (funcall prompt-fn
+                            (format nil "enter ~A (~A): " name line-prefix))
         if value
           do (push (format nil "~A ~A" name value) strings)
         else if (member key required-keys :test #'equal)
