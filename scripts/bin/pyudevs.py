@@ -151,7 +151,24 @@ class ScrcpyHandler(DeviceHandler):
         self.check_call([script])
 
 
-DeviceHandler.handlers.append(ScrcpyHandler())
+# DeviceHandler.handlers.append(ScrcpyHandler())
+
+
+class AdbTetheringHandler(DeviceHandler):
+
+    max_retries = 1
+
+    @staticmethod
+    def matches(device):
+        if device.action  == "bind" and device.get("adb_user") == "yes":
+            return AdbTetheringHandler()
+
+    def retry(self):
+        script = "adb-start-tethering.sh"
+        self.check_call([script])
+
+
+DeviceHandler.handlers.append(AdbTetheringHandler())
 
 
 def monitor_forever():
