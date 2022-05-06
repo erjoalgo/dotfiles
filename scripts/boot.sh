@@ -295,7 +295,7 @@ EOF
 sudo insert-text-block  \
      '# noWi7x9LqUydfbQnf47g7hpMvD4SMcnx-caps-lock-to-ctrl' \
      /etc/default/keyboard <<EOF
-XKBOPTIONS=ctrl:nocaps
+XKBOPTIONS=ctrl:nocaps,terminate:ctrl_alt_bksp
 EOF
 
 sudo service console-setup restart
