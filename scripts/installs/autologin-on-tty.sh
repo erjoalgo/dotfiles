@@ -5,6 +5,7 @@ set -euo pipefail
 sudo insert-text-block '# Zss7UaEgcFtP1T8JPS7h77vOaQlYDR3H-enable-autologin' \
      /etc/systemd/logind.conf <<EOF
 NAutoVTs=6
+ReserveVT=6
 EOF
 
 sudo insert-text-block \
