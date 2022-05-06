@@ -34,6 +34,7 @@ def notify_send(message, color=None):
 class DeviceHandler(object):
     locks = {}
     handlers = []
+    max_retries = 5
 
     def __init__(self):
         self.last_triggered = None
@@ -63,10 +64,10 @@ class DeviceHandler(object):
         logging.info(text)
         return notify_send(text, color="green")
 
-    @staticmethod
-    def __retry__(retriable_fn, max_retries=5, delay_secs=2, name=""):
+    @classmethod
+    def __retry__(cls, retriable_fn, delay_secs=2, name=""):
         error = None
-        for retry in range(max_retries):
+        for retry in range(cls.max_retries):
             try:
               retriable_fn()
               DeviceHandler.notify_success("success: {}".format(name))
