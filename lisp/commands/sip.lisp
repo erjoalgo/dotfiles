@@ -24,11 +24,21 @@
    #:linphone-call-state))
 (in-package :sip)
 
+(defvar *linphone-profile-id* nil)
+
+(defun linphonecsh-command-with-profile-id (args)
+  (append
+   (list (format nil "LINPHONE_PROFILE_ID=~A"
+                 (or *linphone-profile-id*
+                     (linphonec-current-profile-id))))
+   (cons "linphonecsh" args)))
+
 (defun linphonecsh (&rest args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (stumpwm:message-wrapped "linphonecsh ~{~A~^ ~}" args)
-  (stumpwm::run-command-async "linphonecsh" args nil t))
+  (let ((env-args (linphonecsh-command-with-profile-id args)))
+    (stumpwm:message-wrapped "env ~{~A~^ ~}" env-args)
+    (stumpwm::run-command-async "env" env-args)))
 
 (defvar linphone-inhibit-command-echo nil)
 
@@ -38,7 +48,8 @@
   (unless linphone-inhibit-command-echo
     (stumpwm:message-wrapped "running: linphonecsh ~{~A~^ ~}" args))
   (multiple-value-bind (retcode output)
-      (stumpwm::run-command-retcode-output "linphonecsh" args)
+      (stumpwm::run-command-retcode-output
+       "env" (linphonecsh-command-with-profile-id args))
     (if (zerop retcode)
         output
         (error "non-zero exit status: ~A ~A" retcode output))))
@@ -140,16 +151,36 @@
   (let ((output (linphonecsh-sync "generic" "proxy show default")))
     output))
 
+(defun linphonec-profile-ids ()
+  (loop for config-file in (directory #P"~/.linphonerc.*")
+     as profile-id =
+       (or (pathname-type config-file)
+           (format nil "~D" (sb-posix:getuid)))
+     collect (cons profile-id (namestring config-file))))
+
+(defun linphonec-current-profile-id ()
+  (or *linphone-profile-id* (caar (linphonec-profile-ids))))
+
 (defun linphonec-init ()
   (linphonec-kill)
-  (sip:linphonecsh "init" "-c" (namestring (truename #P"~/.linphonerc"))))
+  (stumpwm:with-message-queuing t
+    (loop for (profile-id . config-file) in (linphonec-profile-ids)
+       do
+         (let ((*linphone-profile-id* profile-id))
+           (sip:linphonecsh "init" "-c" config-file)))))
 
 (defun linphonec-started-p ()
   ;; TODO actually check registration status
-  (multiple-value-bind (retcode output)
-      (stumpwm::run-command-retcode-output "linphonecsh" (list "generic" "help"))
-    (declare (ignore output))
-    (zerop retcode)))
+  (loop for (profile-id . _) in (linphonec-profile-ids)
+     always
+       (handler-case
+           (let ((*linphone-profile-id* profile-id)
+                 (linphone-inhibit-command-echo t))
+             (sip:linphonecsh-sync "generic" "help"))
+         (error (err)
+           (format t "error testing for linphonec ~A status: ~A" profile-id err)
+           nil))))
+
 
 (defun linphonec-kill ()
   (stumpwm::run-command-retcode-output "sudo" (list "pkill" "-9" "linphone")))
@@ -275,6 +306,21 @@
       (assert selected)
       (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected)))))
 
+(defcommand sip-select-profile-id () ()
+  (with-message-queuing t
+    (let* ((profiles (sip::linphonec-profile-ids))
+           (current (sip::linphonec-current-profile-id))
+           (selected (selcand:select
+                      :candidates (mapcar #'car profiles)
+                      :prompt (format nil "select linphonec profile (~A): "
+                                      current)))
+           (sip:linphone-inhibit-command-echo t))
+      (assert selected)
+      (setf sip::*linphone-profile-id* selected)
+      (message-wrapped "~A~%~A"
+                       sip::*linphone-profile-id*
+                       (sip::sip-current-identity)))))
+
 (defcommand sip-show-current-default-proxy () ()
   (message-wrapped "current proxy:~%a~%~A" (sip:linphonecsh-current-default-proxy)))
 
@@ -303,7 +349,7 @@
                                ("S" . :espeak-spell)
                                ("t" . :call-terminate)
                                ("a" . :call-answer)
-                               ("p" . :proxy-select)
+                               ("p" . :profile-id-select)
                                ("r" . :linphonec-restart)
                                ("m" . :sip-call-mute)
                                ("M" . :sip-call-unmute))
@@ -318,7 +364,7 @@
       (:espeak-spell (call-interactively "espeak-spell"))
       (:call-terminate (call-interactively "sip-call-terminate"))
       (:call-answer (call-interactively "sip-call-answer"))
-      (:proxy-select (call-interactively "sip-select-default-proxy"))
+      (:profile-id-select (call-interactively "sip-select-profile-id"))
       (:linphonec-restart
        '(call-interactively "sip:linphonec-restart")
        (sip:linphonec-restart))
