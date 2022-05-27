@@ -165,9 +165,16 @@
   (linphonec-kill)
   (stumpwm:with-message-queuing t
     (loop for (profile-id . config-file) in (linphonec-profile-ids)
+       as log-file = (namestring
+                      (make-pathname
+                       :name (format nil ".linphone-~A" profile-id)
+                       :type "log"
+                       :defaults (user-homedir-pathname)))
        do
          (let ((*linphone-profile-id* profile-id))
-           (sip:linphonecsh "init" "-c" config-file)))))
+           (sip:linphonecsh "init" "-c" config-file
+                            "-l" log-file
+                            "-d" "5")))))
 
 (defun linphonec-started-p ()
   ;; TODO actually check registration status
