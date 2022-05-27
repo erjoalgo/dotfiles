@@ -28,4 +28,5 @@
       ("z" "amazon" "https://www.amazon.com/s?k=~A")
       ("f" "whole-foods" "https://www.amazon.com/s?i=wholefoods&k=~A")
       ("h" "home-depot" "https://www.homedepot.com/s/~A")
-      ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")))
+      ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")
+      ("a" "address" "~A")))
