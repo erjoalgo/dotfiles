@@ -282,9 +282,17 @@
   (run-shell-command
    "bash -c 'if pgrep screenkey; then pkill screenkey; else screenkey; fi '"))
 
+(defun beep-fn (&key
+                  (freq 880)
+                  (duration-secs .25))
+  (run-shell-command
+   (format nil
+           "timeout -s9 ~F speaker-test -t sine -f ~D -l 1"
+           duration-secs
+           freq)))
+
 (defcommand beep () ()
   "Fake a pcspkr beep using alsa speaker-test.
 
    Avoids issues with beep permissions"
-  (run-shell-command
-   "timeout -s9 .25 speaker-test -t sine -f 880 -l 1"))
+  (beep))
