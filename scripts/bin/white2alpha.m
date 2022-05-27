@@ -10,9 +10,10 @@ function [] = white2alpha(input_file, output_file)
   ## white/back threshold
   THRESH = 255/2;
   thresh = img > THRESH;
-  imwrite(thresh, output_file);
-  cmd = sprintf("convert %s -fuzz 50%% -transparent white %s",
-                input, output_file);
+  tmp_file = sprintf("/tmp/white-black.png");
+  imwrite(thresh, tmp_file);
+  cmd = sprintf("convert -transparent white %s %s",
+                tmp_file, output_file);
   [status, err] = system(cmd);
   if status~=0;
     printf("error making image transparent: %s", err);
