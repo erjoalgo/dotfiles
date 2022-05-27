@@ -337,6 +337,9 @@ alias lsdisk="sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT"
 alias ifconfig="ip address show"
 
 alias sudo='sudo ' # allow combining sudo with aliases
+alias groups-newline="groups | tr ' ' '\n' | less"
+alias ndw='nmcli d w'
+alias ndwc='nmcli d w c'
 # Local Variables:
 # mode: sh
 # End:
