@@ -86,7 +86,10 @@ seconds ago")
      ,@(loop for (pull-or-raise-fun key) in `((raise-window ,raise-key)
 					      (pull-window ,pull-key))
 
-	  as cmd-name = (intern (format nil "~A-~A" (symbol-name pull-or-raise-fun) name))
+	     as cmd-name = (intern
+                            (format nil "~A-~A"
+                                    (symbol-name pull-or-raise-fun)
+                                    (string-upcase name)))
 	  as pull-p = (eq pull-or-raise-fun 'pull-window)
 	  as cmd-name-string = (symbol-name cmd-name)
 	  as fun = pull-or-raise-fun
