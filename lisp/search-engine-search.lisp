@@ -21,17 +21,18 @@
   search query. The first search engine in the list is used as the default
   if no explicit engine is specified."
   (loop
-     for (key engine-id fmt) in spec
-     as key-sanitized = (sanitize-key key)
-     as engine = (make-search-engine :id engine-id :key key :url-template fmt)
-     do (STUMPWM::if-let ((conflicting-engine (search-engine-find-by-key key)))
-          (if (equalp conflicting-engine engine)
-              (setf engine nil)
-            (warn
-             "Key ~A for engine ~A conflicts with key binding of another distinct engine: ~A"
-             key engine-id conflicting-engine)))
-     when engine
-     do  (push engine *search-engines*))
+    for (key engine-id fmt) in spec
+    as key-sanitized = (sanitize-key key)
+    as engine = (make-search-engine :id engine-id :key key :url-template fmt)
+    as conflicting-engine = (search-engine-find-by-key key)
+    do (format t "search-engine-search xswv: value of conflicting: ~A~%"
+               conflicting-engine)
+    do (if conflicting-engine
+           (unless (equalp conflicting-engine engine)
+             (warn
+              "Skipping engine ~A bound to ~A which conflicts with existing: ~A"
+              engine-id key conflicting-engine))
+           (push engine *search-engines*)))
   (search-engine-install-keymap))
 
 '(define-search-engines
