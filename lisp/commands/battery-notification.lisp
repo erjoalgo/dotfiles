@@ -60,12 +60,13 @@
          (format t "trace: battery-notification dft0~%")
          (when (<= percentage min-percent-message)
            (format t "trace: battery-notification 9zuv~%")
-           (message "^1 warning: battery discharging (~D%)^*" percentage))
+           (let ((*message-window-gravity* :top-right))
+             (message "^1 warning: battery discharging (~D%)^*" percentage)))
          (when (<= percentage min-percent-flashing-message)
            (format t "trace: battery-notification cx3p~%")
            (loop for i below (- min-percent-message percentage)
                  do
-                    (progn
+                    (let ((*message-window-gravity* :top-right))
                       (message
                        "^1 warning: battery discharging (~D%)^*" percentage)
                       (sleep .5)
