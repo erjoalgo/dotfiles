@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+
+PID=${1} && shift
+sudo lsof -Pan -p ${PID} -i
+
+# Local Variables:
+# mode: sh-mode
+# End:

@@ -292,10 +292,6 @@ function kill-process-listening-at-port	{
   kill ${PID}
 }
 
-function ports-open-by-pid  {
-  PID=${1} && shift
-  sudo lsof -Pan -p ${PID} -i
-}
 
 function git-browse-remote	{
     REMOTE="${1:-origin}" && shift
