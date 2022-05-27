@@ -292,10 +292,12 @@ FONTFACE="TerminusBold"
 FONTSIZE="16x32"
 EOF
 
+sudo sed -i 's/^XKBOPTIONS=/# \0/g' /etc/default/keyboard
+
 sudo insert-text-block  \
-     '# noWi7x9LqUydfbQnf47g7hpMvD4SMcnx-caps-lock-to-ctrl' \
-     /etc/default/keyboard <<EOF
-XKBOPTIONS=ctrl:nocaps,terminate:ctrl_alt_bksp
+  '# 81475907-8f33-420a-b002-118c8d4a62ae-configure-console-keyboard'  \
+  /etc/default/keyboard <<EOF
+XKBOPTIONS="terminate:ctrl_alt_bksp,ctrl:nocaps"
 EOF
 
 sudo service console-setup restart
