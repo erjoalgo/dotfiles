@@ -1,5 +1,6 @@
 (in-package :STUMPWM)
 
+(setf *search-engines* nil)
 (define-search-engines
     '(
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")
