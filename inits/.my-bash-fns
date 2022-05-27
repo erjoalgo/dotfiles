@@ -660,3 +660,15 @@ function list-active-sessions {
         fi
     done
 }
+
+function process-children  {
+  PID=${1} && shift
+  if test -z "${PID}"; then
+    return
+  fi
+  echo ${PID}
+  CHILDREN=$(pgrep -P ${PID})
+  for CHILD in ${CHILDREN}; do
+    process-children ${CHILD}
+  done
+}
