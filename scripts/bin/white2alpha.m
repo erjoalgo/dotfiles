@@ -30,20 +30,18 @@ endfunction
   
 arg_list = argv ();
 nargs = size(arg_list, 1);
-if nargs < 2;
+if nargs != 2;
   usage();
   if nargs > 0 && strcmp(arg_list{1}, "-h") || strcmp(arg_list{1}, "--help");
     exit(0);
   else
     exit(1);
   end
+else
+  input = arg_list{1};
+  output_png = arg_list{2};
+  white2alpha(input, output_png);
 end
-
-# input jpg/png image of original signature
-input = arg_list{1};
-
-# output png image of transparent signature
-output_png = arg_list{2};
 
 
 ## Local Variables:
