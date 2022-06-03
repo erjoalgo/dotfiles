@@ -50,7 +50,7 @@ fi
 
 source "${NVM_SH}"
 source ${HOME}/.profile-env
-nvm-load
+nvmload
 
 set +xu
 nvm install stable
