@@ -49,10 +49,10 @@ fi
 sudo ${APT_GET} install -y xdotool
 which nc || sudo ${APT_GET} install -y net-tools
 
-GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
-if sudo test -e "${GDM_CONFIG_FILENAME}"; then
-  sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
-fi
+# GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
+# if sudo test -e "${GDM_CONFIG_FILENAME}"; then
+#   sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
+# fi
 
 
 sudo mkdir -p /usr/share/xsessions
