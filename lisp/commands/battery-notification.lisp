@@ -55,7 +55,6 @@
                         ;; ignore multiple values,
                         ;; which are interpreted as a status error
                         (parse-integer percentage-string :junk-allowed t))))
-       (format t "battery-notification t7es: value of percentage: ~A~%" percentage)
        (when (equal state "discharging")
          (format t "trace: battery-notification dft0~%")
          (when (<= percentage min-percent-message)

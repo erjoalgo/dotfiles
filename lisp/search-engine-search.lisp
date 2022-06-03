@@ -25,8 +25,6 @@
     as key-sanitized = (sanitize-key key)
     as engine = (make-search-engine :id engine-id :key key :url-template fmt)
     as conflicting-engine = (search-engine-find-by-key key)
-    do (format t "search-engine-search xswv: value of conflicting: ~A~%"
-               conflicting-engine)
     do (if conflicting-engine
            (unless (equalp conflicting-engine engine)
              (warn
