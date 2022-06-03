@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -euo pipefail
+
+REGEXP=${1}
+
+pgrep -af $REGEXP | grep -v grep | head -1 | cut -f1 -d' '
+# Local Variables:
+# mode: sh-mode
+# mode: sh-mode
+# End:
