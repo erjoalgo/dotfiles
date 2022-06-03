@@ -10,7 +10,11 @@ for PROFILE_FILE in \
     /etc/profile.d/node-env.sh \
         ${HOME}/.profile-env \
     ; do
-    test -w ${PROFILE_FILE} && SUDOOPT="" || SUDOOPT="sudo"
+    if test -w ${PROFILE_FILE}; then
+        SUDOOPT=""
+    else
+        SUDOOPT="sudo"
+    fi
     set +e
     ${SUDOOPT} insert-text-block \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
