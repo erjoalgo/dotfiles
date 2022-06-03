@@ -340,6 +340,9 @@ alias sudo='sudo ' # allow combining sudo with aliases
 alias groups-newline="groups | tr ' ' '\n' | less"
 alias ndw='nmcli d w'
 alias ndwc='nmcli d w c'
+
+alias g4r='g4 revert'
+alias g4df='g4 revert'
 # Local Variables:
 # mode: sh
 # End:
