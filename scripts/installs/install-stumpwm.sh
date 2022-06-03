@@ -20,6 +20,7 @@ if ! sbcl --eval '(ql:system-apropos :vecto)' --quit; then
     ./sbcl.sh
 fi
 
+pushd .
 mkdir -p "${HOME}/src" && cd "${HOME}/src"
 
 if ! test -d stumpwm; then
@@ -38,6 +39,7 @@ if ! command -v stumpwm || test -n "${FORCE:-}"; then #the executable
     sudo make install
     # sudo ln -sf "${STUMPWM}/stumpwm" /usr/local/bin
 fi
+popd
 
 if command -v yum; then
    sudo yum groupinstall -y "X Window System";
