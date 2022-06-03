@@ -138,6 +138,7 @@ EOF
 
 XSESSIONRC=${HOME}/.xsessionrc
 touch ${XSESSIONRC}
+chmod +x ${XSESSIONRC}
 # lightdm does not source ~/.profile
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=636108
 for SHADOWER in ~/.profile  \
