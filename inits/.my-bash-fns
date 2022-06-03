@@ -452,7 +452,9 @@ function post-command-maybe-notify {
 }
 
 if command -v notify-send-stumpwm >/dev/null \
-  && notify-send-stumpwm -m "connected to $(hostname)" -c green; then
+  &&  \
+  timeout -s9 5 notify-send-stumpwm -m "connected to $(hostname)" -c green \
+  ; then
   PROMPT_COMMAND=post-command-maybe-notify
   trap '_command-start-time-set-maybe' DEBUG
 else
