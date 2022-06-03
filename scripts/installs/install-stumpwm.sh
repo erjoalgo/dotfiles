@@ -49,19 +49,6 @@ fi
 sudo ${APT_GET} install -y xdotool
 which nc || sudo ${APT_GET} install -y net-tools
 
-XSESSION_ENTRY=/usr/share/xsessions/stumpwm.desktop
-
-if test -d $(dirname "${XSESSION_ENTRY}"); then
-   cat << EOF | sudo tee "${XSESSION_ENTRY}"
-[Desktop Entry]
-Encoding=UTF-8
-Name=stumpwm
-Comment=stumpwm
-Exec=/usr/local/bin/stumpwm
-Type=Application
-EOF
-fi
-
 GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
 if sudo test -e "${GDM_CONFIG_FILENAME}"; then
   sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
@@ -74,10 +61,13 @@ sudo insert-text-block  \
      '# TWl64wQwIBG3lCmaSHhigZLEnxfRU0Cr-add-stumpwm-xsession' \
      /usr/share/xsessions/stumpwm.desktop <<EOF
 [Desktop Entry]
+Comment=stumpwm-lightdm
+DesktopNames=STUMPWM
+Encoding=UTF-8
 Exec=/usr/local/bin/stumpwm
 Icon=$(realpath ../../data/public/stumpwm-icon.png)
+Name=stumpwm-lightdm
 Type=Application
-DesktopNames=STUMPWM
 EOF
 
 if test -e ~/.dmrc; then
