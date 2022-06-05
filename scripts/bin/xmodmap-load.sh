@@ -15,7 +15,7 @@ while getopts "hl" OPT; do
 done
 shift $((OPTIND -1))
 
-export DISPLAY=:0.0
+export DISPLAY=:$(ls /tmp/.X11-unix | tr -d 'X')
 export XAUTHORITY=~/.Xauthority
 
 for CAND in ~/.xmodmap/{$(hostname),default}.xmodmap; do
