@@ -99,8 +99,10 @@ class KeyboardHandler(DeviceHandler):
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
         devname = device.get("DEVNAME")
+        input_class = device.get(".INPUT_CLASS")
         matches =  (devname
                     and "mouse" not in devname
+                    and "mouse" not in input_class
                     and device.device_path.split("/")[-1].startswith("event"))
         if matches:
             is_logitech = device.get("ID_VENDOR") == "Logitech"
