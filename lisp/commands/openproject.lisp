@@ -61,7 +61,9 @@
                          :DECODE-CONTENT t
                          :url-encoder url-encoder))
                        (resp-string (babel:octets-to-string resp-raw)))
-                      (json:decode-json-from-string resp-string)))
+                      (let ((json:*json-identifier-name-to-lisp* 'json:camel-case-to-lisp))
+                        (declare (special json:*json-identifier-name-to-lisp*))
+                        (json:decode-json-from-string resp-string))))
 
 
 
