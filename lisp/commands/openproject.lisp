@@ -69,21 +69,22 @@
 
 (defun find-project (project-name)
   (statusor:if-let-ok nil
-                      ((projects
+                      ((projects-resp
                         (openproject-client:request "/api/v3/projects"))
-                       (filtered-projects
+                       (projects (access:accesses projects-resp :--EMBEDDED :ELEMENTS))
+                       (matching-projects
                         (remove-if-not
                          (lambda (project)
                            (equal (access:access project :name) project-name))
-                         (access:accesses projects :--EMBEDDED :ELEMENTS)))
+                         projects))
                        (project (cond
-                                  ((null filtered-projects)
+                                  ((null matching-projects)
                                    (statusor:make-error
                                     (format nil "no projects named ~A" project-name)))
-                                  ((cdr filtered-projects)
+                                  ((cdr matching-projects)
                                    (statusor:make-error
                                     (format nil "more than one project named ~A" project-name)))
-                                  (t (car filtered-projects)))))
+                                  (t (car matching-projects)))))
                       project))
 
 (defun find-user (email)
@@ -130,6 +131,8 @@
 
   (statusor:if-let-ok nil
                       ((project (find-project project-name))
+                       (project-id (access:accesses project :IDENTIFIER))
+                       (project-link (access:accesses project :--LINKS :SELF))
                        (post-data
                         `(("subject" . ,subject)
                           ("description" .
@@ -140,13 +143,15 @@
                                      ("type" . (("href" . "/api/v3/types/1")))
                                      ("status" . (("href" . "/api/v3/statuses/1")))
                                      ("priority" . (("href" . "/api/v3/priorities/8")))
-                                     ("project". ,(access:accesses project :--LINKS :SELF))))))
-                       (filled-form (request "/api/v3/work_packages/form"
+                                     ("project". ,project-link)))))
+                       (form-url (format nil "/api/v3/projects/work_packages/form"))
+                       (filled-form (request form-url
                                              :json post-data
-                                             :content-type "application/json")))
+                                             :content-type "application/json"))
+                       (raw-payload (access:accesses filled-form :--EMBEDDED :PAYLOAD))
+                       (payload (form-remove-null-links raw-payload)))
                       (request "/api/v3/work_packages"
-                               :json (form-remove-null-links
-                                      (access:accesses filled-form :--EMBEDDED :PAYLOAD))
+                               :json payload
                                :method :post
                                :content-type "application/json")))
 
