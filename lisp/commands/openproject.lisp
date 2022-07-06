@@ -119,7 +119,7 @@
 
 (defun create-work-package (subject &key
                                       (description "")
-                                      (project-name ""))
+                                      (project-id ""))
   ;; TODO make drakma use quri instead of puri, which understands this valid URL
   ;; '(statusor:error-to-signal
   ;;   (openproject-client:request
@@ -130,10 +130,7 @@
   ;;    :url-encoder #'quri:url-encode))
 
   (statusor:if-let-ok nil
-                      ((project (find-project project-name))
-                       (project-id (access:accesses project :IDENTIFIER))
-                       (project-link (access:accesses project :--LINKS :SELF))
-                       (post-data
+                      ((post-data
                         `(("subject" . ,subject)
                           ("description" .
                                          (("format" . "textile")
@@ -142,9 +139,9 @@
                                     (
                                      ("type" . (("href" . "/api/v3/types/1")))
                                      ("status" . (("href" . "/api/v3/statuses/1")))
-                                     ("priority" . (("href" . "/api/v3/priorities/8")))
-                                     ("project". ,project-link)))))
-                       (form-url (format nil "/api/v3/projects/work_packages/form"))
+                                     ("priority" . (("href" . "/api/v3/priorities/8")))))))
+                       (form-url (format nil "/api/v3/projects/~A/work_packages/form"
+                                         project-id))
                        (filled-form (request form-url
                                              :json post-data
                                              :content-type "application/json"))
@@ -166,6 +163,6 @@
                         ((resp (openproject-client:create-work-package
                                 subject
                                 :description ""
-                                :project-name "Personal")))
+                                :project-id "personal")))
                         (message-wrapped "created successfully: ~A"
                                          (access:accesses resp :--LINKS :SELF :HREF)))))
