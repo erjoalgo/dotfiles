@@ -11,7 +11,7 @@ FORWARD_SPEC=""
 
 SSH_HOST_SPEC="${1}" && shift
 
-while getopts "r:l:h" OPT; do
+while getopts "r:h" OPT; do
     case ${OPT} in
         r)
             REMOTE_SERVICE_PORT=$(cut -d: -f1  <<< "${OPTARG}")
