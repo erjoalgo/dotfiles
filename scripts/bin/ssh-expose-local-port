@@ -6,13 +6,13 @@ function usage  {
     echo "expose-port <SSH_HOST> -l <LOCAL_SERVICE_PORT> [-r <REMOTE_LISTEN_PORT>]"
 }
 
-while getopts "r:l:h" OPT; do
+while getopts "l:h" OPT; do
     case ${OPT} in
         l)
-            LOCAL_SERVICE_PORT=${OPTARG}
-            ;;
-        r)
-            REMOTE_LISTEN_PORT=${OPTARG}
+            LOCAL_FORWARD_PORT=$(cut -d: -f1  <<< "${OPTARG}")
+            REMOTE_SERVICE_PORT=$(cut -d: -f2  <<< "${OPTARG}")
+            REMOTE_SERVICE_PORT=${REMOTE_SERVICE_PORT:-{LOCAL_FORWARD_PORT}}
+            FORWARD_SPEC+="-R ${LOCAL_FORWARD_PORT}:localhost:${REMOTE_SERVICE_PORT} "
             ;;
         h)
             less $0
@@ -31,8 +31,7 @@ fi
 
 REMOTE_LISTEN_PORT="${REMOTE_LISTEN_PORT:-${LOCAL_SERVICE_PORT}}"
 
-ssh ${SSH_HOST_SPEC}  \
-    -R ${REMOTE_LISTEN_PORT}:localhost:${LOCAL_SERVICE_PORT} -N
+ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
 
 # Local Variables:
 # mode: sh
