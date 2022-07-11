@@ -3,7 +3,10 @@
 set -euo pipefail
 
 PID=${1} && shift
-sudo lsof -Pan -p ${PID} -i
+
+for CHILD_PID in $(process-children ${PID}); do
+  sudo lsof -Pan -p ${CHILD_PID} -i
+done
 
 # Local Variables:
 # mode: sh-mode
