@@ -93,7 +93,7 @@
   (let* ((did (order-new-did *auth*))
          (did-number (alist-get :DID did)))
     (update-caller-id *auth* did-number)
-    (cancel-old-dids *auth* (list did-number))))
+    '(cancel-old-dids *auth* (list did-number))))
 
 (defun current-did (&key (account (car *default-accounts-to-update*)))
   (let ((account (car
