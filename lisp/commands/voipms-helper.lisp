@@ -45,21 +45,17 @@
   (let* ((dids (voipms::get-dids-usa auth
                                      :state state))
          (did (car (voipms::alist-get :DIDS dids)))
-         (did-number (voipms::alist-get :DID did)))
-    (format t "ordering new did: ~A...~%" did-number)
-    (voipms::order-did
-     auth
-     :did did-number
-     :routing (if routing-group
-                  (format nil "grp:~A" routing-group)
-                  (if sip-account
-                      (format nil "account:~A" sip-account)
-                      (error "routing not provided")))
-     :pop pop
-     :dialtime (format nil "~D" dialtime-secs)
-     :cnam "0"
-     :billing_type (if billing-per-minute-p "1" "2")
-     :test (if test "1" "0"))
+         (did-number (voipms::alist-get :DID did))
+         (order-args (list
+                      :did did-number
+                      :routing (format nil "account:~A" sip-account)
+                      :pop pop
+                      :dialtime (format nil "~D" dialtime-secs)
+                      :cnam "0"
+                      :billing_type (if billing-per-minute-p "1" "2")
+                      :test (if test "1" "0"))))
+    (format t "ordering new did: ~A: ~A...~%" did-number order-args)
+    (apply #'voipms::order-did auth order-args)
     (format t "ordered new did: ~A!~%" did-number)
     (format t "updating sms settings for did: ~A!...~%" did-number)
     (voipms::set-sms
