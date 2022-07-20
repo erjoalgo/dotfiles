@@ -26,10 +26,11 @@ sudo chown root:docker ${SOCKET}
 
 sudo mkdir -p /var/lib/openproject/{pgdata,assets}
 
-docker run -d -p 8080:80 --name openproject \
-  # The public facing host name \
-  -e SERVER_HOSTNAME=${SERVER_HOSTNAME} \
+           # The public facing host name \
+
   # The secret key base used for cookies \
+docker run -d -p 8082:80 --name openproject \
+  -e SERVER_HOSTNAME=${SERVER_HOSTNAME} \
   -e SECRET_KEY_BASE=secret \
   -v /var/lib/openproject/pgdata:/var/openproject/pgdata \
   -v /var/lib/openproject/assets:/var/openproject/assets \
