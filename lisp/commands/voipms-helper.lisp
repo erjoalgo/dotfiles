@@ -41,9 +41,11 @@
                              (fwd *default-forward-number*)
                              (dialtime-secs 60)
                              (test nil)
-                             (billing-per-minute-p t))
+                             (billing-per-minute-p t)
+                             ratecenter)
   (let* ((dids (voipms::get-dids-usa auth
-                                     :state state))
+                                     :state state
+                                     :ratecenter ratecenter))
          (did (car (voipms::alist-get :DIDS dids)))
          (did-number (voipms::alist-get :DID did))
          (order-args (list
