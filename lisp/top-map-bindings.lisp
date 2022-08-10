@@ -242,6 +242,7 @@
    ("k" "speak-string")
    ("l" "spell-clipboard")
    ("H-l" "screen-lock")
+   ("l" "screen-lock")
    ;; ("H-e" "echo-current-tab" )
    ("H-e" "emacs-killusr2")
    ("H-E" "emacs-killusr2-tmux")
