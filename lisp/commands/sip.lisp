@@ -80,9 +80,23 @@
                               intl-prefix-opt number-clean sip-host)))
     sip-address))
 
+(defun use-google-voice-p ()
+  t
+  ;; (getenv "HOSTNAME")
+  )
+
+(defun google-voice-call (phone-number)
+  (let ((url
+          (format nil
+                  "https://voice.google.com/u/0/calls?a=nc,%2B%201~A"
+                  phone-number)))
+    (stumpwm::x-www-browser url t)))
+
 (defun call (number)
   (assert number)
-  (linphonecsh "dial" (phone-number-to-address number)))
+  (if (use-google-voice-p)
+      (google-voice-call number)
+      (linphonecsh "dial" (phone-number-to-address number))))
 
 (defun sms-send (sip-address message)
   ;; TODO add "chat" command to linphonecsh
