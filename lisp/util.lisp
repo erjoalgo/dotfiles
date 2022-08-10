@@ -314,8 +314,11 @@
 (defun visible-window-pids ()
   (mapcar #'window-pid (top-windows)))
 
-(defun x-www-browser (url)
-  (SB-EXT:RUN-PROGRAM *browser-name* (list url)
-                      :search t :wait nil :output t :error t))
+(defun x-www-browser (url &optional raise-browser-window-p)
+  (prog1
+      (SB-EXT:RUN-PROGRAM *browser-name* (list url)
+                          :search t :wait nil :output t :error t)
+    (when raise-browser-window-p
+      (stumpwm::raise-window-browser))))
 
 (export '(x-www-browser) :STUMPWM)
