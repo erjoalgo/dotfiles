@@ -81,9 +81,11 @@
     sip-address))
 
 (defun use-google-voice-p ()
-  t
-  ;; (getenv "HOSTNAME")
-  )
+  (let ((md5-hexdigest
+          (crypto:byte-array-to-hex-string
+           (md5:md5sum-string (stumpwm::getenv "HOSTNAME")))))
+    (member md5-hexdigest '("66bb5f30e145169a5c53e193ac4bba8c")
+            :test #'equal)))
 
 (defun google-voice-call (phone-number)
   (let ((url
