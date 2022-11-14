@@ -92,6 +92,22 @@ export PATH=$PATH:${SCRIPTS_BIN}
 which insert-text-block
 sudo ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin
 
+sudo insert-text-block \
+  '# ac25d55a-723b-4da2-bfa6-674c51e7eefb-max-out-virtual-terminal-size' \
+  /etc/default/console-setup<<EOF
+FONTFACE="TerminusBold"
+FONTSIZE="16x32"
+EOF
+
+sudo sed -i 's/^XKBOPTIONS=/# \0/g' /etc/default/keyboard
+
+sudo insert-text-block  \
+  '# 81475907-8f33-420a-b002-118c8d4a62ae-configure-console-keyboard'  \
+  /etc/default/keyboard <<EOF
+XKBOPTIONS="terminate:ctrl_alt_bksp,ctrl:nocaps"
+EOF
+
+sudo service console-setup restart
 
 if test "${BOOT:-}" = wifi; then
     ./installs/wifi-boot.sh
@@ -287,22 +303,5 @@ fi
 
 cd ~/git/githost
 python3 setup.py install --user
-
-sudo insert-text-block \
-  '# ac25d55a-723b-4da2-bfa6-674c51e7eefb-max-out-virtual-terminal-size' \
-  /etc/default/console-setup<<EOF
-FONTFACE="TerminusBold"
-FONTSIZE="16x32"
-EOF
-
-sudo sed -i 's/^XKBOPTIONS=/# \0/g' /etc/default/keyboard
-
-sudo insert-text-block  \
-  '# 81475907-8f33-420a-b002-118c8d4a62ae-configure-console-keyboard'  \
-  /etc/default/keyboard <<EOF
-XKBOPTIONS="terminate:ctrl_alt_bksp,ctrl:nocaps"
-EOF
-
-sudo service console-setup restart
 
 echo "success"
