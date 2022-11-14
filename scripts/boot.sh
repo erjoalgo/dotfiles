@@ -42,7 +42,7 @@ if which apt-get; then
         ${SUDOCMD} ${UPDATE_SOURCES_SCRIPT}
         ${SUDOCMD} "apt-get update"
     fi
-    sudo apt-get install -y sudo git curl apt-file unattended-upgrades ntp
+    sudo apt-get install -y sudo git curl
 fi
 
 # set up passwordless sudo
@@ -195,7 +195,8 @@ fi
 
 # some essential tools
 if test -n "${APT_GET}"; then
-    sudo ${APT_GET} install -y htop fail2ban unison tmux wget colordiff netcat
+    sudo ${APT_GET} install -y htop fail2ban unison tmux wget colordiff netcat \
+       apt-file unattended-upgrades ntp nmap
     sudo ${APT_GET} install -y bootlogd || true
     # auditd may fail with "audit support not in kernel"
     if ! sudo ${APT_GET} install -y auditd; then
