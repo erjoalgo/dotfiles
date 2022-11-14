@@ -57,6 +57,7 @@ fi
 
 sudo echo "successful passwordless sudo"
 
+# backwards compatibility
 ERJOALGO_STUMPWMRC=${GIT_HOME}/erjoalgo-stumpwmrc
 DOTFILES=${GIT_HOME}/dotfiles
 if test -e "${ERJOALGO_STUMPWMRC}" -a ! -e "${DOTFILES}"; then
