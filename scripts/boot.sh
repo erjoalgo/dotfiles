@@ -16,13 +16,24 @@ done
 
 
 APT_GET=$(which apt-get yum 2>/dev/null) || true
-SUDOCMD="su -c"
 if which sudo && SUDO_ASKPASS=$(which false) sudo true; then
-    SUDOCMD="sudo bash -c"
+  SUDOCMD="sudo bash -c"
+else
+  SUDOCMD="su -c"
 fi
 
-if test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y git sudo curl"
+if ! which sudo && test -n "${APT_GET}"; then
+   ${SUDOCMD} "${APT_GET} install -y sudo"
+fi
+
+
+if which apt-get; then
+    if ! ${SUDOCMD} apt-get update ||  \
+        ${SUDOCMD} grep ^deb\ cdrom /etc/apt/sources.list; then
+        ${SUDOCMD} ./installs/update-sources-list.sh
+        ${SUDOCMD} apt-get update
+    fi
+    sudo apt-get install -y sudo git curl apt-file unattended-upgrades ntp
 fi
 
 # set up passwordless sudo
@@ -36,15 +47,6 @@ elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
 fi
 
 sudo echo "successful passwordless sudo"
-
-if which apt-get; then
-    if ! sudo apt-get update ||  \
-        sudo grep ^deb\ cdrom /etc/apt/sources.list; then
-        sudo ./installs/update-sources-list.sh
-        sudo apt-get update
-    fi
-    sudo apt-get install -y apt-file unattended-upgrades ntp
-fi
 
 # fetch my git repos
 GIT_EMAIL=erjoalgo@gmail.com
