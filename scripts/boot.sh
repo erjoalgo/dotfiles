@@ -38,12 +38,12 @@ fi
 sudo echo "successful passwordless sudo"
 
 if which apt-get; then
-    sudo apt-get install -y apt-file unattended-upgrades ntp
-    sudo apt-file update
-    if sudo grep ^deb\ cdrom /etc/apt/sources.list; then
+    if ! sudo apt-get update ||  \
+        sudo grep ^deb\ cdrom /etc/apt/sources.list; then
         sudo ./installs/update-sources-list.sh
         sudo apt-get update
     fi
+    sudo apt-get install -y apt-file unattended-upgrades ntp
 fi
 
 # fetch my git repos
