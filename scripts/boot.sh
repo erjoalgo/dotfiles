@@ -57,12 +57,6 @@ fi
 
 sudo echo "successful passwordless sudo"
 
-# fetch my git repos
-GIT_EMAIL=erjoalgo@gmail.com
-GIT_NAME="Ernesto Alfonso"
-GIT_HOME=${HOME}/git
-mkdir -p ${GIT_HOME}
-
 ERJOALGO_STUMPWMRC=${GIT_HOME}/erjoalgo-stumpwmrc
 DOTFILES=${GIT_HOME}/dotfiles
 if test -e "${ERJOALGO_STUMPWMRC}" -a ! -e "${DOTFILES}"; then
@@ -70,20 +64,27 @@ if test -e "${ERJOALGO_STUMPWMRC}" -a ! -e "${DOTFILES}"; then
   ln -s "${DOTFILES}" "${ERJOALGO_STUMPWMRC}"
 fi
 
-for REPO in  \
-    dotfiles \
-	dotemacs \
-        githost \
-        autobuild \
-        tmux-session-spectrum \
-    ; do
+function fetch-repos  {
+  # fetch my git repos
+  GIT_EMAIL=erjoalgo@gmail.com
+  GIT_NAME="Ernesto Alfonso"
+  GIT_HOME=${HOME}/git
+  mkdir -p ${GIT_HOME}
+  pushd .
+  for REPO in ${*}; do
     cd ${GIT_HOME}
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
     cd ${REPO}
     git config user.name "${GIT_NAME}"
     git config user.email ${GIT_EMAIL}
     git pull --ff-only
-done
+  done
+  popd
+}
+
+fetch-repos dotfiles
+
+cd ~/git/dotfiles/scripts/
 
 SCRIPTS_BIN="${HOME}/git/dotfiles/scripts/bin"
 test -d "${SCRIPTS_BIN}"
@@ -108,8 +109,6 @@ XKBOPTIONS="terminate:ctrl_alt_bksp,ctrl:nocaps"
 EOF
 
 sudo service console-setup restart
-
-cd ~/git/dotfiles/scripts/
 
 if test "${BOOT:-}" = wifi; then
     ./installs/wifi-boot.sh
@@ -192,6 +191,8 @@ if test "${BOOT:-}" = basic; then
     echo "completed basic install"
     exit 0
 fi
+
+fetch-repos dotemacs githost autobuild tmux-session-spectrum
 
 # some essential tools
 if test -n "${APT_GET}"; then
