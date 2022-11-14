@@ -37,10 +37,11 @@ LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
 
 env > /tmp/env
 
-SOCK=$(echo /tmp/ssh-*/*)
-if test -z "${SSH_AUTH_SOCK:-}" -a -e ${SOCK}; then
-  export SSH_AUTH_SOCK=${SOCK}
-fi
+# SOCK=$(echo /tmp/ssh-*/*)
+# if test -z "${SSH_AUTH_SOCK:-}" -a -e ${SOCK}; then
+#   export SSH_AUTH_SOCK=${SOCK}
+# fi
+# exit
 
 ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
 
