@@ -57,6 +57,8 @@ fi
 
 sudo echo "successful passwordless sudo"
 
+GIT_HOME=${HOME}/git
+
 # backwards compatibility
 ERJOALGO_STUMPWMRC=${GIT_HOME}/erjoalgo-stumpwmrc
 DOTFILES=${GIT_HOME}/dotfiles
@@ -69,7 +71,6 @@ function fetch-repos  {
   # fetch my git repos
   GIT_EMAIL=erjoalgo@gmail.com
   GIT_NAME="Ernesto Alfonso"
-  GIT_HOME=${HOME}/git
   mkdir -p ${GIT_HOME}
   pushd .
   for REPO in ${*}; do
