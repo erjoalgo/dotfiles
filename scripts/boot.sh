@@ -117,9 +117,7 @@ if test "${BOOT:-}" = wifi; then
     exit 0
 fi
 
-if test 0 -eq "${EUID}"; then
-    read -p "confirm continuing script as root: "
-fi
+test 0 -ne "${EUID}"
 
 sudo ${APT_GET} install -y python3-pip vim
 pip3 install getchwrap -U --user
