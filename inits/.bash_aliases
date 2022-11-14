@@ -331,7 +331,7 @@ alias sv=service
 alias sv-tail='sudo journalctl -fu'
 
 # https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
-alias strace-attach-stdout='strace -ff -e trace=write -e write=1,2 -s99999 -p'
+alias strace-attach-stdout='sudo strace -ff -e trace=write -e write=1,2 -s99999 -p'
 
 alias luks-add-key="sudo cryptsetup luksAddKey"
 alias lsdisk="sudo lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT"
