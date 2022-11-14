@@ -117,7 +117,9 @@ if test "${BOOT:-}" = wifi; then
     exit 0
 fi
 
-test 0 -ne "${EUID}"
+if test 0 -eq "${EUID}"; then
+  echo "do not run this script as root"
+fi
 
 sudo ${APT_GET} install -y python3-pip vim
 pip3 install getchwrap -U --user
