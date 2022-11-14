@@ -6,7 +6,7 @@ if ! test -e ${SOURCES}.bak; then
     cp /etc/apt/sources.list{,.bak}
 fi
 
-if ! test -e "${TEST}"; then
+if ! test -z "${TEST:-}"; then
     SOURCES=${SOURCES}.bak
 fi
 
