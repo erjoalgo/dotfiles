@@ -92,19 +92,10 @@ export PATH=$PATH:${SCRIPTS_BIN}
 which insert-text-block
 sudo ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin
 
-if test -n "${LOWBANDWITH:-}"; then
-    # this is on a laptop
-    sudo ${APT_GET} install -y wireless-tools links
-    if lspci -nn | grep -i "Intel.*Wireless"; then
-        sudo ${APT_GET} install firmware-iwlwifi
-    else
-        echo "unknown wireless card"
-        exit 1
-    fi
-    wifi-connect
-    links google.com
-    curl google.com
-    echo "completed low-bandwith install"
+
+if test "${BOOT:-}" = wifi; then
+    ./installs/wifi-boot.sh
+    echo "completed wifi install"
     exit 0
 fi
 
