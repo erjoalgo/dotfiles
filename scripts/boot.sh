@@ -187,10 +187,14 @@ fi
 
 mkdir -p ${HOME}/src
 
+if test "${BOOT:-}" = basic; then
+    echo "completed basic install"
+    exit 0
+fi
+
 # some essential tools
 if test -n "${APT_GET}"; then
     sudo ${APT_GET} install -y htop fail2ban unison tmux wget colordiff netcat
-
     sudo ${APT_GET} install -y bootlogd || true
     # auditd may fail with "audit support not in kernel"
     if ! sudo ${APT_GET} install -y auditd; then
