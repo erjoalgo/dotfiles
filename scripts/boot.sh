@@ -109,6 +109,8 @@ EOF
 
 sudo service console-setup restart
 
+cd ~/git/dotfiles/scripts/
+
 if test "${BOOT:-}" = wifi; then
     ./installs/wifi-boot.sh
     echo "completed wifi install"
@@ -121,7 +123,6 @@ sudo ${APT_GET} install -y python3-pip vim
 pip3 install getchwrap -U --user
 
 # link inits
-cd ~/git/dotfiles/scripts/
 for SCRIPT in  \
     ./installs/link-inits.sh \
         ./installs/gen-git-config.sh \
