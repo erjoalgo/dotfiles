@@ -344,6 +344,7 @@ alias ndwc='nmcli d w c'
 
 alias g4r='g4 revert'
 alias g4df='g4 revert'
+
 # Local Variables:
 # mode: sh
 # End:
