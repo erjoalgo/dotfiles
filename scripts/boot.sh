@@ -78,7 +78,7 @@ function fetch-repos  {
     test -d ${REPO} || git clone "https://github.com/erjoalgo/${REPO}"
     cd ${REPO}
     git config user.name "${GIT_NAME}"
-    git config user.email ${GIT_EMAIL}
+    git config user.email "${GIT_EMAIL}"
     git pull --ff-only
   done
   popd
