@@ -22,7 +22,7 @@ HandlePowerKey=ignore
 # LidSwitchIgnoreInhibited=yes
 EOF
 )
-    pkill xautolock
+    # pkill xautolock
 elif test ${SPEC} = 'respect'; then
     CONTENTS=$(cat<<EOF
 # HandleLidSwitch=ignore
@@ -33,7 +33,7 @@ HandleLidSwitchDocked=suspend
 LidSwitchIgnoreInhibited=yes
 EOF
 )
-    xautolock
+    # xautolock
 else
     echo "usage: ignore-lid-close.sh [respect|ignore]"
     exit ${LINENO}
