@@ -28,8 +28,8 @@ fi
 
 
 if which apt-get; then
-    if ! ${SUDOCMD} apt-get update ||  \
-        ${SUDOCMD} grep ^deb\ cdrom /etc/apt/sources.list; then
+    if ! ${SUDOCMD} "apt-get update" ||  \
+        ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
         UPDATE_SOURCES_SCRIPT=installs/update-sources-list.sh
         if ! test -e ${UPDATE_SOURCES_SCRIPT}; then
@@ -40,7 +40,7 @@ if which apt-get; then
             chmod +x ${UPDATE_SOURCES_SCRIPT}
         fi
         ${SUDOCMD} ${UPDATE_SOURCES_SCRIPT}
-        ${SUDOCMD} apt-get update
+        ${SUDOCMD} "apt-get update"
     fi
     sudo apt-get install -y sudo git curl apt-file unattended-upgrades ntp
 fi
