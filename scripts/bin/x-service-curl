@@ -52,8 +52,9 @@ def x_service_curl(specs, path, rest, stdin_bytes):
         p.communicate(input=stdin_bytes)
   return 0 if cnt else 1
 
-def maybe_read_stdin():
-    if select.select([sys.stdin, ], [], [], 0.0)[0]:
+def maybe_read_stdin(force=False):
+    # TODO this function doesn't always select stdin
+    if force or select.select([sys.stdin, ], [], [], 0.0)[0]:
         return sys.stdin.buffer.read()
 
 def main():
@@ -63,7 +64,7 @@ def main():
   path = sys.argv[1]
   sockets = glob.glob("/tmp/.x-service-*.sock") + [1959]
   rest = sys.argv[2:]
-  stdin_bytes = maybe_read_stdin()
+  stdin_bytes = maybe_read_stdin("-d@-" in sys.argv)
   return x_service_curl(sockets, path, rest, stdin_bytes)
 
 if __name__ == "__main__":
