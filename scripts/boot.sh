@@ -28,7 +28,7 @@ fi
 
 
 if which apt-get; then
-    if ! ${SUDOCMD} "apt-get update" ||  \
+    if true || ! ${SUDOCMD} "apt-get update" ||  \
         ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
         UPDATE_SOURCES_SCRIPT=installs/update-sources-list.sh
