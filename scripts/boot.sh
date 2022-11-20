@@ -42,7 +42,9 @@ if which apt-get; then
         ${SUDOCMD} ${UPDATE_SOURCES_SCRIPT}
         ${SUDOCMD} "apt-get update"
     fi
-    sudo apt-get install -y sudo git curl
+    if ! which sudo; then
+        ${SUDOCMD} "apt-get install -y sudo"
+    fi
 fi
 
 # set up passwordless sudo
@@ -56,6 +58,10 @@ elif ! ${SUDOCMD} "grep -F \"${LINE}\" /etc/sudoers"; then
 fi
 
 sudo echo "successful passwordless sudo"
+
+sudo apt-get update
+
+sudo apt-get install -y git curl
 
 GIT_HOME=${HOME}/git
 
