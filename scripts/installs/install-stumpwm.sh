@@ -20,6 +20,11 @@ if ! sbcl --eval '(ql:system-apropos :vecto)' --quit; then
     ./sbcl.sh
 fi
 
+sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
+        (mapcar 'ql:quickload
+	'( "cl-ppcre" "swank" "clx"))
+EOF
+
 pushd .
 mkdir -p "${HOME}/src" && cd "${HOME}/src"
 
