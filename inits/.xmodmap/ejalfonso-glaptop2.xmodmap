@@ -21,6 +21,9 @@ keycode 66 = Control_L
 keycode 105 = Hyper_L
 keycode 107 = F1
 keycode 108 = Super_L
+! for external keyboard
+keycode 135 = Hyper_L
+
 
 clear lock
 clear control
