@@ -123,6 +123,9 @@
 (safe-sexp
   (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd"))
 
+
+(asdf:clear-source-registry)
+
 (safe-sexp
   (ql:quickload :erjoalgo-stumpwmrc))
 
