@@ -2,5 +2,5 @@
 
 set -euo pipefail
 
-grep -Po '(?<=^domain=|^reg_proxy=<sip:)[a-z0-9.]+' < ${HOME}/.linphonerc* |  \
+grep -hPo '(?<=^domain=|^reg_proxy=<sip:)[a-z0-9.]+' ${HOME}/.linphonerc* | \
     head -1
