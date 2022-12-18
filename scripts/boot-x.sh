@@ -76,7 +76,8 @@ for URL in \
   fi
 done
 
-for DIR in ../lisp{/statusor,/cladaver,}; do
+for DIR in ../lisp{/statusor,/cladaver} ~/git/cl-voipms; do
+  test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
   asdf-add-project-to-link-farm $(dirname "${ASD}")
