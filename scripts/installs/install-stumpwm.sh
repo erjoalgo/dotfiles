@@ -26,6 +26,7 @@ sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
 EOF
 
 pushd .
+
 mkdir -p "${HOME}/src" && cd "${HOME}/src"
 
 if ! test -d stumpwm; then
