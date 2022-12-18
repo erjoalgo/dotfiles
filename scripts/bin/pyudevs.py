@@ -98,8 +98,8 @@ class KeyboardHandler(DeviceHandler):
     def matches(device):
         vendor_product = "{}:{}".format(device.get("ID_VENDOR_ID"),
                                         device.get("ID_MODEL_ID"))
-        devname = device.get("DEVNAME")
-        input_class = device.get(".INPUT_CLASS")
+        devname = device.get("DEVNAME") or ""
+        input_class = device.get(".INPUT_CLASS") or ""
         matches =  (devname
                     and "mouse" not in devname
                     and "mouse" not in input_class
