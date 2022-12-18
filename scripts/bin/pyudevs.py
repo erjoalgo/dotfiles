@@ -133,6 +133,10 @@ class MonitorHandler(DeviceHandler):
         ret = x_service_curl("/run", "correct-screen-newly-connected-displays")
         if ret:
           raise Exception("correct-screen failed: {}".format(ret))
+        p = subprocess.Popen(["keynav-restart"])
+        stdout, stderr = p.communicate()
+        if p.returncode:
+            logging.warn("keynav-restart failed: %s %s", stdout, stderr)
 
 
 DeviceHandler.handlers.append(MonitorHandler())
