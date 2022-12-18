@@ -12,7 +12,7 @@
   `(handler-case
        (progn ,@body)
      (error (err)
-       (push (list ',body err) (cdr (last *init-errors*)))
+       (push (list ',body err) *init-errors*)
        (let ((message-fn (if (fboundp 'message-wrapped)
                              'message-wrapped
                              'message))
