@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
-while getopts "n:h" OPT; do
+PROFILE_DIR="${HOME}/.config/chromium/Default"
+while getopts "n:p:h" OPT; do
     case ${OPT} in
         n)
             WEBSITE_HOSTNAME=${OPTARG}
+            ;;
+        p)
+            PROFILE_DIR=${OPTARG}
             ;;
         h)
             less $0
@@ -15,19 +19,23 @@ while getopts "n:h" OPT; do
 done
 shift $((OPTIND -1))
 
-if test -z "${WEBSITE_HOSTNAME+x}"; then
-    echo "usage: chrome-view-pass -n <WEBSITE_HOSTNAME>"
-    exit ${LINENO}
+SQLITE_LOGIN_DATA="${PROFILE_DIR}/Login Data"
+
+if test -n "${WEBSITE_HOSTNAME:-}"; then
+    WHERE_CALUSE_OPT="WHERE origin_url LIKE '%${WEBSITE_HOSTNAME}%'"
+else
+    WHERE_CALUSE_OPT=""
 fi
 
-SQLITE_LOGIN_DATA="${HOME}/.config/chromium/Default/Login Data"
+
 TMPFILE=$(mktemp)
 cp "${SQLITE_LOGIN_DATA}" "${TMPFILE}"
 
 CMD=$(cat <<EOF
-select username_value, origin_url, password_value
-from logins
-where origin_url like '%${WEBSITE_HOSTNAME}%';
+SELECT username_value, origin_url, password_value
+FROM logins
+${WHERE_CALUSE_OPT}
+;
 EOF
    )
 sqlite3 "${TMPFILE}" "${CMD}"
