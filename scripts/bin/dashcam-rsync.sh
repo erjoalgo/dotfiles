@@ -27,6 +27,7 @@ if ! test -d ${DCIM}; then
     echo "DCIM directory does not exist: ${DCIM}"
 fi
 
-rsync --remove-source-files -arv "${DCIM}" "${DEST}/"
+sudo rsync --remove-source-files -arv "${DCIM}" "${DEST}/"
 
+sudo find "${DCIM}" -depth -mindepth 1 -type d -exec rmdir {} \;
 # TODO persist on cloud storage
