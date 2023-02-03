@@ -9,7 +9,6 @@
       ("s" "soverflow" "http://stackoverflow.com/search?q=~A")
       ("b" "bingimg" "http://www.bing.com/images/search?q=~A")
       ("b" "bingimg" "https://www.google.com/search?tbm=isch&q=~A")
-      ("B" "buganizer" "https://b.corp.google.com/issues?q=~A")
       ("e" "ebay" "http://www.ebay.com/sch/i.html?&_nkw=~A")
       ("l" "localhost" "http://localhost:~A")
       ("G" "github" "https://github.com/search?utf8=%E2%9C%93&q=~A")
