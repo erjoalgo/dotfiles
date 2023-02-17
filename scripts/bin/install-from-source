@@ -7,7 +7,7 @@ function usage {
 }
 
 GPG_KEY_ID=""
-while getopts "hu:d:g:D:c:" OPT; do
+while getopts "hu:d:g:D:c:n" OPT; do
     case ${OPT} in
         u)
             URL=${OPTARG}
@@ -23,6 +23,9 @@ while getopts "hu:d:g:D:c:" OPT; do
             ;;
         c)
             CONFIGURE_FLAGS=${OPTARG}
+            ;;
+        n)
+            NO_INSTALL=true
             ;;
         h)
             usage
@@ -62,12 +65,18 @@ if ! test -d "${TOP}"; then
         fi
         gpg --verify ${FNAME}{.sig,}
     fi
-    sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
+    if ! tar -C ${INSTALL_DIR} -xvf ${FNAME}; then
+        sudo tar -C ${INSTALL_DIR} -xvf ${FNAME}
+    fi
 fi
 
 TOP=$(top_dir)
 
 cd "${TOP}"
+
+if test -n ${NO_INSTALL:-}; then
+    exit 0
+fi
 
 if ! test -e ./configure; then
     autoreconf -i
