@@ -24,7 +24,8 @@
    #:lparallel
    #:erjoalgo-webutil
    #:voipms
-   #:md5-hexdigest
+   #:md5
+   #:ironclad
    )
   :components
   (
