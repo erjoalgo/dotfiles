@@ -51,7 +51,7 @@ test -f "${FNAME}" || wget "${URL}"
 DNAME=${DNAME:-$(basename "${FNAME}" ${EXT})}
 
 function top_dir () {
-    echo ${INSTALL_DIR}/*${DNAME}*
+    echo ${INSTALL_DIR}/*${DNAME}* | cut -f1 -d' '
 }
 
 TOP=$(top_dir)
