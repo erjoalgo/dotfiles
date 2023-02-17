@@ -48,6 +48,8 @@
 
 (defstruct search-engine id key url-template)
 
+(defvar *search-engine-search-split-by-newline* t)
+
 (STUMPWM:defcommand search-engine-search (&optional engine-id no-clipboard)
     ((:string "this prompt should never be used"))
   ;; We need to do interactive args ourselves to support displaying
@@ -74,6 +76,14 @@
       (search-engine-search-noninteractive query engine))))
 
 (defun search-engine-search-noninteractive (query &optional engine)
+  (if *search-engine-search-split-by-newline*
+      (lparallel:future
+       (loop for query in (or (ppcre:split #\Newline query) '(""))
+          do (search-engine-search-noninteractive-single query engine)
+          do (sleep .5)))
+      (search-engine-search-noninteractive-single query engine)))
+
+(defun search-engine-search-noninteractive-single (query &optional engine)
   (assert query)
   (assert engine)
   (let* ((query-sanitized (ppcre:regex-replace-all "\\n" (STUMPWM:trim-spaces query) " "))
