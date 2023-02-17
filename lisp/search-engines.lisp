@@ -7,7 +7,7 @@
       ("w" "wiki" "https://en.wikipedia.org/w/index.php?search=~A")
       ("y" "youtube" "https://www.youtube.com/results?search_query=~A")
       ("s" "soverflow" "http://stackoverflow.com/search?q=~A")
-      ("b" "bingimg" "http://www.bing.com/images/search?q=~A")
+      ;; ("b" "bingimg" "http://www.bing.com/images/search?q=~A")
       ("b" "bingimg" "https://www.google.com/search?tbm=isch&q=~A")
       ("e" "ebay" "http://www.ebay.com/sch/i.html?&_nkw=~A")
       ("l" "localhost" "http://localhost:~A")
