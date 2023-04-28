@@ -12,7 +12,7 @@ EOF
     sudo apt-get update
 }
 
-if grep -i centrino <<< "$LSPCI"; then
+if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
     add_non-free_apt_source
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
