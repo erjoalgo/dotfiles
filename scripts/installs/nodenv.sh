@@ -12,7 +12,7 @@ cd ~/.nodenv && src/configure && make -C src
 PROFILE_ENV=${HOME}/.profile-env
 insert-text-block '# 135deb13-3651-424f-9214-a0989b1c9ee3-add-nodenv-to-path'  \
   "${PROFILE_ENV}"<<EOF
-export PATH="\${PATH}:${HOME}/.nodenv/bin"
+export PATH="\${PATH}:${HOME}/.nodenv/bin:${HOME}/.nodenv/shims"
 EOF
 
 insert-text-block '# 7688cf02-3806-4328-9695-2231e6b32d7d--init-nodenv'  \
