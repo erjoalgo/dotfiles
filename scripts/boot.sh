@@ -34,9 +34,11 @@ if which apt-get; then
         UPDATE_SOURCES_SCRIPT=installs/update-sources-list.sh
         if ! test -e ${UPDATE_SOURCES_SCRIPT}; then
             mkdir -p $(dirname "$UPDATE_SOURCES_SCRIPT}")
-            curl --create-dirs -OL --output-dir \
-                $(dirname "${UPDATE_SOURCES_SCRIPT}") \
+	    pushd .
+	    cd $(dirname "${UPDATE_SOURCES_SCRIPT}")
+           curl --create-dirs -OL \
                 ${DOTFILES_GITHUB_URL}/scripts/${UPDATE_SOURCES_SCRIPT}
+	    popd
             chmod +x ${UPDATE_SOURCES_SCRIPT}
         fi
         ${SUDOCMD} ${UPDATE_SOURCES_SCRIPT}
