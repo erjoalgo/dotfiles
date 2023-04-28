@@ -76,7 +76,7 @@ for URL in \
   fi
 done
 
-for DIR in ../lisp{/statusor,/cladaver} ~/git/cl-voipms; do
+for DIR in ../lisp/{.,cladaver} ~/git/{statusor,cl-voipms}; do
   test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
