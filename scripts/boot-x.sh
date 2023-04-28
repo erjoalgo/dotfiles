@@ -66,7 +66,7 @@ EOF
 
 for URL in \
   https://github.com/usocket/usocket \
-  https://github.com/erjoalgo/erjoalgo-webutil \
+  https://github.com/erjoalgo/{erjoalgo-webutil,cl-voipms,statusor} \
   ; do
   NAME=$(basename "${URL}")
   DIR=${HOME}/git/${NAME}
