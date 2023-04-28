@@ -209,7 +209,7 @@ fetch-repos dotemacs githost autobuild tmux-session-spectrum
 # some essential tools
 if test -n "${APT_GET}"; then
     sudo ${APT_GET} install -y htop fail2ban unison tmux wget colordiff netcat \
-       apt-file unattended-upgrades ntp nmap
+       apt-file unattended-upgrades ntp nmap bash-completion
     sudo ${APT_GET} install -y bootlogd || true
     # auditd may fail with "audit support not in kernel"
     if ! sudo ${APT_GET} install -y auditd; then
