@@ -22,7 +22,8 @@ elif grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
     sudo apt-get install -uy firmware-bnx2
 else
     echo "unknown network card: ${LSPCI}"
-    exit $LSPCI
+    echo "unknown network card!"
+    exit 1
 fi
 sudo apt-get install -y wireless-tools iw wpasupplicant
 
