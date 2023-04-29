@@ -70,13 +70,14 @@ if ! test -d "${TOP}"; then
     fi
 fi
 
-TOP=$(top_dir)
-
-cd "${TOP}"
 
 if test -n ${NO_INSTALL:-}; then
     exit 0
 fi
+
+TOP=$(top_dir)
+
+cd "${TOP}"
 
 if ! test -e ./configure; then
     autoreconf -i
