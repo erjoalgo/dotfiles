@@ -672,3 +672,29 @@ function process-children  {
     process-children ${CHILD}
   done
 }
+
+function _nm-find-connection {
+    PATTERN=${1} && shift
+    LINES=$(nmcli c | grep ${PATTERN} | tr -s ' ' | cut -f2 -d' ')
+    if test $(wc -l <<< "${LINES}") -gt 1; then
+        echo "more than one connection for input pattern: ${LINES}"
+        return 1
+    fi
+    echo ${LINES}
+}
+
+function nmup  {
+    PATTERN=${1} && shift
+    UPDOWN=${UPDOWN:-up}
+    nmcli c ${UPDOWN} $(_nm-find-connection "${PATTERN}")
+}
+
+function nmdown {
+    UPDOWN=down nmup ${*}
+}
+
+function nmdownup {
+    nmdown ${*}
+    sleep 1
+    nmup ${*}
+}
