@@ -29,6 +29,13 @@ sudo apt-get install -y wireless-tools iw wpasupplicant
 
 sudo iwconfig
 
+if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller" <<< "$LSPCI"; then
+    add_non-free_apt_source
+    sudo apt-get install -u firmware-sof-signed
+    # sudo modprobe -r iwlwifi || true
+    # sudo modprobe iwlwifi
+fi
+
 # apt-get install -y firmware-realtek
 # modprobe -r realtek
 # modprobe realtek
