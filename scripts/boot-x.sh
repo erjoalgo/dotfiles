@@ -118,4 +118,7 @@ mkdir -p ~/pictures/auto-scrots
 
 sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
+pip3 install chromeurl
+chromeurl --install-manifest all
+
 echo success
