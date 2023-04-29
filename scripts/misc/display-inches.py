@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import absolute_import
+from __future__ import print_function
 import subprocess
 # change the round factor if you like
 r = 1

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from __future__ import absolute_import
 import asyncio
 import logging
 import os
@@ -8,6 +9,7 @@ import threading
 import time
 
 import pyudev
+from six.moves import range
 
 logging.basicConfig(level=logging.DEBUG)
 

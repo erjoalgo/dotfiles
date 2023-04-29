@@ -1,8 +1,14 @@
 #!/usr/bin/python
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import enum
 import math
 import random
+from six.moves import map
+from six.moves import range
+from functools import reduce
+from six.moves import input
 
 parser = argparse.ArgumentParser()
 
@@ -12,7 +18,7 @@ class RNG(enum.Enum):
 
 
 def read_number(prompt):
-  num = input(prompt)
+  num = eval(input(prompt))
   try:
     return int(num)
   except ValueError as ex:
@@ -62,7 +68,7 @@ if __name__ == "__main__":
                       default=6, type=int)
 
   args=parser.parse_args()
-  words = reduce(lambda a, b: a + b, map(read_file_words, args.dict_files))
+  words = reduce(lambda a, b: a + b, list(map(read_file_words, args.dict_files)))
   if not words:
     raise ValueError("no words found in {}".format(
         "\n".oin(args.dict_files)))
@@ -72,4 +78,4 @@ if __name__ == "__main__":
     assert word
     passphrase_words.append(word)
 
-  print (" ".join(passphrase_words))
+  print((" ".join(passphrase_words)))

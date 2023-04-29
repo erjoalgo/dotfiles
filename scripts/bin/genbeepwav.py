@@ -3,10 +3,13 @@
 # adapted from: https://stackoverflow.com/questions/33879523/
 # adapted from: www.daniweb.com/code/snippet263775.html
 
+from __future__ import absolute_import
 import argparse
 import math
 import struct
 import wave
+from six.moves import map
+from six.moves import range
 
 class AudioFile(object):
     def __init__(self, sample_rate = 44100.0):
@@ -96,7 +99,7 @@ def main():
             self.volume = volume
 
     for spec in args.spec:
-        spec = SoundSpec(*map(float, spec.split(":")))
+        spec = SoundSpec(*list(map(float, spec.split(":"))))
         if spec.freq > 0:
             audio.append_sinewave(freq=spec.freq,
                                   duration_milliseconds=spec.duration_ms,

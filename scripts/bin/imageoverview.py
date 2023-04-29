@@ -5,6 +5,7 @@ Display all images recursively contained in a directory on a web browser.
 """
 
 
+from __future__ import absolute_import
 import argparse
 import http.server
 import logging

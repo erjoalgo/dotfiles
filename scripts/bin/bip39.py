@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 
+from __future__ import absolute_import
+from __future__ import print_function
 import argparse
 import hashlib
 import logging
 import math
 import unittest
+from six.moves import range
+from six.moves import zip
+from six.moves import input
 
 logging.basicConfig(level=logging.INFO)
 
@@ -2172,7 +2177,7 @@ class BIP39(object):
         """Prompt for a BASE-sided dice roll."""
         while True:
             try:
-                roll = int(input("enter dice roll [1-{}]: ".format(base)))
+                roll = int(eval(input("enter dice roll [1-{}]: ".format(base))))
                 # roll = int(random.randint(1,6))
             except Exception as ex:
                 logging.error("error: %s", ex)
@@ -2206,7 +2211,7 @@ class TestBIP39(unittest.TestCase):
             873, 924]
         for (expected_index, index) in zip(
                 expected_indices, bip39.indices()):
-            print("\t".join((str(index), bin(index), WORDS[index])))
+            print(("\t".join((str(index), bin(index), WORDS[index]))))
             self.assertEqual(index, expected_index)
         self.assertEqual(
             bip39.__ent_sha256__().hexdigest(),

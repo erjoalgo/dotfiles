@@ -1,7 +1,9 @@
 #!/usr/bin/python
 from __future__ import print_function
+from __future__ import absolute_import
 import os, re, subprocess, sys
 from os.path import join, exists, basename
+from six.moves import filter
 
 def mvn_dep_list(directory=os.getcwd()):
     os.chdir(directory)
@@ -25,7 +27,7 @@ def find_jar(group, artifact, version):
     else:
         print ("resorting to find: {}".format(filename), file=sys.stderr)
         out=subprocess.check_output(["find", M2_REPO, "-name", base]).strip()
-        lines=len(filter(bool, out.split("\n")))
+        lines=len(list(filter(bool, out.split("\n"))))
         if lines:
             return out
         else:
