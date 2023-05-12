@@ -8,7 +8,7 @@
   "take a non-full-screen screen shot. select box interactively"
   (take-scrot name :selection :interactive))
 
-(defparameter *scrot-date-format* "%e-%b-%Y-%H:%M:%S")
+(defparameter *scrot-date-format* "%d-%b-%Y-%H:%M:%S")
 
 (defcommand scrot-cmd-anon () ()
   "take an anonymous non-full-screen screen shot. select box interactively"
