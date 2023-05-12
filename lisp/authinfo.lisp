@@ -67,7 +67,9 @@
                               optional-keys
                               line-prefix
                               ;; (noecho-keys '(:password))
-                              prompt-fn
+                              (prompt-fn
+                               (lambda (prompt)
+                                 (stumpwm:read-one-line (stumpwm:current-screen) prompt)))
                               (authinfo-filename
                                (make-pathname :name ".authinfo"
                                               :defaults (user-homedir-pathname))))
