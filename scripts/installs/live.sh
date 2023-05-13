@@ -23,6 +23,6 @@ EOF
 
 sudo apt install python3 libusb-dev
 
-python3 -m pip install btchip-python
-
 pip3 install ledger_agent
+
+python3 -m pip install btchip-python
