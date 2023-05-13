@@ -5,7 +5,7 @@ set -euo pipefail
 while getopts "hl" OPT; do
     case ${OPT} in
     l)
-        IS_LOGITECH=${OPTARG}
+        IS_LOGITECH=true
         ;;
     h)
         less $0
