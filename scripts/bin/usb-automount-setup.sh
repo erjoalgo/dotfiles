@@ -52,7 +52,7 @@ sudo mount "${PARTITION}" "${MOUNT_POINT}" || true
 
 for SECRET in \
     .password-store \
-    .gnupg; do
+    ; do
 
     DEST="${HOME}/${SECRET}"
     SRC="${SYMLINK}/nosync/${SECRET}"
