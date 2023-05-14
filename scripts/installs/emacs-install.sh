@@ -35,6 +35,7 @@ elif command -v apt-get; then
     sudo apt-get build-dep -y emacs
     sudo apt-get install -y aspell-es emacs-goodies-el
     sudo apt-get install -y uuid-runtime || true
+    # gpg --keyserver hkps://keyserver.ubuntu.com --recv-key 91C1262F01EB8D39
     curl -sSL https://www.gnutls.org/pgpkey-nmav.txt | gpg --import -
     sudo apt-get install -y libgmp-dev
     sudo apt-get install -y gnutls-dev libncurses5-dev
@@ -44,3 +45,5 @@ elif command -v apt-get; then
 fi
 
 install-from-source -u ${URL} -g 7C207910
+cd /usr/local/src/emacs-${EMACS_VERSION}
+sudo make && sudo make install
