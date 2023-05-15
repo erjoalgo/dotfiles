@@ -31,13 +31,14 @@ if which apt-get; then
     if true || ! ${SUDOCMD} "apt-get update" ||  \
         ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
-        UPDATE_SOURCES_SCRIPT=installs/update-sources-list.sh
+        URL=${DOTFILES_GITHUB_URL}/scripts/installs/update-sources-list.sh
+        BASE=$(basename ${URL})
         if ! test -e ${UPDATE_SOURCES_SCRIPT}; then
-            mkdir -p $(dirname "$UPDATE_SOURCES_SCRIPT}")
-	    pushd .
-	    cd $(dirname "${UPDATE_SOURCES_SCRIPT}")
-           curl --create-dirs -OL \
-                ${DOTFILES_GITHUB_URL}/scripts/${UPDATE_SOURCES_SCRIPT}
+            if which curl; then
+                curl "${URL}" -Lo "${BASE}"
+            else
+                wget "${URL}" -O "${BASE}"
+            fi
 	    popd
             chmod +x ${UPDATE_SOURCES_SCRIPT}
         fi
