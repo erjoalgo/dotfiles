@@ -32,16 +32,16 @@ if which apt-get; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
         URL=${DOTFILES_GITHUB_URL}/scripts/installs/update-sources-list.sh
         BASE=$(basename ${URL})
-        if ! test -e ${UPDATE_SOURCES_SCRIPT}; then
+        if ! test -e ${BASE}; then
             if which curl; then
                 curl "${URL}" -Lo "${BASE}"
             else
                 wget "${URL}" -O "${BASE}"
             fi
 	    popd
-            chmod +x ${UPDATE_SOURCES_SCRIPT}
+            chmod +x ${BASE}
         fi
-        ${SUDOCMD} ${UPDATE_SOURCES_SCRIPT}
+        ${SUDOCMD} ${BASE}
         ${SUDOCMD} "apt-get update"
     fi
     if ! which sudo; then
