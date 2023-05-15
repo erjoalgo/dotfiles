@@ -22,6 +22,10 @@ else
   SUDOCMD="su -c"
 fi
 
+if ! which sudo && test -n "${APT_GET}"; then
+   ${SUDOCMD} "${APT_GET} install -y sudo" || true
+fi
+
 if which apt-get; then
     if true || ! ${SUDOCMD} "apt-get update" ||  \
         ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
@@ -43,10 +47,6 @@ if which apt-get; then
     if ! which sudo; then
         ${SUDOCMD} "apt-get install -y sudo"
     fi
-fi
-
-if ! which sudo && test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y sudo"
 fi
 
 # set up passwordless sudo
