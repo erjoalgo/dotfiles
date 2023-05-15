@@ -369,6 +369,7 @@ function git-promote-remote-to-origin	{
 	    fi
 	fi
 	git remote rename ${EXISTING} origin
+	git branch --set-upstream-to=origin/master
     fi
 }
 __git_complete git-promote-remote-to-origin _git_pull
