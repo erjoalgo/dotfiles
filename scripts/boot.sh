@@ -38,7 +38,6 @@ if which apt-get; then
             else
                 wget "${URL}" -O "${BASE}"
             fi
-	    popd
             chmod +x ${BASE}
         fi
         ${SUDOCMD} ${BASE}
