@@ -44,6 +44,10 @@ if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller"
     INSTALLED+=firmware-sof-signed
 fi
 
+# apt-get install -y firmware-realtek
+# modprobe -r realtek
+# modprobe realtek
+
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
     echo "^^ unknown network card!"
@@ -51,7 +55,3 @@ if test -z "${INSTALLED}"; then
 else
     echo "installed: ${INSTALLED}"
 fi
-
-# apt-get install -y firmware-realtek
-# modprobe -r realtek
-# modprobe realtek
