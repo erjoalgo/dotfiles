@@ -19,28 +19,35 @@ EOF
     sudo apt-get update
 }
 
+INSTALLED=""
+
 if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
     add-non-free-apt-source
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
     sudo modprobe iwlwifi
-elif grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
+    sudo apt-get install -y wireless-tools iw wpasupplicant
+    sudo iwconfig
+    INSTALLED+=iwlwifi
+fi
+
+if grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
     add-non-free-apt-source
     sudo apt-get install -uy firmware-bnx2
-else
-    echo "unknown network card: ${LSPCI}"
-    echo "unknown network card!"
-    exit 1
+    INSTALLED+=firmware-bnx2
 fi
-sudo apt-get install -y wireless-tools iw wpasupplicant
 
-sudo iwconfig
-
-if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller" <<< "$LSPCI"; then
-    add_non-free_apt_source
+if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller" \
+        <<< "$LSPCI"; then
+    add-non-free-apt-source
     sudo apt-get install -u firmware-sof-signed
-    # sudo modprobe -r iwlwifi || true
-    # sudo modprobe iwlwifi
+    INSTALLED+=firmware-sof-signed
+fi
+
+if test -z "${INSTALLED}"; then
+    echo ${LSPCI}
+    echo "^^ unknown network card!"
+    exit ${LINENO}
 fi
 
 # apt-get install -y firmware-realtek
