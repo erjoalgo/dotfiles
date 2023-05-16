@@ -5,9 +5,16 @@ set -euo pipefail
 LSPCI=$(lspci)
 
 function add_non-free_apt_source {
+    . /etc/os-release
+    if test -n "${VERSION_CODENAME}"; then
+        CODENAME=$VERSION_CODENAME
+    else
+        CODENAME=$(printf '%s\n' "$VERSION" | grep -o '[a-z]*')
+    fi
+
     sudo tee /etc/apt/sources.list.d/non-free.list <<EOF
-deb http://deb.debian.org/debian buster non-free
-deb-src http://deb.debian.org/debian buster non-free
+deb http://deb.debian.org/debian ${CODENAME} non-free
+deb-src http://deb.debian.org/debian ${CODENAME} non-free
 EOF
     sudo apt-get update
 }
