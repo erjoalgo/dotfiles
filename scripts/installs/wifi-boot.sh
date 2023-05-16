@@ -48,9 +48,10 @@ if test -z "${INSTALLED}"; then
     echo ${LSPCI}
     echo "^^ unknown network card!"
     exit ${LINENO}
+else
+    echo "installed: ${INSTALLED}"
 fi
 
 # apt-get install -y firmware-realtek
 # modprobe -r realtek
 # modprobe realtek
-# 109  modprobe -r realtek ; modprobe realtek
