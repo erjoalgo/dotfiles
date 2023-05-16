@@ -19,6 +19,11 @@ EOF
     sudo apt-get update
 }
 
+function install-wifi-tools {
+    sudo apt-get install -y wireless-tools iw wpasupplicant network-manager
+    sudo iwconfig
+}
+
 INSTALLED=""
 
 if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
@@ -26,8 +31,6 @@ if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
     sudo modprobe iwlwifi
-    sudo apt-get install -y wireless-tools iw wpasupplicant
-    sudo iwconfig
     INSTALLED+=iwlwifi
 fi
 
