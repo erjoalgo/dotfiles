@@ -4,7 +4,7 @@ set -euo pipefail
 
 LSPCI=$(lspci)
 
-function add_non-free_apt_source {
+function add-non-free-apt-source {
     . /etc/os-release
     if test -n "${VERSION_CODENAME}"; then
         CODENAME=$VERSION_CODENAME
@@ -20,12 +20,12 @@ EOF
 }
 
 if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
-    add_non-free_apt_source
+    add-non-free-apt-source
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
     sudo modprobe iwlwifi
 elif grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
-    add_non-free_apt_source
+    add-non-free-apt-source
     sudo apt-get install -uy firmware-bnx2
 else
     echo "unknown network card: ${LSPCI}"
