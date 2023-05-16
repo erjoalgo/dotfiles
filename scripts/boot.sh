@@ -23,7 +23,7 @@ else
 fi
 
 if ! which sudo && test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y sudo" || true
+   ${SUDOCMD} "${APT_GET} install -y sudo ntp" || true
 fi
 
 if which apt-get; then
@@ -44,7 +44,7 @@ if which apt-get; then
         ${SUDOCMD} "apt-get update"
     fi
     if ! which sudo; then
-        ${SUDOCMD} "apt-get install -y sudo"
+        ${SUDOCMD} "apt-get install -y sudo ntp"
     fi
 fi
 
