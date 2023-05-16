@@ -40,7 +40,7 @@ if which apt-get; then
             fi
             chmod +x ${BASE}
         fi
-        ${SUDOCMD} ${BASE}
+        ${SUDOCMD} ./${BASE}
         ${SUDOCMD} "apt-get update"
     fi
     if ! which sudo; then
