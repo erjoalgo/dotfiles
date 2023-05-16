@@ -1,1 +1,1 @@
-exec $(which stumpwm-wrapper)
+exec $(which stumpwm)
