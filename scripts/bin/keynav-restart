@@ -1,0 +1,15 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+SELF_PID=$$
+KEYNAVS=$(pgrep -f keynav)
+
+kill $(grep -v "^${SELF_PID}$" <<< "${KEYNAVS}")
+keynav &
+disown %- # silence shell job status
+
+
+# Local Variables:
+# mode: sh-mode
+# End:
