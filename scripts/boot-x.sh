@@ -90,7 +90,7 @@ for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
     ${XDG_OPEN_SCRIPT} || true
 done
 
-sudo apt-get install python3-pip
+sudo apt-get install -y python3-pip
 python3 -m pip install pyudev
 # for the logitech wireless keyboard
 sudo python3 -m pip install solaar
