@@ -118,6 +118,8 @@ mkdir -p ~/pictures/auto-scrots
 
 sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
+sudo apt-get install -y linphone linphone-cli
+
 pip3 install chromeurl
 chromeurl --install-manifest all
 
