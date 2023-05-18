@@ -106,3 +106,15 @@
   (let ((account (car
                   (alist-get :ACCOUNTS (get-sub-accounts *auth* :account account)))))
     (alist-get :CALLERID-NUMBER account)))
+
+(defun genpasswd (&key (len 13) (charset-regexp "[a-zA-Z0-9_-]"))
+  (with-open-file (stream "/dev/random" :element-type '(unsigned-byte 8))
+    (loop with pass = (make-string len)
+          for i below len
+          as c = (loop as code = (read-byte stream)
+                       as c = (code-char code)
+                       while (not (ppcre:scan charset-regexp
+                                              (format nil "~C" c)))
+                       finally (return c))
+          do (setf (aref pass i) c)
+          finally (return pass))))
