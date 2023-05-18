@@ -180,7 +180,9 @@
 (defun linphonec-init ()
   (linphonec-kill)
   (stumpwm:with-message-queuing t
-    (loop for (profile-id . config-file) in (linphonec-profile-ids)
+    (loop for (profile-id . config-file)
+            in (or (linphonec-profile-ids)
+                   (error "no linphone profile ids found!"))
        as log-file = (namestring
                       (make-pathname
                        :name (format nil ".linphone-~A" profile-id)
