@@ -163,9 +163,10 @@
 (defun run-command-sync-notify-on-error (command &optional args)
   (multiple-value-bind (retcode output)
       (run-command-retcode-output command args)
-    (unless (zerop retcode)
-      (message-wrapped "error: ~A ~A failed with ~A: ~A"
-                       command args (zerop retcode) output))))
+    (if (zerop retcode)
+        output
+        (message-wrapped "error: ~A ~A failed with ~A: ~A"
+                         command args (zerop retcode) output))))
 
 ;; TODO optional
 (defmacro run-command-async (command
