@@ -7,11 +7,18 @@
 (defparameter *default-forward-number* nil)
 (defparameter *default-routing-group* nil)
 (defparameter *default-accounts-to-update* nil)
-(defparameter *auth*
-  (let ((info (authinfo:get-by-machine "voip.ms")))
+
+(defun voipms-get-auth ()
+  (let ((info (or (authinfo:get-by-machine "voip.ms")
+                  (authinfo:persist-authinfo-line
+                   '((:name "machine" :value "voip.ms")
+                     (:name "login" :prompt "enter email: ")
+                     (:name "password"))))))
     (voipms:make-voipms-auth
      :username (voipms::alist-get :LOGIN info)
      :password (voipms::alist-get :PASSWORD info))))
+
+(defparameter *auth* (voipms-get-auth))
 
 (let ((secrets
         (make-pathname :name "voipms-secrets"
