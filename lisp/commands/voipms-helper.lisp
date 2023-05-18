@@ -5,7 +5,6 @@
 (defparameter *default-pop* nil)
 (defparameter *default-forward-email* nil)
 (defparameter *default-forward-number* nil)
-(defparameter *default-routing-group* nil)
 (defparameter *default-accounts-to-update* nil)
 
 (defun voipms-get-auth ()
@@ -42,7 +41,6 @@
 (defun order-new-did (auth &key
                              (state "CA")
                              sip-account
-                             (routing-group *default-routing-group*)
                              (pop *default-pop*)
                              (email *default-forward-email* )
                              (fwd *default-forward-number*)
