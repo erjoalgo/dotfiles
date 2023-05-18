@@ -160,7 +160,7 @@
     (values (sb-ext:process-exit-code proc)
             string)))
 
-(defun run-command-sync-notify-on-error (command args)
+(defun run-command-sync-notify-on-error (command &optional args)
   (multiple-value-bind (retcode output)
       (run-command-retcode-output command args)
     (unless (zerop retcode)
