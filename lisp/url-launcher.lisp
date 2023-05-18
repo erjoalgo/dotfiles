@@ -14,8 +14,10 @@
   ;; may be interactive
   (unless (authinfo:get-by :app "webdav")
     (authinfo:persist-authinfo-line
-     :line-prefix "app webdav"
-     :required-keys '("machine" "login" "password")))
+     `((:name "app" :value "webdav")
+       (:name "machine" :value "webdav.erjoalgo.com" )
+       (:name "login" :value "erjoalgo")
+       (:name "password" :prompt "enter webdav password: "))))
   (statusor:if-let-ok nil
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
