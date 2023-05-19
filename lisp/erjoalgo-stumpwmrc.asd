@@ -23,6 +23,7 @@
    #:drakma ;; TODO factor-out openproject.lisp
    #:lparallel
    #:erjoalgo-webutil
+   #:cl-interpol ;; for voipms helper
    #:voipms
    #:md5
    #:ironclad
