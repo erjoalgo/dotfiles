@@ -70,8 +70,8 @@ if command -v x-service-curl; then
         echo "unknown dial option: ${RESP}"
         exit ${LINENO}
     fi
+    x-service-curl /run -d "linphonec-ensure-running"
 fi
-
 
 if ! linphonecsh ${LINPHONE_COMMAND} "${LINPHONE_COMMAND_ARGS}" 2>&1; then
     xmessage "error" -timeout 2 || true
