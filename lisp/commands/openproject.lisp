@@ -158,7 +158,7 @@
 (in-package :stumpwm)
 
 (defcommand openproject-create-personal-task (subject) ((:string "enter task subject: "))
-  (lparallel:future
+  (stumpwm::lparallel-future
     (statusor:if-let-ok (err (message-wrapped "error creating task: ~A" err))
                         ((resp (openproject-client:create-work-package
                                 subject
