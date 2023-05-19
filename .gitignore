@@ -2,3 +2,5 @@
 inits/.my-bash-completions/erjoalgo-sensitive
 lisp/data/url-launcher-urls.local
 lisp/defs-secret.lisp
+inits/konsole/bookmarks.xml
+inits/konsole/bookmarks.xml.tbcache
