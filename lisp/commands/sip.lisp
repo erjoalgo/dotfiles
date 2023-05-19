@@ -29,9 +29,7 @@
 (defun linphonecsh (args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (let ((env-args (linphonecsh-command-with-profile-id args)))
-    (stumpwm:message-wrapped "env ~{~A~^ ~}" env-args)
-    (stumpwm::run-command-async "env" env-args)))
+  (stumpwm::lparallel-future (linphonecsh-sync args)))
 
 (defvar linphone-inhibit-command-echo nil)
 
