@@ -16,7 +16,8 @@
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
   (with-message-queuing t
     (swank-start)
-    (safe-sexp (xinitrc-init))
+    (setf lparallel:*kernel* (lparallel:make-kernel 3))
+    (lparallel-future (with-message-queuing t (xinitrc-init)))
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
     ;; url-launcher may fail if not connected to the internet, .authinfo doesn't exist, etc
@@ -33,7 +34,6 @@
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
     (startup-apps-run)
     ;; (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
-    (setf lparallel:*kernel* (lparallel:make-kernel 3))
     (message "done loading .stumpwmrc. ~D errors:~%~{~A~^~%~}"
              (length *init-errors*)
              *init-errors*)))
