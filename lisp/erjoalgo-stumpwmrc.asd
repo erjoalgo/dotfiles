@@ -32,8 +32,8 @@
   (
    ;; (:file "packages")
    (:file "commands/selcand")
-   (:file "util")
    (:file "defs")
+   (:file "util")
    (:file "xinitrc")
    (:file "decorations")
    (:file "pid-util")
