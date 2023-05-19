@@ -169,6 +169,47 @@
                          hostname)
                     acc)))))
 
+(cl-interpol:enable-interpol-syntax)
+
+(defun linphone-write-rc-file (&key (output #P"~/.linphonerc")
+                                 subaccount-user
+                                 subaccount-pass
+                                 domain)
+  (unless (and subaccount-user subaccount-pass domain)
+    (let ((subaccount (authinfo:get-by-machine *authinfo-machine-value*)))
+      (setf subaccount-user (voipms::alist-get :LOGIN subaccount)
+            subaccount-pass (voipms::alist-get :PASSWORD subaccount))))
+  (let* ((realm domain)
+        (contents
+          #?"
+[sip]
+default_proxy=0
+
+[proxy_0]
+reg_proxy=<sip:$(domain);transport=tcp>
+reg_identity=sip:$(subaccount-user)@$(domain)
+quality_reporting_enabled=0
+quality_reporting_interval=0
+reg_expires=3600
+reg_sendregister=1
+publish=1
+avpf=0
+avpf_rr_interval=5
+dial_escape_plus=0
+privacy=32768
+publish_expires=-1
+
+[auth_info_0]
+username=$(subaccount-user)
+userid=$(subaccount-user)
+realm=$(realm)
+domain=$(domain)
+passwd=$(subaccount-pass)
+"))
+    (with-open-file (fh output :direction :output :if-exists :supersede)
+      (format t "writing contents: ~A" contents)
+      (format fh "~A" contents))))
+
 (defun change-current-caller-id (auth)
   (let ((acc (find-host-account auth))
         (did-number (select-did-number auth)))
