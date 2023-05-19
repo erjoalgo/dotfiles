@@ -693,3 +693,15 @@ function nmdownup {
     sleep 1
     nmup ${*}
 }
+
+function git-rebase-fxps {
+    N=${1:-} && shift
+    if test -z "${N}"; then
+        REGEXP="Your branch is ahead of .*by [0-9]+ commits|different commits each, respectively"
+        N=$(git status |  \
+                grep -P "${REGEXP}" | \
+                grep -Po "[0-9]+" |  \
+                sort -nr | head -1)
+    fi
+    git rebase "HEAD~${N} -i"
+}
