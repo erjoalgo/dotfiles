@@ -20,7 +20,13 @@ shift $((OPTIND -1))
 
 
 # https://stackoverflow.com/a/37840948/1941755
-function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+function urldecode() {
+    URL=${1} && shift
+    python3 -c \
+            "import sys, urllib.parse as ul; \
+                      print(ul.unquote_plus(sys.argv[1]))" \
+            "${URL}"
+}
 
 TEL=$(sed -Ee 's/^tel:[+]1//g' <<< "${TEL}")
 TEL=$(urldecode "${TEL}")
