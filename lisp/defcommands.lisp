@@ -143,43 +143,6 @@
 (define-stumpwm-type-from-wild-pathname :lisp-source-file
     (merge-pathnames (make-pathname :type "lisp" :name :WILD) *stumpwm-top-directory*))
 
-(defcommand byzanz-record (name duration)
-    ((:string " recording name: ")
-     (:number "recording duration in seconds: "))
-  (assert (which "byzanz-record"))
-  (let* ((name (or name
-                   (time-format *scrot-date-format*)))
-         (recording-pathname
-           (merge-pathnames (make-pathname
-                             :name name
-                             :type "gif")
-                            *scrots-top*))
-         (duration-args
-           (if duration (list "-d" duration)
-               (list "-e"
-                     (format nil "nc -l ~A ~D"
-                             "-p" ;; not always the same
-                             byzanz-recording-control-port)))))
-    (set-x-selection (namestring recording-pathname) :clipboard)
-    (message "starting byzanz recording in 1s...")
-    (sleep 1)
-    (unmap-all-message-windows)
-    (run-command-async-notify
-     "byzanz-record"
-     `(,@duration-args ,recording-pathname))))
-
-(defvar byzanz-recording-control-port 17909)
-
-(defcommand byzanz-record-auto () ()
-  (handler-case (byzanz-record-auto-stop)
-    (USOCKET:CONNECTION-REFUSED-ERROR (_ex)
-      (declare (ignore _ex))
-      ;; no recording in progress. start a new one...
-      (byzanz-record nil nil))))
-
-(defcommand byzanz-record-auto-stop () ()
-  (mozrepl:nc "localhost" byzanz-recording-control-port "1"))
-
 (defcommand emacs-killusr2 () ()
   "invoke this command to debug an emacs hang/freeze"
   (run-command-async-notify
