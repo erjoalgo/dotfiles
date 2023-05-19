@@ -100,11 +100,11 @@
 
 (defun xinitrc-init ()
   (loop for i below 2 do
-       (with-elapsed-time ms (xmodmap-load)
-         (message "xmodmap load took ~D ms" ms)))
+    (with-elapsed-time ms (xmodmap-load)
+      (message "xmodmap load took ~,1fs" (/ ms 1000))))
 
   (with-elapsed-time ms (run-startup-scripts)
-    (message "startup shell scripts took ~D ms" ms))
+    (message "startup shell scripts took ~,1fs" (/ ms 1000)))
 
   (with-elapsed-time ms (start-screensaver)
-    (message "screensaver load took ~D ms" ms)))
+    (message "screensaver load took ~,1fs" (/ ms 1000))))
