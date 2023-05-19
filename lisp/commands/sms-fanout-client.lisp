@@ -122,8 +122,10 @@
   (cl-syslog:log "stumpwm/sms-fanout" ':user priority message))
 
 (defun reconnect-loop (&key
-                         (address (authinfo-address))
+                         address
                          (reconnect-delay-secs 60))
+  (unless address
+    (setf address (authinfo-address)))
   (loop
      as connected = (connected-p :client *client*)
      unless connected do
