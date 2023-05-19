@@ -31,12 +31,12 @@
   ;; TODO check if "linphonecsh init" needs to be called
   (stumpwm::lparallel-future (linphonecsh-sync args)))
 
-(defvar linphone-inhibit-command-echo nil)
+(defvar *linphone-inhibit-command-echo* nil)
 
 (defun linphonecsh-sync (&rest args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (unless linphone-inhibit-command-echo
+  (unless *linphone-inhibit-command-echo*
     (stumpwm:message-wrapped "running: linphonecsh ~{~A~^ ~}" args))
   (multiple-value-bind (retcode output)
       (stumpwm::run-command-retcode-output "linphonecsh" args)
@@ -297,7 +297,7 @@
 (defcommand sip-select-default-proxy () ()
   (with-message-queuing t
     (sip-show-current-default-proxy)
-    (let* ((proxies (let ((sip:linphone-inhibit-command-echo t))
+    (let* ((proxies (let ((sip::*linphone-inhibit-command-echo* t))
                       (sip:linphonecsh-proxies)))
            (selected (selcand:select
                       :candidates proxies
