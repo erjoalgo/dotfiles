@@ -102,6 +102,14 @@
               (setf client nil)))
     client))
 
+(defun get-authinfo-or-prompt ()
+  (or (authinfo:get-by "app" "sms-fanout")
+      (authinfo:persist-authinfo-line
+       `((:name "machine" :value "sms.erjoalgo.com")
+         (:name "app" :value "sms-fanout")
+         (:name "password" :prompt "enter sms-fanount password: ")))))
+
+
 (defun authinfo-address ()
   (authinfo:bind-values (get-authinfo-or-prompt) (machine password)
     (assert machine)
