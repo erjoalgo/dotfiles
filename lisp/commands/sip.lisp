@@ -383,3 +383,10 @@
 
 (defcommand sip-exit () ()
   (sip:linphonecsh `("exit")))
+
+(defcommand linphonec-ensure-running () ()
+  (or
+   (sip:linphonec-started-p)
+   (progn
+     (sip:linphonec-restart)
+     (assert (sip::linphonec-started-p)))))
