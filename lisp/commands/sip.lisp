@@ -24,6 +24,7 @@
    #:linphone-call-state))
 (in-package :sip)
 
+(defparameter *linphonec-log* #P"~/.linphonec.log")
 
 (defun linphonecsh (args)
   "Execute a linphonec command via linphonecsh."
