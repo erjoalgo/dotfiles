@@ -75,7 +75,7 @@
   (let ((start-time-sym (gensym "start-time")))
     `(let ((,start-time-sym (get-internal-real-time)))
        ,form
-       (let ((,elapsed-time-ms-var (- (get-internal-real-time) ,start-time-sym)))
+       (let ((,elapsed-time-ms-var (/ (- (get-internal-real-time) ,start-time-sym) 1000)))
          ,@body))))
 
 (unless (fboundp 'run-shell-command)
