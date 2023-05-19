@@ -22,6 +22,7 @@ shift $((OPTIND -1))
 # https://stackoverflow.com/a/37840948/1941755
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
+TEL=$(sed -Ee 's/^tel:[+]1//g' <<< "${TEL}")
 TEL=$(urldecode "${TEL}")
 TEL=$(sed -e 's/^tel://' -e 's/^[+]1//g' -e 's/[^0-9]//g' <<< "${TEL}")
 if hostname | md5sum | grep -F 24e9ebe4849f568cda45d05f4884ffbd > /dev/null; then
