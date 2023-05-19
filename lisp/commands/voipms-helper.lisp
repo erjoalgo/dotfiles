@@ -158,18 +158,16 @@
 
 (defun find-host-account (auth &key (hostname *host-account-username*))
   (let (names)
-    (or
-     (loop
-       for acc in (voipms::alist-get
-                   :ACCOUNTS (voipms::get-sub-accounts auth))
-       as name = (voipms::alist-get :ACCOUNT acc)
-       do (push name names)
-         thereis (ppcre:register-groups-bind (username) ("[0-9]+_(.*)" name)
-                   (when (ppcre:scan
-                          (format nil "^~A" (ppcre:quote-meta-chars username))
-                          hostname)
-                     acc)))
-     (error "no matching account found for ~A: ~A" hostname names))))
+    (loop
+      for acc in (voipms::alist-get
+                  :ACCOUNTS (voipms::get-sub-accounts auth))
+      as name = (voipms::alist-get :ACCOUNT acc)
+      do (push name names)
+        thereis (ppcre:register-groups-bind (username) ("[0-9]+_(.*)" name)
+                  (when (ppcre:scan
+                         (format nil "^~A" (ppcre:quote-meta-chars username))
+                         hostname)
+                    acc)))))
 
 (defun change-current-caller-id (auth)
   (let ((acc (find-host-account auth))
