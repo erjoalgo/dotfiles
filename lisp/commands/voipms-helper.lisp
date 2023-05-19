@@ -153,7 +153,8 @@
       (authinfo:persist-authinfo-line
        `((:name "machine" :value *authinfo-machine-value*)
          (:name "login" :value ,account)
-         (:name "password" :value ,password))))))
+         (:name "password" :value ,password))))
+    acc))
 
 (defun find-host-account (auth &key (hostname *host-account-username*))
   (let (names)
