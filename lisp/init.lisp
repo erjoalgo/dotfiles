@@ -27,9 +27,9 @@
     (x-service:start 1959)
     ;; TODO remove these
     (def-thread-start *battery-notification-thread*
-        (battery-info-check-notify-loop))
+      (battery-info-check-notify-loop))
     (def-thread-start *sms-fanout-reconnect-thread*
-        (sms-fanout-client:reconnect-loop))
+      (sms-fanout-client:reconnect-loop))
     (setf *startup-message* nil)
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
     (startup-apps-run)
