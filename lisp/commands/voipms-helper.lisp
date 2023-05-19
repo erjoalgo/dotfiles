@@ -128,7 +128,9 @@
    :stringify-fn (lambda (did) (voipms::alist-get :DID did))))
 
 (defun create-host-linphone-subacount (auth
-                                       &key (user *host-account-username*))
+                                       &key
+                                         (user *host-account-username*)
+                                         (persist-authinfo t))
   (let* ((password (genpasswd))
          (did (select-did auth))
          (acc (voipms::create-sub-account
@@ -147,10 +149,11 @@
                :allowed_codecs "all"
                :callerid_number (voipms::alist-get :DID did)))
          (account (voipms::alist-get :ACCOUNT acc)))
-    (authinfo:persist-authinfo-line
-     `((:name "machine" :value "voip.ms-linphonerc")
-       (:name "login" :value ,account)
-       (:name "password" :value ,password)))))
+    (when persist-authinfo
+      (authinfo:persist-authinfo-line
+       `((:name "machine" :value *authinfo-machine-value*)
+         (:name "login" :value ,account)
+         (:name "password" :value ,password))))))
 
 (defun find-host-account (auth &key (hostname *host-account-username*))
   (let (names)
