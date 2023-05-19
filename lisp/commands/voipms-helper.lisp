@@ -169,6 +169,21 @@
                          hostname)
                     acc)))))
 
+(defun linphone-boot (&key overwrite-rc-file)
+  (let* ((auth (voipms-get-auth :maybe-prompt t))
+         (_ (or (find-host-account auth) (create-host-linphone-subacount auth)))
+         (subacount-auth (or (authinfo:get-by-machine *authinfo-machine-value*)
+                             (error "no host-specific voipms account found")))
+         (subaccount-user (voipms::alist-get :ACCOUNT subacount-auth))
+         (subaccount-pass (voipms::alist-get :PASSWORD subacount-auth)))
+    (declare (ignore _))
+    (when (or overwrite-rc-file
+              (not (probe-file #P"~/.linphonerc")))
+      (linphone-write-rc-file
+       :subaccount-user subaccount-user
+       :subaccount-pass subaccount-pass
+       :domain "tampa3.voip.ms"))))
+
 (cl-interpol:enable-interpol-syntax)
 
 (defun linphone-write-rc-file (&key (output #P"~/.linphonerc")
