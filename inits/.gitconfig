@@ -13,3 +13,5 @@
 [branch]
   autosetupmerge = always
 
+[core]
+  hooksPath = .githooks/
