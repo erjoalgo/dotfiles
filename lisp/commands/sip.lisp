@@ -325,7 +325,6 @@
       (assert selected)
       (sip:linphonecsh-set-default-proxy-index (sip:linphone-proxy-index selected)))))
 
-
 (defcommand sip-show-current-default-proxy () ()
   (message-wrapped "current proxy:~%a~%~A" (sip:linphonecsh-current-default-proxy)))
 
