@@ -3,7 +3,7 @@
 (defvar *background-image-filename* #P"~/.background-image-symlink")
 
 (defun background-image-init ()
-  (if (not *background-image-fn*)
+  (if (not *background-image-filename*)
       (message "No background image found at ~A" *background-image-filename*)
       (run-shell-command
        (format nil
