@@ -84,8 +84,10 @@
           do (with-slots (name optional prompt value) key
                (unless value
                  (setf value
-                       (stumpwm:read-one-line (stumpwm:current-screen)
-                                              (or prompt (format nil "enter ~A: " name)))))
+                       (or
+                        (stumpwm:read-one-line (stumpwm:current-screen)
+                                               (or prompt (format nil "enter ~A: " name)))
+                        (if optional "" (error "required value not provided: ~A" name)))))
                (push (format nil "~A ~A" name value) strings))
           finally (format fh "~%~{~A~^ ~}" (reverse strings))))
   (car (last (parse))))
