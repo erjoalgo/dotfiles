@@ -16,7 +16,7 @@
   (setf *max-last-message-size* SB-EXT:DOUBLE-FLOAT-POSITIVE-INFINITY)
   (with-message-queuing t
     (swank-start)
-    (setf lparallel:*kernel* (lparallel:make-kernel 3))
+    (setf lparallel:*kernel* (lparallel:make-kernel 10))
     (lparallel-future (with-message-queuing t (xinitrc-init)))
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
