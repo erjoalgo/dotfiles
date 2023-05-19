@@ -1,6 +1,7 @@
 (in-package :voipms)
 
 (defparameter *host-account-username* (UIOP/OS:HOSTNAME))
+(defparameter *authinfo-machine-value* "voip.ms-linphonerc")
 
 (defparameter *voipms-url-callback* nil)
 (defparameter *never-to-cancel-dids* nil)
