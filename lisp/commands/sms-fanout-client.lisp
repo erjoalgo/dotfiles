@@ -103,7 +103,9 @@
     client))
 
 (defun authinfo-address ()
-  (authinfo:get-info-assert-vars :app "sms-fanout" (machine password)
+  (authinfo:bind-values (get-authinfo-or-prompt) (machine password)
+    (assert machine)
+    (assert password)
     (format nil "wss://~A/fanout?api-key=~A" machine password)))
 
 (defun syslog-log (priority message)

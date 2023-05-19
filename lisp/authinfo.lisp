@@ -6,7 +6,7 @@
    #:get-by-machine
    #:alist-get
    #:alist-get-or-error
-   #:get-info-assert-vars
+   #:bind-values
    #:parse
    #:persist-authinfo-line))
 (in-package :authinfo)
@@ -52,13 +52,13 @@
 (defun get-by-machine (host)
   (get-by :machine host))
 
-(defmacro get-info-assert-vars (authinfo-key value authinfo-vars &body body)
-  (let ((alist-sym (gensym "alist-")))
+(defmacro bind-values (entry authinfo-vars &body body)
+  (let ((entry-sym (gensym "entry-")))
     `(let*
-         ((,alist-sym (or (get-by-or-error ,authinfo-key ,value)))
+         ((,entry-sym ,entry)
           ,@(loop for var in authinfo-vars
                  as sym = (intern (symbol-name var) :keyword)
-                collect (list var `(alist-get-or-error ,sym ,alist-sym))))
+                collect (list var `(alist-get-or-error ,sym ,entry-sym))))
        ,@body)))
 
 (defstruct authinfo-key
