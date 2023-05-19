@@ -60,7 +60,7 @@
   (if (and (not skip-cache) *url-keys-cache*)
       (prog1
           *url-keys-cache*
-        (lparallel:future
+        (stumpwm::lparallel-future
          (url-launcher-list-url-keys
                 :skip-cache t)))
       (setf *url-keys-cache*
@@ -74,7 +74,7 @@
                 (assoc webdav-path *url-values-cache* :test #'equal)))))
     (if val
         (prog1 val
-          (lparallel:future
+          (stumpwm::lparallel-future
             (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
         (prog1
             (setf val (cladaver:cat *webdav-server-info* webdav-path))

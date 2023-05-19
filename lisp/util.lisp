@@ -325,3 +325,8 @@
       (stumpwm::raise-window-browser))))
 
 (export '(x-www-browser) :STUMPWM)
+
+(defvar *lparallel-futures-log* nil)
+
+(defmacro lparallel-future (form)
+  `(push (cons ',form (lparallel:future ,form)) *lparallel-futures-log*))
