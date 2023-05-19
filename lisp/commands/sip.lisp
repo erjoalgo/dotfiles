@@ -50,12 +50,13 @@
                 (linphonecsh-sync args :retry nil))
               (error "~A" msg))))))
 
-(defun sip-current-identity ()
+(defun sip-current-identity (&key no-error)
   (let* ((output (linphonecsh-sync `("generic" "proxy show default"))))
     (or
      (ppcre:register-groups-bind (user host) ("identity: sip:(.*)@(.*).*" output)
        (list user host))
-     (error "unable to determine default proxy: ~A" output))))
+     (unless no-error
+       (error "unable to determine default proxy: ~A" output)))))
 
 (defun sip-default-host ()
   (second (sip-current-identity)))
