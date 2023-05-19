@@ -186,7 +186,8 @@
            "-c" ,(namestring config)
            "-l" ,(uiop:native-namestring *linphonec-log*)
            "-d" "5")
-         :retry nil))))
+         :retry nil)
+      (sleep 1))))
 
 (defun linphonec-started-p ()
   ;; TODO actually check registration status
