@@ -28,7 +28,7 @@ if hostname | md5sum | grep -F 24e9ebe4849f568cda45d05f4884ffbd > /dev/null; the
     USE_GOOGLE_VOICE=true
 else
     USE_GOOGLE_VOICE=""
-    SIP_HOST=$(linphone-default-host.sh)
+    SIP_HOST=${SIP_HOST:-$(linphone-default-host.sh || echo "tamp3.voip.ms")}
     ADDRESS=${TEL}@${SIP_HOST}
     LINPHONE_COMMAND="dial"
     LINPHONE_COMMAND_ARGS="${ADDRESS}";
