@@ -32,5 +32,3 @@
 
 (defparameter emacs-classes
   (list "emacs" "GoogleEmacs"))
-
-(defparameter *machine-uuid* (machine-get-uuid))

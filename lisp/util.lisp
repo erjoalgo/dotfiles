@@ -24,6 +24,8 @@
         (assert uuid)
         uuid))))
 
+(defparameter *machine-uuid* (machine-get-uuid))
+
 (defun ensure-directory-exists (pathname &key (max-parents 0))
   (unless (probe-file pathname)
     (let ((parent
