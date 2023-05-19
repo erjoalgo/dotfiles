@@ -193,7 +193,8 @@
   ;; TODO actually check registration status
   (handler-case
       (let ((*linphone-inhibit-command-echo* t))
-        (sip:linphonecsh-sync `("generic" "help")))
+        (and (sip:linphonecsh-sync `("generic" "help"))
+             (sip-current-identity :no-error t)))
     (error (err)
       (progn
         (format t "error testing for linphonec status: ~A" err)
