@@ -355,6 +355,7 @@ alias g4df='g4 revert'
 
 alias modernize-directory="find . -name '*py' -exec modernize -wn {} +"
 
+alias git-rebase-fxps='git rebase HEAD^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -i'
 # Local Variables:
 # mode: sh
 # End:
