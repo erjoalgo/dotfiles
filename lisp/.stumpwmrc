@@ -3,7 +3,7 @@
 
 (defvar *init-errors* nil)
 
-(defvar *stumpwm-log-filename* #P"/tmp/stumpwm.log")
+(defvar *stumpwm-log-filename* #P"/tmp/stumpwm-init-errors.log")
 
 (defvar *stumpwm-log-stream* nil)
 
