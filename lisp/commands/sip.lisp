@@ -169,7 +169,8 @@
     output))
 
 (defun linphonec-config-file ()
-  (car (directory #P"~/.linphonerc.*")))
+  (car (or (directory #P"~/.linphonerc.*")
+           (directory #P"~/.config/linphone/linphonerc.*"))))
 
 (defun linphonec-init ()
   (linphonec-kill)
