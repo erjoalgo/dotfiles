@@ -227,7 +227,6 @@ passwd=$(subaccount-pass)
 
 (defun change-current-caller-id (auth)
   (let ((acc (find-host-account auth))
-    (format t "DDEBUG voipms-helper.lisp dp71: value of acc: ~A~%" acc)
         (did (select-did auth)))
     (voipms::set-sub-account-sparse
      auth
