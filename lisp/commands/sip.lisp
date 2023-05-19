@@ -70,7 +70,11 @@
         (sip-alpha-text-to-phone-number number-clean)))
     no-alpha))
 
-(defun phone-number-to-address (number &key (sip-host (sip-default-host)))
+(defun phone-number-to-address (number &key sip-host)
+  (unless sip-host
+    (setf sip-host
+          (let ((*linphone-inhibit-command-echo* t))
+            (sip-default-host))))
   (let* ((number-clean (sip-sanitize-phone-number number))
          (intl-prefix-opt "")
          (sip-address (format nil "sip:~A~A@~A"
