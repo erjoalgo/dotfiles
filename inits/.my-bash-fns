@@ -670,12 +670,17 @@ function process-children  {
 
 function _nm-find-connection {
     PATTERN=${1} && shift
-    LINES=$(nmcli c | grep ${PATTERN} | tr -s ' ' | cut -f2 -d' ')
+    LINES=$(nmcli c | grep ${PATTERN})
     if test $(wc -l <<< "${LINES}") -gt 1; then
-        echo "more than one connection for input pattern: ${LINES}"
-        return 1
+        PS3='More than one connection for input pattern, select: '
+        IFS=$'\n' read -r -d '' -a options <<< "${LINES}"
+        select OPT in "${options[@]}"; do
+            LINES=${OPT}
+            OPTIONS=()
+            break
+        done
     fi
-    echo ${LINES}
+    echo ${LINES} | tr -s ' ' | cut -f2 -d' '
 }
 
 function nmup  {
