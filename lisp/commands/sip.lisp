@@ -33,7 +33,7 @@
 
 (defvar *linphone-inhibit-command-echo* nil)
 
-(defun linphonecsh-sync (&rest args)
+(defun linphonecsh-sync (args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
   (unless *linphone-inhibit-command-echo*
@@ -45,7 +45,7 @@
         (error "non-zero exit status: ~A ~A" retcode output))))
 
 (defun sip-current-identity ()
-  (let* ((output (linphonecsh-sync "generic" "proxy show default")))
+  (let* ((output (linphonecsh-sync `("generic" "proxy show default"))))
     (or
      (ppcre:register-groups-bind (user host) ("identity: sip:(.*)@(.*).*" output)
        (list user host))
@@ -88,16 +88,16 @@
   (assert number)
   (if (use-google-voice-p)
       (google-voice-call number)
-      (linphonecsh "dial" (phone-number-to-address number))))
+      (linphonecsh `("dial" ,(phone-number-to-address number)))))
 
 (defun sms-send (sip-address message)
   ;; TODO add "chat" command to linphonecsh
-  (linphonecsh "generic"
-               (format nil "chat ~A ~A"
-                       sip-address message)))
+  (linphonecsh `("generic"
+                 ,(format nil "chat ~A ~A"
+                          sip-address message))))
 
 (defun linphonecsh-active-calls ()
-  (let ((output (linphonecsh-sync "generic" "calls")))
+  (let ((output (linphonecsh-sync `("generic" "calls"))))
     (linphonecsh-parse-active-calls output)))
 
 (defstruct linphone-call
@@ -147,14 +147,14 @@
     proxies))
 
 (defun linphonecsh-proxies ()
-  (let ((output (linphonecsh-sync "generic" "proxy list")))
+  (let ((output (linphonecsh-sync `("generic" "proxy list"))))
     (linphonecsh-parse-proxies output)))
 
 (defun linphonecsh-set-default-proxy-index (index)
-  (linphonecsh-sync "generic" (format nil "proxy use ~D" index)))
+  (linphonecsh-sync `("generic" ,(format nil "proxy use ~D" index))))
 
 (defun linphonecsh-current-default-proxy ()
-  (let ((output (linphonecsh-sync "generic" "proxy show default")))
+  (let ((output (linphonecsh-sync `("generic" "proxy show default"))))
     output))
 
 (defun linphonec-config-file ()
@@ -261,16 +261,16 @@
 ;; call
 
 (defcommand sip-call-terminate () ()
-  (sip:linphonecsh "generic" "terminate"))
+  (sip:linphonecsh `("generic" "terminate")))
 
 (defcommand sip-call-dtmf (numbers) ((:non-blank-string "enter DTMF tones to send: "))
-  (sip:linphonecsh "generic" numbers))
+  (sip:linphonecsh `("generic" ,numbers)))
 
 (defcommand sip-call-mute () ()
-  (sip:linphonecsh "generic" "mute"))
+  (sip:linphonecsh `("generic" "mute")))
 
 (defcommand sip-call-unmute () ()
-  (sip:linphonecsh "generic" "unmute"))
+  (sip:linphonecsh `("generic" "unmute")))
 
 (defcommand sip-sms-send-number (number message)
     ((:non-blank-string "Enter number: ") (:non-blank-string "Enter SMS message: "))
@@ -292,7 +292,7 @@
               (error "no call selected")
               (let* ((call-id (sip:linphone-call-id call))
                      (command (format nil "answer ~D" call-id)))
-                (sip:linphonecsh "generic" command)))))))
+                (sip:linphonecsh `("generic" ,command))))))))
 
 (defcommand sip-select-default-proxy () ()
   (with-message-queuing t
@@ -364,4 +364,4 @@
   (sip:linphonec-init))
 
 (defcommand sip-exit () ()
-  (sip:linphonecsh "exit"))
+  (sip:linphonecsh `("exit")))
