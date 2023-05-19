@@ -354,6 +354,7 @@
                                ("S" . :espeak-spell)
                                ("t" . :call-terminate)
                                ("a" . :call-answer)
+                               ("p" . :display-active-calls)
                                ("i" . :caller-id-select)
                                ("r" . :linphonec-restart)
                                ("m" . :sip-call-mute)
@@ -373,8 +374,9 @@
                           "result: ~A"
                           (voipms::change-current-caller-id (voipms::voipms-get-auth))))
       (:linphonec-restart
-       '(call-interactively "sip:linphonec-restart")
        (sip:linphonec-restart))
+      (:display-active-calls
+       (message-wrapped "active calls: ~A" (sip:linphonecsh-active-calls)))
       (t (if (equal choice clipboard-choice)
              (call-interactively "sip-contact-selection")
              (call-interactively (symbol-name choice)))))))
