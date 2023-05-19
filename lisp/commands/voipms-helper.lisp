@@ -10,12 +10,13 @@
 (defparameter *default-forward-number* nil)
 (defparameter *default-accounts-to-update* nil)
 
-(defun voipms-get-auth ()
+(defun voipms-get-auth (&key maybe-prompt)
   (let ((info (or (authinfo:get-by-machine "voip.ms")
-                  (authinfo:persist-authinfo-line
-                   '((:name "machine" :value "voip.ms")
-                     (:name "login" :prompt "enter email: ")
-                     (:name "password"))))))
+                  (when maybe-prompt
+                    (authinfo:persist-authinfo-line
+                     '((:name "machine" :value "voip.ms")
+                       (:name "login" :prompt "enter email: ")
+                       (:name "password")))))))
     (voipms:make-voipms-auth
      :username (voipms::alist-get :LOGIN info)
      :password (voipms::alist-get :PASSWORD info))))
