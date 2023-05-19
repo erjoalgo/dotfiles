@@ -32,7 +32,6 @@ else
     ADDRESS=${TEL}@${SIP_HOST}
     LINPHONE_COMMAND="dial"
     LINPHONE_COMMAND_ARGS="${ADDRESS}";
-    export LINPHONE_PROFILE_ID=$(ls ~/.linphonerc* | xargs basename | cut -f3 -d.)
 fi
 
 if command -v x-service-curl; then
