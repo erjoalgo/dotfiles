@@ -174,6 +174,12 @@
 (defun linphonec-init ()
   (linphonec-kill)
   (let ((config (linphonec-config-file)))
+    (unless config
+      (stumpwm:message-wrapped "calling linphone boot...")
+      (voipms::linphone-boot)
+      (setf config
+            (or (linphonec-config-file)
+                (error "no linphone config file found!"))))
     (prog1
         (sip:linphonecsh-sync
          `("init"
