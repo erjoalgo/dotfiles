@@ -33,7 +33,7 @@
 
 (defvar *linphone-inhibit-command-echo* nil)
 
-(defun linphonecsh-sync (args)
+(defun linphonecsh-sync (args &key (retry t))
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
   (unless *linphone-inhibit-command-echo*
@@ -42,7 +42,13 @@
       (stumpwm::run-command-retcode-output "linphonecsh" args)
     (if (zerop retcode)
         output
-        (error "non-zero exit status: ~A ~A" retcode output))))
+        (let ((msg (format nil "non-zero exit status: ~A ~A" retcode output)))
+          (if retry
+              (progn
+                (stumpwm:message-wrapped "~A" msg)
+                (linphonec-init)
+                (linphonecsh-sync args :retry nil))
+              (error "~A" msg))))))
 
 (defun sip-current-identity ()
   (let* ((output (linphonecsh-sync `("generic" "proxy show default"))))
