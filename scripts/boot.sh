@@ -322,4 +322,8 @@ fi
 cd ~/git/githost
 python3 setup.py install --user
 
+sudo apt-get install figlet
+
+figlet $(hostname) | sudo tee /etc/motd
+
 echo "success"
