@@ -12,6 +12,9 @@ for POLICIES_DIR in /etc/opt/chrome/policies/ /etc/chromium/policies; do
 
     cat <<EOF | sudo tee ${POLICIES_DIR}/managed/allow_tel_protocol.json > /dev/null
 {
+  "URLWhitelist": [
+    "tel:*"
+  ],
   "URLAllowlist": [
     "tel:*"
   ]
