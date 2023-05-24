@@ -354,6 +354,7 @@ alias g4r='g4 revert'
 alias g4df='g4 revert'
 
 alias modernize-directory="find . -name '*py' -exec modernize -wn {} +"
+alias gpg-clearsign-test='gpg --clearsign <<< test'
 
 # Local Variables:
 # mode: sh
