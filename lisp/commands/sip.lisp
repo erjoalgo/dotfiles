@@ -358,7 +358,8 @@
                                ("i" . :caller-id-select)
                                ("r" . :linphonec-restart)
                                ("m" . :sip-call-mute)
-                               ("M" . :sip-call-unmute))
+                               ("M" . :sip-call-unmute)
+                               ("g" . :call-logs))
            :read-char-if-possible t
            :display-candidates :include-values)))
     (case choice
@@ -373,6 +374,9 @@
       (:caller-id-select (message-wrapped
                           "result: ~A"
                           (voipms::change-current-caller-id (voipms::voipms-get-auth))))
+      (:call-logs (message-wrapped
+                          "result: ~A"
+                          (sip::linphonecsh-sync `("generic" "call-logs"))))
       (:linphonec-restart
        (sip:linphonec-restart))
       (:display-active-calls
