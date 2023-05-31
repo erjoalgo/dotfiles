@@ -708,5 +708,5 @@ function git-rebase-fxps {
                 grep -Po "[0-9]+" |  \
                 sort -nr | head -1)
     fi
-    git rebase "HEAD~${N} -i"
+    git rebase -i "HEAD~${N}"
 }
