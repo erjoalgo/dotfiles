@@ -6,7 +6,7 @@ set -euo pipefail
 git status
 
 function usage {
-    echo "$(basename ${0}) -t SSH_USERHOST [ -o SSH_opts ] -r REMOTE_NAME [ -n repo_name ]
+    echo "$(basename ${0}) -t SSH_USERHOST [-r REMOTE_NAME] [ -o SSH_opts ] [ -n repo_name ]
 [ -d remote_git_bare_prefix ]"
 }
 
@@ -39,10 +39,12 @@ done
 
 REPO_NAME=${REPO_NAME:-$(basename $(pwd))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
-if test -z "${SSH_USERHOST:-}" -o -z "${REMOTE_NAME:-}"; then
+if test -z "${SSH_USERHOST:-}"; then
     usage
     exit 1
 fi
+
+REMOTE_NAME=${REMOTE_NAME:-"${SSH_USERHOST}"}
 
 ssh ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -s" <<EOF
 set -euxo pipefail
