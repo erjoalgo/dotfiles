@@ -27,7 +27,7 @@ def http_request(url, method, data, headers):
   # TODO(ejalfonso) migrate to requests library, make this a python package
   pass
 
-def x_service_curl(specs, path, data):
+def x_service_curl(specs, path, headers, data):
   cnt = 0
   for spec in specs:
     if isinstance(spec, int):
@@ -41,8 +41,6 @@ def x_service_curl(specs, path, data):
         if not socket_open_unix(socket):
             continue
     cnt += 1
-    headers = dict(((name, val) for (name, val) in os.environ.items()
-                    if name.startswith("STUMPWM")))
     if port:
         url = f"http://localhost:{port}{path}"
         method = "POST" if data else "GET"
@@ -70,6 +68,8 @@ def main():
                       help = "read data from the given filename")
   parser.add_argument("-i", "--stdin", action="store_true",
                       help = "read POST data from stdin")
+  parser.add_argument("-H", "--headers", nargs="+",
+                      help = "list of headers as KEY:VALUE pairs")
 
   args=parser.parse_args()
 
@@ -81,8 +81,16 @@ def main():
   elif args.stdin:
       data = sys.stdin.buffer.read()
 
+  headers = dict(((name, val) for (name, val)
+                  in os.environ.items()
+                  if name.startswith("STUMPWM")))
+
+  for header in args.headers:
+      k, v = header.split(':')
+      headers[k] = v
+
   sockets = glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
-  if x_service_curl(sockets, args.path, data):
+  if x_service_curl(sockets, args.path, headers, data):
       return 0
   print(f"no ports or sockets found: {sockets}")
 
