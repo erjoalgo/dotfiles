@@ -262,6 +262,11 @@ insert-text-block '# 20bf6fe5-1525-4fba-905a-beec9b3df1e5-add-usr-games-to-path'
 export PATH=\$PATH:/usr/games/
 EOF
 
+insert-text-block '# 59a39cbe-5416-42b7-b66e-43227eb01227-add-server-configs-bin'  \
+                  ~/.profile-env<<EOF
+export PATH=\$PATH:${HOME}/git/server-configs/bin
+EOF
+
 insert-text-block ';; 5ef52c11-e976-4eb5-90fa-38795231059d-load-my-sbclrc' \
    ${HOME}/.sbclrc <<EOF
   ;; #-dbg
