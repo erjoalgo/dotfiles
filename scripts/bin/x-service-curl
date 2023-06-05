@@ -51,10 +51,6 @@ def x_service_curl(specs, path, headers, data):
             client.connect(socket)
             client.send(stdin_bytes)
             client.close()
-    if cmd:
-        p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-        if data:
-            p.communicate(input=data)
   return cnt
 
 def main():
