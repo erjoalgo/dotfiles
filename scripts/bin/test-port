@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PROTOCOL=${PROTOCOL:-tcp};
+if test $# = 1; then
+    HOST=localhost;
+else
+    HOST="${1}" && shift;
+fi;
+PORT="${1}";
+exec 6<> /dev/${PROTOCOL}/${HOST}/${PORT}
+
+# Local Variables:
+# mode: sh-mode
+# End:
