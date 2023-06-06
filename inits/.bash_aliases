@@ -184,7 +184,7 @@ if command -v apt-get > /dev/null; then
     alias afl='apt-file list'
     alias sagiy='sudo apt-get install -y'
     for ALIAS in sagiy acs acw dpkgl; do
-        complete-alias _apt ${ALIAS} apt-get install
+        complete-alias _apt_get ${ALIAS} apt-get install
     done
 
     alias sagu='sudo apt-get update'
