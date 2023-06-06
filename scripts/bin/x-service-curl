@@ -64,7 +64,7 @@ def main():
                       help = "read data from the given filename")
   parser.add_argument("-i", "--stdin", action="store_true",
                       help = "read POST data from stdin")
-  parser.add_argument("-H", "--headers", nargs="+",
+  parser.add_argument("-H", "--headers", nargs="+", default=[],
                       help = "list of headers as KEY:VALUE pairs")
 
   args=parser.parse_args()
