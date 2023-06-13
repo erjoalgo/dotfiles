@@ -180,9 +180,13 @@ function is_newline_terminated	{
 }
 
 function gitignore-append-commit	{
+    echo "" >> .gitignore # ensure file ends with newline
     for IGNORE in ${*}; do
 	echo ${IGNORE} >> .gitignore
     done
+    # remove empty lines
+    sed '/^[[:space:]]*$/d' -i .gitignore
+
     git add .gitignore
     git commit -m "gitignore ${1}"
 }
