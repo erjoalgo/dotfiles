@@ -26,7 +26,7 @@ function install-wifi-tools {
 
 INSTALLED=""
 
-if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI"; then
+if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI" && ! dpkg -s firmware-iwlwifi; then
     add-non-free-apt-source
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
