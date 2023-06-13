@@ -47,9 +47,12 @@ if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller"
     INSTALLED+=" firmware-sof-signed"
 fi
 
-# apt-get install -y firmware-realtek
-# modprobe -r realtek
-# modprobe realtek
+if sudo dmesg | grep -i "firmware: failed to load.*rtl"; then
+    apt-get install -y firmware-realtek
+    modprobe -r realtek
+    modprobe realtek
+    INSTALLED+=" realtek"
+fi
 
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
