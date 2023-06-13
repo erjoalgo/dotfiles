@@ -31,7 +31,7 @@ if grep -Pi "centrino|Net.*Intel" <<< "$LSPCI" && ! dpkg -s firmware-iwlwifi; th
     sudo apt-get install -u firmware-iwlwifi
     sudo modprobe -r iwlwifi || true
     sudo modprobe iwlwifi
-    INSTALLED+=iwlwifi
+    INSTALLED+=" iwlwifi"
 fi
 
 if grep -i "Ethernet.*Broadcom" <<< "${LSPCI}"; then
@@ -44,7 +44,7 @@ if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller"
         <<< "$LSPCI"; then
     add-non-free-apt-source
     sudo apt-get install -u firmware-sof-signed
-    INSTALLED+=firmware-sof-signed
+    INSTALLED+=" firmware-sof-signed"
 fi
 
 # apt-get install -y firmware-realtek
