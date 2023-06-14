@@ -3,7 +3,7 @@
 set -euo pipefail
 
 DEST=${HOME}/Videos/$(date +"%d-%m-%Y")
-DCIM=/mnt/sdcard/DCIM
+DCIM=/mnts/sdcard/DCIM
 
 while getopts "hds:" OPT; do
     case ${OPT} in

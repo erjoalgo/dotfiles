@@ -3,7 +3,7 @@
 set -euo pipefail
 
 MODE="client"
-MOUNT_POINT="${HOME}/mnt/docs"
+MOUNT_POINT="${HOME}/mnts/docs"
 
 while getopts "csh:" OPT; do
     case ${OPT} in
@@ -42,7 +42,7 @@ EOF
 elif test "${MODE}" = "server"; then
     sudo apt-get install -y rsnapshot rsync
     sudo rm -f /etc/rsnapshot.conf
-    USB_DRIVE_DOCS_PATH=${USB_DRIVE_DOCS_PATH:-/home/ealfonso/mnt/575841314142384E5A374539/docs}
+    USB_DRIVE_DOCS_PATH=${USB_DRIVE_DOCS_PATH:-/home/ealfonso/mnts/575841314142384E5A374539/docs}
     LOCAL_DOCS_PATH=${LOCAL_DOCS_PATH:-/home/ealfonso/docs}
     sudo insert-text-block  \
         '# e55f88e5-e2b7-466b-8b24-1c0c55165985-rsnapshot-usb-backups'  \

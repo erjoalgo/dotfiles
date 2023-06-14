@@ -23,7 +23,7 @@ while getopts "p:m:o:l:Mh" OPT; do
     esac
 done
 
-MOUNT_POINT_PREFIX=${MOUNT_POINT_PREFIX:-${HOME}/mnt/}
+MOUNT_POINT_PREFIX=${MOUNT_POINT_PREFIX:-${HOME}/mnts/}
 test -n "${MOUNT_POINT_PREFIX}"
 
 while true; do
@@ -86,5 +86,5 @@ if test -z "${NOMOUNT:-}" && ! mount | grep -F "${PARTITION}"; then
 fi
 
 # Local Variables:
-# compile-command: "./write-udevrule-for-stick.sh -d /dev/sda1 -m /mnt/ -o umask=000"
+# compile-command: "./write-udevrule-for-stick.sh -d /dev/sda1 -m /mnts/sdcard -o umask=000"
 # End:
