@@ -20,11 +20,22 @@ while getopts "hi:d:x:" OPT; do
     esac
 done
 
-DHCPD=$(which run-dhcpd.sh)
-ATFTPD=$(which run-atftpd.sh)
+DHCPD_CMD=$(which run-dhcpd.sh)
+ATFTPD_CMD=$(which run-atftpd.sh)
+ATFTPD_CMD+=" -d${DIRECTORY}"
 
-sudo ${DHCPD} -i "${IFACE}" -x "${PXE_FILENAME}" &
 
-sudo ${ATFTPD} -d "${DIRECTORY}"
+if test -n "${IFACE}"; then
+    DHCPD_CMD+=" -i${IFACE}"
+fi
+if test -n "${PXE_FILENAME:-}"; then
+    DHCPD_CMD+=" -x${PXE_FILENAME}"
+fi
+
+PXE_FILENAME=${PXE_FILENAME:-}
+
+sudo ${DHCPD_CMD} &
+
+sudo ${ATFTPD_CMD} &
 
 wait $(jobs -p)
