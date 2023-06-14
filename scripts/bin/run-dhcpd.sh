@@ -31,7 +31,7 @@ option routers 10.0.0.1;
 
 # option broadcast-address 10.0.0.255;
 subnet 10.0.0.0 netmask 255.255.255.0 {
-       range 10.0.0.1 10.0.0.20;
+  range 10.0.0.1 10.0.0.20;
 
        # next-server 10.0.0.1;
        # filename "pxelinux.0"; # setting a default, might be wrong for "non defaults"
