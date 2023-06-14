@@ -33,8 +33,8 @@ option routers 10.0.0.1;
 subnet 10.0.0.0 netmask 255.255.255.0 {
   range 10.0.0.1 10.0.0.20;
 
-       # next-server 10.0.0.1;
-       # filename "pxelinux.0"; # setting a default, might be wrong for "non defaults"
+  next-server 10.0.0.1;
+  filename "pxelinux.0"; # setting a default, might be wrong for "non defaults"
 }
 
 # No DHCP service in DMZ network (192.168.1.0/24)
