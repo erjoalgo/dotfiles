@@ -12,9 +12,10 @@ sudo ip link set dev ${IFACE} up
 IP_ADDR=${PREFIX}.1
 
 while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/24"; do
-    ifdown ${IFACE}
+    ip link set ${IFACE} down
     ip addr add ${IP_ADDR}/24 dev ${IFACE} \
        valid_lft forever preferred_lft forever
+    ip link set ${IFACE} up
 done
 
 
