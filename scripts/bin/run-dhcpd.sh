@@ -3,11 +3,31 @@
 set -euo pipefail
 
 
-CONF=/tmp/dhcpd.conf
-IFACE=enx9405bb1175cc
-PREFIX=10.0.0
+while getopts "hi:x:" OPT; do
+    case ${OPT} in
+    i)
+        IFACE=${OPTARG}
+        ;;
+    x)
+        PXE_FILENAME=${OPTARG}
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
 
-sudo ip link set dev ${IFACE} up
+function find-iface {
+    ip link | grep -Po '^[0-9]+: [^:]+' | cut -d' ' -f2 |  \
+        grep -P "enp|enx" | tail -1
+}
+
+CONF=$(mktemp)
+IFACE=${IFACE:-$(find-iface)}
+PREFIX=10.0.0
+PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
 
 IP_ADDR=${PREFIX}.1
 
@@ -34,7 +54,7 @@ subnet 10.0.0.0 netmask 255.255.255.0 {
   range 10.0.0.1 10.0.0.20;
 
   next-server 10.0.0.1;
-  filename "pxelinux.0"; # setting a default, might be wrong for "non defaults"
+  filename "${PXE_FILENAME}"; # setting a default, might be wrong for "non defaults"
 }
 
 # No DHCP service in DMZ network (192.168.1.0/24)
@@ -42,6 +62,9 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 EOF
 
-INTERFACES=enx9405bb1175cc
 LEASE_FILE=$(mktemp)
-/usr/sbin/dhcpd -f -d -4 -cf ${CONF} $INTERFACES -lf ${LEASE_FILE}
+
+while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
+    sleep 1
+done
+/usr/sbin/dhcpd -f -d -4 -cf "${CONF}" "${IFACE}" -lf "${LEASE_FILE}"
