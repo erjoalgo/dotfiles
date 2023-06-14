@@ -714,3 +714,16 @@ function git-rebase-fxps {
     fi
     git rebase -i "HEAD~${N}"
 }
+
+function git-bisect-start-run {
+    set -x
+    GOOD=${1} && shift
+    BAD=${1} && shift
+    CMD=${*}
+
+    git bisect start
+    git bisect good ${GOOD}
+    git bisect bad ${BAD}
+    git bisect run ${CMD}
+    set +x
+}
