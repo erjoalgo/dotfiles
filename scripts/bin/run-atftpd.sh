@@ -23,4 +23,4 @@ while pgrep -f /sbin/atftpd | xargs kill -9 2> /dev/null; do
     sleep 1
 done
 
-sudo atftpd --no-fork --verbose=7 --logfile - --daemon "${DIRECTORY}"
+sudo atftpd --no-fork --verbose=5 --logfile - --daemon "${DIRECTORY}"
