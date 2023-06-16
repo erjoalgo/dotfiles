@@ -13,7 +13,8 @@ if ! test -e ${SOURCES}.bak; then
 fi
 
 if ! test -z "${TEST:-}"; then
-    SOURCES=${SOURCES}.bak
+    cp /etc/apt/sources.list{,.test}
+    SOURCES=${SOURCES}.test
 fi
 
 . /etc/os-release
