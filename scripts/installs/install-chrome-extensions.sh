@@ -8,12 +8,18 @@ EXT_URLS=$(cat)
 CHROME_WEBSTORE_URL="https://clients2.google.com/service/update2/crx"
 
 # TODO add macos dirs
+DIRS_FOUND=""
+
 for DIR in  \
   /opt/google/chrome/ \
   /usr/share/google-chrome/ \
   /usr/share/chromium/ \
   ; do
-  if test -d ${DIR}; then
+    if ! test -d ${DIR}; then
+        echo "not found ${DIR}"
+        continue
+    fi
+    DIRS_FOUND+=" ${DIR}"
     echo "found chrom* directory: ${DIR}"
     test -w ${DIR} && SUDOOPT="" || SUDOOPT="sudo"
     TOP=${DIR}/extensions
@@ -33,8 +39,15 @@ EOF
         echo "${EXTID} already installed"
       fi
     done
-  fi
 done
+
+if test -z "${DIRS_FOUND}"; then
+    echo "no chrome dirs found!"
+    exit ${LINENO}
+else
+    echo "installed extensions to the following directories: "
+    echo "${DIRS_FOUND}"
+fi
 
 # Local Variables:
 # compile-command: "./install-chrome-extensions.sh < ../../data/public/chrome-extension-urls.txt"
