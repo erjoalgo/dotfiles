@@ -60,6 +60,15 @@ if sudo test -e "${GDM_CONFIG_FILENAME}"; then
   sudo sed -i 's/^XSession=.*/XSession=stumpwm/g' "${GDM_CONFIG_FILENAME}"
 fi
 
+sudo cat <<EOF | sudo tee "${GDM_CONFIG_FILENAME}"
+[User]
+Session=stumpwm
+Icon=$(realpath ../../data/public/.face)
+SystemAccount=false
+
+[InputSource0]
+xkb=us
+EOF
 
 sudo mkdir -p /usr/share/xsessions
 
