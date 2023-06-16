@@ -3,6 +3,11 @@
 SOURCES=/etc/apt/sources.list
 ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS:-}
 
+if grep ubuntu /etc/apt/sources.list; then
+  echo "on ubuntu. skipping sources.list update"
+  exit 0
+fi
+
 if ! test -e ${SOURCES}.bak; then
     cp /etc/apt/sources.list{,.bak}
 fi
