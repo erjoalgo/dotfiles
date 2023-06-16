@@ -17,7 +17,9 @@ fi
 
 sudo apt-get install -y zathura konsole pass keynav at x2x
 sudo apt-get install -y eog scrot
-test -n "$(which google-chrome)" || sudo apt-get install -y chromium
+if ! which google-chrome chromium chrome; then
+  sudo apt-get install -y chromium || sudo snap install chromium;
+fi
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
   macchanger expect iw net-tools
