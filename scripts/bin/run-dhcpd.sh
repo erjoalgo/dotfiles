@@ -20,8 +20,11 @@ done
 shift $((OPTIND -1))
 
 function find-iface {
-    ip link | grep -Po '^[0-9]+: [^:]+' | cut -d' ' -f2 |  \
-        grep -P "enp|enx" | tail -1
+    echo "select target iface: "
+    select IFACE in $(ip link | grep -Po '^[0-9]+: [^:]+' | cut -d' ' -f2); do
+        break
+    done
+    echo "${IFACE}"
 }
 
 function find-route {
