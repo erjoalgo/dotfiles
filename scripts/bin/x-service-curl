@@ -32,25 +32,34 @@ def x_service_curl(specs, path, headers, data):
   for spec in specs:
     if isinstance(spec, int):
         port = spec
-        socket = None
+        socket_addr = None
         if not socket_open_tcp(port):
             continue
     else:
         port = None
-        socket = spec
-        if not socket_open_unix(socket):
+        socket_addr = spec
+        if not socket_open_unix(socket_addr):
             continue
     cnt += 1
     if port:
-        url = f"http://localhost:{port}{path}"
+        url = f"http://127.0.0.1:{port}{path}"
         method = "POST" if data else "GET"
         req = requests.Request(method, url, headers=headers, data=data)
         resp = requests.Session().send(req.prepare())
     else:
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
-            client.connect(socket)
-            client.send(stdin_bytes)
-            client.close()
+        cmd = (
+            ["curl", "-s", "--no-buffer",
+             "--unix-socket", socket_addr,
+             f"http://localhost{path}"] +
+            (["-d@-"] if data else []) +
+            ["-H{key}:{val}" for (key, val) in headers.items()])
+        try:
+            p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+            if data:
+                p.communicate(input=data, timeout=5)
+        except TimeoutExpired:
+            p.kill()
+
   return cnt
 
 def main():
