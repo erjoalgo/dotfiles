@@ -326,7 +326,7 @@ if ! ./installs/nonet.sh; then
 fi
 
 cd ~/git/githost
-python3 setup.py install --user
+python3 setup.py install --user || true
 
 sudo apt-get install figlet
 
