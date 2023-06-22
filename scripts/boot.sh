@@ -62,7 +62,7 @@ sudo echo "successful passwordless sudo"
 
 sudo apt-get update
 
-sudo apt-get install -y git curl python3
+sudo apt-get install -y git curl python3 python3-full
 
 GIT_HOME=${HOME}/git
 
