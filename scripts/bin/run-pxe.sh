@@ -25,7 +25,7 @@ ATFTPD_CMD=$(which run-atftpd.sh)
 ATFTPD_CMD+=" -d${DIRECTORY}"
 
 
-if test -n "${IFACE}"; then
+if test -n "${IFACE:-}"; then
     DHCPD_CMD+=" -i${IFACE}"
 fi
 if test -n "${PXE_FILENAME:-}"; then
