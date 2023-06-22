@@ -41,7 +41,8 @@ export PROMPT_COMMAND='history -a'
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && which xinit  \
+       && ! pgrep X; then
     exec xinit;
 fi
 
