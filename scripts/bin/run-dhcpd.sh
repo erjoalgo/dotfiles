@@ -51,7 +51,10 @@ sudo insert-text-block  \
 EOF
 
 sudo iptables -P FORWARD ACCEPT # TODO fix this, make this more specific
-# sudo iptables -t nat -A POSTROUTING -s ${IP_ADDR}/${SUBNET_CIDR} -j MASQUERADE
+for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev .*)"); do
+    sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
+done
+
 sudo sysctl -w net.ipv4.ip_forward=1
 
 while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/${SUBNET_CIDR}"; do
