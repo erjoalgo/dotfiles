@@ -24,18 +24,34 @@ function find-iface {
         grep -P "enp|enx" | tail -1
 }
 
+function find-route {
+    ip route get 8.8.8.8 | grep -Po '(?<=via )[0-9.]+'
+}
+
+function find-dns {
+    grep -Po '(?<=^nameserver )[0-9.]+' /etc/resolv.conf | head -1
+}
+
 CONF=$(sudo mktemp)
 IFACE=${IFACE:-$(find-iface)}
 PREFIX=10.0.0
 PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
-
+REAL_ROUTER=${REAL_ROUTER:-$(find-route)}
 IP_ADDR=${PREFIX}.1
+SUBNET_CIDR=24
+DNS=${DNS:-$(find-dns)}
 
-while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/24"; do
-    ip link set ${IFACE} down
-    ip addr add ${IP_ADDR}/24 dev ${IFACE} \
+
+sudo iptables -P FORWARD ACCEPT # TODO fix this, make this more specific
+# sudo iptables -t nat -A POSTROUTING -s ${IP_ADDR}/${SUBNET_CIDR} -j MASQUERADE
+sudo sysctl -w net.ipv4.ip_forward=1
+
+while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/${SUBNET_CIDR}"; do
+    sudo ip link set ${IFACE} down
+    sudo ip addr flush dev ${IFACE}
+    sudo ip addr add ${IP_ADDR}/${SUBNET_CIDR} dev ${IFACE} \
        valid_lft forever preferred_lft forever
-    ip link set ${IFACE} up
+    sudo ip link set ${IFACE} up
 done
 
 
@@ -45,21 +61,22 @@ sudo insert-text-block \
 default-lease-time 600;
 max-lease-time 7200;
 
-option domain-name-servers 8.8.8.8;
-option subnet-mask 255.255.255.0;
-option routers 10.0.0.1;
 
-# option broadcast-address 10.0.0.255;
 subnet 10.0.0.0 netmask 255.255.255.0 {
   range 10.0.0.1 10.0.0.20;
 
-  next-server 10.0.0.1;
-  filename "${PXE_FILENAME}"; # setting a default, might be wrong for "non defaults"
+
+  option subnet-mask 255.255.255.0;
+  option routers ${IP_ADDR};
+  option broadcast-address ${REAL_ROUTER%.*}.255;
+  option domain-name-servers ${DNS};
+
+  next-server ${IP_ADDR};
+  filename "${PXE_FILENAME}";
 }
 
 # No DHCP service in DMZ network (192.168.1.0/24)
-subnet 192.168.1.0 netmask 255.255.255.0 {
-}
+subnet ${REAL_ROUTER%.*}.0 netmask 255.255.255.0 {}
 EOF
 
 LEASE_FILE=$(sudo mktemp)
