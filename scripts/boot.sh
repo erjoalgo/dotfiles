@@ -320,6 +320,12 @@ if which "${X_BROWSER}" && which update-alternatives; then
   # sudo update-alternatives --config x-www-browser
 fi
 
+sudo insert-text-block \
+     '# yTyIZrilAW59XgITTlNwLp3VdhMn9k7R-enable-sysrq' \
+     /etc/sysctl.d/99-sysctl.conf<<EOF
+kernel.sysrq = 1
+EOF
+
 # set up the nonet user
 if ! ./installs/nonet.sh; then
     echo "WARNING: failed to install nonent"
