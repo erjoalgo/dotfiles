@@ -62,7 +62,7 @@ done
 
 sudo insert-text-block \
      '# 44ee01ca-8a56-411a-b047-f525e30a138a-dhcpd-conf' \
-     "${CONF}" <<EOF
+     "${CONF}" -e <<EOF
 default-lease-time 600;
 max-lease-time 7200;
 
