@@ -44,7 +44,7 @@ fi
 if command -v x-service-curl; then
     RESP=$(x-service-curl  \
                /read-char  \
-               -H"STUMPWM-PROMPT: call (c) or (t) text ${TEL}? ")
+               -H"STUMPWM-PROMPT:call (c) or (t) text ${TEL}? ")
     if test "${RESP}" = "t"; then
         # text
         if command -v emacs-sip; then
