@@ -19,10 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+"""Insert a block of text into a (config) file."""
+
 from __future__ import print_function
-import sys, argparse, re, os
 
 import argparse
+import os
+import re
+import sys
+
 parser = argparse.ArgumentParser()
 parser.add_argument("line", help = "universally unique line")
 parser.add_argument("filename", help = "input/output file")
@@ -36,46 +41,49 @@ parser.add_argument("-N", "--skip_separating_line",  action="store_true",
 parser.add_argument("-p", "--parents", help = "make parent directories",
                     action="store_true")
 
-args=vars(parser.parse_args())
-globals().update(args)
+args=parser.parse_args()
 
 stdin=sys.stdin.read()
-if not no_strip_newline and stdin and stdin[-1]=="\n":
+if not args.no_strip_newline and stdin and stdin[-1]=="\n":
     stdin=stdin[:-1]
-block="\n".join((line, stdin, line))
-if not filename.startswith("/dev/fd") and not os.path.exists(filename):
-    if parents:
+block="\n".join((args.line, stdin, args.line))
+if not args.filename.startswith("/dev/fd") and not os.path.exists(args.filename):
+    if args.parents:
         def mkparent(path):
+            """Recursively make directories in path."""
             if not os.path.exists(path):
                 mkparent(os.path.dirname(path))
                 os.mkdir(path)
-        mkparent(os.path.dirname(filename))
+        mkparent(os.path.dirname(args.filename))
 
-    with open( filename, "w") as fh:
+    with open(args.filename, "w") as fh:
         pass
-# assert(os.path.exists(filename))
-orig_text=open(filename).read()
-output=output or filename
-if output=="-":
-    output="/dev/stdout"
 
-regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(line))
+orig_text = open(args.filename).read()
+output = args.output or args.filename
+if output=="-":
+    output = "/dev/stdout"
+
+regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(args.line))
 match=re.match(regexp, orig_text)
 if match:
-  pre, post = match.group(1), match.group(3)
+    pre, post = match.group(1), match.group(3)
 else:
-  pre, post = orig_text, ""
+    pre, post = orig_text, ""
+
 # pre, post refer to the original document before processing
 # before, after refer to the new document
 
-middle=filter(bool, [match.group(1), match.group(3)]) if match else [orig_text] if orig_text else []
+middle=(filter(bool, [match.group(1), match.group(3)]) if match else
+        [orig_text] if orig_text
+        else [])
 
-if begining_append:
+if args.begining_append:
     before, after = "", "\n".join((pre, post))
 else:
     before, after = pre, post
 
-if not skip_separating_line:
+if not args.skip_separating_line:
     if before:
         block = "\n" + block
     if after:
