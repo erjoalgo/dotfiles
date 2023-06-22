@@ -41,6 +41,11 @@ IP_ADDR=${PREFIX}.1
 SUBNET_CIDR=24
 DNS=${DNS:-$(find-dns)}
 
+sudo insert-text-block  \
+     '# b53ee337-a469-4b65-a3b4-348b593b2178-allowlist-vbox-host-only-adapter-prefix' \
+      /etc/vbox/networks.conf <<EOF
+* ${IP_ADDR}/${SUBNET_CIDR}
+EOF
 
 sudo iptables -P FORWARD ACCEPT # TODO fix this, make this more specific
 # sudo iptables -t nat -A POSTROUTING -s ${IP_ADDR}/${SUBNET_CIDR} -j MASQUERADE
