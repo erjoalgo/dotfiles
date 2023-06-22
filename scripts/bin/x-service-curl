@@ -86,6 +86,8 @@ def main():
       data = args.data.encode()
   elif args.stdin:
       data = sys.stdin.buffer.read()
+  else:
+      data = None
 
   headers = dict(((name, val) for (name, val)
                   in os.environ.items()
