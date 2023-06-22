@@ -36,7 +36,10 @@
 
 (define-run-or-pull-program "zathura")
 
-(define-run-or-pull-program "vncviewer")
+(define-run-or-pull-program "virtualbox"
+  :classes '("VirtualBox Machine" "VirtualBox Manager")
+        :cmd "virtualbox"
+        :raise-key "H-v")
 
 (defvar *games-keymap* (make-sparse-keymap))
 
