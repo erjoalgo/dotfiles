@@ -34,8 +34,8 @@ fi
 
 PXE_FILENAME=${PXE_FILENAME:-}
 
-sudo ${DHCPD_CMD} &
+( sudo ${DHCPD_CMD} || true; kill $$) &
 
-sudo ${ATFTPD_CMD} &
+( sudo ${ATFTPD_CMD} || true; kill $$) &
 
 wait $(jobs -p)
