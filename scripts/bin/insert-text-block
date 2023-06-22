@@ -40,6 +40,8 @@ parser.add_argument("-N", "--skip_separating_line",  action="store_true",
                     help = "skip adding a separating newline when file exists and is not empty")
 parser.add_argument("-p", "--parents", help = "make parent directories",
                     action="store_true")
+parser.add_argument("-e", "--echo", help = "echo contents to stdout",
+                    action="store_true")
 
 args=parser.parse_args()
 
@@ -92,6 +94,9 @@ if not args.skip_separating_line:
 new_text="\n".join(b for b in (before, block, after) if b)
 with open( output, "w") as fh:
     fh.write(new_text)
+
+if args.echo:
+    print(new_text)
 
 # Local Variables:
 # mode: python
