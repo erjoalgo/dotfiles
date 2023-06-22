@@ -46,6 +46,7 @@ def x_service_curl(specs, path, headers, data):
         method = "POST" if data else "GET"
         req = requests.Request(method, url, headers=headers, data=data)
         resp = requests.Session().send(req.prepare())
+        print(resp.text)
     else:
         cmd = (
             ["curl", "-s", "--no-buffer",
