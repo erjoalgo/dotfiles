@@ -24,7 +24,7 @@ function find-iface {
         grep -P "enp|enx" | tail -1
 }
 
-CONF=$(mktemp)
+CONF=$(sudo mktemp)
 IFACE=${IFACE:-$(find-iface)}
 PREFIX=10.0.0
 PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
@@ -62,7 +62,7 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 EOF
 
-LEASE_FILE=$(mktemp)
+LEASE_FILE=$(sudo mktemp)
 
 while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
     sleep 1
