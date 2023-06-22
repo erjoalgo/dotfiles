@@ -727,3 +727,11 @@ function git-bisect-start-run {
     git bisect run ${CMD}
     set +x
 }
+
+function apt-get-source {
+    PACKAGE=${1} && shift
+    mkdir -p ${HOME}/src/${PACKAGE}
+    cd ${HOME}/src/${PACKAGE}
+    apt-get source ${PACKAGE}
+    cd $(find . -maxdepth 1 -type d -name "${PACKAGE}*")
+}
