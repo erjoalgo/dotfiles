@@ -37,7 +37,8 @@ function find-dns {
 
 CONF=$(sudo mktemp)
 IFACE=${IFACE:-$(find-iface)}
-PREFIX=10.0.0
+IFACE_ID=$(python3 -c "print (0x$(md5sum <<<$IFACE | cut -f1 -d' ') % 10)")
+PREFIX=10.0.${IFACE_ID}
 PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
 REAL_ROUTER=${REAL_ROUTER:-$(find-route)}
 IP_ADDR=${PREFIX}.1
@@ -73,8 +74,8 @@ default-lease-time 600;
 max-lease-time 7200;
 
 
-subnet 10.0.0.0 netmask 255.255.255.0 {
-  range 10.0.0.1 10.0.0.20;
+subnet ${PREFIX}.0 netmask 255.255.255.0 {
+  range ${PREFIX}.1 ${PREFIX}.20;
 
 
   option subnet-mask 255.255.255.0;
