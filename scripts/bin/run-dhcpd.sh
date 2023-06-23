@@ -20,7 +20,7 @@ done
 shift $((OPTIND -1))
 
 function find-iface {
-    echo "select target iface: "
+    echo "select target iface: " 1>&2
     select IFACE in $(ip link | grep -Po '^[0-9]+: [^:]+' | cut -d' ' -f2); do
         break
     done
