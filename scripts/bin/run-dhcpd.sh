@@ -52,7 +52,7 @@ sudo insert-text-block  \
 EOF
 
 sudo iptables -P FORWARD ACCEPT # TODO fix this, make this more specific
-for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev .*)"); do
+for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
     sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
 done
 
