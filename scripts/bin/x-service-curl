@@ -53,12 +53,12 @@ def x_service_curl(specs, path, headers, data):
              "--unix-socket", socket_addr,
              f"http://localhost{path}"] +
             (["-d@-"] if data else []) +
-            ["-H{key}:{val}" for (key, val) in headers.items()])
+            [f"-H{key}:{val}" for (key, val) in headers.items()])
         try:
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
             if data:
                 p.communicate(input=data, timeout=5)
-        except TimeoutExpired:
+        except subprocess.TimeoutExpired:
             p.kill()
 
   return cnt
