@@ -278,16 +278,7 @@ function git-review-pull-request	{
     fi
 }
 
-function pid-listening-at-port	{
-    PORT=${1} && shift
-    LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${PORT}[^0-9]")
-    if test -n "${LINE}"; then
-        PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
-        echo -e "${LINE}\n" 1>&2
-        xargs -L1 ps -w30 -fp <<< "${PID}"  1>&2
-        echo ${PID}
-    fi
-}
+
 
 function kill-process-listening-at-port	{
   PORT=${1} && shift
