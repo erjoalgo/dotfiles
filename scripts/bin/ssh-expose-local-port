@@ -3,7 +3,7 @@
 set -euo pipefail
 
 function usage  {
-    echo "expose-port <SSH_HOST> -l <LOCAL_FORWARD_PORT>:<REMOTE_LISTEN_PORT>"
+    echo "expose-port -l <LOCAL_FORWARD_PORT>:<REMOTE_LISTEN_PORT> <SSH_HOST>"
 }
 
 while getopts "l:h" OPT; do
