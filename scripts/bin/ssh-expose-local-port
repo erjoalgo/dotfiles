@@ -12,7 +12,7 @@ while getopts "l:h" OPT; do
             LOCAL_FORWARD_PORT=$(cut -d: -f1  <<< "${OPTARG}")
             REMOTE_LISTEN_PORT=$(cut -d: -f2  <<< "${OPTARG}")
             REMOTE_LISTEN_PORT=${REMOTE_LISTEN_PORT:-$LOCAL_FORWARD_PORT}
-            FORWARD_SPEC+="-R ${LOCAL_FORWARD_PORT}:localhost:${REMOTE_LISTEN_PORT} "
+            FORWARD_SPEC+="-R ${REMOTE_LISTEN_PORT}:localhost:${LOCAL_FORWARD_PORT} "
             ;;
         h)
             less $0
