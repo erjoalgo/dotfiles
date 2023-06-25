@@ -3,16 +3,16 @@
 set -euo pipefail
 
 function usage  {
-    echo "expose-port <SSH_HOST> -l <LOCAL_SERVICE_PORT> [-r <REMOTE_LISTEN_PORT>]"
+    echo "expose-port <SSH_HOST> -l <LOCAL_FORWARD_PORT>:<REMOTE_LISTEN_PORT>"
 }
 
 while getopts "l:h" OPT; do
     case ${OPT} in
         l)
             LOCAL_FORWARD_PORT=$(cut -d: -f1  <<< "${OPTARG}")
-            REMOTE_SERVICE_PORT=$(cut -d: -f2  <<< "${OPTARG}")
-            REMOTE_SERVICE_PORT=${REMOTE_SERVICE_PORT:-{LOCAL_FORWARD_PORT}}
-            FORWARD_SPEC+="-R ${LOCAL_FORWARD_PORT}:localhost:${REMOTE_SERVICE_PORT} "
+            REMOTE_LISTEN_PORT=$(cut -d: -f2  <<< "${OPTARG}")
+            REMOTE_LISTEN_PORT=${REMOTE_LISTEN_PORT:-{LOCAL_FORWARD_PORT}}
+            FORWARD_SPEC+="-R ${LOCAL_FORWARD_PORT}:localhost:${REMOTE_LISTEN_PORT} "
             ;;
         h)
             less $0
@@ -24,12 +24,12 @@ shift $((OPTIND -1))
 
 SSH_HOST_SPEC="${1}" && shift
 
-if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_SERVICE_PORT:-}"; then
+if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_FORWARD_PORT:-}"; then
     usage
     exit ${LINENO}
 fi
 
-REMOTE_LISTEN_PORT="${REMOTE_LISTEN_PORT:-${LOCAL_SERVICE_PORT}}"
+REMOTE_LISTEN_PORT="${REMOTE_LISTEN_PORT:-${LOCAL_FORWARD_PORT}}"
 
 ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
 
