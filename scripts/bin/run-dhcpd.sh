@@ -53,7 +53,7 @@ EOF
 
 for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
     sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
-    sudo iptables -P FORWARD ACCEPT -i ${IFACE} -o ${GATEWAY_IFACE}
+    sudo iptables -A FORWARD -j ACCEPT -i ${IFACE} -o ${GATEWAY_IFACE}
 done
 
 sudo sysctl -w net.ipv4.ip_forward=1
