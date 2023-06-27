@@ -724,5 +724,5 @@ function apt-get-source {
     mkdir -p ${HOME}/src/${PACKAGE}
     cd ${HOME}/src/${PACKAGE}
     apt-get source ${PACKAGE}
-    cd $(find . -maxdepth 1 -type d -name "${PACKAGE}*")
+    cd $(find . -maxdepth 1 -mindepth 1 -type d)
 }
