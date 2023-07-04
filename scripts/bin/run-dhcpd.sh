@@ -98,5 +98,7 @@ while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
 done
 TRACE_FILE=$(sudo mktemp)
 echo "trace file: ${TRACE_FILE}"
-sudo /usr/sbin/dhcpd -f -d -4 -cf "${CONF}" "${IFACE}"  \
+DHCPD=/usr/sbin/dhcpd
+
+sudo "${DHCPD}" -f -d -4 -cf "${CONF}" "${IFACE}"  \
      -lf "${LEASE_FILE}" -tf "${TRACE_FILE}"
