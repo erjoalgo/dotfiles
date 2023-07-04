@@ -45,6 +45,14 @@ PARTITION_NAME="vm-${VM_NAME}"
 if test "${UMOUNT:-}" = true; then
     LOOP_DEVICE_IDX=$(($LOOP_DEVICE_IDX-1))
     LOOP_DEVICE="/dev/loop${LOOP_DEVICE_IDX}"
+    for DIR in ${ROOT}/{sys,proc,boot,dev/pts,dev}; do
+        for _ in $(seq 3); do
+            if sudo umount ${DIR}; then
+                break
+            fi
+            echo "umount ${DIR} failed. retrying..."
+            sleep 1
+        done
     done
     sudo umount "${BOOT}" || true
     sudo umount "${ROOT}" || true
