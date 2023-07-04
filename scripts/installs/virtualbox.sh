@@ -16,3 +16,5 @@ done
 
 sudo apt-get -y update
 sudo apt-get install -y virtualbox-6.1
+
+vboxmanage setextradata global GUI/SuppressMessages "all"
