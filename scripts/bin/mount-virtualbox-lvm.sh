@@ -38,13 +38,13 @@ MNT=/mnts/${VM_NAME}
 RAW=${MNT}-raw
 ROOT=${MNT}-root
 BOOT=${MNT}-boot
-# LOOP_DEVICE="/dev/loop_$(ls -1 /dev/loop* | wc -l)"
-LOOP_DEVICE="/dev/loop8"
+LOOP_DEVICE_IDX=$(ls -1 /dev/loop* | wc -l)
+LOOP_DEVICE="/dev/loop${LOOP_DEVICE_IDX}"
 PARTITION_NAME="vm-${VM_NAME}"
 
 if test "${UMOUNT:-}" = true; then
-    for DIR in ${ROOT}/{sys,proc,boot,dev/pts,}; do
-        sudo umount ${DIR} || true
+    LOOP_DEVICE_IDX=$(($LOOP_DEVICE_IDX-1))
+    LOOP_DEVICE="/dev/loop${LOOP_DEVICE_IDX}"
     done
     sudo umount "${BOOT}" || true
     sudo umount "${ROOT}" || true
