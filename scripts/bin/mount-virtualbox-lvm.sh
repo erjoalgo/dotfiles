@@ -131,6 +131,7 @@ fi
 sudo mount --bind "${BOOT}" "${ROOT}/boot" || true
 sudo mount -t sysfs /sys "${ROOT}/sys" || true
 sudo mount -t proc /proc "${ROOT}/proc" || true
+sudo mount --bind /dev "${ROOT}/dev" || true
 sudo mount -t devpts /dev/pts "${ROOT}/dev/pts" || true
 
 echo "now sudo chroot ${ROOT}"
