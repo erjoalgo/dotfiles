@@ -75,7 +75,7 @@ max-lease-time 7200;
 
 
 subnet ${PREFIX}.0 netmask 255.255.255.0 {
-  range ${PREFIX}.1 ${PREFIX}.20;
+  range ${PREFIX}.2 ${PREFIX}.20;
 
 
   option subnet-mask 255.255.255.0;
