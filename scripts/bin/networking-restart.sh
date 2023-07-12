@@ -3,7 +3,7 @@
 set -euo pipefail
 
 sudo service networking stop
-sudo rm /var/lib/dhcp/*lease*
+sudo rm -f /var/lib/dhcp/*lease*
 while sudo pkill dhclient; do
     sleep 1
 done
