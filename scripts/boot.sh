@@ -130,8 +130,12 @@ if test 0 -eq "${EUID}"; then
 fi
 
 sudo ${APT_GET} install -y python3-pip vim
-python3 -m venv ~/.venv
-source ~/.venv/bin/activate
+
+if false; then
+    python3 -m venv ~/.venv
+    source ~/.venv/bin/activate
+fi
+
 pip3 install getchwrap -U
 
 # link inits
