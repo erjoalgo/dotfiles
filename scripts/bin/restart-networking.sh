@@ -13,4 +13,7 @@ for IFACE in ${IFACES}; do
     sudo ip addr flush ${IFACE}
 done
 
+echo "ip addr after flushing: "
+sudo ip addr
+
 service networking restart
