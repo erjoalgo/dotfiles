@@ -17,3 +17,6 @@ echo "ip addr after flushing: "
 sudo ip addr
 
 sudo service networking restart
+
+echo "ip addr after restart: "
+sudo ip addr
