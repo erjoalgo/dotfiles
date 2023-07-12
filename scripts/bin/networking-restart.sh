@@ -16,4 +16,4 @@ done
 echo "ip addr after flushing: "
 sudo ip addr
 
-service networking restart
+sudo service networking restart
