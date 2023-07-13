@@ -45,11 +45,16 @@ IP_ADDR=${PREFIX}.1
 SUBNET_CIDR=24
 DNS=${DNS:-$(find-dns)}
 
-sudo insert-text-block  \
-     '# b53ee337-a469-4b65-a3b4-348b593b2178-allowlist-vbox-host-only-adapter-prefix' \
-      /etc/vbox/networks.conf <<EOF
+VBOX_CONF=/etc/vbox/networks.conf
+
+if test -e "${VBOX_CONF}"; then
+    sudo insert-text-block  \
+         '# b53ee337-a469-4b65-a3b4-348b593b2178-allowlist-vbox-host-only-adapter-prefix' \
+         "${VBOX_CONF}" <<EOF
 * ${IP_ADDR}/${SUBNET_CIDR}
 EOF
+fi
+
 
 for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
     sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
