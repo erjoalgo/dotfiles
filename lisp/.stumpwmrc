@@ -116,7 +116,7 @@
 
 (safe-sexp (start-swank))
 
-(style-options-init :debugging t)
+(safe-sexp (style-options-init :debugging t))
 
 (defun load-stumpwmrc-file (relative-path)
   (let ((source-directory
