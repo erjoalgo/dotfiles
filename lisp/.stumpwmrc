@@ -27,7 +27,11 @@
 (defmacro safe-sexp (&body body)
   "Evaluate an expression, handling and recording errors."
   `(handler-case
-       (progn ,@body)
+       (progn
+         (message "executing: ~A" ',body)
+         (prog1
+             ,@body
+           (message "executed: ~A" ',body)))
      (error (err)
        (push (list ',body err) *init-errors*)
        (let ((message-fn (if (fboundp 'message-wrapped)
