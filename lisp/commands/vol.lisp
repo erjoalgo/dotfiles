@@ -16,7 +16,7 @@
         indices)
     (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^ +[*] +index: ([0-9]+)" output)
       (push index indices))
-    indices))
+    (reverse indices)))
 
 (defun pulseaudio-default-sink-index ()
   (setf *pulseaudio-default-sink-index*
