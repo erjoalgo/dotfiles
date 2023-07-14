@@ -115,16 +115,17 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
         (throw 'error "Abort."))))
 
 (define-regexp-route search-handler ("/search")
-    "Web search"
-  (let ((query (hunchentoot-post-data-or-err))
-        (engine (or (read-header :ENGINE)
-                    (let* ((letter (read-header :ENGINE-LETTER))
-                           (char (aref letter 0))
-                           (as-string (format nil "~C" char)))
-                      (assert (eq (length letter) 1))
-                      (or
-                       (stumpwm::search-engine-find-by-key as-string)
-                       (error "No engine found for key ~A" letter))))))
+                     "Web search"
+  (let* ((query (hunchentoot-post-data-or-err))
+         (engine-header (read-header :ENGINE))
+         (engine-letter-header (read-header :ENGINE-LETTER))
+         (engine (if engine-letter-header
+                     (progn
+                       (assert (eq (length engine-letter-header) 1))
+                       (or
+                        (stumpwm::search-engine-find-by-key engine-letter-header)
+                        (error "No engine found for key ~A" engine-letter-header)))
+                     (stumpwm::search-engine-find-by-id (or engine-header "ddg")))))
     (stumpwm::search-engine-search-noninteractive query engine)))
 
 (define-regexp-route run-handler ("/run")
