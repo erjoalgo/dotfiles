@@ -69,23 +69,6 @@
                  do (setf idx new-idx))
         finally (return (nreverse chunks))))
 
-(defun message-wrapped (fmt &rest args)
-  (let* ((text (apply #'format nil fmt args))
-         (screen (current-screen))
-         (pixels-per-char (text-line-width
-                           (screen-font screen) "a"
-                           :translate #'translate-id))
-         (pixels-per-line (screen-width screen))
-         (chars-per-line (floor pixels-per-line pixels-per-char))
-         (chars-per-line (round (* chars-per-line .8))))
-    (if (zerop chars-per-line)
-        (progn
-          (warn "no usable displays?")
-          (STUMPWM::message (apply #'format nil fmt args)))
-        (progn
-          (assert (> chars-per-line 0))
-          (echo-string-list screen (wrap-text text chars-per-line))))))
-
 ;; apply font size options
 (defun style-options-init (&key debugging (font-size 40))
     (setq *message-window-gravity* :center)
