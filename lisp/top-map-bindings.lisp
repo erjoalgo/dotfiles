@@ -41,6 +41,12 @@
         :cmd "virtualbox"
         :raise-key "H-v")
 
+(define-run-or-pull-program "pavucontrol"
+  :classes '("Pavucontrol" )
+  :cmd "pavucontrol"
+  :pull-key "H-o"
+  :raise-key "H-O")
+
 (defvar *games-keymap* (make-sparse-keymap))
 
 (define-run-or-pull-program "eboard"
