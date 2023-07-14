@@ -14,7 +14,7 @@
 (defun pulseaudio-sink-indices ()
   (let ((output (run-shell-command "pacmd list-sinks" t))
         indices)
-    (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^ +index: ([0-9]+)" output)
+    (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^ +[*] +index: ([0-9]+)" output)
       (push index indices))
     indices))
 
