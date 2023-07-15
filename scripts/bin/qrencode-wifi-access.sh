@@ -38,3 +38,5 @@ OUTPUT=${OUTPUT:-"wifi-${SSID}.png"}
 # https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-network-config-android-ios-11
 
 qrencode -o "${OUTPUT}" "WIFI:T:WPA;S:${SSID};P:${PASS};H:false;"
+
+echo "wrote to ${OUTPUT}"
