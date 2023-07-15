@@ -3,7 +3,7 @@
 set -euo pipefail
 
 HOMEDIR_PATH=home/ealfonso/usb-bak/070C6A0EB3DFA834
-while getopts "l:d:h" OPT; do
+while getopts "l:d:hp:" OPT; do
     case ${OPT} in
         p)
             PARTITION=${OPTARG}

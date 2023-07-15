@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "m:nht:" OPT; do
+while getopts "m:nht:d:" OPT; do
     case ${OPT} in
 	m)
 	    LAST_N_MINS="${OPTARG}"

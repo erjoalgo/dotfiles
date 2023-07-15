@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "s:p:h" OPT; do
+while getopts "s:p:ho:" OPT; do
     case ${OPT} in
     s)
         SSID=${OPTARG}

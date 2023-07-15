@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "t:h" OPT; do
+while getopts "t:hs:" OPT; do
     case ${OPT} in
     t)
         TEL=${OPTARG}

@@ -8,7 +8,7 @@ function usage {
 
 COLOR_HEADER_OPT=""
 
-while getopts "m:c:p:h" OPT; do
+while getopts "m:c:p:hH" OPT; do
   case ${OPT} in
     m)
       MESSAGE=${OPTARG}
