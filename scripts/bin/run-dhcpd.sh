@@ -55,7 +55,7 @@ if test -e "${VBOX_CONF}"; then
 EOF
 fi
 
-sudo apt-get install -y iptables
+sudo apt-get install -y iptables isc-dhcp-server
 
 for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
     sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
