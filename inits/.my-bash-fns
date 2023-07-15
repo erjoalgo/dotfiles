@@ -726,8 +726,8 @@ function apt-get-source {
 }
 
 function git-add-new-file {
-    git add ${FILE}
-    git commit -m "new file: ${FILE}"
+    git add ${*}
+    git commit -m "new file: ${*}"
 }
 
 alias ganewfile='git-add-new-file'
