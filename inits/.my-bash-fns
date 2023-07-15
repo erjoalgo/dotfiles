@@ -724,3 +724,12 @@ function apt-get-source {
     apt-get source ${PACKAGE}
     cd $(find . -maxdepth 1 -mindepth 1 -type d)
 }
+
+function git-add-new-file {
+    git add ${FILE}
+    git commit -m "new file: ${FILE}"
+}
+
+alias ganewfile='git-add-new-file'
+__git_complete ganewfile _git_add
+__git_complete git-add-new-file _git_add
