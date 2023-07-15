@@ -32,6 +32,8 @@ if which apt-get; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
         URL=${DOTFILES_GITHUB_URL}/scripts/installs/update-sources-list.sh
         BASE=$(basename ${URL})
+        pushd .
+        cd /tmp
         if ! test -e ${BASE}; then
             if which curl; then
                 curl "${URL}" -Lo "${BASE}"
@@ -42,6 +44,7 @@ if which apt-get; then
         fi
         ${SUDOCMD} ./${BASE}
         ${SUDOCMD} "apt-get update"
+        popd
     fi
     if ! which sudo; then
         ${SUDOCMD} "apt-get install -y sudo ntp"
