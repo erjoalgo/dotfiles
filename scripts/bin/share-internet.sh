@@ -23,5 +23,7 @@ shift $((OPTIND -1))
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
-sudo iptables -I FORWARDING 1 -s ${IFACE_SOURCE} -o ${IFACE_OUT} -j ACCEPT
-sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_SOURCE} -j MASQUERADE
+for TARGET in NFLOG ACCEPT; do
+    sudo iptables -I FORWARD 1 -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ${TARGET}
+done
+sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
