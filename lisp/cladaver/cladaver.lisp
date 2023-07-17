@@ -31,8 +31,7 @@
                                  :method :PROPFIND
                                  :additional-headers '(("Depth" . "1"))
                                  :basic-authorization (when (and username password)
-                                                        (list username password))
-                                 ))
+                                                        (list username password))))
          (doc (cxml:parse raw-resp (stp:make-builder)))
          (nodeset
           (xpath:with-namespaces (("D" "DAV:"))
