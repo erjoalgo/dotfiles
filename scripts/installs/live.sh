@@ -25,4 +25,3 @@ sudo apt install -y python3 libusb-dev
 
 pip3 install ledger_agent
 
-python3 -m pip install btchip-python
