@@ -64,16 +64,21 @@ Favorites=
 ShowMenuBarByDefault=false
 EOF
 
+function clone-git-repo {
+    URL=${1} && shift
+    NAME=$(basename "${URL}")
+    DIR=${HOME}/git/${NAME}
+    if ! test -d "${DIR}"; then
+        git clone "${URL}" "${DIR}"
+    fi
+}
+
 for URL in \
   https://github.com/usocket/usocket \
   https://github.com/erjoalgo/{erjoalgo-webutil,cl-voipms,statusor} \
   ; do
-  NAME=$(basename "${URL}")
-  DIR=${HOME}/git/${NAME}
-  if ! test -d "${DIR}"; then
-    git clone "${URL}" "${DIR}"
+    clone-git-repo "${URL}"
     quicklisp-register-local-project "${DIR}"
-  fi
 done
 
 for DIR in ../lisp/{.,cladaver} ~/git/{statusor,cl-voipms}; do
@@ -122,5 +127,9 @@ sudo apt-get install -y linphone linphone-cli
 
 pip3 install chromeurl
 chromeurl --install-manifest all
+
+clone-git-repo ledger-passwords-cli
+
+ln -fs ${HOME}/git/ledger-passwords-cli/ledger-password-backup-restore.js ${HOME}/bin
 
 echo success
