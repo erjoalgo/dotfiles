@@ -31,7 +31,6 @@ seconds ago")
 (add-hook stumpwm:*new-window-hook* 'raise-window-in-original-group)
 
 (defun raise-pull-or-run-win (win-classes cmd-line &optional pull-p all-screens)
-  (format t "DDEBUG run-raise-programs.lisp mk1p: value of win-classes: ~A~%" win-classes)
   (let* ((win-list (if all-screens (screen-windows (current-screen))
 		       (group-windows (current-group))))
 	 (curr-win (current-window))
