@@ -25,3 +25,10 @@ sudo apt install -y python3 libusb-dev
 
 pip3 install ledger_agent
 
+cd ~/bin
+
+if ! command -v ledger-live; then
+    wget https://download.live.ledger.com/latest/linux -O ledger-live
+    chmod +x ledger-live
+fi
+
