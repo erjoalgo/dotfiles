@@ -1,0 +1,39 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+sudo apt-get install -y redshift geoclue-2.0
+
+
+mkdir -p ${HOME}/.config
+ln -sf ~/git/dotfiles/inits/redshift.conf ${HOME}/.config
+
+# apparmor doesn't like comments!
+# sudo insert-text-block '# 6c23639d-5d9d-45a0-8fa4-8fbc799ecbc2-add-git-controlled-redshift-config'  \
+cat <<EOF | sudo tee /etc/apparmor.d/local/usr.bin.redshift
+owner ${HOME}/git/dotfiles/inits/redshift.conf r,
+EOF
+
+sudo service apparmor restart
+
+install-systemd-service.sh -u redshift <<EOF
+[Unit]
+Description=redshift
+After=graphical.target
+
+[Service]
+ExecStart=/usr/bin/redshift -v
+SyslogIdentifier=redshift
+Environment=DISPLAY=:0
+Restart=always
+RuntimeMaxSec=60
+Type=simple
+
+[Install]
+WantedBy=graphical.target
+EOF
+
+
+# Local Variables:
+# mode: sh-mode
+# End:

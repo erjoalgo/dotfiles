@@ -338,10 +338,11 @@ sudo insert-text-block \
 kernel.sysrq = 1
 EOF
 
-# set up the nonet user
-if ! ./installs/nonet.sh; then
-    echo "WARNING: failed to install nonent"
-fi
+for SCRIPT in nonet.sh redshift; do
+    if ! ./installs/${SCRIPT}; then
+        echo "WARNING: failed to install installs/${SCRIPT}";
+    fi
+done
 
 cd ~/git/githost
 python3 setup.py install --user || true
