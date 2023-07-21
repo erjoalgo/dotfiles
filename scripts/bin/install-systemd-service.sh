@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "h" OPT; do
+while getopts "hu" OPT; do
     case ${OPT} in
     u)
         USER_SERVICE=true
