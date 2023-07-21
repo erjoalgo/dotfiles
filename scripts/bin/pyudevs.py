@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import absolute_import
+import argparse
 import asyncio
 import logging
 import os
@@ -8,10 +9,8 @@ import subprocess
 import threading
 import time
 
-import pyudev
 from six.moves import range
-
-logging.basicConfig(level=logging.DEBUG)
+import pyudev
 
 def x_service_curl(path, post_data=None, headers=None):
     script = "x-service-curl"
@@ -211,4 +210,15 @@ def monitor_forever():
         else:
             logging.info("nothing matched: %s", device)
 
-monitor_forever()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose",  action="store_true")
+
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.WARN)
+    monitor_forever()
