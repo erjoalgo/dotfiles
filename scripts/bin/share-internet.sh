@@ -23,6 +23,7 @@ shift $((OPTIND -1))
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
+set -x
 for TARGET in NFLOG ACCEPT; do
     sudo iptables -I FORWARD 1 -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ${TARGET}
 done
