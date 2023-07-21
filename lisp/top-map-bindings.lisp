@@ -200,7 +200,9 @@
       ("H-q" "run-last-kbd-macro")
       ("H-Q" "run-kbd-macro")
       (,(make-key :keysym 65258) "middle-click")
-      (,(make-key :keysym 65535) "middle-click"))
+      (,(make-key :keysym 65535) "middle-click")
+      ("H-r" "redshift-shift-red")
+      ("H-R" "redshift-shift-blue"))
   ;;not efficient nor necessary but only run at initialization
   )
 
@@ -299,13 +301,17 @@
 
 (define-key-bindings
     *brightness-map*
-    (loop for c across (concat "`1234" "56789" "0")
+    (append
+     (loop for c across "`1234567890"
        for percentage in '(.01 .05 .1 .5 .8
                            1 30 50 70 90
                            100)
        collect
          (list (format nil "~C" c)
-               (format nil "set-brightness ~A" percentage))))
+               (format nil "set-brightness ~A" percentage)))
+     `(("r" "redshift-shift-red")
+       ("b" "redshift-shift-blue")
+       ("x" "redshift-reset"))))
 
 (set-prefix-key (kbd "F19"))
 (pop-top-map)

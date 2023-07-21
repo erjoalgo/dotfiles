@@ -259,3 +259,28 @@
 
    Avoids issues with beep permissions"
   (beep))
+
+(defun get-lat-lng ()
+  "TODO geolocation API"
+  (cons 28.562871 -81.210339))
+
+(defun redshift-oneshot (cmd)
+  "Run a 'oneshot' redshift command"
+  (destructuring-bind (lat . lng) (get-lat-lng)
+    (let ((shell-cmd (format nil
+                             "redshift -l~A:~A -ov ~A"
+                             lat lng cmd)))
+      (message "~A" shell-cmd)
+      (run-shell-command shell-cmd))))
+
+(defcommand redshift-shift-red () ()
+  "Redshift shift red"
+  (redshift-oneshot "-t 3600:3600"))
+
+(defcommand redshift-shift-blue () ()
+  "Redshift shift red"
+  (redshift-oneshot "-t 5600:5600"))
+
+(defcommand redshift-reset () ()
+  "Redshift shift red"
+  (redshift-oneshot "-x"))
