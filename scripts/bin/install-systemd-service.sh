@@ -2,6 +2,19 @@
 
 set -euo pipefail
 
+while getopts "h" OPT; do
+    case ${OPT} in
+    u)
+        USER_SERVICE=true
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
 SERVICE_NAME=${1} && shift
 
 # example service
@@ -19,9 +32,19 @@ ExecStart=/usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes" -o "ServerAliveInt
 WantedBy=multi-user.target
 EOF
 
-sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
-     /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
-
-sudo systemctl enable ${SERVICE_NAME}.service
-sudo systemctl daemon-reload
-sudo service ${SERVICE_NAME} start
+if test -z "${USER_SERVICE:-}"; then
+    sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
+         /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
+    sudo systemctl enable ${SERVICE_NAME}.service
+    sudo systemctl daemon-reload
+    sudo service ${SERVICE_NAME} start
+else
+    CONF=${HOME}/.config/systemd/user/${SERVICE_NAME}.service
+    mkdir -p $(dirname "${CONF}")
+    insert-text-block \
+        '# 7119bd41-07d2-429a-ae51-cc16f0878169-${SERVICE_NAME}'  \
+        "${CONF}" < /dev/stdin
+    systemctl --user enable ${SERVICE_NAME}.service
+    systemctl --user daemon-reload
+    systemctl --user start ${SERVICE_NAME}.service
+fi
