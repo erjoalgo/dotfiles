@@ -26,7 +26,7 @@ EOF
 
 sudo apt install -y python3 libusb-dev
 
-pip3 install ledger_agent
+pip3 install ledger-agent
 
 cd ~/bin
 
