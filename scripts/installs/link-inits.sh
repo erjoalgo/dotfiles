@@ -69,3 +69,5 @@ safe_ln "${INITS_TOP}/redshift.conf" "${HOME}/.config/"
 if ! test -d "${HOME}/.stumpwmrc.d"; then
     safe_ln "${STUMPWM_TOP}" "${HOME}/.stumpwmrc.d"
 fi
+
+safe_ln "${STUMPWM_TOP}/data/public/.face" "${HOME}/"
