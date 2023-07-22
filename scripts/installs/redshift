@@ -26,7 +26,6 @@ ExecStart=/usr/bin/redshift -v
 SyslogIdentifier=redshift
 Environment=DISPLAY=:0
 Restart=always
-RuntimeMaxSec=60
 Type=simple
 
 [Install]
