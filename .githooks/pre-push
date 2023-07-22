@@ -16,7 +16,10 @@ if grep -oP \
     exit ${LINENO}
 fi
 
-sh-fix-getopt.el ./scripts/*/*
+if command -v sh-fix-getopt.el; then
+    sh-fix-getopt.el ./scripts/*/*
+fi
+
 
 # Local Variables:
 # mode: sh-mode
