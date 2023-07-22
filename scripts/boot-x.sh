@@ -46,8 +46,6 @@ sudo $(which update-config-file-key-value) \
   -f /etc/systemd/logind.conf  \
   -k HandlePowerKey -v ignore
 
-sudo service systemd-logind restart
-
 KONSOLERC=${HOME}/.config/konsolerc
 if test -e "$KONSOLERC"; then
     sed -i '/^DefaultProfile=/d' ${KONSOLERC}
