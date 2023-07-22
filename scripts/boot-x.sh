@@ -17,9 +17,6 @@ fi
 
 sudo apt-get install -y zathura konsole pass keynav at x2x
 sudo apt-get install -y eog scrot
-if ! which google-chrome chromium chrome; then
-  sudo apt-get install -y chromium || sudo snap install chromium;
-fi
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
   macchanger expect iw net-tools
@@ -127,11 +124,16 @@ sudo apt-get install -y redshift xcalib xbacklight
 
 sudo apt-get install -y linphone linphone-cli redshift
 
-pip3 install chromeurl
-chromeurl --install-manifest all
-
 clone-git-repo ledger-passwords-cli
 
 ln -fs ${HOME}/git/ledger-passwords-cli/ledger-password-backup-restore.js ${HOME}/bin
+
+if ! which google-chrome chromium chrome; then
+  sudo apt-get install -y chromium || sudo snap install chromium;
+fi
+
+pip3 install chromeurl
+
+chromeurl --install-manifest all
 
 echo success
