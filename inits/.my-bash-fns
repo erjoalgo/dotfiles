@@ -368,7 +368,7 @@ function git-promote-remote-to-origin	{
 __git_complete git-promote-remote-to-origin _git_pull
 
 function ps-tree	{
-    CURR=${1}
+    CURR=${1:-$$}
     while test ${CURR} != 1; do
 	ps -fp ${CURR}
 	CURR=$(ps -o ppid= -p ${CURR})
