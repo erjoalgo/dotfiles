@@ -48,9 +48,9 @@ if grep -Pi "Intel Corporation Cannon Point-LP High Definition Audio Controller"
 fi
 
 if sudo dmesg | grep -i "firmware: failed to load.*rtl"; then
-    apt-get install -y firmware-realtek
-    modprobe -r realtek
-    modprobe realtek
+    sudo apt-get install -y firmware-realtek
+    sudo modprobe -r realtek
+    sudo modprobe realtek
     INSTALLED+=" realtek"
 fi
 
