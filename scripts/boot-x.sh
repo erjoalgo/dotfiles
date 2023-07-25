@@ -24,10 +24,6 @@ sudo apt-get install -y libxcomposite-dev
 
 ./installs/install-xsecurelock.sh
 
-./installs/install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
-
-./installs/chrome-disable-xdg-open-prompt.sh
-
 ./installs/install-find-cursor.sh ||
   echo "WARNING: failed to install find-cursor"
 
@@ -140,5 +136,9 @@ fi
 pip3 install chromeurl
 
 chromeurl --install-manifest all
+
+./installs/install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
+
+./installs/chrome-disable-xdg-open-prompt.sh
 
 echo success
