@@ -54,6 +54,10 @@ if sudo dmesg | grep -i "firmware: failed to load.*rtl"; then
     INSTALLED+=" realtek"
 fi
 
+if sudo grep "Possible missing firmware /lib/firmware/radeon" -R /var/log; then
+    sudo apt-get install -y firmware-amd-graphics
+fi
+
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
     echo "^^ unknown network card!"
