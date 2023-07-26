@@ -133,12 +133,12 @@ if ! which google-chrome chromium chrome; then
   sudo apt-get install -y chromium || sudo snap install chromium;
 fi
 
-pip3 install chromeurl
-
-chromeurl --install-manifest all
 
 ./installs/install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
 
 ./installs/chrome-disable-xdg-open-prompt.sh
+
+pip3 install chromeurl
+chromeurl --install-manifest all
 
 echo success
