@@ -25,7 +25,7 @@
     ;; url-launcher may fail if not connected to the internet, .authinfo doesn't exist, etc
     (safe-sexp (url-launcher-init))
     (text-shortcuts-init)
-    (brightness-init)
+    (safe-sexp (brightness-init))
     (x-service:start 1959)
     ;; TODO remove these
     (def-thread-start *battery-notification-thread*
