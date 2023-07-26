@@ -10,7 +10,7 @@ export XSECURELOCK_WANT_FIRST_KEYPRESS=1
 
 VENV_ACTIVATE="${HOME}/.venv/bin/activate"
 if test -e VENV_ACTIVATE; then
-    source ${VENV_ACTIVATE} || true
+    . ${VENV_ACTIVATE} || true
 fi
 
 PROFILE_ENV=${HOME}/.profile-env
