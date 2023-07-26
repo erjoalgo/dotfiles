@@ -27,6 +27,7 @@
    #:voipms
    #:md5
    #:ironclad
+   #:bordeaux-threads
    )
   :components
   (
