@@ -5,15 +5,15 @@ set -euo pipefail
 DEST=${HOME}/Videos/$(date +"%d-%m-%Y")
 DCIM=/mnts/sdcard/DCIM
 
-while getopts "hds:" OPT; do
+while getopts "hd:s:" OPT; do
     case ${OPT} in
-        d)
-            # output directory
-            DEST=${OPTARG}
-            ;;
         s)
             # source directory
             DCIM=${OPTARG}
+            ;;
+        d)
+            # output directory
+            DEST=${OPTARG}
             ;;
         h)
             less $0
@@ -27,7 +27,10 @@ if ! test -d ${DCIM}; then
     echo "DCIM directory does not exist: ${DCIM}"
 fi
 
-sudo rsync --remove-source-files -arv "${DCIM}" "${DEST}/"
+# sudo chown -R $(whoami) "${DCIM}"
+
+rsync --remove-source-files -arv "${DCIM}" "${DEST}/"
 
 sudo find "${DCIM}" -depth -mindepth 1 -type d -exec rmdir {} \;
+
 # TODO persist on cloud storage
