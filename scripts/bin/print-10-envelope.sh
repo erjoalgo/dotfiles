@@ -21,6 +21,10 @@ while getopts "ha:s:r:" OPT; do
 done
 shift $((OPTIND -1))
 
+if ! command -v evince || ! command -v pdftk; then
+    sudo apt-get install -y evince pdftk
+fi
+
 function read-lines {
     FILENAME=${1} && shift
     cat ${FILENAME} | sed 's/$/\n/g'
