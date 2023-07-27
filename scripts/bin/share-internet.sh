@@ -3,7 +3,7 @@
 set -euo pipefail
 
 
-while getopts "h:s:o:" OPT; do
+while getopts "hs:o:" OPT; do
     case ${OPT} in
         s)
             # source or local interface
