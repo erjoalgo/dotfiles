@@ -53,14 +53,15 @@
 
 (defun battery-notification-maybe-notify (&key (thresholds *battery-notification-thresholds-defaults*))
   "Maybe notify that battery is low. Thresholds has the form (see source): "
-  (destructuring-bind
+  (when-let* ((info (battery-info)))
+  (with-slots
       (min-percent-message
        min-percent-flashing-message
        min-percent-window-popup
        min-percent-beep
        min-percent-suspend)
       thresholds
-    (erjoalgo-webutil:with-json-paths (battery-info)
+    (erjoalgo-webutil:with-json-paths info
         (state (percentage-string "percentage"))
       (statusor:if-let-ok
        (err (error "battery notification error: ~A" err))
@@ -91,7 +92,7 @@
          (when (<= percentage min-percent-beep)
            (beep))
          (when (<= percentage min-percent-suspend)
-           (run-shell-command "systemctl suspend")))))))
+           (run-shell-command "systemctl suspend"))))))))
 
 (defun battery-info-check-notify-loop (&key (interval-secs 30))
   (loop
