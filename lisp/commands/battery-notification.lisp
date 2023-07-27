@@ -36,8 +36,22 @@
             collect (cons (intern (string-upcase (trim-spaces (car kv))) :keyword)
                           (trim-spaces (cadr kv))))))
 
-(defun battery-notification-maybe-notify (&key (thresholds
-                                                '(20 10 5 4 2)))
+(defstruct battery-notification-thresholds
+  min-percent-message
+  min-percent-flashing-message
+  min-percent-window-popup
+  min-percent-beep
+  min-percent-suspend)
+
+(defparameter *battery-notification-thresholds-defaults*
+  (make-battery-notification-thresholds
+   :min-percent-message 20
+   :min-percent-flashing-message 10
+   :min-percent-window-popup 5
+   :min-percent-beep 4
+   :min-percent-suspend 2))
+
+(defun battery-notification-maybe-notify (&key (thresholds *battery-notification-thresholds-defaults*))
   "Maybe notify that battery is low. Thresholds has the form (see source): "
   (destructuring-bind
       (min-percent-message
