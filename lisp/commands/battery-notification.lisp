@@ -1,11 +1,12 @@
 (in-package :STUMPWM)
 
 (defun battery-info ()
-  (let* ((devices (run-shell-command "upower -e" t))
-         (device (loop for device in (cl-ppcre:split #\Newline devices)
-                         thereis (and (cl-ppcre:scan "BAT|battery" device)
-                                      device)))
-         (info (run-shell-command (format nil "upower -i ~A" device) t)))
+  (when-let*
+      ((devices (run-shell-command "upower -e" t))
+       (device (loop for device in (cl-ppcre:split #\Newline devices)
+                       thereis (and (cl-ppcre:scan "BAT|battery" device)
+                                    device)))
+       (info (run-shell-command (format nil "upower -i ~A" device) t)))
     ;; example:
     ;; ((NATIVE-PATH . "BAT0")
     ;;   (VENDOR . "SMP")
