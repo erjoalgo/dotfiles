@@ -40,6 +40,8 @@
       ("m" "google-maps" "https://www.google.com/maps/search/~A")
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")))
 
+(defstruct search-engine id key url-template)
+
 (defparameter *default-engine*
   (make-search-engine :id "ddg"
                       :key "d"
@@ -50,8 +52,6 @@
   "If not nil, search queries will be logged to this filename.")
 
 (defvar *search-engine-map* (STUMPWM:make-sparse-keymap) "")
-
-(defstruct search-engine id key url-template)
 
 (defvar *search-engine-search-split-by-newline* t)
 
