@@ -14,7 +14,7 @@ if test -e VENV_ACTIVATE; then
 fi
 
 PROFILE_ENV=${HOME}/.profile-env
-test -e "${PROFILE_ENV}" && source "${PROFILE_ENV}"
+test -e "${PROFILE_ENV}" && . "${PROFILE_ENV}"
 
 # Local Variables:
 # mode: shell-script

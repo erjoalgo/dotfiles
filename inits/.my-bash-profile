@@ -19,7 +19,7 @@ function notify_lagging_repos {
 # notify_lagging_repos & disown %-
 
 # executed once per session
-source ${HOME}/git/dotfiles/inits/.my-bashrc
+. ${HOME}/git/dotfiles/inits/.my-bashrc
 
 # Local Variables:
 # mode: sh

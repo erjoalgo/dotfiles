@@ -17,9 +17,9 @@ IDX=$(python3 -c "print (0x${HOSTNAME_HASH_HEX} % ${COLORS_COUNT})")
 PS1="\[$(tput setaf $IDX)\]█\[$(tput setaf 4)\][\h][\W][\$?]$ \[$(tput sgr0)\]"
 export PS1=$PS1
 
-source ~/.bash_aliases #should already be sourced by original bashrc
+. ~/.bash_aliases #should already be sourced by original bashrc
 for SRC in $(find -L ~/.bash-fns/ -type f); do
-    source $SRC;
+    . $SRC;
 done
 
 # bash completion on macos

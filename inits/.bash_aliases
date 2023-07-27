@@ -83,7 +83,7 @@ alias lynx-accept-all-cookies='lynx -accept_all_cookies'
 # http://stackoverflow.com/questions/342969/
 GIT_COMPLETIONS=/usr/share/bash-completion/completions/git
 if test -f ${GIT_COMPLETIONS}; then
-  source ${GIT_COMPLETIONS}
+  . ${GIT_COMPLETIONS}
 else
   function __git_complete {
       true
@@ -207,15 +207,15 @@ alias spsi='sudo python setup.py install'
 
 #meta
 function source-personal-bash-files {
-  source ~/.bash_aliases
+  . ~/.bash_aliases
   for SRC in $(find -L ~/.bash-fns/ -type f) ~/.profile-env; do
     echo sourcing $SRC
-    source $SRC
+    . $SRC
   done
 }
 
 alias .a=source-personal-bash-files
-alias .brc='source ~/.bashrc'
+alias .brc='. ~/.bashrc'
 alias .t='tmux source ~/.tmux.conf'
 alias .r='tput reset; clear'
 alias aa='aliasadd.py'
