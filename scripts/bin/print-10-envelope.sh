@@ -2,10 +2,16 @@
 
 set -euo pipefail
 
-while getopts "ha:" OPT; do
+while getopts "ha:s:r:" OPT; do
     case ${OPT} in
     a)
         SOMEARG=${OPTARG}
+        ;;
+    s)
+        SENDER_FILENAME=${OPTARG}
+        ;;
+    r)
+        RECIPIENT_FILENAME=${OPTARG}
         ;;
     h)
         less $0
@@ -16,13 +22,14 @@ done
 shift $((OPTIND -1))
 
 function read-lines {
-    cat | sed 's/$/\n/g'
+    FILENAME=${1} && shift
+    cat ${FILENAME} | sed 's/$/\n/g'
 }
-echo "enter sender lines: "
-SENDER_LINES=$(read-lines)
+echo "reading sender lines..."
+SENDER_LINES=$(read-lines "${SENDER_FILENAME}")
 
-echo "enter recipient lines: "
-RECIPIENT_LINES=$(read-lines)
+echo "reading recipient lines..."
+RECIPIENT_LINES=$(read-lines "${RECIPIENT_FILENAME}")
 
 TEX=$(mktemp XXXXX.tex --tmpdir)
 PREFIX="${TEX%.*}"
