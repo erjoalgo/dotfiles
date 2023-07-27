@@ -71,4 +71,4 @@ echo "print using #10 envelope size and portrait orientation. "
 echo "feed #10 envelope into tray with the stamp on the top-left"
 read -p "confirm print instructions: "
 
-evince ${PDF}
+evince "${ROTATED}"
