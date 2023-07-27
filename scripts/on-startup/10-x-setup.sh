@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if expr $(xbacklight -get) \> 70; then
+CURRENT_BACKLIGHT=$(xbacklight -get)
+if test $? -eq 0 &&  expr ${CURRENT_BACKLIGHT} \> 70; then
     xbacklight -set 70
 fi
 
