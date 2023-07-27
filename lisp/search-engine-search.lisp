@@ -40,6 +40,11 @@
       ("m" "google-maps" "https://www.google.com/maps/search/~A")
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")))
 
+(defparameter *default-engine*
+  (make-search-engine :id "ddg"
+                      :key "d"
+                      :url-template "https://duckduckgo.com/lite/?q=~A"))
+
 (defparameter *search-history-filename*
   (merge-pathnames "search-history" STUMPWM::*data-private-one-way*)
   "If not nil, search queries will be logged to this filename.")
@@ -85,7 +90,7 @@
 
 (defun search-engine-search-noninteractive-single (query &optional engine)
   (assert query)
-  (assert engine)
+  (unless engine (setf engine *default-engine*))
   (let* ((query-sanitized (ppcre:regex-replace-all "\\n" (STUMPWM:trim-spaces query) " "))
 	 (query-encoded (uri-encode query-sanitized))
 	 (url (format nil (search-engine-url-template engine) query-encoded)))
