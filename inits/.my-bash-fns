@@ -662,8 +662,8 @@ function process-children  {
 }
 
 function _nm-find-connection {
-    PATTERN=${1} && shift
-    LINES=$(nmcli c | grep ${PATTERN})
+    PATTERN=${1:-.*} && shift
+    LINES=$(nmcli c | grep  "${PATTERN}")
     if test $(wc -l <<< "${LINES}") -gt 1; then
         PS3='More than one connection for input pattern, select: '
         IFS=$'\n' read -r -d '' -a options <<< "${LINES}"
