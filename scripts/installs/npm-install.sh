@@ -27,6 +27,8 @@ EOFF
 }
 EOF
 
+NVM_PROFILE_INTSALLED=true
+
 for PROFILE_FILE in \
     /etc/profile.d/node-env.sh \
         ${HOME}/.profile-env \
@@ -44,8 +46,8 @@ for PROFILE_FILE in \
 EOF
     STATUS=$?
     set -e
-    if test ${STATUS} = 0; then
-        NVM_PROFILE_INTSALLED=true
+    if test ${STATUS} != 0; then
+        NVM_PROFILE_INTSALLED=false
     fi
 done
 
