@@ -6,6 +6,27 @@ NVM_SH="${HOME}/.nvm/nvm.sh"
 cd
 test -d .nvm || git clone https://github.com/creationix/nvm.git .nvm
 
+
+NVM_LOAD=${HOME}/.nvm-load
+cat <<EOF > ${NVM_LOAD}
+export NVM_DIR="\$HOME/.nvm"
+function nvmload  {
+    echo "loading nvm"
+    # This loads nvm
+    [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh" --no-use
+    # This loads nvm bash_completion
+    [ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"
+    nvm install stable
+    # nvm alias default node
+    NODE_DIR=\$(dirname \$(which node))
+    insert-text-block \
+      '# DAb44TrrbZ9qvuqy3C2He81kPX0NzUJB-export-current-node-location' \
+       ${HOME}/.profile-env <<EOFF
+export PATH=\\\$PATH:\${NODE_DIR}
+EOFF
+}
+EOF
+
 for PROFILE_FILE in \
     /etc/profile.d/node-env.sh \
         ${HOME}/.profile-env \
@@ -19,23 +40,7 @@ for PROFILE_FILE in \
     ${SUDOOPT} insert-text-block \
                '# 69596022-9179-4a5c-be28-a6d12bcdc132-install-nvm' \
                ${PROFILE_FILE} <<EOF
-export NVM_DIR="\$HOME/.nvm"
-function nvmload  {
-    echo "loading nvm"
-    # This loads nvm
-    [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh" --no-use
-    # This loads nvm bash_completion
-    [ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"
-    nvm install stable
-    # nvm alias default node
-    NODE_DIR=\$(dirname \$(which node))
-    insert-text-block \
-      '# DAb44TrrbZ9qvuqy3C2He81kPX0NzUJB-export-current-node-location' \
-       ${PROFILE_FILE} <<EOFF
-export PATH=\\\$PATH:\${NODE_DIR}
-EOFF
-    echo "Added \${NODE_DIR} to PATH in ${PROFILE_FILE}"
-}
+. ${NVM_LOAD}
 EOF
     STATUS=$?
     set -e
