@@ -10,7 +10,7 @@ test -d .nvm || git clone https://github.com/creationix/nvm.git .nvm
 NVM_LOAD=${HOME}/.nvm-load
 cat <<EOF > ${NVM_LOAD}
 export NVM_DIR="\$HOME/.nvm"
-function nvmload  {
+nvmload()  {
     echo "loading nvm"
     # This loads nvm
     [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh" --no-use
@@ -53,8 +53,8 @@ if ! test "${NVM_PROFILE_INTSALLED:-}" = true; then
     echo "failed to install nvm to a bash .profile" && exit ${LINENO}
 fi
 
-source "${NVM_SH}"
-source ${HOME}/.profile-env
+. "${NVM_SH}"
+. ${HOME}/.profile-env
 nvmload
 
 set +xu
