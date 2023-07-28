@@ -27,6 +27,7 @@ SyslogIdentifier=redshift
 Environment=DISPLAY=:0
 Restart=always
 Type=simple
+RuntimeMaxSec=60
 
 [Install]
 WantedBy=graphical.target
