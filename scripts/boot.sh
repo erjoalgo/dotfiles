@@ -114,7 +114,7 @@ FONTFACE="TerminusBold"
 FONTSIZE="16x32"
 EOF
 
-sudo sed -i 's/^XKBOPTIONS=/# \0/g' /etc/default/keyboard
+sudo sed -i 's/^XKBOPTIONS=/# \0/g' /etc/default/keyboard || true
 
 sudo insert-text-block  \
   '# 81475907-8f33-420a-b002-118c8d4a62ae-configure-console-keyboard'  \
@@ -122,7 +122,7 @@ sudo insert-text-block  \
 XKBOPTIONS="terminate:ctrl_alt_bksp,ctrl:nocaps"
 EOF
 
-sudo service console-setup restart
+sudo service console-setup restart || true
 
 if test "${BOOT:-}" = wifi; then
     ./installs/wifi-boot.sh
@@ -141,7 +141,7 @@ if false; then
     source ~/.venv/bin/activate
 fi
 
-pip3 install getchwrap -U
+pip3 install getchwrap -U --break-system-packages || true
 
 # link inits
 for SCRIPT in  \
