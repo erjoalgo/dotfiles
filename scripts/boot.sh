@@ -23,7 +23,8 @@ else
 fi
 
 if ! which sudo && test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y sudo ntp" || true
+   ${SUDOCMD} "${APT_GET} install -y sudo"
+   ${SUDOCMD} "${APT_GET} install -y ntp" || true
 fi
 
 if which apt-get; then
@@ -47,7 +48,8 @@ if which apt-get; then
         popd
     fi
     if ! which sudo; then
-        ${SUDOCMD} "apt-get install -y sudo ntp"
+        ${SUDOCMD} "apt-get install -y sudo"
+        ${SUDOCMD} "apt-get install -y ntp" || true
     fi
 fi
 
@@ -217,7 +219,7 @@ fetch-repos dotemacs githost autobuild tmux-session-spectrum
 # some essential tools
 if test -n "${APT_GET}"; then
     sudo ${APT_GET} install -y htop fail2ban unison tmux wget colordiff netcat-openbsd \
-       apt-file unattended-upgrades ntp nmap bash-completion man-db rsyslog
+       apt-file unattended-upgrades nmap bash-completion man-db rsyslog
     sudo ${APT_GET} install -y bootlogd || true
     # auditd may fail with "audit support not in kernel"
     if ! sudo ${APT_GET} install -y auditd; then
