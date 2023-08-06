@@ -44,7 +44,13 @@ if test -z "${SSH_USERHOST:-}"; then
     exit 1
 fi
 
-REMOTE_NAME=${REMOTE_NAME:-"${SSH_USERHOST}"}
+if test -z "${REMOTE_NAME:-}"; then
+    if ! git config --get "remote.origin"; then
+        REMOTE_NAME=origin
+    else
+        REMOTE_NAME="${SSH_USERHOST}"
+    fi
+fi
 
 ssh ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -s" <<EOF
 set -euxo pipefail
