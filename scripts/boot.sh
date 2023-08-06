@@ -338,6 +338,19 @@ sudo insert-text-block \
 kernel.sysrq = 1
 EOF
 
+sudo apt-get install -y network-manager
+
+sudo insert-text-block \
+     '# 2c8739f8-5dfb-4329-8b73-afacddddef11-dont-revert-spoofed-mac'  \
+     /etc/NetworkManager/NetworkManager.conf <<EOF
+[device]
+wifi.scan-rand-mac-address=no
+
+[connection]
+ethernet.cloned-mac-address=preserve
+wifi.cloned-mac-address=preserve
+EOF
+
 for SCRIPT in nonet.sh redshift; do
     if ! ./installs/${SCRIPT}; then
         echo "WARNING: failed to install installs/${SCRIPT}";
