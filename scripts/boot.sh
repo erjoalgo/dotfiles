@@ -357,6 +357,8 @@ for SCRIPT in nonet.sh redshift; do
     fi
 done
 
+sudo apt-get install -y pgformatter
+
 cd ~/git/githost
 python3 setup.py install --user || true
 
