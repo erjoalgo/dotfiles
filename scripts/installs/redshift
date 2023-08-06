@@ -29,7 +29,7 @@ Restart=always
 Type=simple
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
 EOF
 
 
