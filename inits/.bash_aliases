@@ -246,7 +246,7 @@ alias tail-mail='sudo tail -f /var/mail/$(whoami)'
 alias less-mail='sudo less /var/mail/$(whoami)'
 alias mci='mvn clean install'
 alias cflogs='cf logs $(grep -Po "(?<=name: ).*" manifest.yml)'
-alias json-pp='python -mjson.tool'
+alias json-pp='python3 -mjson.tool'
 
 #pipes
 alias lein-repl-tee-log='lein repl |& tee log'
