@@ -4,17 +4,19 @@ set -euo pipefail
 #
 # Ensure that no commit breaks erjoalgo-stumpwmrc
 
-OUTPUT=$(sbcl \
-             --eval "(load \"lisp/erjoalgo-stumpwmrc.asd\")" \
-             --eval "(require 'erjoalgo-stumpwmrc)" --non-interactive \
-             2>&1 | tee /dev/stderr)
-
-if grep -oP \
-        "caught WARNING|undefined variable|Undefined function" \
-        <<< "${OUTPUT}"; then
-    echo "compilation warnings found!"
-    exit ${LINENO}
+if command -v sbcl; then
+    OUTPUT=$(sbcl \
+                 --eval "(load \"lisp/erjoalgo-stumpwmrc.asd\")" \
+                 --eval "(require 'erjoalgo-stumpwmrc)" --non-interactive \
+                 2>&1 | tee /dev/stderr)
+    if grep -oP \
+            "caught WARNING|undefined variable|Undefined function" \
+            <<< "${OUTPUT}"; then
+        echo "compilation warnings found!"
+        exit ${LINENO}
+    fi
 fi
+
 
 if command -v sh-fix-getopt.el; then
     sh-fix-getopt.el ./scripts/*/*
