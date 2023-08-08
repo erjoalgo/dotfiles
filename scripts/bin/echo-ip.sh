@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 curl -s checkip.dyndns.org \
     | grep -oi "current ip address: [^<]*" \
