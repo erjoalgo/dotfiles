@@ -649,18 +649,6 @@ function list-active-sessions {
     done
 }
 
-function process-children  {
-  PID=${1} && shift
-  if test -z "${PID}"; then
-    return
-  fi
-  echo ${PID}
-  CHILDREN=$(pgrep -P ${PID})
-  for CHILD in ${CHILDREN}; do
-    process-children ${CHILD}
-  done
-}
-
 function _nm-find-connection {
     PATTERN=${1:-.*} && shift
     LINES=$(nmcli c | grep  "${PATTERN}")

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -euo pipefail
+
+function rec {
+    PID=${1} && shift
+    if test -z "${PID}"; then
+        return
+    fi
+    echo ${PID}
+    CHILDREN=$(pgrep -P ${PID})
+    for CHILD in ${CHILDREN}; do
+        rec ${CHILD}
+    done
+}
+
+rec ${1}
+
+# Local Variables:
+# mode: sh-mode
+# End:
