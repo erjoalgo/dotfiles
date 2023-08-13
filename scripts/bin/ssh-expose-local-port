@@ -29,8 +29,6 @@ if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_FORWARD_PORT:-}"; then
     exit ${LINENO}
 fi
 
-REMOTE_LISTEN_PORT="${REMOTE_LISTEN_PORT:-${LOCAL_FORWARD_PORT}}"
-
 ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
 
 # Local Variables:
