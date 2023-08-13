@@ -17,5 +17,5 @@ sudo udevadm control --reload
 sudo insert-text-block '# fa4889aa-5bdb-488f-a862-05f95b93ca3b-beep-on-successful-ssh-login' \
     "/etc/ssh/sshd_config"  \
     <<EOF
-$(which beep)
+# $(which beep)
 EOF
