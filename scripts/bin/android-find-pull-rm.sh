@@ -20,7 +20,7 @@ adb shell command -v find
 
 export ADB_CMD=adb
 
-if test -n "${NO_PULL:-}"; then
+if test -z "${NO_PULL:-}"; then
     sudo adb shell "find ${@}" \
         | xargs -L1 $(which adb-pull-rm.sh)
 else
