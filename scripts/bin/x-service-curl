@@ -2,6 +2,7 @@
 
 import argparse
 import glob
+import logging
 import os
 import requests
 import select
@@ -44,8 +45,10 @@ def x_service_curl(specs, path, headers, data):
     if port:
         url = f"http://127.0.0.1:{port}{path}"
         method = "POST" if data else "GET"
+        logging.debug(f"{method} {url}" + (f" <<< {data}" if data else ""))
         req = requests.Request(method, url, headers=headers, data=data)
         resp = requests.Session().send(req.prepare())
+        logging.debug(resp.text)
         print(resp.text)
     else:
         cmd = (
@@ -54,6 +57,7 @@ def x_service_curl(specs, path, headers, data):
              f"http://localhost{path}"] +
             (["-d@-"] if data else []) +
             [f"-H{key}:{val}" for (key, val) in headers.items()])
+        logging.debug(" ".join(cmd))
         try:
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
             if data:
@@ -76,6 +80,8 @@ def main():
                       help = "read POST data from stdin")
   parser.add_argument("-H", "--headers", nargs="+", default=[],
                       help = "list of headers as KEY:VALUE pairs")
+  parser.add_argument("-v", "--verbose", action="store_true",
+                      help = "verbose logging")
 
   args=parser.parse_args()
 
@@ -88,6 +94,11 @@ def main():
       data = sys.stdin.buffer.read()
   else:
       data = None
+
+  if args.verbose:
+      logging.basicConfig(level=logging.DEBUG)
+  else:
+      logging.basicConfig(level=logging.WARN)
 
   headers = dict(((name, val) for (name, val)
                   in os.environ.items()
