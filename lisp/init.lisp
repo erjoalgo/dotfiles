@@ -30,7 +30,7 @@
     ;; TODO remove these
     (def-thread-start *battery-notification-thread*
         (safe-sexp (battery-info-check-notify-loop)))
-    (def-thread-start *sms-fanout-reconnect-thread*
+    '(def-thread-start *sms-fanout-reconnect-thread*
         (safe-sexp (sms-fanout-client:reconnect-loop)))
     (setf *startup-message* nil)
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
