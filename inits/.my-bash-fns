@@ -671,19 +671,19 @@ function _nm-active-connection {
 function nmup  {
     PATTERN=${1} && shift
     UPDOWN=${UPDOWN:-up}
-    sudo nmcli c ${UPDOWN} $(_nm-find-connection "${PATTERN}")
+    nmcli c ${UPDOWN} $(_nm-find-connection "${PATTERN}")
 }
 
 function nmdownup {
     CONN=$(_nm-active-connection)
-    sudo nmcli c down "${CONN}"
+    nmcli c down "${CONN}"
     sleep 1
-    sudo nmcli c up "${CONN}"
+    nmcli c up "${CONN}"
 }
 
 function nmdown {
     CONN=$(_nm-active-connection)
-    sudo nmcli c down "${CONN}"
+    nmcli c down "${CONN}"
 }
 
 function git-rebase-fxps {
