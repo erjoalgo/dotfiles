@@ -356,6 +356,9 @@ alias g4df='g4 revert'
 
 alias modernize-directory="find . -name '*py' -exec modernize -wn {} +"
 alias gpg-clearsign-test='gpg --clearsign <<< test'
+function android-pull-rm-media {
+    android-find-pull-rm.sh sdcard/DCIM -name "'*mp4'" -o -name "'*jpg'"
+}
 
 # Local Variables:
 # mode: sh
