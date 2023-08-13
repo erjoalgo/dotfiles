@@ -175,7 +175,7 @@ class AdbTetheringHandler(DeviceHandler):
         self.check_call([script])
 
 
-DeviceHandler.handlers.append(AdbTetheringHandler())
+# DeviceHandler.handlers.append(AdbTetheringHandler())
 
 
 def monitor_forever():
