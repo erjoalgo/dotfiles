@@ -45,7 +45,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     ((not (eq (hunchentoot:request-method*) :post))
      (error "Request should be :post, but is ~A" (hunchentoot:request-method*)))
     ((null (hunchentoot:raw-post-data))
-     (error "Missing post data"))
+     "")
     (t (-> (hunchentoot:raw-post-data)
           (babel:octets-to-string)))))
 
