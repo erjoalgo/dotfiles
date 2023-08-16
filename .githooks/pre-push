@@ -4,7 +4,7 @@ set -euo pipefail
 #
 # Ensure that no commit breaks erjoalgo-stumpwmrc
 
-if command -v sbcl; then
+if sbcl --eval "(asdf:find-system :stumpwm)" --non-interactive; then
     OUTPUT=$(sbcl \
                  --eval "(load \"lisp/erjoalgo-stumpwmrc.asd\")" \
                  --eval "(require 'erjoalgo-stumpwmrc)" --non-interactive \
