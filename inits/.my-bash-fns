@@ -727,3 +727,10 @@ function git-add-commit-file {
 alias ganewfile='git-add-new-file'
 __git_complete ganewfile _git_add
 __git_complete git-add-new-file _git_add
+
+function tmux-find-pid  {
+    PID=${1} && shift
+    tmux list-panes -a -F  \
+         "#{pane_pid} #{session_name}:#{window_index}:#{pane_index}" | \
+        grep "${PID}"
+}
