@@ -719,7 +719,7 @@ function apt-get-source {
     cd $(find . -maxdepth 1 -mindepth 1 -type d)
 }
 
-function git-add-new-file {
+function git-add-commit-file {
     git add ${*}
     git commit -m "new file: ${*}"
 }
