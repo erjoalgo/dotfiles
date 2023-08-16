@@ -34,10 +34,18 @@ else
 fi
 
 test -e "${PARTITION}"
-BLOCK_DEVICE="/dev/$(lsblk -no pkname ${PARTITION})"
+
+PKNAME=$(lsblk -no pkname ${PARTITION})
+if test -n "${PKNAME}"; then
+    BLOCK_DEVICE="/dev/${PKNAME}"
+else
+    BLOCK_DEVICE=$(lsblk -no PATH ${PARTITION})
+
+fi
 
 for MOUNT_POINT in \
-    $(sudo mount | grep -Po "(?<=${BLOCK_DEVICE}[0-9] on )[^ ]+" | tr '\n' ' '); do
+    $(sudo mount | grep -Po "${BLOCK_DEVICE}[0-9]* on [^ ]+" |  \
+          cut -d' ' -f3 | tr '\n' ' '); do
     sudo umount ${MOUNT_POINT}
 done
 
