@@ -6,7 +6,7 @@
 (setf *real-top-map* *top-map*)
 
 (define-run-or-pull-program "BROWSER"
-    :cmd *browser-name*
+    :cmd (format nil "~{~A~^ ~}" *browser-cmd*)
     :raise-key "H-f"
     :pull-key "H-F"
     :classes *browser-classes*)
