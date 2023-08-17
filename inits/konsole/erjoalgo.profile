@@ -1,6 +1,6 @@
 [Appearance]
 ColorScheme=BlackOnLightYellow
-Font=monospace,20,-1,2,50,0,0,0,0,0
+Font=monospace,35,-1,2,50,0,0,0,0,0
 
 [General]
 Name=erjoalgo
