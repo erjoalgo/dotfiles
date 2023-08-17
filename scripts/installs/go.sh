@@ -7,7 +7,10 @@ GO_URL=https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
 
 if ! command -v go || test ${UPGRADE_GO} = true; then
     mkdir -p ~/src && cd ~/src
-    test -f $(basename ${GO_URL}) || wget "${GO_URL}"
+    if test -f $(basename ${GO_URL}); then
+        rm $(basename ${GO_URL})
+    fi
+    wget "${GO_URL}"
     FNAME=$(basename ${GO_URL})
     DNAME=$(basename ${FNAME} .tar.gz)
 
