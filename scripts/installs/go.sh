@@ -3,7 +3,7 @@
 set -euo pipefail
 
 GOROOT=/usr/local/go
-GO_URL=https://go.dev/dl/go1.20.7.src.tar.gz
+GO_URL=https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
 
 if ! command -v go || test ${UPGRADE_GO} = true; then
     mkdir -p ~/src && cd ~/src
