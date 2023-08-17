@@ -172,7 +172,7 @@ def main():
         return dimensions
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", help="port number", default=6969)
+    parser.add_argument("-p", "--port", help="port number", default=6969, type=int)
     parser.add_argument("-d", "--images_directory",
                         help="directory with images", default=os.getcwd())
     parser.add_argument("-D", "--dimensions",
