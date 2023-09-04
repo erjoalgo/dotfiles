@@ -8,7 +8,7 @@ function [] = white2alpha(input_file, output_file)
 
   ## TODO parameterize threshold
   ## white/back threshold
-  THRESH = 255/2;
+  THRESH = 140;
   thresh = img > THRESH;
   tmp_file = sprintf("/tmp/white-black.png");
   imwrite(thresh, tmp_file);
