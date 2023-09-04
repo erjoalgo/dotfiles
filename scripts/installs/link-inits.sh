@@ -44,6 +44,7 @@ for LINK in \
     .Xdefaults \
     .vimrc \
     .gitconfig \
+    .Xresources \
     ; do \
     safe_ln "${INITS_TOP}/${LINK}" "${HOME}/"
 done
