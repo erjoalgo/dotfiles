@@ -4,9 +4,6 @@ set -euo pipefail
 
 while getopts "ha:s:r:" OPT; do
     case ${OPT} in
-    a)
-        SOMEARG=${OPTARG}
-        ;;
     s)
         SENDER_FILENAME=${OPTARG}
         ;;
