@@ -5,7 +5,7 @@ set -euo pipefail
 GOROOT=/usr/local/go
 GO_URL=https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
 
-if ! command -v go || test ${UPGRADE_GO} = true; then
+if ! command -v go || test ${UPGRADE_GO:-} = true; then
     mkdir -p ~/src && cd ~/src
     if test -f $(basename ${GO_URL}); then
         rm $(basename ${GO_URL})
@@ -14,8 +14,13 @@ if ! command -v go || test ${UPGRADE_GO} = true; then
     FNAME=$(basename ${GO_URL})
     DNAME=$(basename ${FNAME} .tar.gz)
 
-    test -d ${GOROOT} ||  \
-	sudo tar -C $(dirname ${GOROOT}) -xzf ${FNAME}
+    if test ${UPGRADE_GO:-} = true && command -v go && test -d ${GOROOT}; then
+        VERSION=$(go version | cut -f3 -d' ')
+        export GOROOT_BOOTSTRAP=${GOROOT}-${VERSION}
+        sudo mv ${GOROOT} ${GOROOT_BOOTSTRAP}
+    fi
+
+    test -d ${GOROOT} || sudo tar -C $(dirname ${GOROOT}) -xzf ${FNAME}
 
     test -d ${GOROOT}
 
@@ -27,6 +32,12 @@ if ! command -v go || test ${UPGRADE_GO} = true; then
 export PATH=\${PATH}:${GOROOT}/bin
 EOF
     source ${PROFILE_FILE}
+    if test -e ${GOROOT}/src/all.bash; then
+        pushd .
+        cd ${GOROOT}/src
+        ./all.bash
+        popd
+    fi
     go version
 fi
 
