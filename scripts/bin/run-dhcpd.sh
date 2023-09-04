@@ -35,7 +35,26 @@ function find-dns {
     grep -Po '(?<=^nameserver )[0-9.]+' /etc/resolv.conf | head -1
 }
 
-CONF=$(sudo mktemp)
+TMP=/tmp/dhcpd/
+mkdir -p "${TMP}"
+DHCPD=/usr/sbin/dhcpd
+
+CONF=$(sudo mktemp -p "${TMP}")
+TRACE_FILE=$(sudo mktemp -p "${TMP}")
+LEASE_FILE=$(sudo mktemp -p "${TMP}")
+
+# TODO factor-out to apparmor permission installer script
+
+APPARMOR_LOCAL=/etc/apparmor.d/local/usr.sbin.dhcpd
+if ! test -e "${APPARMOR_LOCAL}"; then
+    cat <<EOF | sudo tee "${APPARMOR_LOCAL}"
+owner ${TMP}/** lrw
+EOF
+    sudo sed -i 's|# *\(include <local/usr.sbin.dhcpd>\)|\1|'  \
+         /etc/apparmor.d/usr.sbin.dhcpd
+    sudo service apparmor restart
+fi
+
 IFACE=${IFACE:-$(find-iface)}
 IFACE_ID=$(python3 -c "print (0x$(md5sum <<<$IFACE | cut -f1 -d' ') % 10)")
 PREFIX=10.0.${IFACE_ID}
