@@ -12,7 +12,8 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get autoremove
 
-sudo sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list
+sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bullseye/bookworm/g' {} \;
+
 sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get full-upgrade -y
