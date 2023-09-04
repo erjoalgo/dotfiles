@@ -116,14 +116,11 @@ subnet ${PREFIX}.0 netmask 255.255.255.0 {
 subnet ${REAL_ROUTER%.*}.0 netmask 255.255.255.0 {}
 EOF
 
-LEASE_FILE=$(sudo mktemp)
-
 while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
     sleep 1
 done
-TRACE_FILE=$(sudo mktemp)
-echo "trace file: ${TRACE_FILE}"
-DHCPD=/usr/sbin/dhcpd
 
-sudo "${DHCPD}" -f -d -4 -cf "${CONF}" "${IFACE}"  \
-     -lf "${LEASE_FILE}" -tf "${TRACE_FILE}"
+sudo "${DHCPD}" -f -d -4  \
+     -cf "${CONF}" "${IFACE}"  \
+     -lf "${LEASE_FILE}" \
+     -tf "${TRACE_FILE}"
