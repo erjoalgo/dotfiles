@@ -360,6 +360,21 @@ function android-pull-rm-media {
     android-find-pull-rm.sh sdcard/DCIM -name "'*mp4'" -o -name "'*jpg'"
 }
 
+function docker-select-container {
+    echo "select docker container: " 1>&2
+    IFS=$'\n'
+    select LINE in $(docker ps); do
+        break
+    done
+    cut -f1 -d' ' <<< "${LINE}"
+}
+
+function docker-bash {
+    CONTAINER=$(docker-select-container)
+    docker exec -it "${CONTAINER}" bash
+}
+
+alias lrsh='lein ring server-headless'
 # Local Variables:
 # mode: sh
 # End:
