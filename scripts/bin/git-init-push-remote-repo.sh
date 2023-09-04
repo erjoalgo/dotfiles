@@ -52,7 +52,7 @@ if test -z "${REMOTE_NAME:-}"; then
     fi
 fi
 
-ssh ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -s" <<EOF
+ssh -vv ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -xs" <<EOF
 set -euxo pipefail
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
