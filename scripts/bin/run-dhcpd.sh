@@ -109,12 +109,12 @@ sudo insert-text-block \
 
 subnet ${PREFIX}.0 netmask 255.255.255.0 {
   range ${PREFIX}.2 ${PREFIX}.150;
+  option broadcast-address ${PREFIX}.255;
+  option routers ${IP_ADDR};
   default-lease-time 600;
   max-lease-time 7200;
 
   option subnet-mask 255.255.255.0;
-  option routers ${IP_ADDR};
-  option broadcast-address ${PREFIX}.255;
   option domain-name-servers ${DNS};
 
   ${PXE_OPT}
