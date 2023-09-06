@@ -101,6 +101,7 @@ while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/${SUBNET_CIDR}"; 
     sudo ip link set ${IFACE} up
 done
 
+sudo ip -6 addr flush ${IFACE}
 
 if test -n "${PXE_FILENAME:-}"; then
     PXE_OPT=$(cat<<EOF
