@@ -115,6 +115,7 @@ subnet ${PREFIX}.0 netmask 255.255.255.0 {
   max-lease-time 7200;
 
   option subnet-mask 255.255.255.0;
+  option domain-name ".local";
   option domain-name-servers ${DNS};
 
   ${PXE_OPT}
