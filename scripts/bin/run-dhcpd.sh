@@ -108,8 +108,7 @@ sudo insert-text-block \
 
 
 subnet ${PREFIX}.0 netmask 255.255.255.0 {
-  range ${PREFIX}.2 ${PREFIX}.20;
-
+  range ${PREFIX}.2 ${PREFIX}.150;
   default-lease-time 600;
   max-lease-time 7200;
 
