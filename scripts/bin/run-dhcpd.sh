@@ -3,13 +3,16 @@
 set -euo pipefail
 
 
-while getopts "hi:x:" OPT; do
+while getopts "i:x:th" OPT; do
     case ${OPT} in
     i)
         IFACE=${OPTARG}
         ;;
     x)
         PXE_FILENAME=${OPTARG}
+        ;;
+    t)
+        USE_TMP_FILE=${OPTARG}
         ;;
     h)
         less $0
@@ -18,6 +21,8 @@ while getopts "hi:x:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+DHCPD=/usr/sbin/dhcpd
 
 function find-iface {
     echo "select target iface: " 1>&2
@@ -35,25 +40,30 @@ function find-dns {
     grep -Po '(?<=^nameserver )[0-9.]+' /etc/resolv.conf | head -1
 }
 
-TMP=/tmp/dhcpd/
-mkdir -p "${TMP}"
-DHCPD=/usr/sbin/dhcpd
 
-CONF=$(sudo mktemp -p "${TMP}")
-TRACE_FILE=$(sudo mktemp -p "${TMP}")
-LEASE_FILE=$(sudo mktemp -p "${TMP}")
+if test -n "${USE_TMP_FILE:-}"; then
+    TMP=/tmp/dhcpd/
+    mkdir -p "${TMP}"
+    CONF=$(sudo mktemp -p "${TMP}")
+    TRACE_FILE_OPT="-tf $(sudo mktemp -p "${TMP}")"
+    LEASE_FILE_OPT="-lf $(sudo mktemp -p "${TMP}")"
+    # TODO factor-out to apparmor permission installer script
 
-# TODO factor-out to apparmor permission installer script
-
-APPARMOR_LOCAL=/etc/apparmor.d/local/usr.sbin.dhcpd
-if ! test -e "${APPARMOR_LOCAL}"; then
-    cat <<EOF | sudo tee "${APPARMOR_LOCAL}"
+    APPARMOR_LOCAL=/etc/apparmor.d/local/usr.sbin.dhcpd
+    if ! test -e "${APPARMOR_LOCAL}"; then
+        cat <<EOF | sudo tee "${APPARMOR_LOCAL}"
 owner ${TMP}/** lrw
 EOF
-    sudo sed -i 's|# *\(include <local/usr.sbin.dhcpd>\)|\1|'  \
-         /etc/apparmor.d/usr.sbin.dhcpd
-    sudo service apparmor restart
+        sudo sed -i 's|# *\(include <local/usr.sbin.dhcpd>\)|\1|'  \
+             /etc/apparmor.d/usr.sbin.dhcpd
+        sudo service apparmor restart
+    fi
+else
+    CONF=/etc/dhcp/dhcpd.conf
+    LEASE_FILE_OPT=""
+    TRACE_FILE_OPT=""
 fi
+
 
 IFACE=${IFACE:-$(find-iface)}
 IFACE_ID=$(python3 -c "print (0x$(md5sum <<<$IFACE | cut -f1 -d' ') % 10)")
@@ -123,13 +133,21 @@ subnet ${PREFIX}.0 netmask 255.255.255.0 {
 
 # No DHCP service in DMZ network (192.168.1.0/24)
 subnet ${REAL_ROUTER%.*}.0 netmask 255.255.255.0 {}
+
+INTERFACESv4=${IFACE};
 EOF
 
 while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
     sleep 1
 done
 
-sudo "${DHCPD}" -f -d -4  \
+
+if test -n "${USE_TMP_FILE:-}"; then
+    sudo "${DHCPD}" -f -d -4  \
      -cf "${CONF}" "${IFACE}"  \
-     -lf "${LEASE_FILE}" \
-     -tf "${TRACE_FILE}"
+     ${LEASE_FILE_OPT} \
+     ${TRACE_FILE_OPT}
+else
+    sudo service isc-dhcp-server restart
+    sudo journalctl -fu isc-dhcp-server
+fi
