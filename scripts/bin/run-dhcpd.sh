@@ -105,13 +105,13 @@ fi
 sudo insert-text-block \
      '# 44ee01ca-8a56-411a-b047-f525e30a138a-dhcpd-conf' \
      "${CONF}" -e <<EOF
-default-lease-time 600;
-max-lease-time 7200;
 
 
 subnet ${PREFIX}.0 netmask 255.255.255.0 {
   range ${PREFIX}.2 ${PREFIX}.20;
 
+  default-lease-time 600;
+  max-lease-time 7200;
 
   option subnet-mask 255.255.255.0;
   option routers ${IP_ADDR};
