@@ -58,7 +58,7 @@ fi
 IFACE=${IFACE:-$(find-iface)}
 IFACE_ID=$(python3 -c "print (0x$(md5sum <<<$IFACE | cut -f1 -d' ') % 10)")
 PREFIX=10.0.${IFACE_ID}
-PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
+# PXE_FILENAME=${PXE_FILENAME:-"pxelinux.0"}
 REAL_ROUTER=${REAL_ROUTER:-$(find-route)}
 IP_ADDR=${PREFIX}.1
 SUBNET_CIDR=24
@@ -92,6 +92,16 @@ while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/${SUBNET_CIDR}"; 
 done
 
 
+if test -n "${PXE_FILENAME:-}"; then
+    PXE_OPT=$(cat<<EOF
+  next-server ${IP_ADDR};
+  filename "${PXE_FILENAME}";
+EOF
+           )
+else
+    PXE_OPT=""
+fi
+
 sudo insert-text-block \
      '# 44ee01ca-8a56-411a-b047-f525e30a138a-dhcpd-conf' \
      "${CONF}" -e <<EOF
@@ -108,8 +118,7 @@ subnet ${PREFIX}.0 netmask 255.255.255.0 {
   option broadcast-address ${REAL_ROUTER%.*}.255;
   option domain-name-servers ${DNS};
 
-  next-server ${IP_ADDR};
-  filename "${PXE_FILENAME}";
+  ${PXE_OPT}
 }
 
 # No DHCP service in DMZ network (192.168.1.0/24)
