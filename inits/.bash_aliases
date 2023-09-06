@@ -336,8 +336,8 @@ alias git-delete-show-unpublished-commits='git --no-pager log --branches --not -
 alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
-alias sv-tail='sudo journalctl -fu'
-alias sv-less='sudo journalctl -u'
+alias svlogs='sudo journalctl -fu'
+alias svless='sudo journalctl -u'
 
 # https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
 alias strace-attach-stdout='sudo strace -ff -e trace=write -e write=1,2 -s99999 -p'
