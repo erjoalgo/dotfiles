@@ -3,7 +3,7 @@
 set -euo pipefail
 
 
-while getopts "hs:o:" OPT; do
+while getopts "s:o:ph" OPT; do
     case ${OPT} in
         s)
             # source or local interface
@@ -12,6 +12,9 @@ while getopts "hs:o:" OPT; do
         o)
             # internet-connected interface
             IFACE_OUT=${OPTARG}
+            ;;
+        p)
+            PERSIST=true
             ;;
         h)
             less $0
@@ -28,3 +31,8 @@ for TARGET in NFLOG ACCEPT; do
     sudo iptables -I FORWARD 1 -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ${TARGET}
 done
 sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
+
+if test -n "${PERSIST:-}"; then
+    sudo apt-get install -y iptables-persistent
+    sudo iptables-save | sudo tee -a /etc/iptables/rules.v4
+fi
