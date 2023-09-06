@@ -114,7 +114,7 @@ subnet ${PREFIX}.0 netmask 255.255.255.0 {
 
   option subnet-mask 255.255.255.0;
   option routers ${IP_ADDR};
-  option broadcast-address ${REAL_ROUTER%.*}.255;
+  option broadcast-address ${PREFIX}.255;
   option domain-name-servers ${DNS};
 
   ${PXE_OPT}
