@@ -20,7 +20,9 @@ fi
 
 sudo apt-get install -y devscripts
 dpkg-buildpackage -b
-sudo dpkg -i ../openssh-client_*.deb
+
+PATCHED_DEB=$(ls -1t ../openssh-client_*deb | head -1)
+sudo dpkg -i "${PATCHED_DEB}"
 
 git push fork
 
