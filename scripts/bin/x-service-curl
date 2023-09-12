@@ -25,10 +25,6 @@ def socket_open_unix(unix_socket):
   return result == 0
 
 
-def http_request(url, method, data, headers):
-  # TODO(ejalfonso) migrate to requests library, make this a python package
-  pass
-
 def x_service_curl(specs, path, headers, data):
   cnt = 0
   for spec in specs:
