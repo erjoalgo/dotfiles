@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+sudo apt-get install -y jq
+
 EXTENSION_TOP=$(realpath ${1:-.})
 test -d ${EXTENSION_TOP}
 
