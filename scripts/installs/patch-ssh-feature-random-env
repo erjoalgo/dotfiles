@@ -1,0 +1,30 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+SELFD="$(dirname $(realpath $0))"
+
+LOCAL_REPO=${HOME}/git/erjoalgo-openssh
+if ! test -d "${LOCAL_REPO}"; then
+    git clone ssh://git@github.com/erjoalgo/openssh "${LOCAL_REPO}" -o fork
+fi
+cd "${LOCAL_REPO}"
+git remote add vcs-git https://salsa.debian.org/ssh-team/openssh.git || true
+cd "${LOCAL_REPO}"
+
+git fetch vcs-git
+if ! git rebase vcs-git/master; then
+    # resolve rebase manually
+    bash
+fi
+
+sudo apt-get install -y devscripts
+dpkg-buildpackage -b
+sudo dpkg -i ../openssh-client_*.deb
+
+git push fork
+
+# Local Variables:
+# mode: sh-mode
+# mode: sh-mode
+# End:
