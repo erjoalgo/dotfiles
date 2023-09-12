@@ -5,6 +5,7 @@ import glob
 import logging
 import os
 import requests
+import requests_unixsocket
 import select
 import socket
 import subprocess
@@ -33,37 +34,28 @@ def x_service_curl(specs, path, headers, data):
   for spec in specs:
     if isinstance(spec, int):
         port = spec
-        socket_addr = None
         if not socket_open_tcp(port):
             continue
+        url = f"http://127.0.0.1:{port}{path}"
+        session = requests.Session()
     else:
-        port = None
         socket_addr = spec
         if not socket_open_unix(socket_addr):
             continue
     cnt += 1
-    if port:
-        url = f"http://127.0.0.1:{port}{path}"
-        method = "POST" if data else "GET"
-        logging.debug(f"{method} {url}" + (f" <<< {data}" if data else ""))
-        req = requests.Request(method, url, headers=headers, data=data)
-        resp = requests.Session().send(req.prepare())
-        logging.debug(resp.text)
-        print(resp.text)
+        host_encoded = socket_addr.replace("/", "%2F")
+        url = f"http+unix://{host_encoded}{path}"
+        session = requests_unixsocket.Session()
+    method = "POST" if data else "GET"
+    logging.debug(f"{method} {url}" +
+                  (f" <<< {peek_string(data, 100)}" if data else ""))
+
+    req = requests.Request(method, url, headers=headers, data=data)
+    resp = session.send(req.prepare())
+    if resp.status_code != 200:
+        logging.error(resp.text)
     else:
-        cmd = (
-            ["curl", "-s", "--no-buffer",
-             "--unix-socket", socket_addr,
-             f"http://localhost{path}"] +
-            (["-d@-"] if data else []) +
-            [f"-H{key}:{val}" for (key, val) in headers.items()])
-        logging.debug(" ".join(cmd))
-        try:
-            p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-            if data:
-                p.communicate(input=data, timeout=5)
-        except subprocess.TimeoutExpired:
-            p.kill()
+        print(resp.text)
 
   return cnt
 
