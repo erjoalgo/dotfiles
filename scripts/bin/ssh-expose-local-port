@@ -3,8 +3,10 @@
 set -euo pipefail
 
 function usage  {
-    echo "expose-port -l <LOCAL_FORWARD_PORT>[:<REMOTE_LISTEN_PORT>] <SSH_HOST>"
+    echo "expose-port <SSH_HOST> [-l <LOCAL_FORWARD_PORT>[:<REMOTE_LISTEN_PORT>]]..."
 }
+
+SSH_HOST_SPEC="${1}" && shift
 
 while getopts "l:h" OPT; do
     case ${OPT} in
@@ -22,7 +24,6 @@ while getopts "l:h" OPT; do
 done
 shift $((OPTIND -1))
 
-SSH_HOST_SPEC="${1}" && shift
 
 if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_FORWARD_PORT:-}"; then
     usage
