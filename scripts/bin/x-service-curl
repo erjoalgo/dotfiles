@@ -26,7 +26,7 @@ def socket_open_unix(unix_socket):
 
 
 def x_service_curl(specs, path, headers, data):
-  cnt = 0
+  success_count = 0
   for spec in specs:
     if isinstance(spec, int):
         port = spec
@@ -38,7 +38,6 @@ def x_service_curl(specs, path, headers, data):
         socket_addr = spec
         if not socket_open_unix(socket_addr):
             continue
-    cnt += 1
         host_encoded = socket_addr.replace("/", "%2F")
         url = f"http+unix://{host_encoded}{path}"
         session = requests_unixsocket.Session()
@@ -52,8 +51,9 @@ def x_service_curl(specs, path, headers, data):
         logging.error(resp.text)
     else:
         print(resp.text)
+        success_count += 1
 
-  return cnt
+  return success_count
 
 def main():
   if len(sys.argv) < 2 or set(("-h", "--help")).intersection(sys.argv):
