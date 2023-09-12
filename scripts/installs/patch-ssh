@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+SELDF="$(dirname "${BASH_SOURCE[0]}")"
+
 sudo apt-get install -y devscripts
 
 cd $(mktemp -d)
@@ -12,13 +14,18 @@ SERIES="${PATCHES}/series"
 test -e "${SERIES}"
 pushd .
 
-cd $(mktemp -d)
-GIT_URL=https://github.com/erjoalgo/openssh-portable
-git clone "${GIT_URL}"
-cd $(basename "${GIT_URL}")
-TMPDIR=$(mktemp -d)
-git format-patch 22caa1d4bbc265f8f8970a7933798a7a067c7c3e^ --output-directory "${TMPDIR}"
-PATCH_FILENAME=$(echo ${TMPDIR}/*patch)
+if false; then
+    cd $(mktemp -d)
+    GIT_URL=https://github.com/erjoalgo/openssh-portable
+    git clone "${GIT_URL}"
+    cd $(basename "${GIT_URL}")
+    TMPDIR=$(mktemp -d)
+    git format-patch 22caa1d4bbc265f8f8970a7933798a7a067c7c3e^ --output-directory "${TMPDIR}"
+    PATCH_FILENAME=$(echo ${TMPDIR}/*patch)
+else
+    PATCH_FILENAME="${SELFD}/patches/0001-Add-support-for-the-special-RANDOM-environment-varia.patch"
+fi
+
 test -e "${PATCH_FILENAME}"
 cp "${PATCH_FILENAME}" "${PATCHES}"
 echo $(basename "${PATCH_FILENAME}") >> "${PATCHES}/series"
