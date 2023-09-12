@@ -24,7 +24,7 @@ dpkg-buildpackage -b
 PATCHED_DEB=$(ls -1t ../openssh-client_*deb | head -1)
 sudo dpkg -i "${PATCHED_DEB}"
 
-git push fork
+git push fork master
 
 # Local Variables:
 # mode: sh-mode
