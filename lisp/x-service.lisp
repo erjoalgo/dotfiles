@@ -6,6 +6,7 @@
 (in-package :x-service)
 
 (defvar *x-service* nil)
+(defvar *x-service-debugging* nil)
 
 (defun start (port)
   "Start a service based on the config obtained by proxying all arguments make-config"
