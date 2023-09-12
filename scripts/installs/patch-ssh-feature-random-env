@@ -19,7 +19,7 @@ if ! git rebase vcs-git/master; then
 fi
 
 sudo apt-get install -y devscripts
-dpkg-buildpackage -b
+dpkg-buildpackage -b -us -uc
 
 PATCHED_DEB=$(ls -1t ../openssh-client_*deb | head -1)
 sudo dpkg -i "${PATCHED_DEB}"
