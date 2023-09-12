@@ -35,8 +35,15 @@ popd
 SOURCE_TREE=$(find . -maxdepth 1 -mindepth 1 -type d)
 cd "${SOURCE_TREE}"
 
-sudo apt-get -y build-dep openssh-client
-debuild -i -us -uc -b
+sudo apt-get -y build-dep openssh-client quilt
+
+quilt push
+quilt refresh
+
+rm -f debian/changelog.dch
+EMAIL=erjoalgo.com dch -n "Apply manual patch: $(basename ${PATCH_FILENAME})".
+
+dpkg-buildpackage -us -uc
 
 sudo dpkg -i ../ssh_8.4p1-5+deb11u1_all.deb
 
