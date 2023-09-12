@@ -101,9 +101,9 @@ def main():
       headers[k] = v
 
   sockets = glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
-  if x_service_curl(sockets, args.path, headers, data):
-      return 0
-  print(f"no ports or sockets found: {sockets}")
+  if x_service_curl(sockets, args.path, headers, data) == 0:
+      raise Exception(f"no ports or sockets found: {sockets}")
+  return 0
 
 if __name__ == "__main__":
   exit(main())
