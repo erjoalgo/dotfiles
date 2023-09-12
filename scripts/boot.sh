@@ -295,14 +295,16 @@ EOF
 
 X_BROWSER=$(which x-www-browser-stumpwm)
 
+sudo ${APT_GET} install -y openssh-server
+
+./installs/patch-ssh-feature-random-env || true
+
 insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-group-number"  \
   "${HOME}/.ssh/config" << EOF
 Match host *
     SendEnv DESKTOP_GROUP_NUMBER
-    RemoteForward /tmp/.x-service-$(hostname).sock localhost:1959
+    RemoteForward /tmp/.x-service-$(hostname)-\${RANDOM}.sock localhost:1959
 EOF
-
-sudo ${APT_GET} install -y openssh-server
 
 SSHD_CONFIG=/etc/ssh/sshd_config
 if test -f "${SSHD_CONFIG}"; then
