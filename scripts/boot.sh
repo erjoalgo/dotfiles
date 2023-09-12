@@ -142,6 +142,7 @@ if false; then
 fi
 
 pip3 install getchwrap -U --break-system-packages || true
+pip3 install requests_unixsocket --break-system-packages || true
 
 # link inits
 for SCRIPT in  \
