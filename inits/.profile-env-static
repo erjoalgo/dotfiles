@@ -1,0 +1,5 @@
+export GNUPGHOME="${HOME}/.gnupg/ledger"
+
+# Local Variables:
+# mode: sh-mode
+# End:

@@ -288,6 +288,11 @@ insert-text-block '# 8c65cfa8-bc9f-414c-a8d2-de367865a539-add-emacs-scripts'   \
 export PATH=\$PATH:${HOME}/git/dotemacs/lisp/scripts
 EOF
 
+insert-text-block '# a1ec5b17-3ee5-4397-9d74-1094e51c0975-source-static-profile-env'  \
+                  ~/.profile-env<<EOF
+source ${HOME}/git/dotfiles/inits/.profile-env-static
+EOF
+
 insert-text-block ';; 5ef52c11-e976-4eb5-90fa-38795231059d-load-my-sbclrc' \
    ${HOME}/.sbclrc <<EOF
   ;; #-dbg
