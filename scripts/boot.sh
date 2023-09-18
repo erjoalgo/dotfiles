@@ -69,7 +69,14 @@ sudo echo "successful passwordless sudo"
 
 sudo apt-get update
 
-sudo apt-get install -y git curl python3 python3-full
+function sagiy {
+    for _ in $(seq 3); do
+        sudo apt-get install -y ${*} && break
+        sleep 5
+    done
+}
+
+sagiy git curl python3 python3-full
 
 GIT_HOME=${HOME}/git
 
@@ -354,7 +361,7 @@ sudo insert-text-block \
 kernel.sysrq = 1
 EOF
 
-sudo apt-get install -y network-manager
+sagiy network-manager
 
 sudo insert-text-block \
      '# 2c8739f8-5dfb-4329-8b73-afacddddef11-dont-revert-spoofed-mac'  \
@@ -373,12 +380,12 @@ for SCRIPT in nonet.sh redshift; do
     fi
 done
 
-sudo apt-get install -y pgformatter
+sagiy pgformatter
 
 cd ~/git/githost
 python3 setup.py install --user || true
 
-sudo apt-get install figlet
+sagiy figlet
 
 figlet $(hostname) | sudo tee /etc/motd
 
