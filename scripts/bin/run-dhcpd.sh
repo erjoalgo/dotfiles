@@ -18,7 +18,7 @@ while getopts "i:x:snth" OPT; do
         NO_SHARE_INTERNET=true
         ;;
     t)
-        USE_TMP_FILE=${OPTARG}
+        USE_TMP_FILE=true
         ;;
     h)
         less $0
