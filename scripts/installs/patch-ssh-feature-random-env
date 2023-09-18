@@ -13,6 +13,7 @@ git remote add vcs-git https://salsa.debian.org/ssh-team/openssh.git || true
 cd "${LOCAL_REPO}"
 
 git fetch vcs-git
+git checkout -- .
 if ! git rebase vcs-git/master; then
     # resolve rebase manually
     bash
