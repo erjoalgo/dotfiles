@@ -47,7 +47,7 @@ function find-dns {
 }
 
 
-if test -n "${USE_TMP_FILE:-}"; then
+if test -n "${USE_TMP_FILE:-}" && false; then
     TMP=/tmp/dhcpd/
     mkdir -p "${TMP}"
     CONF=$(sudo mktemp -p "${TMP}")
