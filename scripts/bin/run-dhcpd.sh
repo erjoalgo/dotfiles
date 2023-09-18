@@ -87,8 +87,8 @@ fi
 sudo apt-get install -y iptables isc-dhcp-server
 
 for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
-    sudo iptables -t nat -A POSTROUTING -o ${GATEWAY_IFACE} -j MASQUERADE
-    sudo iptables -A FORWARD -j ACCEPT -i ${IFACE} -o ${GATEWAY_IFACE}
+    sudo iptables -t nat -I POSTROUTING 1 -o ${GATEWAY_IFACE} -j MASQUERADE
+    sudo iptables -I FORWARD 1 -j ACCEPT -i ${IFACE} -o ${GATEWAY_IFACE}
 done
 
 sudo sysctl -w net.ipv4.ip_forward=1
