@@ -125,8 +125,6 @@ fi
 sudo insert-text-block \
      '# 44ee01ca-8a56-411a-b047-f525e30a138a-dhcpd-conf' \
      "${CONF}" -e <<EOF
-
-
 subnet ${PREFIX}.0 netmask 255.255.255.0 {
   range ${PREFIX}.2 ${PREFIX}.150;
   option broadcast-address ${PREFIX}.255;
