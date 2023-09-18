@@ -343,6 +343,8 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 alias sv=service
 alias svlogs='sudo journalctl -fu'
 alias svless='sudo journalctl -u'
+complete-alias _service svlogs service
+complete-alias _service svless service
 
 # https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
 alias strace-attach-stdout='sudo strace -ff -e trace=write -e write=1,2 -s99999 -p'
