@@ -72,7 +72,7 @@ ORIGIN_NAME=origin
 if ! git remote show "${REMOTE_NAME}"; then
     git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
     echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
-elif test $(git config --get "remote.${REMOTE_NAME}") != "${REMOTE_URL}"; then
+elif test $(git config --get "remote.${REMOTE_NAME}".url) != "${REMOTE_URL}"; then
     echo "remote ${REMOTE_NAME} exists and doesn't point to ${REMOTE_URL}"
     exit ${LINENO}
 fi
