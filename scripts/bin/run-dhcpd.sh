@@ -3,10 +3,13 @@
 set -euo pipefail
 
 
-while getopts "i:x:th" OPT; do
+while getopts "i:x:snth" OPT; do
     case ${OPT} in
     i)
         IFACE=${OPTARG}
+        ;;
+    s)
+        WRITE_SYSTEMD_SERVICE=true
         ;;
     x)
         PXE_FILENAME=${OPTARG}
@@ -59,7 +62,7 @@ EOF
         sudo service apparmor restart
     fi
 else
-    CONF=/etc/dhcp/dhcpd.conf
+    CONF=/etc/dhcp/dhcpd-${IFACE}.conf
     LEASE_FILE_OPT=""
     TRACE_FILE_OPT=""
 fi
@@ -93,13 +96,13 @@ done
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
-while ! ip -f inet addr show ${IFACE}  | grep "inet ${IP_ADDR}/${SUBNET_CIDR}"; do
+if true; then
     sudo ip link set ${IFACE} down
     sudo ip addr flush dev ${IFACE}
     sudo ip addr add ${IP_ADDR}/${SUBNET_CIDR} dev ${IFACE} \
        valid_lft forever preferred_lft forever
     sudo ip link set ${IFACE} up
-done
+fi
 
 sudo ip -6 addr flush ${IFACE}
 
@@ -143,12 +146,49 @@ while pgrep -f /usr/sbin/dhcpd | xargs kill -9 2>/dev/null; do
 done
 
 
+sudo ip link set ${IFACE} up
+
 if test -n "${USE_TMP_FILE:-}"; then
     sudo "${DHCPD}" -f -d -4  \
      -cf "${CONF}" "${IFACE}"  \
      ${LEASE_FILE_OPT} \
      ${TRACE_FILE_OPT}
+elif test -n "${WRITE_SYSTEMD_SERVICE:-}"; then
+    SERVICE_NAME=isc-dhcpd-server-${IFACE}
+
+    echo "installing systemd service: ${SERVICE_NAME}"
+
+    sudo tee /etc/network/interfaces.d/${IFACE}-static <<EOF
+ifac     e wlx00c0cab2edfd inet static
+    address ${IP_ADDR}
+    netmask 255.255.255.0
+EOF
+
+    install-systemd-service.sh ${SERVICE_NAME} <<EOF
+[Unit]
+SourcePath=/etc/init.d/isc-dhcp-server
+Description=DHCP server for ${IFACE}
+Before=multi-user.target
+Before=multi-user.target
+Before=multi-user.target
+Before=graphical.target
+After=remote-fs.target
+After=network-online.target
+After=slapd.service
+After=nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+RestartSec=60
+RemainAfterExit=no
+ExecStart=$(which run-dhcpd.sh) -i ${IFACE} -t
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    sudo service ${SERVICE_NAME} restart
 else
-    sudo service isc-dhcp-server restart
-    sudo journalctl -fu isc-dhcp-server
+    echo "either tmpfile or system service option must be provided" && exit ${LINENO}
 fi
