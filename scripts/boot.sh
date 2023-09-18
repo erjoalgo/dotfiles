@@ -27,6 +27,8 @@ if ! which sudo && test -n "${APT_GET}"; then
    ${SUDOCMD} "${APT_GET} install -y ntp" || true
 fi
 
+cd
+
 if which apt-get; then
     if true || ! ${SUDOCMD} "apt-get update" ||  \
         ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
