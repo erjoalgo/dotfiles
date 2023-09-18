@@ -723,7 +723,7 @@ function git-add-commit-file {
     git commit -m "new file: ${*}"
 }
 
-alias ganewfile='git-add-new-file'
+alias ganewfile='git-add-commit-file'
 __git_complete ganewfile _git_add
 __git_complete git-add-new-file _git_add
 
