@@ -5,6 +5,9 @@ function make-completion-wrapper ()  {
     # make-completion-wrapper _apt_get _apt_get_install apt-get install
     # complete -F _apt_get_install apt-inst
 
+    # use "complete -p <command>" to look up the completion function
+    # https://superuser.com/questions/947065/how-do-i-view-the-tab-completion-function-for-a-command-in-bash
+
     local comp_function_name="$1"
     local function_name="$2"
     local arg_count=$(($#-3))
