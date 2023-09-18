@@ -111,7 +111,6 @@ if true; then
     sudo ip link set ${IFACE} up
 fi
 
-sudo ip -6 addr flush ${IFACE}
 
 if test -n "${PXE_FILENAME:-}"; then
     PXE_OPT=$(cat<<EOF
