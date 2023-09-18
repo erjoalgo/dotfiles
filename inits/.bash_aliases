@@ -27,6 +27,8 @@ function complete-alias  {
     # example usage
     # complete-alias _pass pshow pass show
     # complete-alias _pass pgen pass generate
+    #
+    # 1) To look up the bash completion function of a command: complete -p <command>
 
     EXISTING_COMPLETION_FN=${1} && shift
     ALIAS=${1} && shift
