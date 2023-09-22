@@ -367,7 +367,17 @@ sudo insert-text-block \
 kernel.sysrq = 1
 EOF
 
-sagiy network-manager
+sagiy network-manager ufw
+
+sudo ufw enable
+sudo ufw allow 22/tcp
+
+sudo insert-text-block \
+     '# 28bdb8b6-b290-4826-9210-fc8556998230-ssh-no-password-authentication'  \
+     /etc/ssh/sshd_config<<EOF
+PasswordAuthentication no
+PermitEmptyPasswords no
+EOF
 
 sudo insert-text-block \
      '# 2c8739f8-5dfb-4329-8b73-afacddddef11-dont-revert-spoofed-mac'  \
