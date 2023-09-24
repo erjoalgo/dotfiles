@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # adapted from: https://stackoverflow.com/questions/33879523/
 # adapted from: www.daniweb.com/code/snippet263775.html
@@ -8,8 +8,6 @@ import argparse
 import math
 import struct
 import wave
-from six.moves import map
-from six.moves import range
 
 class AudioFile(object):
     def __init__(self, sample_rate = 44100.0):
