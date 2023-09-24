@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-while getopts "u:a:" OPT; do
+while getopts "uh" OPT; do
     case ${OPT} in
     u)
-        UNLOAD=${OPTARG}
+        UNLOAD=true
         ;;
     h)
         less $0
