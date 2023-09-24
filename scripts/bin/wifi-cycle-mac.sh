@@ -35,7 +35,7 @@ fi
 
 sudo macchanger ${MACCHANGER_OPT} "${WIFI_IFACE}"
 
-sudo sed -i "s/\(send host-name = \).*/\1\"${NEW_HOSTNAME}\"/" \
+sudo sed -i "s/\(send host-name = \).*/\1\"${NEW_HOSTNAME}\";/" \
      /etc/dhcp/dhclient.conf
 
 sudo nmcli radio wifi on
