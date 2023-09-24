@@ -367,6 +367,15 @@ function git-promote-remote-to-origin	{
 }
 __git_complete git-promote-remote-to-origin _git_pull
 
+function git-remote-add-from-ssh-host {
+    SSH_HOST=${1} && shift
+    REPO_NAME=$(basename $(git rev-parse --show-toplevel))
+    REMOTE_NAME=$(cut -f1 -d. <<< ${SSH_HOST})
+    git remote add "${REMOTE_NAME}" "ssh://git@${SSH_HOST}/opt/git/${REPO_NAME}"
+    git fetch "${REMOTE_NAME}"
+    git branch --set-upstream-to=${REMOTE_NAME}/master
+}
+
 function ps-tree	{
     CURR=${1:-$$}
     while test ${CURR} != 1; do
