@@ -381,6 +381,10 @@ function docker-bash {
     docker exec -it "${CONTAINER}" bash
 }
 
+function docker-kill {
+    docker kill $(docker-select-container)
+}
+
 alias lrsh='lein ring server-headless'
 # Local Variables:
 # mode: sh
