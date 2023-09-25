@@ -1,13 +1,23 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
 PORT=${1} && shift
 LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${PORT}[^0-9]")
+
+function ps-tree	{
+    CURR=${1:-$$}
+    while test ${CURR} != 1; do
+	ps -fp ${CURR}
+	CURR=$(ps -o ppid= -p ${CURR})
+    done
+}
+
 if test -n "${LINE}"; then
-    PID=$(grep -o '[0-9]*/' <<< "${LINE}" | cut -f1 -d/)
+    PIDS=$(grep -Po '[0-9]*(?=/)' <<< "${LINE}")
     echo -e "${LINE}\n" 1>&2
-    xargs -L1 ps -w30 -fp <<< "${PID}"  1>&2
-    echo ${PID} | tr ' ' '\n' | sort | uniq
+    xargs -L1 ps -w30 -fp <<< "${PIDS}"  1>&2
+    PID=$(echo ${PIDS} | tr ' ' '\n' | sort | uniq)
+    ps-tree ${PID}
 fi
 
 # Local Variables:
