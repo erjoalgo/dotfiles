@@ -19,7 +19,7 @@ sudo service apparmor restart
 install-systemd-service.sh -u redshift <<EOF
 [Unit]
 Description=redshift
-After=graphical.target
+After=default.target
 
 [Service]
 ExecStart=/usr/bin/redshift -v
