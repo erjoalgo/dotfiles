@@ -69,13 +69,25 @@ EOF
 REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO_NAME}"
 ORIGIN_NAME=origin
 
-if ! git remote show "${REMOTE_NAME}"; then
-    git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
-    echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
-elif test $(git config --get "remote.${REMOTE_NAME}.url") != "${REMOTE_URL}"; then
+function git-remote-url {
+    REMOTE=${1} && shift
+    git config --get "remote.${REMOTE}.url"
+}
+
+if ! git-remote-url "${REMOTE_NAME}"; then
+   git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
+elif test $(git-remote-url "${REMOTE_NAME}") != "${REMOTE_URL}"; then
     echo "remote ${REMOTE_NAME} exists and doesn't point to ${REMOTE_URL}"
-    exit ${LINENO}
+    OLD=${REMOTE_NAME}
+    while git config --get "remote.${OLD}.url"; do
+        OLD+=.old
+    done
+    echo "renaming ${REMOTE_NAME} to ${OLD}"
+    git remote rename ${REMOTE_NAME} ${OLD}
+    git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
 fi
+
+echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 git push --set-upstream ${REMOTE_NAME} ${BRANCH}
