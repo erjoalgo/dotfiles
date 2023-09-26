@@ -37,7 +37,7 @@ while getopts "ht:o:r:n:d:" OPT; do
 done
 
 
-REPO_NAME=${REPO_NAME:-$(basename $(pwd))}
+REPO_NAME=${REPO_NAME:-$(basename $(git rev-parse --show-toplevel))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
 if test -z "${SSH_USERHOST:-}"; then
     usage
