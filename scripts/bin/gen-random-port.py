@@ -1,11 +1,16 @@
-#!/usr/bin/python
-from __future__ import absolute_import
-from __future__ import print_function
+#!/usr/bin/python3
+
+import argparse
 import random
-lower = 1024
 
-upper = 2**16-1 
+parser = argparse.ArgumentParser()
+parser.add_argument("-l", "--lower", default=1024)
+parser.add_argument("-u", "--upper", default=49151)
+parser.add_argument("-m", "--max_upper", action="store_true",
+                    help="if specified, set upper to the maximum allowed port number")
+args= parser.parse_args()
 
-upper = 49151
+if args.max_upper:
+    args.upper = 2**16-1
 
-print(random.randint(lower, upper))
+print(random.randint(args.lower, args.upper))
