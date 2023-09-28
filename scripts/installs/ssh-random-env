@@ -1,0 +1,28 @@
+#!/bin/bash -x
+
+SELFD="$(dirname $(realpath $0))"
+
+set -euo pipefail
+
+URL=ssh://git@github.com/erjoalgo/openssh-portable
+LOCAL_REPO=${HOME}/git/$(basename "${URL}")
+
+if ! test -d "${LOCAL_REPO}"; then
+    git clone -o fork ${URL} "${LOCAL_REPO}"
+fi
+
+cd "${LOCAL_REPO}"
+
+git fetch fork
+git checkout non-debian
+git pull fork non-debian
+
+autoreconf && ./configure && make
+SSH=$(which ssh)
+sudo mv "${SSH}" "${SSH}.debian"
+sudo mv ./ssh "${SSH}"
+
+# Local Variables:
+# mode: sh-mode
+# mode: sh-mode
+# End:
