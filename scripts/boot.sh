@@ -315,7 +315,7 @@ X_BROWSER=$(which x-www-browser-stumpwm)
 
 sudo ${APT_GET} install -y openssh-server
 
-./installs/patch-ssh-feature-random-env || true
+./installs/ssh-random-env || true
 
 insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-group-number"  \
   "${HOME}/.ssh/config" << EOF
