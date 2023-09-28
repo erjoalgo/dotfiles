@@ -1,2 +1,2 @@
 #!/bin/bash -x
-nmap -pN ${*}
+nmap -Pn ${*}
