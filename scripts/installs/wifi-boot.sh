@@ -58,6 +58,10 @@ if sudo grep "Possible missing firmware /lib/firmware/radeon" -R /var/log; then
     sudo apt-get install -y firmware-amd-graphics
 fi
 
+if  sudo dmesg | grep 'Direct firmware load for .*failed with error'; then
+    sudo apt-get install -y firmware-misc-nonfree
+fi
+
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
     echo "^^ unknown network card!"
