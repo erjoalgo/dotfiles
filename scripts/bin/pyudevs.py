@@ -5,9 +5,11 @@ import argparse
 import asyncio
 import logging
 import os
+import re
 import subprocess
 import threading
 import time
+import traceback
 
 from six.moves import range
 import pyudev
@@ -92,8 +94,9 @@ class DeviceHandler(object):
 
 class KeyboardHandler(DeviceHandler):
 
-    def __init__(self, is_logitech=False):
+    def __init__(self, is_logitech=False, keyboard_id=None):
         self.is_logitech = is_logitech
+        self.keyboard_id = keyboard_id
 
     @staticmethod
     def matches(device):
@@ -105,17 +108,30 @@ class KeyboardHandler(DeviceHandler):
                     and "mouse" not in devname
                     and "mouse" not in input_class
                     and device.device_path.split("/")[-1].startswith("event"))
+        # INFO:root:got new event: add Device('/sys/devices/virtual/misc/uhid/0005:04E8:7021.000A/input/input40/event18')
+        m = re.search("(?<=/uhid/)([^/]+)[.]", device.device_path)
+        if m:
+            keyboard_id = m.group(1)
+        else:
+            keyboard_id = vendor_product
+
         if matches:
             is_logitech = device.get("ID_VENDOR") == "Logitech"
-            return KeyboardHandler(is_logitech=is_logitech)
+            logging.info(
+                "got keyboard. vendor:product: %s, logitech? %s devname: %s input_class: %s",
+                vendor_product, is_logitech, devname, input_class)
+            return KeyboardHandler(is_logitech=is_logitech,
+                                   keyboard_id=keyboard_id)
 
     def retry(self):
         self.notify_info("please touch any key on the keyboard...")
         filename = "xmodmap-load.sh"
-        logging.info("running xmodmap %s", filename)
         cmd = [filename]
         if self.is_logitech:
-            cmd.push(["-l"])
+            cmd.push("-l")
+        if self.keyboard_id:
+              cmd.extend(["-i", self.keyboard_id])
+        logging.info("running %s", " ".join(cmd))
         self.check_call(cmd)
 
 
