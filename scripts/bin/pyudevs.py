@@ -219,11 +219,12 @@ def monitor_forever():
           logging.debug("%s: %s", key, device.get(key))
         logging.debug("")
 
-        for handler in DeviceHandler.handlers:
-            if handler.matches(device):
-                logging.info("matched: %s", handler)
+        for match_handler in DeviceHandler.handlers:
+            specific_handler = match_handler.matches(device)
+            if specific_handler:
+                logging.info("matched: %s", specific_handler)
                 asyncio.run_coroutine_threadsafe(
-                    handler.run(), loop)
+                    specific_handler.run(), loop)
                 break
         else:
             logging.info("nothing matched: %s", device)
