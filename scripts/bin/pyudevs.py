@@ -87,8 +87,8 @@ class DeviceHandler(object):
         ret = subprocess.call(cmd)
         if ret != 0:
           raise Exception(
-              "failed: {}. exit status: {}".format(
-                  name or str(cmd), ret))
+              f"{name or str(cmd)} failed. exit status: {ret}")
+
 
 
 
