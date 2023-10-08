@@ -239,5 +239,9 @@ if __name__ == "__main__":
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.WARN)
-    monitor_forever()
+        logging.basicConfig(level=logging.INFO)
+    while True:
+        try:
+            monitor_forever()
+        except Exception:
+            traceback.print_exc()
