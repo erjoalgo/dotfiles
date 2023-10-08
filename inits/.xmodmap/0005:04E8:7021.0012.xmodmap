@@ -1,0 +1,21 @@
+clear control
+clear mod1
+clear mod4
+clear mod3
+
+keycode 108 = Hyper_L
+keycode 134 = Super_L
+keycode 133 = Alt_L
+
+add control = Control_L
+add mod1 = Alt_L
+add mod3 = Super_L
+add mod4 = Hyper_L
+
+keycode 180 = Escape
+
+keycode 225 = F1
+
+keycode 22 = BackSpace dead_acute
+keycode 49 = grave asciitilde
+keycode 65 = space underscore
