@@ -284,12 +284,3 @@
 (defcommand redshift-reset () ()
   "Redshift shift red"
   (redshift-oneshot "-x"))
-
-(defcommand xev-look () ()
-  (only)
-  (fclear)
-  (run-command-async-notify
-   "konsole"
-   `("-e" "bash" "-c"
-          "xev | grep -P 'keycode|^Key'"))
-  (vsplit))
