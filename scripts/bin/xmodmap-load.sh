@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "hl" OPT; do
+while getopts "hli:" OPT; do
     case ${OPT} in
     l)
         IS_LOGITECH=true
+        ;;
+    i)
+        KEYBOARD_ID=${OPTARG}*
         ;;
     h)
         less $0
@@ -18,10 +21,15 @@ shift $((OPTIND -1))
 export DISPLAY=:$(ls /tmp/.X11-unix | tr -d 'X')
 export XAUTHORITY=~/.Xauthority
 
-for CAND in ~/.xmodmap/{$(hostname),default}.xmodmap; do
+echo "KEYBOARD_ID is ${KEYBOARD_ID:-}"
+
+for CAND in ~/.xmodmap/{${KEYBOARD_ID:-},$(hostname),default}.xmodmap; do
     if test -e "${CAND}"; then
+        echo "loading xmodmap file: ${CAND}"
         xmodmap "${CAND}"
         break
+    else
+        echo "file does not exist: ${CAND}"
     fi
 done
 
