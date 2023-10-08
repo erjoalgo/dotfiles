@@ -134,6 +134,9 @@ if ! which google-chrome chromium chrome; then
 fi
 
 
+# enable sleep, suspend, hibernate to avoid draining laptop battery
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+
 ./installs/install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
 
 ./installs/chrome-disable-xdg-open-prompt.sh
