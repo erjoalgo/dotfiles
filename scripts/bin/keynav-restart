@@ -4,8 +4,10 @@ set -euo pipefail
 
 SELF_PID=$$
 KEYNAVS=$(pgrep -f keynav)
+if test -n "${KEYNAVS:-}"; then
+    kill $(grep -v "^${SELF_PID}$" <<< "${KEYNAVS}")
+fi
 
-kill $(grep -v "^${SELF_PID}$" <<< "${KEYNAVS}")
 keynav &
 disown %- # silence shell job status
 
