@@ -124,7 +124,6 @@ class KeyboardHandler(DeviceHandler):
                                    keyboard_id=keyboard_id)
 
     def retry(self):
-        self.notify_info("please touch any key on the keyboard...")
         filename = "xmodmap-load.sh"
         cmd = [filename]
         if self.is_logitech:
