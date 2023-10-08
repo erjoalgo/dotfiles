@@ -19,7 +19,7 @@ done
 shift $((OPTIND -1))
 
 if test "${STATUS:-}" = on; then
-    pactl load-module module-null-sink sink_name=test
+    pactl load-module module-loopback latency_msec=1
 elif test "${STATUS:-}" = off; then
     IDX=$(pactl list short modules | grep module-loopback | cut -f1)
     pactl unload-module "${IDX}"
