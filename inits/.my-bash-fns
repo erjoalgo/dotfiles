@@ -742,3 +742,10 @@ function tmux-find-pid  {
          "#{pane_pid} #{session_name}:#{window_index}:#{pane_index}" | \
         grep "${PID}"
 }
+
+function source-export-vars {
+    FILE=${1} && shift
+    set -o allexport
+    source "${FILE}"
+    set +o allexport
+}
