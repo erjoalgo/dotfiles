@@ -18,7 +18,7 @@ if sbcl --eval "(asdf:find-system :stumpwm)" --non-interactive; then
 fi
 
 
-if command -v sh-fix-getopt.el; then
+if command -v sh-fix-getopt.el && command -v emacs; then
     sh-fix-getopt.el ./scripts/*/*
 fi
 
