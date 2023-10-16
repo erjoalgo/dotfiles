@@ -14,6 +14,9 @@ while getopts "i:x:snth" OPT; do
     x)
         PXE_FILENAME=${OPTARG}
         ;;
+    g)
+        GATEWAY_IFACE=${OPTARG}
+        ;;
     n)
         NO_SHARE_INTERNET=true
         ;;
@@ -94,7 +97,7 @@ sudo apt-get install -y iptables isc-dhcp-server
 
 if test "${NO_SHARE_INTERNET:-}" != true; then
     sudo sysctl -w net.ipv4.ip_forward=1
-    for GATEWAY_IFACE in $(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+"); do
+    for GATEWAY_IFACE in ${GATEWAY_IFACE:-$(ip route | grep '^default' | grep -Po "(?<= dev) [^ ]+")}; do
         sudo iptables -I FORWARD 1 -i ${IFACE} -o ${GATEWAY_IFACE} -j NFLOG
         sudo iptables -I FORWARD 2 -i ${IFACE} -o ${GATEWAY_IFACE} -j ACCEPT
         sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE} -j MASQUERADE
