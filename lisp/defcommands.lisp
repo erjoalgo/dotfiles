@@ -275,7 +275,7 @@
 
 (defcommand redshift-shift-red () ()
   "Redshift shift red"
-  (redshift-oneshot "-t 5600:5600"))
+  (redshift-oneshot "-t 6000:6000"))
 
 (defcommand redshift-shift-blue () ()
   "Redshift shift red"
