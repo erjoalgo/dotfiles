@@ -1,0 +1,12 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+USER_PASS=${1} && shift
+
+BASE64=$(echo -n "${USER_PASS}" | base64 -w0)
+echo "Authorization: Basic ${BASE64}"
+
+# Local Variables:
+# mode: sh-mode
+# End:
