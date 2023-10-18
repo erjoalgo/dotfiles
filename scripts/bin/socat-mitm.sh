@@ -4,10 +4,10 @@ set -euo pipefail
 
 while getopts "h" OPT; do
     case ${OPT} in
-    h)
-        less $0
-        exit 0
-        ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
