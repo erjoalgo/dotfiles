@@ -3,7 +3,7 @@
 set -euo pipefail
 
 VERBOSE_OPT=-v
-while getopts "h" OPT; do
+while getopts "hq" OPT; do
     case ${OPT} in
         q)
             # quiet
