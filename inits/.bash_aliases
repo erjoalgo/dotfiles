@@ -385,6 +385,13 @@ function docker-kill {
     docker kill $(docker-select-container)
 }
 
+alias dcl='docker compose logs'
+alias dcps='docker compose ps'
+alias dcu='docker compose up -d; docker compose logs -f'
+alias dcub='docker compose up --build -d; docker compose logs -f'
+alias dc='docker compose
+'
+
 alias lrsh='lein ring server-headless'
 # Local Variables:
 # mode: sh
