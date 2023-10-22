@@ -11,13 +11,15 @@ function usage {
 }
 
 SSH_OPTS=""
-while getopts "ht:o:r:n:d:" OPT; do
+PORT_OPT=""
+while getopts "ht:p:r:n:d:" OPT; do
     case ${OPT} in
     t)
         SSH_USERHOST=${OPTARG}
         ;;
-    o)
-        SSH_OPTS=${OPTARG}
+    p)
+        SSH_OPTS+=" -p${OPTARG} "
+        PORT_OPT+=:${OPTARG}
         ;;
     n)
         REPO=${OPTARG}
@@ -52,7 +54,7 @@ if test -z "${REMOTE_NAME:-}"; then
     fi
 fi
 
-ssh -vv ${SSH_USERHOST} ${SSH_OPTS} "sudo bash -xs" <<EOF
+ssh -vv ${SSH_USERHOST} ${SSH_OPTS} sudo bash -xs <<EOF
 set -euxo pipefail
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
@@ -66,7 +68,7 @@ EOF
 # TODO remove possible user from SSH_USERHOST
 # TODO add possible non-standard port
 
-REMOTE_URL="ssh://git@${SSH_USERHOST}${SRV_PREFIX}/${REPO_NAME}"
+REMOTE_URL="ssh://git@${SSH_USERHOST}${PORT_OPT}${SRV_PREFIX}/${REPO_NAME}"
 ORIGIN_NAME=origin
 
 function git-remote-url {
