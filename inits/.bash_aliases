@@ -386,11 +386,12 @@ function docker-kill {
 }
 
 alias dcl='docker compose logs -f'
-alias dcps='docker compose ps'
+alias dcp='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
 alias dcub='docker compose up --build -d; docker compose logs -f'
 alias dc='docker compose'
 alias db='docker-bash'
+alias dps='docker ps'
 
 alias lrsh='lein ring server-headless'
 # Local Variables:
