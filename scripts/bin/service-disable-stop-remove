@@ -7,9 +7,10 @@ SERVICE=${1} && shift
 sudo service stop "${SERVICE}" || true
 sudo systemctl disable "${SERVICE}" || true
 
-sudo find /etc/systemd/ -name "${SERVICE}"
+FIND_CMD="sudo find /etc/systemd/ -name *${SERVICE}*"
+${FIND_CMD}
 read -p"confirm deleting the above files? "
-sudo find /etc/systemd/ -name "*${SERVICE}*" -exec rm {} +
+${FIND_CMD} -exec rm {} +
 
 # Local Variables:
 # mode: sh-mode
