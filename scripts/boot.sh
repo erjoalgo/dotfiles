@@ -269,6 +269,11 @@ fi
 touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
+insert-text-block '# 02a8943a-e369-47f7-9e96-11de241c2e36-add-universal-ssh' \
+                  ~/.ssh/authorized_keys<<EOF
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHgs/j9IDFtOS8FriMd8ddZziQoNbZllfeobTqSeClJyimUiiSm+uiqP/0mL4FC2HZmeeRKVlGJx8DUQWUBHVPE= <ssh://erjoalgo@gmail.com|nist256p1>
+EOF
+
 insert-text-block -b '# -*- mode: sh -*-'  \
                   ~/.profile-env  \
   <<EOF
