@@ -13,8 +13,7 @@ function add-non-free-apt-source {
     fi
 
     sudo tee /etc/apt/sources.list.d/non-free.list <<EOF
-deb http://deb.debian.org/debian ${CODENAME} non-free
-deb-src http://deb.debian.org/debian ${CODENAME} non-free
+deb http://deb.debian.org/debian ${CODENAME} non-free-firmware
 EOF
     sudo apt-get update
 }
