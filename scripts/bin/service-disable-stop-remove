@@ -9,7 +9,7 @@ sudo systemctl disable "${SERVICE}" || true
 
 sudo find /etc/systemd/ -name "${SERVICE}"
 read -p"confirm deleting the above files? "
-sudo find /etc/systemd/ -name ${SERVICE} -exec rm {} +
+sudo find /etc/systemd/ -name "*${SERVICE}*" -exec rm {} +
 
 # Local Variables:
 # mode: sh-mode
