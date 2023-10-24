@@ -1,0 +1,16 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+SERVICE=${1} && shift
+
+sudo service stop "${SERVICE}"
+sudo systemctl disable "${SERVICE}"
+
+sudo find /etc/systemd/ -name "${SERVICE}"
+read -p"confirm deleting the above files? "
+sudo find /etc/systemd/ -name ${SERVICE} -exec rm {} +
+
+# Local Variables:
+# mode: sh-mode
+# End:
