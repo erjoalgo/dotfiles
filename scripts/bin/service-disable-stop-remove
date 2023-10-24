@@ -4,8 +4,8 @@ set -euo pipefail
 
 SERVICE=${1} && shift
 
-sudo service stop "${SERVICE}"
-sudo systemctl disable "${SERVICE}"
+sudo service stop "${SERVICE}" || true
+sudo systemctl disable "${SERVICE}" || true
 
 sudo find /etc/systemd/ -name "${SERVICE}"
 read -p"confirm deleting the above files? "
