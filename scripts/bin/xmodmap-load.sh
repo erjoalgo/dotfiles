@@ -27,6 +27,10 @@ for CAND in ~/.xmodmap/{${KEYBOARD_ID:-},$(hostname),default}.xmodmap; do
     if test -e "${CAND}"; then
         echo "loading xmodmap file: ${CAND}"
         xmodmap "${CAND}"
+        sleep 1
+        xmodmap "${CAND}"
+        sleep 1
+        xmodmap "${CAND}"
         break
     else
         echo "file does not exist: ${CAND}"
