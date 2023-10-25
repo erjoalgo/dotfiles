@@ -34,5 +34,9 @@ sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
 
 if test -n "${PERSIST:-}"; then
     sudo apt-get install -y iptables-persistent
-    sudo iptables-save | sudo tee -a /etc/iptables/rules.v4
+    IDENTIFIER="${IFACE_SOURCE}-to-${IFACE_OUT}"
+    sudo iptables-save |  \
+        sudo insert-text-block \
+             '# b674161f-f554-4255-86cb-80065761abdc-share-internet-${IDENTIFIER}' \
+             /etc/iptables/rules.v4
 fi
