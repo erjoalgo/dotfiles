@@ -345,6 +345,9 @@ alias svlogs='sudo journalctl -fu'
 alias svless='sudo journalctl -u'
 complete-alias _service svlogs service
 complete-alias _service svless service
+# complete -F _service service-disable-stop-remove stop
+alias service-delete='service-disable-stop-remove'
+complete-alias _service service-delete service
 
 # https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
 alias strace-attach-stdout='sudo strace -ff -e trace=write -e write=1,2 -s99999 -p'
