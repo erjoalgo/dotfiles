@@ -5,7 +5,7 @@ set -euo pipefail
 OVPN=${1} && shift
 BASE=$(basename "${OVPN}" .ovpn)
 
-sudo cp "${OVPN}" "/etc/openvpn/${BASE}.conf"
+sudo mv "${OVPN}" "/etc/openvpn/${BASE}.conf"
 
 SERVICE=openvpn@${BASE}
 
