@@ -11,7 +11,9 @@ FIND_CMD="sudo find /etc/systemd/ -name *${SERVICE}*"
 ${FIND_CMD}
 read -p"confirm deleting the above files? "
 ${FIND_CMD} -exec rm {} +
-
+if VPN_CONF=$(grep -Po '(?<=^openvpn@).*' <<< "${SERVICE}"); then
+  sudo rm /etc/openvpn/${VPN_CONF}.conf
+fi
 # Local Variables:
 # mode: sh-mode
 # End:
