@@ -8,8 +8,9 @@ sudo systemctl stop "${SERVICE}" || true
 sudo systemctl disable "${SERVICE}" || true
 
 FIND_CMD="sudo find /etc/systemd/ -name *${SERVICE}*"
-${FIND_CMD}
-read -p"confirm deleting the above files? "
+# ${FIND_CMD}
+# read -p"confirm deleting the above files? "
+# echo "deleting the above files..." && sleep 1
 ${FIND_CMD} -exec rm {} +
 if VPN_CONF=$(grep -Po '(?<=^openvpn@).*' <<< "${SERVICE}"); then
   sudo rm /etc/openvpn/${VPN_CONF}.conf
