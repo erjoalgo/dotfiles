@@ -240,7 +240,7 @@ alias unzip-src='unzip -d ~/src'
 alias chmodx='chmod +x'
 alias chown-rec='sudo chown -R '
 complete -F _usermod chown-rec
-alias lagging-repos='git-notify-lagging-repos.sh ~/git/*'
+alias gitlag='git-notify-lagging-repos.sh ~/git/*'
 alias less-auth='sudo less -f /var/log/auth.log'
 alias less-syslog='sudo less -f /var/log/syslog'
 alias grep-syslog='sudo grep /var/log/syslog -e'
