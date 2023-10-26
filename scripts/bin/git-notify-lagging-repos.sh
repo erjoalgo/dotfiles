@@ -66,7 +66,7 @@ function check_lagging	{
 	fi
     fi
     if ! git diff --exit-code >/dev/null|| ! git diff --cached --exit-code >/dev/null; then
-	TAGS+=" ${YELLOW}NOT-COMMITED${NC}"
+	TAGS+=" ${RED}NOT-COMMITED${NC}"
     fi
 
     STASH_CNT=$(git stash list | wc -l)
