@@ -381,7 +381,7 @@ function docker-select-container {
 
 function docker-bash {
     CONTAINER=$(docker-select-container)
-    docker exec -it "${CONTAINER}" bash
+    docker exec -it --user root "${CONTAINER}" bash
 }
 
 function docker-kill {
