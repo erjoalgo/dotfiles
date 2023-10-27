@@ -125,7 +125,7 @@ if test -n "${PXE_FILENAME:-}"; then
   next-server ${IP_ADDR};
   filename "${PXE_FILENAME}";
 EOF
-           )
+)
 else
     PXE_OPT=""
 fi
