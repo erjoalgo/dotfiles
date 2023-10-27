@@ -21,6 +21,9 @@ while getopts "i:x:snthg:" OPT; do
         NO_SHARE_INTERNET=true
         ;;
     t)
+        STATIC_IP_ADDRESS=true
+        ;;
+    t)
         USE_TMP_FILE=true
         ;;
     h)
@@ -106,12 +109,14 @@ fi
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
-if true; then
+if test -z "${STATIC_IP_ADDRESS:-}"; then
     sudo ip link set ${IFACE} down
     sudo ip addr flush dev ${IFACE}
     sudo ip addr add ${IP_ADDR}/${SUBNET_CIDR} dev ${IFACE} \
        valid_lft forever preferred_lft forever
     sudo ip link set ${IFACE} up
+else
+    IP_ADDR=$(ip a show dev eth0 | grep -Po '(?<=inet )[0-9.]+' | head -1)
 fi
 
 
