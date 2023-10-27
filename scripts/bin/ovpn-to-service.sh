@@ -3,7 +3,7 @@
 set -euo pipefail
 
 OVPN=${1} && shift
-BASE=OVPN
+BASE=${OVPN}
 BASE=$(basename "${BASE}" .ovpn)
 BASE=$(basename "${BASE}" .conf)
 
