@@ -74,6 +74,8 @@ def main():
                       help = "read data from the given filename")
   parser.add_argument("-i", "--stdin", action="store_true",
                       help = "read POST data from stdin")
+  parser.add_argument("-t", "--tmux", action="store_true",
+                      help = "read data from the `tmux show-buffer` command")
   parser.add_argument("-H", "--headers", nargs="+", default=[],
                       help = "list of headers as KEY:VALUE pairs")
   parser.add_argument("-v", "--verbose", action="store_true",
@@ -88,6 +90,8 @@ def main():
       data = args.data.encode()
   elif args.stdin:
       data = sys.stdin.buffer.read()
+  elif args.tmux:
+      data = subprocess.check_output(["tmux", "show-buffer"])
   else:
       data = None
 
