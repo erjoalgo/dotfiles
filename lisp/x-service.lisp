@@ -76,9 +76,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     "get/set clipboard contents"
   (case (hunchentoot:request-method*)
     (:post
-     (let ((contents (hunchentoot-post-data-or-err)))
+     (let ((contents (hunchentoot-post-data-or-err))
+           (notify (equal (read-header :STUMPWM-NOTIFY) "true")))
        (stumpwm:set-x-selection contents :clipboard)
        (stumpwm:set-x-selection contents :primary)
+       (when notify
+         (stumpwm::message-wrapped "copied: ~A" contents))
        ""))
     (:get (stumpwm:get-x-selection :clipboard))))
 
