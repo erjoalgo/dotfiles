@@ -37,6 +37,6 @@ if test -n "${PERSIST:-}"; then
     IDENTIFIER="${IFACE_SOURCE}-to-${IFACE_OUT}"
     sudo iptables-save |  \
         sudo insert-text-block \
-             '# b674161f-f554-4255-86cb-80065761abdc-share-internet-${IDENTIFIER}' \
+             "# b674161f-f554-4255-86cb-80065761abdc-share-internet-${IDENTIFIER}" \
              /etc/iptables/rules.v4
 fi
