@@ -258,7 +258,7 @@
   "Fake a pcspkr beep using alsa speaker-test.
 
    Avoids issues with beep permissions"
-  (beep))
+  (beep-fn))
 
 (defun get-lat-lng ()
   "TODO geolocation API"
