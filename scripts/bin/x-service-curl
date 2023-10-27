@@ -51,7 +51,8 @@ def x_service_curl(specs: list, path: str, headers: dict[str:str], data: bytes):
 
     req = requests.Request(method, url, headers=headers, data=data)
     try:
-        resp = session.send(req.prepare())
+        prepared = req.prepare()
+        resp = session.send(prepared)
     except Exception as ex:
         logging.error("failed to send to %s: %s", url, ex)
         continue
