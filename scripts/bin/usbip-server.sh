@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+FILTER_OPT=(cat)
 while getopts "b:h" OPT; do
     case ${OPT} in
     b)
@@ -9,7 +10,7 @@ while getopts "b:h" OPT; do
         DEVICE=${OPTARG}
         ;;
     f)
-        FILTER_OPT="grep -B1 '${OPTARG}' | "
+        FILTER_OPT=(grep -B1 "${OPTARG}")
         ;;
     h)
         less $0
@@ -24,7 +25,7 @@ sudo modprobe usbip_host
 
 if test -z "${DEVICE:-}"; then
 	sudo usbip list -l
-	CHOICES=$(sudo usbip list -l | ${FILTER_OPT} | grep -Po '(?<=^ - busid )[^ ]+')
+	CHOICES=$(sudo usbip list -l | "${FILTER_OPT[@]}" | grep -Po '(?<=^ - busid )[^ ]+')
 	if test 1 -eq $(wc -l <<< "${CHOICES}"); then
 	  DEVICE=${CHOICES}
 	else
