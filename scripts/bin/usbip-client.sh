@@ -9,7 +9,7 @@ while getopts "r:f:h" OPT; do
         REMOTE_SERVER_ADDRESS=${OPTARG}
         ;;
     f)
-        FILTER_OPT=(grep "${OPT}")
+        FILTER_OPT=(grep "${OPTARG}")
         ;;
     h)
         less $0
