@@ -49,9 +49,9 @@ s warp,click 1
 shift+s warp,click 3
 semicolon warp,end
 Tab warp
-1 click 1
-2 click 2
-3 click 3
+1 click 1, end
+2 click 2, end
+3 click 3, end
 4 click 4
 5 click 5
 shift+space warp, click 3,end
