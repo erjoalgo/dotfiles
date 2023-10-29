@@ -2,13 +2,14 @@
 
 set -euo pipefail
 
-while getopts "s:b:h" OPT; do
+FILTER_OPT=()
+while getopts "s:f:h" OPT; do
     case ${OPT} in
     s)
         SERVER_ADDRESS=${OPTARG}
         ;;
-    b)
-        DEVICE_BIND_PATH=${OPTARG}
+    f)
+        FILTER_OPT=(grep "${OPT}")
         ;;
     h)
         less $0
@@ -21,5 +22,14 @@ shift $((OPTIND -1))
 sudo apt-get install -y usbip
 sudo modprobe vhci-hcd
 
-sudo usbip attach -r "${SERVER_ADDRESS}" -b "${DEVICE_BIND_PATH}"
+usbip list -r "${REMOTE_SERVER_ADDRESS}"
+
+echo "select device attach to" 1>&2
+select DEVICE in $(usbip list -r "${REMOTE_SERVER_ADDRESS}" |  \
+                       "${FILTER_OPT[@]}" | \
+                           cut -f1 -d: | tr -d ' '); do
+    break
+done
+
+sudo usbip attach -r "${REMOTE_SERVER_ADDRESS}" -b "${DEVICE}"
 
