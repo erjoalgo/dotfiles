@@ -289,7 +289,7 @@ function kill-process-listening-at-port	{
 function git-browse-remote	{
     REMOTE="${1:-origin}" && shift
     URL=$(git config --get "remote.${REMOTE}.url" |  \
-	      sed -e 's|:|/|g' -e 's|^\(ssh///\)\?git@|https://|')
+	      sed -e 's|^\(ssh://\)\?git@|https://|')
     echo ${URL}
     x-www-browser "${URL}"
 }
