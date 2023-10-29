@@ -26,7 +26,8 @@ test -n "${REMOTE_SERVER_ADDRESS}"
 
 CHOICES=$(usbip list -r "${REMOTE_SERVER_ADDRESS}" |  \
               "${FILTER_OPT[@]}" | \
-              cut -f1 -d: | tr -d ' ')
+              grep -Po '^ +[0-9-.]+(?=:)' | tr -d ' ')
+
 if test 1 -eq $(wc -l <<< "${CHOICES}"); then
     DEVICE="${CHOICES}"
 else
