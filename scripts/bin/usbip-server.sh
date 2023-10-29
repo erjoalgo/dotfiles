@@ -3,7 +3,7 @@
 set -euo pipefail
 
 FILTER_OPT=(cat)
-while getopts "b:h" OPT; do
+while getopts "b:f:h" OPT; do
     case ${OPT} in
     b)
         # bind device
