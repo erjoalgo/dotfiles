@@ -22,6 +22,8 @@ shift $((OPTIND -1))
 sudo apt-get install -y usbip
 sudo modprobe vhci-hcd
 
+test -n "${REMOTE_SERVER_ADDRESS}"
+
 CHOICES=$(usbip list -r "${REMOTE_SERVER_ADDRESS}" |  \
               "${FILTER_OPT[@]}" | \
               cut -f1 -d: | tr -d ' ')
