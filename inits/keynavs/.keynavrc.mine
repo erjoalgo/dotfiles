@@ -56,6 +56,7 @@ Tab warp
 5 click 5
 shift+space warp, click 3,end
 
+shift+1 warp, click 1, click 1, end
 shift+2 warp, click 1, click 1, sh "xdotool key shift+ctrl+c"
 shift+3 warp, click 1, click 1, click 1, sh "xdotool key shift+ctrl+c"
 
