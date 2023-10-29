@@ -22,14 +22,18 @@ shift $((OPTIND -1))
 sudo apt-get install -y usbip
 sudo modprobe vhci-hcd
 
-usbip list -r "${REMOTE_SERVER_ADDRESS}"
-
-echo "select device attach to" 1>&2
-select DEVICE in $(usbip list -r "${REMOTE_SERVER_ADDRESS}" |  \
-                       "${FILTER_OPT[@]}" | \
-                           cut -f1 -d: | tr -d ' '); do
-    break
-done
+CHOICES=$(usbip list -r "${REMOTE_SERVER_ADDRESS}" |  \
+              "${FILTER_OPT[@]}" | \
+              cut -f1 -d: | tr -d ' ')
+if test 1 -eq $(wc -l <<< "${CHOICES}"); then
+    DEVICE="${CHOICES}"
+else
+    usbip list -r "${REMOTE_SERVER_ADDRESS}"
+    echo "select device attach to" 1>&2
+    select DEVICE in "${CHOICES}"; do
+        break
+    done
+fi
 
 sudo usbip attach -r "${REMOTE_SERVER_ADDRESS}" -b "${DEVICE}"
 
