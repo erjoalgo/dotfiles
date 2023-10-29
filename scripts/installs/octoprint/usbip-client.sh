@@ -3,10 +3,10 @@
 set -euo pipefail
 
 FILTER_OPT=()
-while getopts "s:f:h" OPT; do
+while getopts "r:f:h" OPT; do
     case ${OPT} in
-    s)
-        SERVER_ADDRESS=${OPTARG}
+    r)
+        REMOTE_SERVER_ADDRESS=${OPTARG}
         ;;
     f)
         FILTER_OPT=(grep "${OPT}")
