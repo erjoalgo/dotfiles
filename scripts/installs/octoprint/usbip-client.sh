@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-FILTER_OPT=()
+FILTER_OPT=(cat)
 while getopts "r:f:h" OPT; do
     case ${OPT} in
     r)
