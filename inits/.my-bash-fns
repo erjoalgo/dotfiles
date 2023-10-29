@@ -202,7 +202,7 @@ function gpom	{
     REMOTE=${1:-origin} && shift
     BRANCH=${1:-$(git rev-parse --abbrev-ref HEAD 2> /dev/null)} && shift
     (
-	GIT_TERMINAL_PROMPT=0 git push ${REMOTE} ${BRANCH} &>/dev/null </dev/null
+	GIT_TERMINAL_PROMPT=0 git push ${REMOTE} ${BRANCH} </dev/null
 	LAST=$?
 	if test 0 -ne $LAST; then
 	    echo
