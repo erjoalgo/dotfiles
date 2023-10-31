@@ -40,7 +40,7 @@ sudo mount -t proc /proc "${CHROOT}/proc" || true
 sudo mount --bind /dev "${CHROOT}/dev" || true
 sudo mount -t devpts /dev/pts "${CHROOT}/dev/pts" || true
 
-if test -n ${BOOT_PARTITION:-}; then
+if test -n "${BOOT_PARTITION:-}"; then
     sudo mount --bind "${BOOT_PARTITION}" "${ROOT}/boot" || true
 fi
 
