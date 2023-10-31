@@ -54,6 +54,8 @@ Tab warp
 3 click 3, end
 4 click 4
 5 click 5
+shift+4 sh "xdotool keydown shift click 4 keyup shift"
+shift+5 sh "xdotool keydown shift click 5 keyup shift"
 shift+space warp, click 3,end
 
 shift+1 warp, click 1, click 1, end
