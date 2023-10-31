@@ -129,6 +129,5 @@
 (asdf:clear-source-registry)
 
 (safe-sexp
-  (ql:quickload :erjoalgo-stumpwmrc))
-
-(safe-sexp (funcall (find-symbol "INIT" "STUMPWM")))
+  (ql:quickload :erjoalgo-stumpwmrc)
+  (funcall (find-symbol "INIT" "STUMPWM")))
