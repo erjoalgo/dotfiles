@@ -251,6 +251,7 @@
    ("n" "take-scrot-snipit")
    ("o" "ocr-scrot-clipboard")
    ("k" "speak-string")
+   ("v" "run-shell-command keynav-restart")
    ("l" "spell-clipboard")
    ("H-l" "screen-lock")
    ("l" "screen-lock")
