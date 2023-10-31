@@ -35,6 +35,8 @@ if test "${UMOUNT:-}" = true; then
     exit 0
 fi
 
+test -d "${CHROOT:-}"
+
 sudo mount -t sysfs /sys "${CHROOT}/sys" || true
 sudo mount -t proc /proc "${CHROOT}/proc" || true
 sudo mount --bind /dev "${CHROOT}/dev" || true
