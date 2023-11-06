@@ -749,3 +749,8 @@ function source-export-vars {
     source "${FILE}"
     set +o allexport
 }
+
+function add-current-user-to-group {
+    GROUP=${1} && shift
+    sudo usermod -a -G "${GROUP}" "${USER}"
+}
