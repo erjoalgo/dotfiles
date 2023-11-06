@@ -299,7 +299,7 @@ EOF
 
 insert-text-block '# 8c65cfa8-bc9f-414c-a8d2-de367865a539-add-emacs-scripts'   \
                   ~/.profile-env<<EOF
-export PATH=\$PATH:${HOME}/git/dotemacs/lisp/scripts
+export PATH=\$PATH:${HOME}/git/dotemacs/lisp/bin
 EOF
 
 insert-text-block '# a1ec5b17-3ee5-4397-9d74-1094e51c0975-source-static-profile-env'  \
