@@ -51,9 +51,16 @@
    :min-percent-beep 4
    :min-percent-suspend 2))
 
+(defparameter *battery-notification-enabled-p* t)
+
+(defcommand battery-notifications-disable (pathname) ()
+  "Disable battery notifications"
+  (setf *battery-notification-enabled-p* nil))
+
 (defun battery-notification-maybe-notify (&key (thresholds *battery-notification-thresholds-defaults*))
   "Maybe notify that battery is low. Thresholds has the form (see source): "
-  (when-let* ((info (battery-info)))
+  (when-let* ((_ *battery-notification-enabled-p*)
+              (info (battery-info)))
     (with-slots
           (min-percent-message
            min-percent-flashing-message
