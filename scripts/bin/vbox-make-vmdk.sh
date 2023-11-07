@@ -19,7 +19,7 @@ shift $((OPTIND -1))
 test -n "${RAW_DRIVE:-}"
 
 
-TOP=/etc/vmdk
+TOP=/var/vmdk
 
 sudo mkdir -p "${TOP}"
 
