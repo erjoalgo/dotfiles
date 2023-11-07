@@ -49,7 +49,7 @@ ${SENDER_LINES}
 }
 
 \vspace{1.0in}\LARGE
-\setlength\parindent{3.5in}
+\setlength\parindent{5.5in}
 
 ${RECIPIENT_LINES}
 \end{document}
