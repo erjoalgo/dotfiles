@@ -114,5 +114,5 @@ if __name__ == "__main__":
   exit(main())
 
 # Local Variables:
-# mode: python-mode
+# mode: python
 # End:
