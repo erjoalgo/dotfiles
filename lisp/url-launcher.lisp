@@ -162,6 +162,7 @@
     '(cladaver:mkdir *webdav-server-info* webdav-urls-prefix)))
 
 (defun url-launcher-init ()
+  (load-webdav-server-info)
   (ensure-directory-exists
    (uiop:pathname-parent-directory-pathname
     (uiop:ensure-directory-pathname *search-history-filename*))
