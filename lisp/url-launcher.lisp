@@ -95,7 +95,7 @@
     (let* ((url (expand-user url))
            (opener (url-command url)))
       (if (functionp opener)
-          (funcall opener url)
+          (stumpwm::lparallel-future (funcall opener url))
           (progn
             (run-shell-command (format nil "~A ~A" opener url))
             ;;TODO why this causes hang
