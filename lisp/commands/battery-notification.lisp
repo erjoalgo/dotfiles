@@ -53,7 +53,7 @@
 
 (defparameter *battery-notification-enabled-p* t)
 
-(defcommand battery-notifications-disable (pathname) ()
+(defcommand battery-notifications-disable () ()
   "Disable battery notifications"
   (setf *battery-notification-enabled-p* nil))
 
