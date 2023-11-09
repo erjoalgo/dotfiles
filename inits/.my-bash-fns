@@ -754,3 +754,9 @@ function add-current-user-to-group {
     GROUP=${1} && shift
     sudo usermod -a -G "${GROUP}" "${USER}"
 }
+
+function ssh-list-all-host-keys {
+    for pubkey_file in /etc/ssh/*.pub; do
+        ssh-keygen -lf ${pubkey_file} -E sha256
+    done
+}
