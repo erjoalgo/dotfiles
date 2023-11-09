@@ -61,8 +61,7 @@
       (prog1
           *url-keys-cache*
         (stumpwm::lparallel-future
-         (url-launcher-list-url-keys
-                :skip-cache t)))
+         (url-launcher-list-url-keys :skip-cache t)))
       (setf *url-keys-cache*
             (statusor:error-to-signal
              (cladaver:ls *webdav-server-info* webdav-urls-prefix)))))
