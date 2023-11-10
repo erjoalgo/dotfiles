@@ -157,6 +157,7 @@ pip3 install requests_unixsocket --break-system-packages || true
 for SCRIPT in  \
     ./installs/link-inits.sh \
         ./installs/gen-git-config.sh \
+        ./installs/suspend-sedation.sh \
     ;do
     ./${SCRIPT}
 done
