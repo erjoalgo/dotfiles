@@ -12,6 +12,8 @@ while getopts "ha:" OPT; do
 done
 shift $((OPTIND -1))
 
+sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
+
 if test ${SPEC} = 'ignore'; then
     CONTENTS=$(cat<<EOF
 HandleLidSwitch=ignore
