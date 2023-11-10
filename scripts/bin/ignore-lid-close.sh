@@ -31,7 +31,7 @@ EOF
 )
     # xautolock
 else
-    echo "usage: ignore-lid-close.sh [respect|ignore]"
+    echo "usage: ignore-lid-close.sh <respect|ignore>"
     exit ${LINENO}
 fi
 
