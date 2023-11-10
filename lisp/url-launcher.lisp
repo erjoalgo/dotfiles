@@ -10,7 +10,7 @@
 
 (defvar *webdav-server-info* nil)
 
-(defun load-webdav-server-info ()
+(defun webdav-load-server-info ()
   ;; may be interactive
   (unless (authinfo:get-by :app "webdav")
     (authinfo:persist-authinfo-line
@@ -122,7 +122,7 @@
 	  (string= "NIL" key))
       (message "invalid key")
       (progn
-        (unless *webdav-server-info* (load-webdav-server-info))
+        (unless *webdav-server-info* (webdav-load-server-info))
         (assert *webdav-server-info*)
         (statusor:error-to-signal
          (cladaver:put *webdav-server-info*
@@ -157,7 +157,7 @@
 
 (defun webdav-maybe-init ()
   (unless *webdav-server-info*
-    (statusor:return-if-error (load-webdav-server-info) WEBDAV-MAYBE-INIT)
+    (statusor:return-if-error (webdav-load-server-info) WEBDAV-MAYBE-INIT)
     ;; mkdir. may fail if already exists
     '(cladaver:mkdir *webdav-server-info* webdav-urls-prefix)))
 
