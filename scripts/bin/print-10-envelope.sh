@@ -2,13 +2,18 @@
 
 set -euo pipefail
 
-while getopts "ha:s:r:" OPT; do
+RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-4.1}
+
+while getopts "ha:s:r:o:" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
         ;;
     r)
         RECIPIENT_FILENAME=${OPTARG}
+        ;;
+    o)
+        RECIPIENT_OFFSET_INCHES=${OPTARG}
         ;;
     h)
         less $0
@@ -49,7 +54,7 @@ ${SENDER_LINES}
 }
 
 \vspace{1.0in}\LARGE
-\setlength\parindent{5.5in}
+\setlength\parindent{${RECIPIENT_OFFSET_INCHES}in}
 
 ${RECIPIENT_LINES}
 \end{document}
