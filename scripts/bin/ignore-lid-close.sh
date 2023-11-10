@@ -18,17 +18,11 @@ if test ${SPEC} = 'ignore'; then
     CONTENTS=$(cat<<EOF
 HandleLidSwitch=ignore
 HandlePowerKey=ignore
-# HandleLidSwitch=suspend
-# HandleLidSwitchExternalPower=suspend
-# HandleLidSwitchDocked=suspend
-# LidSwitchIgnoreInhibited=yes
 EOF
 )
     # pkill xautolock
 elif test ${SPEC} = 'respect'; then
     CONTENTS=$(cat<<EOF
-# HandleLidSwitch=ignore
-# HandlePowerKey=ignore
 HandleLidSwitch=suspend
 HandleLidSwitchExternalPower=suspend
 HandleLidSwitchDocked=suspend
