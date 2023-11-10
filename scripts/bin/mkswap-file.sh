@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-SWAP=/swap.file
+SWAP=${SWAP:-/swap.file}
+
 
 while getopts "hf:g:" OPT; do
     case ${OPT} in
