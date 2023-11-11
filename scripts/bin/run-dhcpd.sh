@@ -3,7 +3,7 @@
 set -euo pipefail
 
 
-while getopts "i:x:snthg:" OPT; do
+while getopts "i:x:sntThg:" OPT; do
     case ${OPT} in
     i)
         IFACE=${OPTARG}
@@ -20,7 +20,7 @@ while getopts "i:x:snthg:" OPT; do
     n)
         NO_SHARE_INTERNET=true
         ;;
-    t)
+    T)
         STATIC_IP_ADDRESS=true
         ;;
     t)
