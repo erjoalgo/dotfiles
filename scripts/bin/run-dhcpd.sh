@@ -26,6 +26,10 @@ while getopts "i:x:snthg:" OPT; do
     t)
         USE_TMP_FILE=true
         ;;
+    G)
+        # use Google dns
+        DNS=8.8.8.8
+        ;;
     h)
         less $0
         exit 0
