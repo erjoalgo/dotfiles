@@ -120,7 +120,7 @@ if test -z "${STATIC_IP_ADDRESS:-}"; then
        valid_lft forever preferred_lft forever
     sudo ip link set ${IFACE} up
 else
-    IP_ADDR=$(ip a show dev eth0 | grep -Po '(?<=inet )[0-9.]+' | head -1)
+    IP_ADDR=$(ip a show dev ${IFACE} | grep -Po '(?<=inet )[0-9.]+' | head -1)
 fi
 
 
