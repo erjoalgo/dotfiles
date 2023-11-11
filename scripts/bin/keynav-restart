@@ -10,7 +10,7 @@ if test -n "${KEYNAVS:-}"; then
     fi
 fi
 
-keynav &
+keynav start &
 disown %- # silence shell job status
 
 
