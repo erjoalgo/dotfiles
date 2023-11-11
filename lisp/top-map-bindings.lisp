@@ -60,6 +60,17 @@
   :pull-key "H-S"
   :classes '("signal" "Signal"))
 
+(define-run-or-pull-program "blender"
+  :raise-key "H-t H-b"
+  :pull-key "H-t H-B"
+  :classes '("Blender"))
+
+(define-run-or-pull-program "creality"
+  :raise-key "H-t H-c"
+  :pull-key "H-t H-C"
+  :classes '("Creative3D")
+  :cmd (namestring (car (directory #P"~/Downloads/Creality*.AppImage"))))
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
