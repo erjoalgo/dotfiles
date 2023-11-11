@@ -198,7 +198,6 @@
       ("H-F9" "vol-down")
       ("H-F10" "vol-up")
       ("H-SPC" "speak-key")
-      ("H-t" *text-shortcuts-map*)
 
       ("H-N" "gnext")
       ("H-P" "gprev")
