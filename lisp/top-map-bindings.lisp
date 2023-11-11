@@ -39,7 +39,8 @@
 (define-run-or-pull-program "virtualbox"
   :classes '("VirtualBox Machine" "VirtualBox Manager")
         :cmd "virtualbox"
-        :raise-key "H-v")
+  :raise-key "H-t H-v"
+  :pull-key "H-t H-V")
 
 (define-run-or-pull-program "pavucontrol"
   :classes '("Pavucontrol" )
@@ -47,13 +48,10 @@
   :pull-key "H-o"
   :raise-key "H-O")
 
-(defvar *games-keymap* (make-sparse-keymap))
-
 (define-run-or-pull-program "eboard"
-  :raise-key "H-e"
-  :pull-key "H-E"
-  :classes '("eboard" "Eboard")
-  :keymap *games-keymap*)
+  :raise-key "H-t H-e"
+  :pull-key "H-t H-E"
+  :classes '("eboard" "Eboard"))
 
 (define-run-or-pull-program "signal-desktop"
   :raise-key "H-s"
@@ -204,7 +202,6 @@
 
       ("H-N" "gnext")
       ("H-P" "gprev")
-      ("H-d" *games-keymap*)
       ("H-B" "sip-call-dtmf")
       ("H-b" "sip-main")
       ("H-V" "paste-primary")
