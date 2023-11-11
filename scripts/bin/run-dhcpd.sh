@@ -3,7 +3,7 @@
 set -euo pipefail
 
 
-while getopts "i:x:sntThg:" OPT; do
+while getopts "i:x:sntThg:G" OPT; do
     case ${OPT} in
     i)
         IFACE=${OPTARG}
