@@ -101,4 +101,27 @@ seconds ago")
 			  (raise-pull-or-run-win (mapcar 'string-downcase ,classes)
 						 ,cmd ,pull-p ,all-screens))
 	      ,(unless (null key)
-		 `(define-key ,keymap (kbd ,key) ,cmd-name-string))))))
+		 `(define-key-path ,keymap ,key ,cmd-name-string))))))
+
+(defun define-key-path (keymap key-path cmd)
+  (loop
+    with curr-kmap = (or keymap *top-map*)
+    for keys-left on (ppcre:split " " key-path)
+    as key = (car keys-left)
+    as is-last = (null (cdr keys-left))
+    as kbd = (kbd key)
+    as val = (lookup-key curr-kmap kbd)
+    do (progn
+         (when (kmap-or-kmap-symbol-p val)
+           (setf val (symbol-value val)))
+         (if (not is-last)
+             (progn
+               (if val
+                   (assert (kmap-p val))
+                   (progn
+                     (setf val (make-sparse-keymap))
+                     (define-key curr-kmap kbd val)))
+               (setf curr-kmap val))
+             (progn
+               (assert (not (kmap-p val)))
+               (define-key curr-kmap kbd cmd))))))
