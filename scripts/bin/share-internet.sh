@@ -32,6 +32,7 @@ for TARGET in NFLOG ACCEPT; do
 done
 sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
 sudo iptables -A FORWARD -i ${IFACE_OUT} -o ${IFACE_SOURCE} -m state --state ESTABLISHED,RELATED -j ACCEPT
+
 if test -n "${PERSIST:-}"; then
     sudo apt-get install -y iptables-persistent
     IDENTIFIER="${IFACE_SOURCE}-to-${IFACE_OUT}"
