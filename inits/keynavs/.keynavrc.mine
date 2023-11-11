@@ -59,8 +59,8 @@ shift+5 sh "xdotool keydown shift click 5 keyup shift"
 shift+space warp, click 3,end
 
 shift+1 warp, click 1, click 1, end
-shift+2 warp, click 1, click 1, sh "xdotool key shift+ctrl+c"
-shift+3 warp, click 1, click 1, click 1, sh "xdotool key shift+ctrl+c"
+shift+2 warp, click 1, click 1, sh "xdotool key shift+ctrl+c", end
+shift+3 warp, click 1, click 1, click 1, sh "xdotool key shift+ctrl+c", end
 
 # Zoom to the current window
 #w windowzoom
