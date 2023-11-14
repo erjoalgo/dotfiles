@@ -146,12 +146,10 @@ fi
 sudo ${APT_GET} install -y python3-pip vim
 
 python3 -m venv ~/.venv
-if false; then
-    source ~/.venv/bin/activate
-fi
+source ~/.venv/bin/activate
 
-pip3 install getchwrap -U --break-system-packages || true
-pip3 install requests_unixsocket --break-system-packages || true
+pip3 install getchwrap -U || true
+pip install git+https://github.com/mupuf/requests-unixsocket || true
 
 # link inits
 for SCRIPT in  \

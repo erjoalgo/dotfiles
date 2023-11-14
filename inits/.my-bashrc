@@ -47,6 +47,9 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && which xinit  \
 fi
 
 
+export VIRTUAL_ENV_DISABLE_PROMPT=true
+source ~/.venv/bin/activate
+
 # skip auto tmux-attach on non-servers
 if test -z "${TMUX}" -a -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
   ! grep -F $(hostname | sha256sum | cut -f1 -d' ')<<EOF > /dev/null; then
