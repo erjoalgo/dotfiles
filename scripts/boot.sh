@@ -145,8 +145,8 @@ fi
 
 sudo ${APT_GET} install -y python3-pip vim
 
+python3 -m venv ~/.venv
 if false; then
-    python3 -m venv ~/.venv
     source ~/.venv/bin/activate
 fi
 
