@@ -49,29 +49,52 @@ function get-partition-attr {
 FSTYPE=$(get-partition-attr PATH="${PARTITION}" FSTYPE)
 
 if test "${FSTYPE}" = crypto_LUKS; then
+    LUKS_NAME="decrypted-${UID}"
+    DEVICE_PATH="/dev/mapper/${LUKS_NAME}"
+    MAPPER=/dev/mapper/${LUKS_NAME}
 else
     DEVICE_PATH="${PARTITION}"
 fi
 
 
 
-function get-mountpoint {
+function get-unique-label {
     LABEL=$(get-partition-attr PATH="${DEVICE_PATH}" LABEL)
-    echo /mnts/${LABEL:-$(basename "${DEVICE_PATH}")}
+    PART_UID=${LABEL:-$(get-partition-attr PATH="${DEVICE_PATH}" UUID)}
+    echo "${PART_UID}"
+}
+
+function get-mountpoint {
+    PART_UID=$(get-unique-label)
+    echo /mnts/${PART_UID:-$(basename "${DEVICE_PATH}")}
+}
+
+function get-volume-for-mapper {
+    # TODO more reliable way of mapping volume groups to partitions
+    # assumes VG is contained in one physical partition
+    MAPPER=${1} && shift
+    sudo lvdisplay --maps |  \
+        grep -P 'Physical volume|VG Name' \
+        | grep -B1 "${MAPPER}" |  \
+        grep -Po '(?<=VG Name).*' |  \
+        tr -d ' ' | head -1
 }
 
 if test "${UMOUNT:-}" = true; then
     MNT=$(get-mountpoint)
     sudo umount "${MNT}" || true
-    sudo vgchange -an || true
-    sudo cryptsetup luksClose "${DEVICE_PATH}"
+    if ! sudo vgchange -an $(get-volume-for-mapper); then
+        sudo vgchange -an || true
+    fi
+    sudo cryptsetup luksClose "${MAPPER}"
     exit 0
 else
-
-    LUKS_NAME=$(basename ${PARTITION})
+    PART_UID=$(get-unique-label)
     if test "${FSTYPE}" = crypto_LUKS && ! sudo dmsetup info ${LUKS_NAME}; then
         sudo cryptsetup luksOpen "${PARTITION}" "${LUKS_NAME}"
-        sudo vgchange -ay
+        if ! sudo vgchange -ay $(get-volume-for-mapper); then
+            sudo vgchange -ay || true
+        fi
     fi
     MNT=$(get-mountpoint)
     sudo mkdir -p ${MNT}
