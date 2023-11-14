@@ -8,12 +8,12 @@ set -euo pipefail
 
 install-xdg-open-handler.sh  \
     -c "linphone-dial-gui.sh -t %u"  \
-    -s tel  \
+    -m x-scheme-handler/tel  \
     -b "fkp6YNbFENtRk4L1uwh2F43Wa59R0gGh-xdg-open-tel-linphone"
 
 install-xdg-open-handler.sh  \
     -c "linphone-dial-gui.sh -t %u"  \
-    -s sms  \
+    -m x-scheme-handler/sms  \
     -b "5qFPC6LIciYZCDu7h3yf9V5tas4l2VUI-xdg-open-sms-linphone"
 
 # test:

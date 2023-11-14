@@ -2,13 +2,13 @@
 
 set -euo pipefail
 
-while getopts "c:s:b:h" OPT; do
+while getopts "c:m:b:h" OPT; do
     case ${OPT} in
     c)
         COMMAND_LINE=${OPTARG}
         ;;
-    s)
-        SCHEME=${OPTARG}
+    m)
+        MIME_TYPE=${OPTARG}
         ;;
     b)
         BLOCK_ID=${OPTARG}
@@ -28,7 +28,7 @@ MIMEAPPS=${HOME}/.local/share/applications/mimeapps.list
 mkdir -p $(dirname "${MIMEAPPS}")
 insert-text-block "# ${BLOCK_ID}" "${MIMEAPPS}" <<EOF
 [Added Associations]
-x-scheme-handler/${SCHEME}=${APP_NAME}.desktop
+${MIME_TYPE}=${APP_NAME}.desktop
 EOF
 
 DESKTOP_ENTRY=${HOME}/.local/share/applications/${APP_NAME}.desktop
@@ -38,10 +38,10 @@ insert-text-block "# ${BLOCK_ID}" ${DESKTOP_ENTRY} <<EOF
 Exec=${COMMAND_LINE}
 Terminal=false
 Type=Application
-MimeType=x-scheme-handler/${SCHEME}
+MimeType=${MIME_TYPE}
 EOF
 
 sudo ln -sf ${DESKTOP_ENTRY} /usr/share/applications
 
-xdg-mime default $(basename ${DESKTOP_ENTRY}) x-scheme-handler/${SCHEME}
-xdg-mime query default x-scheme-handler/${SCHEME} | grep -F "${APP_NAME}"
+xdg-mime default $(basename ${DESKTOP_ENTRY}) "${MIME_TYPE}"
+xdg-mime query default "${MIME_TYPE}" | grep -F "${APP_NAME}"
