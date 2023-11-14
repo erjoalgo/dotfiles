@@ -70,14 +70,9 @@ function get-mountpoint {
 }
 
 function get-volume-for-mapper {
-    # TODO more reliable way of mapping volume groups to partitions
     # assumes VG is contained in one physical partition
     MAPPER=${1} && shift
-    sudo lvdisplay --maps |  \
-        grep -P 'Physical volume|VG Name' \
-        | grep -B1 "${MAPPER}" |  \
-        grep -Po '(?<=VG Name).*' |  \
-        tr -d ' ' | head -1
+    sudo lvs -o +devices | grep "${MAPPER}" | tr -s ' ' | cut -f2 -d' '
 }
 
 if test "${UMOUNT:-}" = true; then
