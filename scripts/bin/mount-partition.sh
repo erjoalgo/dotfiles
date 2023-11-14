@@ -48,8 +48,7 @@ function get-partition-attr {
 
 FSTYPE=$(get-partition-attr PATH="${PARTITION}" FSTYPE)
 
-if test -e "${FSTYPE}" = crypto_LUKS; then
-    DEVICE_PATH="/dev/mapper/${NAME}"
+if test "${FSTYPE}" = crypto_LUKS; then
 else
     DEVICE_PATH="${PARTITION}"
 fi
@@ -70,7 +69,7 @@ if test "${UMOUNT:-}" = true; then
 else
 
     LUKS_NAME=$(basename ${PARTITION})
-    if test -e "${FSTYPE}" = crypto_LUKS && ! sudo dmsetup info ${LUKS_NAME}; then
+    if test "${FSTYPE}" = crypto_LUKS && ! sudo dmsetup info ${LUKS_NAME}; then
         sudo cryptsetup luksOpen "${PARTITION}" "${LUKS_NAME}"
         sudo vgchange -ay
     fi
