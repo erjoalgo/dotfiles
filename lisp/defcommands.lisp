@@ -270,7 +270,6 @@
     (let ((shell-cmd (format nil
                              "redshift -l~A:~A -ov ~A"
                              lat lng cmd)))
-      (message "~A" shell-cmd)
       (run-shell-command shell-cmd))))
 
 (defcommand redshift-shift-red () ()
