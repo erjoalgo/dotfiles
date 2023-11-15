@@ -29,10 +29,12 @@ import re
 import sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument("line", help = "universally unique line")
+parser.add_argument("block_id", help = "universally unique line")
 parser.add_argument("filename", help = "input/output file")
 parser.add_argument("-b", "--begining_append",  action="store_true",
                     help = "preppend instead of append")
+parser.add_argument("-l", "--line",  type = int,
+                    help = "skip the first N lines of the file, then insert")
 parser.add_argument("-o", "--output", help = "specify a different output file")
 parser.add_argument("-n", "--no_strip_newline",  action="store_true",
                     help = "don't strip trailing newline from stdin")
@@ -48,7 +50,7 @@ args=parser.parse_args()
 stdin=sys.stdin.read()
 if not args.no_strip_newline and stdin and stdin[-1]=="\n":
     stdin=stdin[:-1]
-block="\n".join((args.line, stdin, args.line))
+block="\n".join((args.block_id, stdin, args.block_id))
 if not args.filename.startswith("/dev/fd") and not os.path.exists(args.filename):
     if args.parents:
         def mkparent(path):
@@ -66,32 +68,40 @@ output = args.output or args.filename
 if output=="-":
     output = "/dev/stdout"
 
-regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(args.line))
-match=re.match(regexp, orig_text)
-if match:
-    pre, post = match.group(1), match.group(3)
-else:
-    pre, post = orig_text, ""
 
-# pre, post refer to the original document before processing
-# before, after refer to the new document
+def before_middle_after(original_text, block_id):
+    # try to find an existing block with the given block id
+    # partition the file into the text before and after the block
 
-middle=(filter(bool, [match.group(1), match.group(3)]) if match else
-        [orig_text] if orig_text
-        else [])
+    regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(block_id))
+    match=re.match(regexp, original_text)
+    if match:
+        return match.group(1), match.group(2), match.group(3)
+    return original_text, "", ""
+
+old_before, _, old_after = before_middle_after(orig_text, args.block_id)
 
 if args.begining_append:
-    before, after = "", "\n".join((pre, post))
+    args.line = 0
+
+if args.line is not None:
+    lines_before = old_before.split("\n")
+    lines_after = old_after.split("\n")
+
+    new_before = "\n".join(lines_before[:args.line])
+    yet_to_skip = max(0, len(lines_before) - args.line)
+    new_after = "\n".join(lines_before[args.line:] + lines_after[yet_to_skip:])
 else:
-    before, after = pre, post
+    new_before, new_after = old_before, old_after
 
 if not args.skip_separating_line:
-    if before:
+    if new_before:
         block = "\n" + block
-    if after:
+    if new_after:
         block = block + "\n"
 
-new_text="\n".join(b for b in (before, block, after) if b)
+new_text="\n".join(b for b in (new_before, block, new_after) if b)
+
 with open( output, "w") as fh:
     fh.write(new_text)
 
