@@ -369,7 +369,7 @@ sagiy network-manager
 
 sudo insert-text-block \
      '# 2c8739f8-5dfb-4329-8b73-afacddddef11-dont-revert-spoofed-mac'  \
-     /etc/NetworkManager/NetworkManager.conf <<EOF
+     /etc/NetworkManager/NetworkManager.conf <<EOF || true
 [device]
 wifi.scan-rand-mac-address=no
 
