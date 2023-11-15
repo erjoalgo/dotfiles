@@ -2,7 +2,7 @@
 
 (setf *search-engines* nil)
 (define-search-engines
-    '(
+    `(
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")
       ("w" "wiki" "https://en.wikipedia.org/w/index.php?search=~A")
       ("y" "youtube" "https://www.youtube.com/results?search_query=~A")
@@ -28,4 +28,7 @@
       ("f" "whole-foods" "https://www.amazon.com/s?i=wholefoods&k=~A")
       ("h" "home-depot" "https://www.homedepot.com/s/~A")
       ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")
-      ("a" "address" "~A")))
+      ("a" "address" "~A")
+      ("3" "3d-printables" ("https://www.yeggi.com/q/~A"
+                            "https://www.printables.com/search/models?q=~A"
+                            "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"))))
