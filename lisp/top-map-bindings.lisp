@@ -69,6 +69,12 @@
   :classes '("Creative3D")
   :cmd (namestring (car (directory #P"~/Downloads/Creality*.AppImage"))))
 
+(define-run-or-pull-program "vnc"
+  :raise-key "H-t H-v"
+  :pull-key "H-t H-v"
+  :classes '("Vncviewer")
+  :cmd "xtightvncviewer")
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
