@@ -346,7 +346,7 @@ sudo ${APT_GET} install -y resolvconf net-tools
 if ! command -v glinux-updater; then
   sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
     /etc/resolvconf/resolv.conf.d/head <<EOF
-nameserver 209.182.235.223
+nameserver 77.88.8.8
 EOF
 fi
 
