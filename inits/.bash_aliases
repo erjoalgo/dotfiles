@@ -397,6 +397,9 @@ alias db='docker-bash'
 alias dps='docker ps'
 
 alias lrsh='lein ring server-headless'
+
+alias opp='octoprint-print.sh -g'
+alias opu='octoprint-cli files upload'
 # Local Variables:
 # mode: sh
 # End:
