@@ -151,13 +151,13 @@ source ~/.venv/bin/activate
 pip3 install getchwrap -U || true
 pip install git+https://github.com/mupuf/requests-unixsocket || true
 
-# link inits
+./installs/link-inits.sh
+
 for SCRIPT in  \
-    ./installs/link-inits.sh \
         ./installs/gen-git-config.sh \
         ./installs/suspend-sedation.sh \
     ;do
-    ./${SCRIPT}
+    ./${SCRIPT} || true
 done
 
 # set default cmd line editor to vi
