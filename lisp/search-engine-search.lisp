@@ -15,15 +15,21 @@
 
 (defun define-search-engines (spec)
   "Parse and install a list search engines specified as a list of
-  (KEY-BINDING ENGINE-ID URL-TEMPLATE) triples.
+  (KEY-BINDING ENGINE-ID URL-TEMPLATES) triples.
 
-  URL-TEMPLATE should contain the '~A' format specifier, to be replaced by the
-  search query. The first search engine in the list is used as the default
+  URL-TEMPLATES should contain a list of at least one search engine URL
+  with the query parameter replaced by the '~A' format
+  specifier. This specifier will be expanded with the search query.
+
+  If multiple engines are associated with a single spec, multiple tabs will
+  be opened for the same search query.
+
+  The first search engine in the list is used as the default
   if no explicit engine is specified."
   (loop
-    for (key engine-id fmt) in spec
+    for (key engine-id fmts) in spec
     as key-sanitized = (sanitize-key key)
-    as engine = (make-search-engine :id engine-id :key key :url-template fmt)
+    as engine = (make-search-engine :id engine-id :key key :url-templates fmts)
     as conflicting-engine = (search-engine-find-by-key key)
     do (if conflicting-engine
            (unless (equalp conflicting-engine engine)
@@ -40,12 +46,12 @@
       ("m" "google-maps" "https://www.google.com/maps/search/~A")
       ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")))
 
-(defstruct search-engine id key url-template)
+(defstruct search-engine id key url-templates)
 
 (defparameter *default-engine*
   (make-search-engine :id "ddg"
                       :key "d"
-                      :url-template "https://duckduckgo.com/lite/?q=~A"))
+                      :url-templates '("https://duckduckgo.com/lite/?q=~A")))
 
 (defparameter *search-history-filename*
   (merge-pathnames "search-history" STUMPWM::*data-private-one-way*)
@@ -92,9 +98,11 @@
   (assert query)
   (unless engine (setf engine *default-engine*))
   (let* ((query-sanitized (ppcre:regex-replace-all "\\n" (STUMPWM:trim-spaces query) " "))
-	 (query-encoded (uri-encode query-sanitized))
-	 (url (format nil (search-engine-url-template engine) query-encoded)))
-    (STUMPWM:x-www-browser url)
+	 (query-encoded (uri-encode query-sanitized)))
+    (loop with tmpls = (search-engine-url-templates engine)
+          for url-tmpl in (if (atom tmpls) (list tmpls) tmpls)
+          as url = (format nil url-tmpl query-encoded)
+          do (STUMPWM:x-www-browser url))
     (when *search-history-filename*
       (STUMPWM:log-timestamped-entry (format nil "~A:~A" engine query)
                              *search-history-filename*))))
