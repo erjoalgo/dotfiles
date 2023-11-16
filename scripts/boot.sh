@@ -348,6 +348,7 @@ if ! command -v glinux-updater; then
   sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
     /etc/resolvconf/resolv.conf.d/head <<EOF
 nameserver 77.88.8.8
+nameserver 77.88.8.1
 EOF
 fi
 
