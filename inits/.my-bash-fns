@@ -450,6 +450,8 @@ function post-command-maybe-notify {
     disown %- # silence shell job status
 }
 
+source ~/.venv/bin/activate || true
+
 if command -v notify-send-stumpwm >/dev/null \
   &&  \
   timeout -s9 5 notify-send-stumpwm -m "connected to $(hostname)" -c green \
