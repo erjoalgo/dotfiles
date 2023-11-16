@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
-SELFD="$(dirname $(realpath $0))"
-
 set -euo pipefail
+
+SELFD="$(dirname $(realpath $0))"
 
 URL=ssh://git@github.com/erjoalgo/openssh-portable
 LOCAL_REPO=${HOME}/git/$(basename "${URL}")
