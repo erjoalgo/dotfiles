@@ -143,7 +143,7 @@ if test 0 -eq "${EUID}"; then
   echo "do not run this script as root"
 fi
 
-sudo ${APT_GET} install -y python3-pip vim
+sudo ${APT_GET} install -y python3-pip vim python-is-python3
 
 python3 -m venv ~/.venv
 source ~/.venv/bin/activate
