@@ -22,6 +22,7 @@ sudo apt-get install -y autoconf libcrypto++-dev libssl-dev
 
 autoreconf && ./configure && make
 SSH=$(which ssh)
+test -e ./ssh
 sudo mv "${SSH}" "${SSH}.debian"
 sudo mv ./ssh "${SSH}"
 
