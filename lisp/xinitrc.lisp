@@ -40,7 +40,7 @@
 (defun run-startup-scripts ()
   (loop for script in (append
                        '(#P"~/.xsessionrc")
-                       (directory #P"~/.stumpwmrc.d/scripts/on-startup/*.*"))
+                       (directory #P"~/.stumpwmrc.d/bin/on-startup/*.*"))
         do (format t "running script ~A~%" script)
         do
            (run-shell-command (format nil "~A &" script) nil)))

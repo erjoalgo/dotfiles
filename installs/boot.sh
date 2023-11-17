@@ -33,7 +33,7 @@ if which apt-get; then
     if true || ! ${SUDOCMD} "apt-get update" ||  \
         ${SUDOCMD} "grep ^deb\ cdrom /etc/apt/sources.list"; then
         DOTFILES_GITHUB_URL=https://raw.githubusercontent.com/erjoalgo/dotfiles/master/
-        URL=${DOTFILES_GITHUB_URL}/scripts/installs/update-sources-list.sh
+        URL=${DOTFILES_GITHUB_URL}/installs/update-sources-list.sh
         BASE=$(basename ${URL})
         pushd .
         cd /tmp

@@ -19,7 +19,7 @@ fi
 
 
 if command -v sh-fix-getopt.el && command -v emacs; then
-    sh-fix-getopt.el ./scripts/*/*
+    sh-fix-getopt.el ./{bin,installs}/*/*
 fi
 
 
