@@ -28,6 +28,8 @@
    #:md5
    #:ironclad
    #:bordeaux-threads
+   :mgl-pax-bootstrap ;; ??
+   :sha1 ;; ??
    )
   :components
   (
