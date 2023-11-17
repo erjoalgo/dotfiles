@@ -344,7 +344,7 @@ StreamLocalBindUnlink yes
 EOF
 fi
 
-sudo ${APT_GET} install -y resolvconf net-tools
+sudo ${APT_GET} install -y resolvconf net-tools dnsutils
 
 if ! command -v glinux-updater; then
   sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
