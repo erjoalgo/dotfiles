@@ -127,7 +127,6 @@
 
       ;;("H-m" "raise-remmina")
       ;;("H-m" "raise-matlab")
-      ;;("H-v" "raise-vbox")
       ;;("H-p" "raise-pidgin")
       ("Scroll_Lock" "fnext")
       ("H-a" "echo-date-battery")
