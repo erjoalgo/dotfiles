@@ -120,6 +120,8 @@ EOF
 
 mkdir -p ~/pictures/auto-scrots
 
+sbcl --eval "(let ((*quickload-prompt* nil)) (ql:update-all-dists))" --quit
+
 sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
 sudo apt-get install -y redshift xcalib xbacklight
