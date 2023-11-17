@@ -96,7 +96,7 @@ done
 sudo apt-get install -y python3-pip
 python3 -m pip install pyudev
 # for the logitech wireless keyboard
-sudo python3 -m pip install solaar
+python3 -m pip install solaar
 
 install-systemd-service.sh pyudevs <<EOF
 [Unit]
