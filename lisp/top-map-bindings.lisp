@@ -67,7 +67,9 @@
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
   :classes '("Creative3D")
-  :cmd (namestring (car (directory #P"~/Downloads/Creality*.AppImage"))))
+  :cmd (namestring (or
+                    (car (directory #P"~/Downloads/Creality*.AppImage"))
+                    "cura")))
 
 (define-run-or-pull-program "vnc"
   :raise-key "H-t H-v"
