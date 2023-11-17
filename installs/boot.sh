@@ -105,6 +105,8 @@ function fetch-repos  {
   popd
 }
 
+sed -i 's/${RANDOM}/{RANDOM}/' ~/.ssh/config
+
 fetch-repos dotfiles
 
 cd ~/git/dotfiles/installs/
@@ -320,8 +322,8 @@ X_BROWSER=$(which x-www-browser-stumpwm)
 
 sudo ${APT_GET} install -y openssh-server
 
-if ! test -e /usr/bin/ssh.debian; do
-  ./installs/ssh-random-env || true
+if test -e /usr/bin/ssh.debian || ./ssh-random-env; then
+    sed -i 's/-{RANDOM}/${RANDOM}/' ~/.ssh/config || true
 fi
 
 insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-group-number"  \
