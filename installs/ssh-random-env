@@ -24,7 +24,16 @@ fi
 sudo apt-get update
 sudo apt-get install -y autoconf libcrypto++-dev libssl-dev
 
-autoreconf && ./configure && make
+make clean
+if test -e ./ssh; then
+    rm ./ssh
+fi
+
+if ! ( autoreconf && ./configure && make ) && test -e ./ssh; then
+    echo "warn: proceeding on build failure since ./ssh was built"
+fi
+
+
 SSH=$(which ssh)
 test -e ./ssh
 sudo mv "${SSH}" "${SSH}.debian"
