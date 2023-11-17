@@ -66,7 +66,7 @@
 (define-run-or-pull-program "creality"
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
-  :classes '("Creative3D")
+  :classes '("Creative3D" "cura")
   :cmd (namestring (or
                     (car (directory #P"~/Downloads/Creality*.AppImage"))
                     "cura")))
