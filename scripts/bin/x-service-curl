@@ -65,9 +65,6 @@ def x_service_curl(specs: list, path: str, headers: dict[str:str], data: bytes):
   return success_count
 
 def main():
-  if len(sys.argv) < 2 or set(("-h", "--help")).intersection(sys.argv):
-    print ("usage: x-service /PATH [CURL_FLAGS...]")
-    exit(1)
   parser = argparse.ArgumentParser()
   parser.add_argument("path", help="the x-service URL path")
   parser.add_argument("-d", "--data", help = "the literal data")
