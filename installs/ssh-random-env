@@ -17,7 +17,9 @@ cd "${LOCAL_REPO}"
 
 git fetch fork
 git checkout non-debian
-git pull fork non-debian
+if git pull fork --ff-only non-debian; then
+    echo "WARN: pull failed."
+fi
 
 sudo apt-get update
 sudo apt-get install -y autoconf libcrypto++-dev libssl-dev
