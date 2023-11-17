@@ -141,7 +141,6 @@ if ! which google-chrome chromium chrome; then
   sudo apt-get install -y chromium || sudo snap install chromium;
 fi
 
-
 # enable sleep, suspend, hibernate to avoid draining laptop battery
 sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
