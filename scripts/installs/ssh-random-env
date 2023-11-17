@@ -9,6 +9,8 @@ LOCAL_REPO=${HOME}/git/$(basename "${URL}")
 
 if ! test -d "${LOCAL_REPO}"; then
     git clone -o fork ${URL} "${LOCAL_REPO}"
+    git remote add upstream https://github.com/openssh/openssh-portable
+    git fetch upstream
 fi
 
 cd "${LOCAL_REPO}"
