@@ -8,10 +8,6 @@ if grep ubuntu /etc/apt/sources.list; then
   exit 0
 fi
 
-if ! test -e ${SOURCES}.bak; then
-    cp /etc/apt/sources.list{,.bak}
-fi
-
 if ! test -z "${TEST:-}"; then
     cp /etc/apt/sources.list{,.test}
     SOURCES=${SOURCES}.test
