@@ -145,7 +145,10 @@ sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.
 
 ./installs/chrome-disable-xdg-open-prompt.sh
 
-pip3 install chromeurl
+clone-git-repo "${URL}"
+pushd .
+cd ~/git/chromeurl/native
+pip3 install -U .
 chromeurl --install-manifest all
 
 echo success
