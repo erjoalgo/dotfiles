@@ -6,8 +6,7 @@ SSH_URL=$(git remote -vv |  \
               head -1 |  \
               awk '{print $2}' |  \
               sed 's,https*://,ssh://git@,')
-git remote rename "${REMOTE}" "${REMOTE}-https"
-git remote add "${REMOTE}" "${SSH_URL}"
+git remote set-url "${REMOTE}" "${SSH_URL}"
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 git fetch ${REMOTE}
 git branch --set-upstream-to=${REMOTE}/${BRANCH}
