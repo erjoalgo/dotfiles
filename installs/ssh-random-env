@@ -35,8 +35,12 @@ fi
 
 
 SSH=$(which ssh)
-test -e ./ssh
-sudo mv "${SSH}" "${SSH}.debian"
+SSH_DEBIAN="${SSH}.debian"
+
+if ! test -e "${SSH_DEBIAN}"; then
+    sudo mv "${SSH}" "${SSH_DEBIAN}"
+fi
+
 sudo mv ./ssh "${SSH}"
 
 # Local Variables:
