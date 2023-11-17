@@ -112,7 +112,7 @@ seconds ago")
     as kbd = (kbd key)
     as val = (lookup-key curr-kmap kbd)
     do (progn
-         (when (kmap-or-kmap-symbol-p val)
+         (when (symbolp val)
            (setf val (symbol-value val)))
          (if (not is-last)
              (progn
