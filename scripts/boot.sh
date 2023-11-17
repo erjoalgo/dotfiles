@@ -320,7 +320,9 @@ X_BROWSER=$(which x-www-browser-stumpwm)
 
 sudo ${APT_GET} install -y openssh-server
 
-./installs/ssh-random-env || true
+if ! test -e /usr/bin/ssh.debian; do
+  ./installs/ssh-random-env || true
+fi
 
 insert-text-block "# 391f301e-c328-43f2-84ff-94de868293c7-ssh-send-env-desktop-group-number"  \
   "${HOME}/.ssh/config" << EOF
