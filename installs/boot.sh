@@ -107,7 +107,7 @@ function fetch-repos  {
 
 fetch-repos dotfiles
 
-cd ~/git/dotfiles/scripts/
+cd ~/git/dotfiles/installs/
 
 SCRIPTS_BIN="${HOME}/git/dotfiles/bin"
 test -d "${SCRIPTS_BIN}"
@@ -134,7 +134,7 @@ EOF
 sudo service console-setup restart || true
 
 if test "${BOOT:-}" = wifi; then
-    ./installs/wifi-boot.sh
+    ./wifi-boot.sh
     echo "completed wifi install"
     exit 0
 fi
@@ -152,11 +152,11 @@ pip3 install getchwrap -U || true
 pip install git+https://github.com/mupuf/requests-unixsocket || true
 pip install requests
 
-./installs/link-inits.sh
+./link-inits.sh
 
 for SCRIPT in  \
-        ./installs/gen-git-config.sh \
-        ./installs/suspend-sedation.sh \
+        ./gen-git-config.sh \
+        ./suspend-sedation.sh \
     ;do
     ./${SCRIPT} || true
 done
@@ -393,8 +393,8 @@ wifi.cloned-mac-address=preserve
 EOF
 
 for SCRIPT in nonet.sh redshift; do
-    if ! ./installs/${SCRIPT}; then
-        echo "WARNING: failed to install installs/${SCRIPT}";
+    if ! ./${SCRIPT}; then
+        echo "WARNING: failed to install ${SCRIPT}";
     fi
 done
 
