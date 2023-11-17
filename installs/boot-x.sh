@@ -6,10 +6,10 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 
 sudo apt-get install -y dirmngr || true
 
-./installs/install-stumpwm.sh
+./install-stumpwm.sh
 
 if ! emacs --version | grep "26\\|27"; then
-  if ! ./installs/emacs-install.sh; then
+  if ! ./emacs-install.sh; then
     echo "warning: failed to build emacs from source"
     which emacs || true
   fi
@@ -22,9 +22,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplic
   macchanger expect iw net-tools
 sudo apt-get install -y libxcomposite-dev
 
-./installs/install-xsecurelock.sh
+./install-xsecurelock.sh
 
-./installs/install-find-cursor.sh ||
+./install-find-cursor.sh ||
   echo "WARNING: failed to install find-cursor"
 
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=856351
@@ -90,7 +90,7 @@ for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
 done
 
 # set up xdg-open configs
-for XDG_OPEN_SCRIPT in ./installs/xdg-open-*; do
+for XDG_OPEN_SCRIPT in ./xdg-open-*; do
     ${XDG_OPEN_SCRIPT} || true
 done
 
@@ -144,9 +144,9 @@ fi
 # enable sleep, suspend, hibernate to avoid draining laptop battery
 sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
-./installs/install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
+./install-chrome-extensions.sh < ../data/public/chrome-extension-urls.txt
 
-./installs/chrome-disable-xdg-open-prompt.sh
+./chrome-disable-xdg-open-prompt.sh
 
 clone-git-repo "${URL}"
 pushd .
