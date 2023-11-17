@@ -13,9 +13,9 @@ if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
   RET=0
   for EMACS_SOCKET_NAME in ${SERVER_DIRECTORY}/${DESKTOP_GROUP_NUMBER}.*; do
       echo "attempting to connect to ${EMACS_SOCKET_NAME}"
-      EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} "${REAL_EMACSCLIENT}" \
-                       "--socket-name=${EMACS_SOCKET_NAME}" "${@}"
-      if test $? -ne 0; then
+      if ! EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} "${REAL_EMACSCLIENT}" \
+                          "--socket-name=${EMACS_SOCKET_NAME}" "${@}"; then
+          echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
           RET=$?
       fi
   done
