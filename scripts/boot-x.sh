@@ -78,6 +78,8 @@ for URL in \
     quicklisp-register-local-project "${DIR}"
 done
 
+find ~/.cache/common-lisp/ -path '*dotfiles/lisp/*.fasl' -exec rm {} +
+
 for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
   test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
