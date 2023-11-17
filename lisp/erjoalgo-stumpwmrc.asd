@@ -33,7 +33,6 @@
    )
   :components
   (
-   ;; (:file "packages")
    (:file "commands/selcand")
    (:file "defs")
    (:file "util")
