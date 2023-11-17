@@ -4,7 +4,7 @@ set -euo pipefail
 
 SELFD="$(dirname $(realpath $0))"
 
-URL=ssh://git@github.com/erjoalgo/openssh-portable
+URL=https://github.com/erjoalgo/openssh-portable
 LOCAL_REPO=${HOME}/git/$(basename "${URL}")
 
 if ! test -d "${LOCAL_REPO}"; then
