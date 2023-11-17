@@ -35,6 +35,7 @@ fi
 STUMPWM="$(pwd)/stumpwm"
 cd stumpwm
 
+FORCE=true
 if ! command -v stumpwm || test -n "${FORCE:-}"; then #the executable
     ./autogen.sh
     ./configure
