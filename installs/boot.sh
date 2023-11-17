@@ -109,7 +109,7 @@ fetch-repos dotfiles
 
 cd ~/git/dotfiles/scripts/
 
-SCRIPTS_BIN="${HOME}/git/dotfiles/scripts/bin"
+SCRIPTS_BIN="${HOME}/git/dotfiles/bin"
 test -d "${SCRIPTS_BIN}"
 export PATH=$PATH:${SCRIPTS_BIN}
 
@@ -164,7 +164,7 @@ done
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim --verbose || true
 
-EMACSCLIENT_WRAPPER=${HOME}/.stumpwmrc.d/scripts/bin/emacsclient-wrapper.sh
+EMACSCLIENT_WRAPPER=${HOME}/.stumpwmrc.d/bin/emacsclient-wrapper.sh
 sudo update-alternatives --install /usr/bin/emacsclient emacsclient \
   "${EMACSCLIENT_WRAPPER}" 0
 sudo update-alternatives --set emacsclient "${EMACSCLIENT_WRAPPER}" --verbose

@@ -10,7 +10,7 @@ Description=ssh tunnel to workstation to expose webdav service
 # After=systemd-networkd-wait-online.service
 
 [Service]
-ExecStart=/home/ejalfonso/git/erjoalgo-stumpwmrc/scripts/bin/ssh-expose-remote-port <CORP_HOSTNAME> -r 81:8081
+ExecStart=/home/ejalfonso/git/dotfiles/bin/ssh-expose-remote-port <CORP_HOSTNAME> -r 81:8081
 User=ejalfonso
 Restart=on-failure
 RestartSec=30s
