@@ -74,6 +74,8 @@ def main():
                       help = "read POST data from stdin")
   parser.add_argument("-H", "--headers", nargs="+", default=[],
                       help = "list of headers as KEY:VALUE pairs")
+  parser.add_argument("-s", "--sockets", nargs="+", default=[],
+                      help = "override the list of unix socket paths to use")
   parser.add_argument("-v", "--verbose", action="store_true",
                       help = "verbose logging")
 
@@ -102,7 +104,8 @@ def main():
       k, v = header.split(':')
       headers[k] = v
 
-  sockets = glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
+  sockets = args.sockets or glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
+
   if x_service_curl(sockets, args.path, headers, data) == 0:
       raise Exception(f"no ports or sockets found: {sockets}")
   return 0
