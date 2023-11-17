@@ -27,11 +27,18 @@
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
-          (http-request-or-error url
-                                 :method :PROPFIND
-                                 :additional-headers '(("Depth" . "1"))
-                                 :basic-authorization (when (and username password)
-                                                        (list username password))))
+          ;; (http-request-or-error url
+          ;;                        :method :PROPFIND
+          ;;                        :additional-headers '(("Depth" . "1"))
+          ;;                        :basic-authorization (when (and username password)
+          ;;                                               (list username password)))
+          (with-output-to-string (fh)
+            (sb-ext:run-program
+             "curl"
+             `("-s"
+               ,(format nil "-u~A:~A" username password)
+               "-XPROPFIND" "-HDepth:1" ,url)
+             :search t :output fh)))
          (doc (cxml:parse raw-resp (stp:make-builder)))
          (nodeset
           (xpath:with-namespaces (("D" "DAV:"))
@@ -59,9 +66,14 @@
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
-          (http-request-or-error url :method :GET
-                                 :basic-authorization (when (and username password)
-                                                        (list username password))))
+          ;; (http-request-or-error url :method :GET
+          ;;                        :basic-authorization (when (and username password)
+          ;;                                               (list username password)))
+          (with-output-to-string (fh)
+            (sb-ext:run-program
+             "curl"
+             `("-s" ,(format nil "-u~A:~A" username password) "-XGET" ,url)
+             :search t :output fh)))
          (string (if (stringp raw-resp)
                      raw-resp
                      (babel:octets-to-string raw-resp))))
