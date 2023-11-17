@@ -21,8 +21,7 @@ if ! sbcl --eval '(ql:system-apropos :vecto)' --quit; then
 fi
 
 sbcl --load "${SBCLRC}" --script /dev/stdin <<EOF
-        (mapcar 'ql:quickload
-	'( "cl-ppcre" "swank" "clx"))
+(mapcar 'ql:quickload '(:cl-ppcre :swank :clx))
 EOF
 
 pushd .
