@@ -64,6 +64,10 @@ function clone-git-repo {
     if ! test -d "${DIR}"; then
         git clone "${URL}" "${DIR}"
     fi
+    pushd .
+    cd "${DIR}"
+    git pull --ff-only
+    popd
 }
 
 for URL in \
