@@ -78,7 +78,7 @@ for URL in \
     quicklisp-register-local-project "${DIR}"
 done
 
-for DIR in ../lisp/{.,cladaver} ~/git/{statusor,cl-voipms}; do
+for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
   test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
