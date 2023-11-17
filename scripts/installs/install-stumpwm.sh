@@ -42,7 +42,6 @@ if ! command -v stumpwm || test -n "${FORCE:-}"; then #the executable
     make
     test -d ~/bin || mkdir ~/bin
     sudo make install
-    # sudo ln -sf "${STUMPWM}/stumpwm" /usr/local/bin
 fi
 popd
 
