@@ -33,3 +33,5 @@ EOF
 fi
 
 octoprint-cli files list
+
+pip install trimesh
