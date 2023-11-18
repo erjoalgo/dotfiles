@@ -75,7 +75,7 @@
   :raise-key "H-t H-v"
   :pull-key "H-t H-v"
   :classes '("Vncviewer")
-  :cmd "xtightvncviewer")
+  :cmd nil)
 
 (per-window-bindings-reload-from-fn)
 
