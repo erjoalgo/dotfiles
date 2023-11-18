@@ -79,6 +79,8 @@ done
 
 find ~/.cache/common-lisp/ -path '*dotfiles/lisp/*.fasl' -exec rm {} +
 
+sbcl --eval "(let ((*quickload-prompt* nil)) (ql:update-all-dists))" --quit
+
 for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
   test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
@@ -118,8 +120,6 @@ WantedBy=graphical.target
 EOF
 
 mkdir -p ~/pictures/auto-scrots
-
-sbcl --eval "(let ((*quickload-prompt* nil)) (ql:update-all-dists))" --quit
 
 sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
