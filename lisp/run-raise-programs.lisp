@@ -35,21 +35,22 @@ seconds ago")
 		       (group-windows (current-group))))
 	 (curr-win (current-window))
 	 (win-matches (lambda (win)
-			(member (string-downcase (window-class win))
-				win-classes :test #'equal)))
+			(when win
+                          (member (string-downcase (window-class win))
+				win-classes :test #'equal))))
 	 (cands (remove-if-not win-matches win-list))
          (cands (sort cands #'< :key (lambda (win)
                                        (position (string-downcase (window-class win))
                                                  win-classes :test #'equal))))
 	 (cand-no-curr (car (remove curr-win cands)))
-         (cmd-list (ppcre:split " +" cmd-line)))
+         (cmd-list (when cmd-line (ppcre:split " +" cmd-line))))
     (if cand-no-curr
 	(progn (funcall (if pull-p 'pull-window
 			    'raise-window)
 			cand-no-curr)
 	       (focus-all cand-no-curr))
-	(unless (and curr-win
-		     (funcall win-matches curr-win))
+	(when (and cmd-line
+                   (not (funcall win-matches curr-win)))
           (destructuring-bind (command . args) cmd-list
 	    (let* ((log-file (merge-pathnames #P"/tmp/"
                                               (make-pathname
