@@ -118,6 +118,11 @@ export PATH=$PATH:${SCRIPTS_BIN}
 which insert-text-block
 sudo ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin
 
+insert-text-block '# 58b63bb1-de24-449c-9bf9-9f317a28b9ac-load-scripts-bin'  \
+                  ${HOME}/.profile-env<<EOF
+PATH=${PATH}:${HOME}/git/dotfiles/bin/
+EOF
+
 sudo insert-text-block \
   '# ac25d55a-723b-4da2-bfa6-674c51e7eefb-max-out-virtual-terminal-size' \
   /etc/default/console-setup<<EOF
