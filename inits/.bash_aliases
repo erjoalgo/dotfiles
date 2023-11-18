@@ -373,7 +373,7 @@ function android-pull-rm-media {
 function docker-select-container {
     echo "select docker container: " 1>&2
     IFS=$'\n'
-    select LINE in $(docker ps); do
+    select LINE in $(docker compose ps); do
         break
     done
     cut -f1 -d' ' <<< "${LINE}"
