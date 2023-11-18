@@ -181,6 +181,8 @@ sudo insert-text-block  \
      /usr/share/vim/vimrc \
     < ${HOME}/.vimrc
 
+sudo cp ${HOME}/.vimrc /etc/vim/vimrc
+
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<EOF
 test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (uzvr)"
