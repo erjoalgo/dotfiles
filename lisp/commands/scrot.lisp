@@ -103,7 +103,7 @@
           finally
              (if (not (and done-p
                            (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
-                 (error "scrot command failed: ~A"
+                 (error "scrot command failed:~%~A"
                         (if (not done-p) "timeout"
                             "non-zero exit status"))))
 
