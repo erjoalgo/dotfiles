@@ -17,7 +17,8 @@
      `((:name "app" :value "webdav")
        (:name "machine" :value "webdav.erjoalgo.com" )
        (:name "login" :value "erjoalgo")
-       (:name "password" :prompt "enter webdav password: "))))
+       (:name "password"))
+    :no-prompt t))
   (statusor:if-let-ok nil
       (
        (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
