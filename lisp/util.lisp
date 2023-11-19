@@ -195,13 +195,15 @@
                     ,output-sym)))))))
 
 (defun run-command-async-notify (command &optional args)
-  (run-command-async command (mapcar 'princ-to-string args) (ret out)
-                     (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
-                                      command args)
-                     (message-wrapped
-                      "^1non-zero exit: ~~A of '~A ~{~A~^ ~}': ~~A^*"
-                      command args
-                      ret out)))
+  (run-command-async
+   command
+   (mapcar 'princ-to-string args)
+   (ret out)
+   (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
+                    command args)
+   (message-wrapped
+    "^1non-zero exit: ~A of '~A ~{~A~^ ~}':~%~%~A^*"
+    ret command args out)))
 
 (defun wrap-text (text &optional max-chars-per-line)
   (loop for text in (ppcre:split #\Newline text)
