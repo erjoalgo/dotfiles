@@ -12,8 +12,14 @@ function add-non-free-apt-source {
         CODENAME=$(printf '%s\n' "$VERSION" | grep -o '[a-z]*')
     fi
 
+    if test ${VERSION_ID} -ge 12; then
+        NON_FREE=non-free-firmware
+    else
+        NON_FREE=non-free
+    fi
+
     sudo tee /etc/apt/sources.list.d/non-free.list <<EOF
-deb http://deb.debian.org/debian ${CODENAME} non-free-firmware
+deb http://deb.debian.org/debian ${CODENAME} ${NON_FREE}
 EOF
     sudo apt-get update
 }
