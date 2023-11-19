@@ -72,6 +72,7 @@ sudo apt-get update
 function sagiy {
     for _ in $(seq 3); do
         sudo apt-get install -y ${*} && break
+        sudo apt-get update --fix-missing || true
         sleep 5
     done
 }
