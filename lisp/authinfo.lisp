@@ -72,7 +72,8 @@
      &key
        (authinfo-filename
         (make-pathname :name ".authinfo"
-                       :defaults (user-homedir-pathname))))
+                       :defaults (user-homedir-pathname)))
+       no-prompt)
   (with-open-file (fh authinfo-filename
                       :if-does-not-exist :create
                       :if-exists :append
@@ -85,9 +86,12 @@
                (unless value
                  (setf value
                        (or
-                        (stumpwm:read-one-line (stumpwm:current-screen)
-                                               (or prompt (format nil "enter ~A: " name)))
-                        (if optional "" (error "required value not provided: ~A" name)))))
+                        (unless no-prompt
+                          (stumpwm:read-one-line (stumpwm:current-screen)
+                                               (or prompt (format nil "enter ~A: " name))))
+                        (if optional
+                            ""
+                            (error "required value not provided: ~A" name)))))
                (push (format nil "~A ~A" name value) strings))
           finally (format fh "~%~{~A~^ ~}" (reverse strings))))
   (car (last (parse))))
