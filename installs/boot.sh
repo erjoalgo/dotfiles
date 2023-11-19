@@ -172,10 +172,14 @@ done
 # set default cmd line editor to vi
 sudo update-alternatives --set editor /usr/bin/vim --verbose || true
 
-EMACSCLIENT_WRAPPER=${HOME}/.stumpwmrc.d/bin/emacsclient-wrapper.sh
-sudo update-alternatives --install /usr/bin/emacsclient emacsclient \
-  "${EMACSCLIENT_WRAPPER}" 0
-sudo update-alternatives --set emacsclient "${EMACSCLIENT_WRAPPER}" --verbose
+for LINK in /usr/bin/{emacsclient,editor}; do
+    WRAPPER=${HOME}/.stumpwmrc.d/bin/emacsclient-wrapper.sh
+    NAME=$(basename "${LINK}")
+    sudo update-alternatives --install "${LINK}" "${NAME}" "${WRAPPER}" 0
+    sudo update-alternatives --set "${NAME}" "${WRAPPER}" --verbose
+done
+
+
 
 sudo insert-text-block  \
      '"xUxm084v1yfXHaLwwMFubYIub1eOsvKo-system-wide-vi-settings"'  \
