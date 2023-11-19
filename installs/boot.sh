@@ -189,6 +189,11 @@ sudo insert-text-block  \
 sudo ln -sf ${HOME}/.vimrc /etc/vim/vimrc.local
 sudo ln -sf ${HOME}/.vimrc ~root/.vimrc
 
+
+sudo debconf-set-selections <<EOF
+debconf frontend stromg Editor
+EOF
+
 insert-text-block '# bbdede6e-87c5-4ba9-927e-78865afb3dcb-source-my-bashrc'  \
 		  ${HOME}/.bashrc <<EOF
 test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (uzvr)"
