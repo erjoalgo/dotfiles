@@ -4,8 +4,9 @@ set -euo pipefail
 
 REAL_EMACSCLIENT=/usr/bin/emacsclient.emacs
 
-if test -z "${DESKTOP_GROUP_NUMBER:-}"; then
-    "${REAL_EMACSCLIENT}" "${@}"
+if ! pgrep emacs; then
+    emacs &
+    disown
 fi
 
 SERVER_DIRECTORY=$(emacs -q --batch  \
