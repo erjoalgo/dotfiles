@@ -10,7 +10,7 @@ exec > >(tee ${LOG}) 2>&1
 
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bullseye/bookworm/g' {} \;
 
