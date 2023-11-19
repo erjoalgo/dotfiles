@@ -54,7 +54,7 @@ fi
 
 if sudo dmesg | grep -i "firmware: failed to load.*rtl"; then
     sudo apt-get install -y firmware-realtek
-    sudo modprobe -r realtek
+    sudo modprobe -r realtek || true
     sudo modprobe realtek
     INSTALLED+=" realtek"
 fi
