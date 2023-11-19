@@ -157,8 +157,8 @@ python3 -m venv ~/.venv
 source ~/.venv/bin/activate
 
 pip3 install getchwrap -U || true
-pip install git+https://github.com/mupuf/requests-unixsocket || true
 pip install requests
+pip install git+https://github.com/mupuf/requests-unixsocket || true
 
 ./link-inits.sh
 
