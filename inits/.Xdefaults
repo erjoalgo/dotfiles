@@ -11,3 +11,16 @@ XTerm*metaSendsEscape: true
 XTerm.vt100.translations: #override \n\
   Ctrl <Key> minus: smaller-vt-font() \n\
   Ctrl <Key> plus: larger-vt-font()
+
+
+XTerm*utf8Title: true
+XTerm*multiClickTime: 500
+XTerm*faceName: Bitstream Vera Sans Mono
+XTerm*title: X-Terminal
+XTerm*internalBorder: 10
+XTerm*geometry: 80x20 # xterm geometry size
+XTerm*saveLines: 10000000
+XTerm*visualBell: true
+XTerm*colorULMode: true
+XTerm*colorUL: #cc0000
+XTerm*pointerMode: 0
