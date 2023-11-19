@@ -106,7 +106,7 @@ function fetch-repos  {
   popd
 }
 
-sed -i 's/${RANDOM}/{RANDOM}/' ~/.ssh/config
+sed -i 's/${RANDOM}/{RANDOM}/' ~/.ssh/config || true
 
 fetch-repos dotfiles
 
