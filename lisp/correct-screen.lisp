@@ -105,7 +105,7 @@
             "--pos" pos-string))
        do (setf cmd (nconc cmd args))
        do (incf pos-x (xrandr-mode-width mode)))
-    (run-shell-command-print (format nil "xrandr ~{~A~^ ~}" cmd))))
+    (run-command-sync-notify-on-error "xrandr" cmd)))
 
 (defun correct-screen-fix-display-prefs ()
   (loop with fixes = nil
