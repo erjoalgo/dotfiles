@@ -14,6 +14,8 @@ SERVER_DIRECTORY=$(emacs -q --batch  \
                          --eval "(print server-socket-dir)" \
                          2>/dev/null  \
                        | tail -1 | tr -d '"')
+SUCCESS_COUNT=0
+FAIL_COUNT=0
 RET=0
 
 for EMACS_SOCKET_NAME in /tmp/emacs*/* ; do
@@ -29,6 +31,14 @@ for EMACS_SOCKET_NAME in /tmp/emacs*/* ; do
          "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
         echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
         RET=$?
+        FAIL_COUNT+=1
+    else
+        SUCCESS_COUNT+=1
     fi
 done
+
+if test "${SUCCESS_COUNT+}" = 0; then
+    "${REAL_EMACSCLIENT}" "${@}"
+fi
+
 exit $RET
