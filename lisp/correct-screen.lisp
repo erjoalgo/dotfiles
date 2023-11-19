@@ -202,9 +202,11 @@
                                           (if active "*" "")
                                           width height)))
                               :display-candidates t)))
-    (run-command-async-notify "xrandr"
-                              (list "--output" (XRANDR-DISPLAY-ID display)
-                                    "--mode" (funcall mode-stringify mode)))))
+    (run-command-async-notify
+     "xrandr"
+     (list "--output"
+           (XRANDR-DISPLAY-ID display)
+           "--mode" (funcall mode-stringify mode)))))
 
 (define-stumpwm-type-for-completion
     :xrandr-rot
