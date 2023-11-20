@@ -19,7 +19,7 @@ XTerm*faceName: Bitstream Vera Sans Mono
 XTerm*title: X-Terminal
 XTerm*internalBorder: 10
 XTerm*geometry: 80x20 # xterm geometry size
-XTerm*saveLines: 10000000
+XTerm*saveLines: 1000
 XTerm*visualBell: true
 XTerm*colorULMode: true
 XTerm*colorUL: #cc0000
