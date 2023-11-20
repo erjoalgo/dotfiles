@@ -18,9 +18,14 @@ SUCCESS_COUNT=0
 FAIL_COUNT=0
 RET=0
 
-for EMACS_SOCKET_NAME in /tmp/emacs*/* ; do
+for EMACS_SOCKET_NAME in  \
+    $(echo /tmp/emacs*/*)  \
+        $(echo /run/user/*/emacs/*); do
     echo "attempting to connect to ${EMACS_SOCKET_NAME}"
-    SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)" <<< "${EMACS_SOCKET_NAME}")
+    if ! test -e "${EMACS_SOCKET_NAME}"; then
+        continue;
+    fi
+    SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
     SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
     if ! sudo -u "${SERVER_USER}" bash test -r "${@}"; then
