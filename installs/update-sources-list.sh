@@ -49,4 +49,6 @@ for SOURCE in $(find /etc/apt/ -name '*list'); do
     sed -i 's/^.*ftp/# &/g' $SOURCE
 done
 
+sudo sed -i 's/^[^#]/# &/g' /etc/apt/sources.list
+
 apt-get update
