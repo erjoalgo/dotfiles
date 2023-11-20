@@ -350,10 +350,12 @@ EOF
 
 SSHD_CONFIG=/etc/ssh/sshd_config
 if test -f "${SSHD_CONFIG}"; then
-  sudo insert-text-block  \
+    sudo sed -i 's/PasswordAuthentication/# &/g' "${SSHD_CONFIG}"
+    sudo insert-text-block  \
     '# 59b01e7b-7982-4fc0-8b3d-6a7b7cb43ca0-ssh-accept-env-desktop-group-number' \
     "${SSHD_CONFIG}"  \
     <<EOF
+PasswordAuthentication no
 AcceptEnv DESKTOP_GROUP_NUMBER
 AcceptEnv DEBUG_INIT
 # https://unix.stackexchange.com/questions/427189/
