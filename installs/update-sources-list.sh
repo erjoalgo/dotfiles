@@ -1,7 +1,6 @@
 #!/bin/bash -x
 
 SOURCES=/etc/apt/sources.list.d/base.list
-ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS:-}
 
 if test ${UID} -ne 0; then
     sudo "$0" "${@}"
