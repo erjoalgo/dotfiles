@@ -5,11 +5,9 @@
   ;; (UIOP/LISP-BUILD:CURRENT-LISP-FILE-PATHNAME)
   (merge-pathnames  ".stumpwmrc.d/lisp/" (user-homedir-pathname)))
 
-(defparameter *data-private*
-  (merge-pathnames "private-data/stumpwm/" (user-homedir-pathname)))
+(defparameter *data-private* #P"~/.local/stumpwm/")
 
-(defparameter *data-private-one-way*
-  (merge-pathnames "private-data-one-way/stumpwm/" (user-homedir-pathname)))
+(defparameter *data-private-one-way* #P"~/.local/stumpwm/")
 
 (defparameter *data-dirs*
   (list
