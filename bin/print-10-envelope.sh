@@ -23,8 +23,9 @@ while getopts "ha:s:r:o:" OPT; do
 done
 shift $((OPTIND -1))
 
-if ! command -v evince || ! command -v pdftk; then
+if ! command -v evince || ! command -v pdftk || ! command -v pdflatex; then
     sudo apt-get install -y evince pdftk
+    ~/git/dotfiles/installs/tex.sh
 fi
 
 function read-lines {
