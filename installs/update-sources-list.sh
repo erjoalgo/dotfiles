@@ -3,6 +3,11 @@
 SOURCES=/etc/apt/sources.list.d/base.list
 ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS:-}
 
+if test ${UID} -ne 0; then
+    sudo "$0" "${@}"
+    exit $?
+fi
+
 if grep ubuntu /etc/apt/sources.list; then
   echo "on ubuntu. skipping sources.list update"
   exit 0
