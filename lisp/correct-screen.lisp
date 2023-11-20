@@ -198,9 +198,10 @@
                               :stringify-fn
                               (lambda (mode)
                                 (with-slots (width height active) mode
-                                  (format nil "~A~Dx~D"
+                                  (format nil "~A~Dx~D (ratio: ~,2F)"
                                           (if active "*" "")
-                                          width height)))
+                                          width height
+                                          (/ width height))))
                               :display-candidates t)))
     (run-command-async-notify
      "xrandr"
