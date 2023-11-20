@@ -13,6 +13,8 @@ if grep ubuntu /etc/apt/sources.list; then
   exit 0
 fi
 
+rm -rf /etc/apt/sources.list~
+
 if ! test -z "${TEST:-}"; then
     cp /etc/apt/sources.list{,.test}
     SOURCES=${SOURCES}.test
