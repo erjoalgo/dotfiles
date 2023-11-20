@@ -400,6 +400,10 @@ alias lrsh='lein ring server-headless'
 
 alias opp='octoprint-print.sh -g'
 alias opu='octoprint-cli files upload'
+
+alias redshift-restart='systemctl --user restart redshift.service'
+alias redshift-stop='systemctl --user stop redshift.service'
+
 # Local Variables:
 # mode: sh
 # End:
