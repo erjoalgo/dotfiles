@@ -40,6 +40,9 @@ deb-src https://ftp.debian.org/debian ${CODENAME}-updates main ${ADDITIONAL_COMP
 ${INDICATOR_LINE}
 EOF
 
-sed -i 's/^deb cdrom/# &/g' $SOURCES
+for SOURCE in $(find /etc/apt/ -name '*list'); do
+    sed -i 's/^deb cdrom/# &/g' $SOURCE
+    sed -i 's/^.*ftp/# &/g' $SOURCE
+done
 
 apt-get update
