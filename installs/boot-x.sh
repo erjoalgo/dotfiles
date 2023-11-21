@@ -80,7 +80,7 @@ done
 
 find ~/.cache/common-lisp/ -path '*dotfiles/lisp/*.fasl' -exec rm {} +
 
-sbcl --eval "(let ((*quickload-prompt* nil)) (ql:update-all-dists))" --quit
+sbcl --eval "(ql:update-all-dists :prompt nil)" --quit
 
 for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
   test -d ${DIR}
