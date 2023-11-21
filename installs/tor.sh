@@ -17,9 +17,6 @@ if ! test -e "${KEYRING_FILE}"; then
         sudo tee "${KEYRING_FILE}"
 fi
 
-wget -q "${TOR_KEY_URL}" -O- |  \
-    sudo apt-key add -
-
 sudo apt-get update
 sudo apt-get install -y deb.torproject.org-keyring tor
 
