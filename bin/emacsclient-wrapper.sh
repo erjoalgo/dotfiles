@@ -2,6 +2,21 @@
 
 set -euo pipefail
 
+EXTRA_ARGS=()
+
+while getopts "hn" OPT; do
+    case ${OPT} in
+    n)
+        EXTRA_ARGS+=(-n)
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
 REAL_EMACSCLIENT=/usr/bin/emacsclient.emacs
 
 if ! pgrep emacs; then
@@ -32,7 +47,9 @@ for EMACS_SOCKET_NAME in  \
         TRAMP_PREFIX="/sudo:root@$(hostname):"
     fi
 
-    if ! sudo -u "${SERVER_USER}" env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME} "${REAL_EMACSCLIENT}" \
+    if ! sudo -u "${SERVER_USER}" env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
+         "${REAL_EMACSCLIENT}" \
+         ${EXTRA_ARGS[@]} \
          "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
         echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
         RET=$?
