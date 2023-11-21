@@ -230,15 +230,20 @@
       (nth (sort-groups (current-screen)))
       switch-to-group))
 
+(defcommand gmove-nth (i) ((:number "enter group number: "))
+  (assert (< i (length (sort-groups (current-screen)))))
+  (let ((group (nth i (sort-groups (current-screen)))))
+    (gmove group)))
+
 (loop
-   for group-name in '("Default" "F2" "F3" "F4" "F5")
-   for i from 0
-   as key = (format nil "H-F~D" (1+ i))
-   as command = (format nil "gselect-nth ~D" i)
-   do (gnewbg group-name)
-   do
+  for group-name in '("Default" "F2" "F3" "F4" "F5")
+  for i from 0
+  do (gnewbg group-name)
+  do
      (define-key-bindings (all-top-maps)
-         (list (list key command))))
+         `(
+           (,(format nil "H-F~D" (1+ i)) ,(format nil "gselect-nth ~D" i))
+           (,(format nil "S-H-F~D" (1+ i)) ,(format nil "gmove-nth ~D" i)))))
 
 (define-key-bindings
     *correct-screen-map*
