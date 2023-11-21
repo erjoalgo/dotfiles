@@ -82,7 +82,7 @@ find ~/.cache/common-lisp/ -path '*dotfiles/lisp/*.fasl' -exec rm {} +
 
 sbcl --eval "(ql:update-all-dists :prompt nil)" --quit
 
-for DIR in ../lisp/{,cladaver} ~/git/{statusor,cl-voipms}; do
+for DIR in ~/git/{statusor,cl-voipms} ../lisp/{cladaver,} ; do
   test -d ${DIR}
   ASD=$(realpath $(echo "${DIR}/*asd"))
   SYSTEM=$(basename ${ASD} .asd)
