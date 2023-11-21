@@ -12,7 +12,7 @@ TOR_KEY_URL=https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE
 KEYRING_FILE=/usr/share/keyrings/tor-archive-keyring.gpg
 
 if ! test -e "${KEYRING_FILE}"; then
-    curl ${TOR_KEY_URL} \
+    curl ${TOR_KEY_URL} | \
          gpg --dearmor | \
         sudo tee "${KEYRING_FILE}"
 fi
