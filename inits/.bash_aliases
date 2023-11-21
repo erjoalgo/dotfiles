@@ -403,6 +403,8 @@ alias opu='octoprint-cli files upload'
 
 alias redshift-restart='systemctl --user restart redshift.service'
 alias redshift-stop='systemctl --user stop redshift.service'
+alias tor-browser='~/src/tor-browser/Browser/start-tor-browser'
+
 
 # Local Variables:
 # mode: sh
