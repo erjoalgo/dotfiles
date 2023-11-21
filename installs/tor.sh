@@ -18,7 +18,7 @@ if ! test -e "${KEYRING_FILE}"; then
 fi
 
 sudo apt-get update
-sudo apt-get install -y deb.torproject.org-keyring tor
+sudo apt-get install -y deb.torproject.org-keyring tor tor-geoipdb
 
 insert-text-block '# 2f798a9e-bef5-401e-af6e-8597461114b8-tor-client' \
                   ${HOME}/.torrc<<EOF
