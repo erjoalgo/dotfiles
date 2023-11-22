@@ -88,7 +88,9 @@ if args.line is not None:
     lines_before = old_before.split("\n") if old_before else []
     lines_after = old_after.split("\n") if old_after else []
     new_before = "\n".join(lines_before[:args.line])
-    yet_to_skip = max(0, len(lines_before) - args.line)
+    yet_to_skip = 0
+    if args.line > len(lines_before):
+        yet_to_skip = args.line - len(lines_before)
     new_after = "\n".join(lines_before[args.line:] + lines_after[yet_to_skip:])
 else:
     new_before, new_after = old_before, old_after
