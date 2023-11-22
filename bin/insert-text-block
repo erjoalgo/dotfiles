@@ -85,9 +85,8 @@ if args.begining_append:
     args.line = 0
 
 if args.line is not None:
-    lines_before = old_before.split("\n")
-    lines_after = old_after.split("\n")
-
+    lines_before = old_before.split("\n") if old_before else []
+    lines_after = old_after.split("\n") if old_after else []
     new_before = "\n".join(lines_before[:args.line])
     yet_to_skip = max(0, len(lines_before) - args.line)
     new_after = "\n".join(lines_before[args.line:] + lines_after[yet_to_skip:])
