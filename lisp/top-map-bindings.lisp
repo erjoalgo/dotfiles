@@ -77,6 +77,15 @@
   :classes '("Vncviewer")
   :cmd nil)
 
+(define-run-or-pull-program "n64"
+  :raise-key "H-t H-n"
+  :pull-key "H-t H-n"
+  :classes '("project64.exe")
+  :cmd
+  (list "wine"
+        (uiop:native-namestring
+         #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
