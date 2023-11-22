@@ -43,7 +43,10 @@ seconds ago")
                                        (position (string-downcase (window-class win))
                                                  win-classes :test #'equal))))
 	 (cand-no-curr (car (remove curr-win cands)))
-         (cmd-list (when cmd-line (ppcre:split " +" cmd-line))))
+         (cmd-list (if (listp cmd-line)
+                       cmd-line
+                       (when cmd-line
+                         (ppcre:split " +" cmd-line)))))
     (if cand-no-curr
 	(progn (funcall (if pull-p 'pull-window
 			    'raise-window)
