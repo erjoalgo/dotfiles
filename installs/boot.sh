@@ -272,13 +272,6 @@ cat <<EOF | tee -a ~/.ssh/authorized_keys
 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAyqPpjzbRuF5Nxt4QAQF7IwA7IwpoQIFLYYLE1WQ/h1TwLYwxhoPjSewCmGFc8qO4afc9IkQGzJSsdRdLCNR20= <ssh://ealfonso|nist256p1>
 EOF
 
-if ! ssh -G google.com; then
-    insert-text-block '# 99ef88b9-660b-458d-9dfd-9cf090778ea5-include-private-ssh-config' \
-                      ~/.ssh/config -b <<EOF
-# Include ~/private-data/configs/ssh-config disabled...
-EOF
-fi
-
 chmod 600 ~/.ssh/config
 
 SSH_PRIVATE_KEY_PATH=~/.ssh/id_rsa
