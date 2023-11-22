@@ -287,7 +287,10 @@ insert-text-block '# 02a8943a-e369-47f7-9e96-11de241c2e36-add-universal-ssh' \
 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHgs/j9IDFtOS8FriMd8ddZziQoNbZllfeobTqSeClJyimUiiSm+uiqP/0mL4FC2HZmeeRKVlGJx8DUQWUBHVPE= <ssh://erjoalgo@gmail.com|nist256p1>
 EOF
 
-insert-text-block -b '# -*- mode: sh -*-' ~/.profile-env <<< ""
+insert-text-block -b '# 0c26fa16-1154-4554-8dbd-056097fb58d0-add-emacs-mode' \
+                  ${HOME}/.profile-env <<< <<EOF
+# -*- mode: sh -*-
+EOF
 
 insert-text-block '# 9f56be79-fa85-4ec0-ab4f-a9d3df5fef76-maybe-add-gopath' ~/.profile-env  \
   <<EOF
