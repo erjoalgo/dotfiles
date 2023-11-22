@@ -120,7 +120,7 @@ which insert-text-block
 sudo ln -fs ${SCRIPTS_BIN}/insert-text-block /usr/bin
 
 insert-text-block '# 58b63bb1-de24-449c-9bf9-9f317a28b9ac-load-scripts-bin'  \
-                  ${HOME}/.profile-env<<EOF
+                  ${HOME}/.profile-env <<"EOF"
 PATH=${PATH}:${HOME}/git/dotfiles/bin/
 EOF
 
