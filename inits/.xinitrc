@@ -1,0 +1,1 @@
+exec $(which stumpwm)
