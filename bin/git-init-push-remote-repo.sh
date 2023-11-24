@@ -91,6 +91,11 @@ fi
 
 echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 git fetch ${REMOTE_NAME}
-git push --set-upstream ${REMOTE_NAME} ${BRANCH}
+
+if ! git log; then
+    echo "error: missing initial commit" && exit ${LINENO}
+fi
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || true
+git push --set-upstream ${REMOTE_NAME} ${BRANCH:-}
