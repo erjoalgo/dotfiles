@@ -424,6 +424,29 @@ alias redshift-restart='systemctl --user restart redshift.service'
 alias redshift-stop='systemctl --user stop redshift.service'
 alias tor-browser='~/src/tor-browser/Browser/start-tor-browser'
 
+alias ufw-ls='sudo ufw status numbered'
+function ufw-select-rule {
+    echo "select ufw rule: " 1>&2
+    sudo ufw status numbered | head -3 1>&2
+    OLDIFS=$IFS
+    IFS=$'\n'
+    select RULE in $(sudo ufw status numbered | grep ']'); do
+        break
+    done
+    IFS=$OLDIFS
+    grep -Po '(?<=[[]) *[0-9]+(?=])' <<< "${RULE}" | tr -d ' '
+}
+
+function ufw-delete {
+    RULE="$(ufw-select-rule)"
+    sudo ufw delete "${RULE}"
+}
+
+function ufw-allow-tcp {
+    PORTS=${1} && shift
+    sudo ufw allow ${PORTS}/tcp
+}
+es)
 
 # Local Variables:
 # mode: sh
