@@ -8,7 +8,7 @@ services:
       - $PORT:80
       - 0.0.0.0:5000:5000
     devices:
-    # use `python -m serial.tools.miniterm` to see what the name is of the printer, this requires pyserial
+      # use `python -m serial.tools.miniterm` to see what the name is of the printer, this requires pyserial
       - ${PRINTER_DEVICE}:/dev/ttyACM0
       - /dev/video0:/dev/video0
     volumes:
