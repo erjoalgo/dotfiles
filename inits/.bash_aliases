@@ -384,6 +384,23 @@ function docker-bash {
     docker exec -it --user root "${CONTAINER}" bash
 }
 
+function docker-working-dir {
+    CONTAINER=${1} && shift
+    if ! command -v jq > /dev/null; then
+        sudo apt-get install -y jq
+    fi
+    test -z "${CONTAINER:-}"
+    docker inspect "${CONTAINER}" | jq -r '.[0].Config.WorkingDir'
+}
+
+function docker-cp {
+    CONTAINER=$(docker-select-container)
+    WORKDIR=$(docker-working-dir "${CONTAINER}")
+    SOURCE=${1} && shift
+    DEST=${1} && shift
+    docker cp "${SOURCE}" "${CONTAINER}:${WORKDIR}/${DEST}"
+}
+
 function docker-kill {
     docker kill $(docker-select-container)
 }
