@@ -109,7 +109,7 @@ After=systemd-udevd.service
 StartLimitInterval=0
 
 [Service]
-ExecStart=$(pwd)/bin/pyudevs.py
+ExecStart=$(realpath $(pwd)/../bin/pyudevs.py)
 User=$(whoami)
 Restart=always
 RestartSec=5
