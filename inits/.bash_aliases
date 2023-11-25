@@ -446,7 +446,6 @@ function ufw-allow-tcp {
     PORTS=${1} && shift
     sudo ufw allow ${PORTS}/tcp
 }
-es)
 
 # Local Variables:
 # mode: sh
