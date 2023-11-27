@@ -164,7 +164,6 @@ pip install git+https://github.com/mupuf/requests-unixsocket || true
 
 for SCRIPT in  \
         ./gen-git-config.sh \
-        ./suspend-sedation.sh \
     ;do
     ./${SCRIPT} || true
 done
