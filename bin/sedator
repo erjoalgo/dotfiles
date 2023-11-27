@@ -1,0 +1,44 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "i:l:b:c:" OPT; do
+    case ${OPT} in
+    i)
+        IDLE_SECS=${OPTARG}
+        ;;
+    l)
+        LID_STATE=${OPTARG}
+        ;;
+    b)
+        BATTERY=${OPTARG}
+        ;;
+    c)
+        CHARGING=${OPTARG}
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
+MINS=$((${IDLE_SECS} / 60))
+if test ${MINS} -lt 5; then
+    echo "taking no sedating action"
+    true
+elif test ${MINS} -lt 30; then
+    echo "invoking lightdm locker"
+    light-locker-command -l
+elif test ${MINS} -lt 60; then
+    echo "suspending..."
+    sudo systemctl suspend
+else
+    echo "hibernating"
+    sudo systemctl hibernate
+fi
+
+# Local Variables:
+# mode: sh-mode
+# End:
