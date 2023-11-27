@@ -426,7 +426,6 @@ alias redshift-logs='journalctl --user -fu redshift'
 
 alias tor-browser='~/src/tor-browser/Browser/start-tor-browser'
 
-alias ufw-ls='sudo ufw status numbered'
 function ufw-select-rule {
     echo "select ufw rule: " 1>&2
     sudo ufw status numbered | head -3 1>&2
@@ -448,6 +447,10 @@ function ufw-allow-tcp {
     PORTS=${1} && shift
     sudo ufw allow ${PORTS}/tcp
 }
+
+alias ufw-ls='sudo ufw status numbered'
+alias ufw-delete='ufw-ls; sudo ufw delete'
+
 
 # Local Variables:
 # mode: sh
