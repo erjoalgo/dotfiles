@@ -52,13 +52,21 @@
   (or (which "xsecurelock.sh")
       (which "xsecurelock")))
 
+(defun service-running-p (service-name)
+  (let ((proc (sb-ext:run-program
+               "sudo" `("service" ,service-name "status")
+               :wait t :search t)))
+    (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
+
 (defun start-screensaver ()
   (let ((lock-program (screen-lock-program)))
     (unless (and lock-program
                  (which "xautolock"))
       (error "xsecurelock, xautolock not installed"))
-    (unless (and *screensaver-proc*
-                 (eq :RUNNING (slot-value *screensaver-proc* 'SB-IMPL::%STATUS)))
+    (unless (or
+             (and *screensaver-proc*
+                  (eq :RUNNING (slot-value *screensaver-proc* 'SB-IMPL::%STATUS)))
+             (service-running-p "sedation"))
       (setf *screensaver-proc*
             ;; "xautolock -time 1 -locker xsecurelock"
             (SB-EXT:RUN-PROGRAM "xautolock"
