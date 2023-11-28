@@ -433,7 +433,7 @@ RestartSec=5
 Environment=PATH=$PATH:$(realpath $(pwd)/../bin)
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical-session.target
 EOF
 
 echo "success"
