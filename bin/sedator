@@ -31,6 +31,8 @@ if test ${MINS} -lt 5; then
 elif test ${MINS} -lt 30; then
     echo "invoking lightdm locker"
     light-locker-command -l
+elif test -z "${BATTERY:-}"; then
+    echo "probably not on a laptop. skipping further sedation..."
 elif test ${MINS} -lt 60; then
     echo "suspending..."
     sudo systemctl suspend
