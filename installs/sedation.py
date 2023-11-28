@@ -1,24 +1,60 @@
 #!/usr/bin/env python3
 
 import argparse
+import fcntl
 import glob
 import json
 import logging
+import os
 import re
 import subprocess
 import time
 import traceback
 
-def read_xinput():
-    cmd = ["timeout", "2", "xinput", "test-xi2", "--root"]
-    p = subprocess.Popen(cmd,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-    if p.returncode != 124:
-        raise subprocess.CalledProcessError(
-            p.returncode, cmd, output=stdout, stderr=stderr)
-    return stdout
+class InputDetector(object):
+    def __init__(self):
+        self.fh_map = {}
+        self.update_input_fh_map()
+
+    @staticmethod
+    def _set_nonblock(fh):
+        orig_fl = fcntl.fcntl(fh, fcntl.F_GETFL)
+        fcntl.fcntl(fh, fcntl.F_SETFL, orig_fl | os.O_NONBLOCK)
+
+
+    def update_input_fh_map(self):
+        for fname in glob.glob("/dev/input/by-path/*"):
+            if fname not in self.fh_map:
+                fh = open(fname, "rb")
+                InputDetector._set_nonblock(fh)
+                self.fh_map[fname] = fh
+
+    def has_new_input(self):
+        count = 0
+        for fh in self.fh_map.values():
+            count += len(fh.read() or "")
+        return count
+
+class XInputDetector(object):
+    def __init__(self):
+        self.last_input = None
+
+    def _read_xinput(self):
+        cmd = ["timeout", "2", "xinput", "test-xi2", "--root"]
+        p = subprocess.Popen(cmd,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        if p.returncode != 124:
+            raise subprocess.CalledProcessError(
+                p.returncode, cmd, output=stdout, stderr=stderr)
+        return stdout
+
+    def has_new_input(self):
+        curr_input = self._read_xinput()
+        result = curr_input == self.last_input
+        self.last_input = curr_input
+        return result
 
 def read_lid_state():
     lid_glob = "/proc/acpi/button/lid/LID*/state"
@@ -53,22 +89,26 @@ def read_battery_info():
 
 def loop(inter_sedation_cycles=20):
     last_activity = None
-    last_input = read_xinput()
     counter = 0
+    try:
+        detector = XInputDetector()
+        detector.has_new_input()
+    except Exception:
+        logging.warn("falling back to non-x input detector")
+        detector = InputDetector()
+
     while True:
-        # time.sleep(intervalSecs)
-        currInput = read_xinput()
+        time.sleep(1)
         now = time.time()
-        if last_activity is None or currInput != last_input:
+        if last_activity is None or detector.has_new_input():
             last_activity = now
-        last_input = currInput
-        idleSecs = int(now - last_activity)
+        idle_secs = int(now - last_activity)
         lid_state = read_lid_state()
         batteryInfo = read_battery_info()
-        if counter % inter_sedation_cycles:
+        if counter % (1 + inter_sedation_cycles):
             continue
         try:
-            custom_sedation(idleSecs, lid_state, batteryInfo)
+            custom_sedation(idle_secs, lid_state, batteryInfo)
         except Exception as ex:
             logging.error("failed to invoke custom sedation script: %s", ex)
 
