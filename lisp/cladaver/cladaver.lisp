@@ -25,72 +25,72 @@
 (defun ls (info path)
   (with-slots (base-url username password) info
     (if-let-ok nil
-        ((url (format nil "~A~A" base-url path))
-         (raw-resp
-          ;; (http-request-or-error url
-          ;;                        :method :PROPFIND
-          ;;                        :additional-headers '(("Depth" . "1"))
-          ;;                        :basic-authorization (when (and username password)
-          ;;                                               (list username password)))
-          (with-output-to-string (fh)
-            (sb-ext:run-program
-             "curl"
-             `("-s"
-               ,(format nil "-u~A:~A" username password)
-               "-XPROPFIND" "-HDepth:1" ,url)
-             :search t :output fh)))
-         (doc (cxml:parse raw-resp (stp:make-builder)))
-         (nodeset
-          (xpath:with-namespaces (("D" "DAV:"))
-            (xpath:evaluate "//D:href/text()" doc)))
-         (iter (xpath:make-node-set-iterator nodeset)))
-      (loop
-         with first = nil
-         while (not (xpath:node-set-iterator-end-p iter))
-         for i from 0
-         as node = (xpath:node-set-iterator-current iter)
-         as pathname = (pathname (cxml-stp:data node))
-         as basename = (pathname-name pathname)
-         do (assert (if (zerop i)
-                        (prog1
-                            (null basename)
-                          (setf first pathname))
-                        (equal (pathname-directory first)
-                               (pathname-directory pathname))))
-         unless (null basename)
-         collect pathname
-         do (setf iter (xpath:node-set-iterator-next iter))))))
+               ((url (format nil "~A~A" base-url path))
+                (raw-resp
+                 ;; (http-request-or-error url
+                 ;;                        :method :PROPFIND
+                 ;;                        :additional-headers '(("Depth" . "1"))
+                 ;;                        :basic-authorization (when (and username password)
+                 ;;                                               (list username password)))
+                 (with-output-to-string (fh)
+                   (sb-ext:run-program
+                    "curl"
+                    `("-s"
+                      ,(format nil "-u~A:~A" username password)
+                      "-XPROPFIND" "-HDepth:1" ,url)
+                    :search t :output fh)))
+                (doc (cxml:parse raw-resp (stp:make-builder)))
+                (nodeset
+                 (xpath:with-namespaces (("D" "DAV:"))
+                   (xpath:evaluate "//D:href/text()" doc)))
+                (iter (xpath:make-node-set-iterator nodeset)))
+               (loop
+                 with first = nil
+                 while (not (xpath:node-set-iterator-end-p iter))
+                 for i from 0
+                 as node = (xpath:node-set-iterator-current iter)
+                 as pathname = (pathname (cxml-stp:data node))
+                 as basename = (pathname-name pathname)
+                 do (assert (if (zerop i)
+                                (prog1
+                                    (null basename)
+                                  (setf first pathname))
+                                (equal (pathname-directory first)
+                                       (pathname-directory pathname))))
+                 unless (null basename)
+                   collect pathname
+                 do (setf iter (xpath:node-set-iterator-next iter))))))
 
 (defun cat (info path)
   (with-slots (base-url username password) info
     (if-let-ok nil
-        ((url (format nil "~A~A" base-url path))
-         (raw-resp
-          ;; (http-request-or-error url :method :GET
-          ;;                        :basic-authorization (when (and username password)
-          ;;                                               (list username password)))
-          (with-output-to-string (fh)
-            (sb-ext:run-program
-             "curl"
-             `("-s" ,(format nil "-u~A:~A" username password) "-XGET" ,url)
-             :search t :output fh)))
-         (string (if (stringp raw-resp)
-                     raw-resp
-                     (babel:octets-to-string raw-resp))))
-      string)))
+               ((url (format nil "~A~A" base-url path))
+                (raw-resp
+                 ;; (http-request-or-error url :method :GET
+                 ;;                        :basic-authorization (when (and username password)
+                 ;;                                               (list username password)))
+                 (with-output-to-string (fh)
+                   (sb-ext:run-program
+                    "curl"
+                    `("-s" ,(format nil "-u~A:~A" username password) "-XGET" ,url)
+                    :search t :output fh)))
+                (string (if (stringp raw-resp)
+                            raw-resp
+                            (babel:octets-to-string raw-resp))))
+               string)))
 
 (defun put (info path data)
   (with-slots (base-url username password) info
     (if-let-ok nil
-        ((url (format nil "~A~A" base-url path))
-         (raw-resp
-          (with-output-to-string (fh)
-            (sb-ext:run-program
-             "curl"
-             `("-s" ,(format nil "-u~A:~A" username password)
-                    "-XPUT" ,url "-d" ,data)
-             :search t :output fh))))
-        raw-resp)))
+               ((url (format nil "~A~A" base-url path))
+                (raw-resp
+                 (with-output-to-string (fh)
+                   (sb-ext:run-program
+                    "curl"
+                    `("-s" ,(format nil "-u~A:~A" username password)
+                           "-XPUT" ,url "-d" ,data)
+                    :search t :output fh))))
+               raw-resp)))
 
 (defun mkdir (info path)
   (with-slots (base-url username password) info
