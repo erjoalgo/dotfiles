@@ -84,11 +84,12 @@
     (if-let-ok nil
         ((url (format nil "~A~A" base-url path))
          (raw-resp
-          (http-request-or-error url
-                                 :method :PUT
-                                 :content data
-                                 :basic-authorization (when (and username password)
-                                                        (list username password)))))
+          (with-output-to-string (fh)
+            (sb-ext:run-program
+             "curl"
+             `("-s" ,(format nil "-u~A:~A" username password)
+                    "-XPUT" ,url "-d" ,data)
+             :search t :output fh))))
         raw-resp)))
 
 (defun mkdir (info path)
