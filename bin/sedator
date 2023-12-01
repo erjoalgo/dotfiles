@@ -1,6 +1,8 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
+
+echo "sedator invoked as: ${0} ${@}"
 
 while getopts "i:l:b:c:" OPT; do
     case ${OPT} in
