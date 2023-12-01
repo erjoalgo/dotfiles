@@ -39,7 +39,6 @@ if test -z "${BATTERY:-}"; then
         echo "suspending..."
         sudo systemctl suspend
     fi
-    exit 0
 fi
 
 if test ${MINS} -gt 10; then
