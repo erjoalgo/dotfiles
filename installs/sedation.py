@@ -98,7 +98,7 @@ def loop(inter_sedation_cycles=20):
         detector = InputDetector()
 
     while True:
-        time.sleep(1)
+        time.sleep(60)
         now = time.time()
         if last_activity is None or detector.has_new_input():
             last_activity = now
