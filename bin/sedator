@@ -27,20 +27,26 @@ done
 shift $((OPTIND -1))
 
 MINS=$((${IDLE_SECS} / 60))
-if test ${MINS} -lt 5; then
-    echo "taking no sedating action"
-    true
-elif test ${MINS} -lt 30; then
+echo "idle time: ${MINS}m"
+
+exit 0
+if test -z "${BATTERY:-}"; then
+    # battery detected. considering sedation
+    if test ${MINS} -gt 60; then
+        echo "hibernating"
+        sudo systemctl hibernate
+    elif test ${MINS} -gt 30; then
+        echo "suspending..."
+        sudo systemctl suspend
+    fi
+    exit 0
+fi
+
+if test ${MINS} -gt 10; then
     echo "invoking lightdm locker"
     light-locker-command -l
-elif test -z "${BATTERY:-}"; then
-    echo "probably not on a laptop. skipping further sedation..."
-elif test ${MINS} -lt 60; then
-    echo "suspending..."
-    sudo systemctl suspend
 else
-    echo "hibernating"
-    sudo systemctl hibernate
+    echo "taking no sedating action"
 fi
 
 # Local Variables:
