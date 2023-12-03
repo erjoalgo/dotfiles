@@ -293,3 +293,10 @@
 (defcommand redshift-reset () ()
   "Redshift shift red"
   (redshift-oneshot "-x"))
+
+(defun redshift-current-temp ()
+  (let ((output
+         (run-shell-command
+          "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
+          t)))
+    (parse-integer output)))
