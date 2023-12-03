@@ -287,7 +287,7 @@ ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHgs/j9I
 EOF
 
 insert-text-block -b '# 0c26fa16-1154-4554-8dbd-056097fb58d0-add-emacs-mode' \
-                  ${HOME}/.profile-env <<< <<EOF
+                  ${HOME}/.profile-env <<EOF
 # -*- mode: sh -*-
 EOF
 
