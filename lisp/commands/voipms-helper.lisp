@@ -43,7 +43,7 @@
                 (voipms::cancel-did auth :did did-number))))
 
 (defun order-new-did (auth &key
-                             (state "CA")
+                             (state "FL")
                              sip-account
                              (pop *default-pop*)
                              (email *default-forward-email* )
