@@ -300,3 +300,10 @@
           "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
           t)))
     (parse-integer output)))
+
+(defcommand describe-key-+ (keys) ((:key-seq "Describe key:"))
+  (with-message-queuing t
+                        (describe-key keys)
+                        (message "keys are: ~A" keys)))
+
+(define-key *help-map* (kbd "k") "describe-key-+")
