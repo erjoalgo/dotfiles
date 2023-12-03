@@ -54,7 +54,12 @@ seconds ago")
 	       (focus-all cand-no-curr))
 	(when (and cmd-line
                    (not (funcall win-matches curr-win)))
-          (destructuring-bind (command . args) cmd-list
+          (destructuring-bind (command . args)
+              (loop for arg in cmd-list
+                    collect
+                    (if (pathnamep arg)
+                        (namestring arg)
+                        arg))
 	    (let* ((log-file (merge-pathnames #P"/tmp/"
                                               (make-pathname
                                                :name (pathname-name command)
