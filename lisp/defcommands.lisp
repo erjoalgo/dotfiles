@@ -274,11 +274,21 @@
 
 (defcommand redshift-shift-red () ()
   "Redshift shift red"
-  (redshift-oneshot "-t 6000:6000"))
+  (redshift-shift -500))
 
 (defcommand redshift-shift-blue () ()
   "Redshift shift red"
-  (redshift-oneshot "-t 5600:5600"))
+  (redshift-shift 500))
+
+(defvar *redshift-temp* 5000)
+
+(defun redshift-shift (delta)
+  "Redshift shift red"
+  (let* ((curr *redshift-temp*)
+         (temp (+ delta curr)))
+    ;; (redshift-oneshot (format nil "-Pt ~A:~A" temp temp))
+    (redshift-oneshot (format nil "-PO ~A" temp))
+    (setf *redshift-temp* temp)))
 
 (defcommand redshift-reset () ()
   "Redshift shift red"
