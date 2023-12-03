@@ -767,3 +767,15 @@ function ssh-list-all-host-keys {
         ssh-keygen -lf ${pubkey_file} -E sha256
     done
 }
+
+function sshfs-mount {
+    # trap 'trap - ERR RETURN; kill -INT $$ ; return' ERR RETURN
+    SPEC=${1} && shift
+    MOUNT_ID=$(sed -e 's/[^@]*@//' -e 's|[:/]|-|g'  \
+                   -e 's/--*/-/g'  -e 's/-$//' \
+                   <<< "${SPEC}")
+    MOUNT_LOCAL="${HOME}/mnts/${MOUNT_ID}"
+    mkdir -p ${MOUNT_LOCAL}
+    echo "mounting ${SPEC} at ${MOUNT_LOCAL} via sshfs"
+    sshfs ${SPEC} ${*} ${MOUNT_LOCAL}
+}
