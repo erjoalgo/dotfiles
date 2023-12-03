@@ -35,7 +35,11 @@ EOF
     if test -e ${GOROOT}/src/all.bash; then
         pushd .
         cd ${GOROOT}/src
-        ./all.bash
+        if ! command -v go; then
+            # need go to bootstrap go
+            sudo apt-get install -y golang-go
+        fi
+        sudo ./all.bash
         popd
     fi
     go version
