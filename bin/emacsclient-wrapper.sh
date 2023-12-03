@@ -43,7 +43,7 @@ for EMACS_SOCKET_NAME in  \
     SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
     SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
-    if ! sudo -u "${SERVER_USER}" bash -c "test -r ${@}"; then
+    if ! sudo -u "${SERVER_USER}" bash -c "test -w $(dirname ${1})"; then
         TRAMP_PREFIX="/sudo:root@$(hostname):"
     fi
 
