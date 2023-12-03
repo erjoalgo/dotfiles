@@ -80,11 +80,16 @@
 (define-run-or-pull-program "n64"
   :raise-key "H-t H-n"
   :pull-key "H-t H-n"
-  :classes '("project64.exe")
+  :classes '("project64.exe" "mupen64plus")
   :cmd
-  (list "wine"
-        (uiop:native-namestring
-         #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))
+  (cond
+   ((which "mupen64plus")
+    (list "mupen64plus"
+          #P"~/Downloads/n64/Legend of Zelda, The - Ocarina of Time (USA) (Rev 2).z64"))
+   ((which "wine")
+    (list "wine"
+          (uiop:native-namestring
+           #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
 
 (per-window-bindings-reload-from-fn)
 
