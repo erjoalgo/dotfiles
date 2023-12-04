@@ -151,6 +151,7 @@ sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.
 clone-git-repo "https://github.com/erjoalgo/chromeurl"
 pushd .
 cd ~/git/chromeurl/native
+source ~/.venv/bin/activate
 pip3 install -U .
 chromeurl --install-manifest all
 popd
