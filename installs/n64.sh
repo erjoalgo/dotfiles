@@ -32,3 +32,6 @@ Rumblepak switch = key(46)
 X Axis = key(276,275)
 Y Axis = key(273,274)
 EOF
+
+sudo chgrp input $(which mupen64plus)
+sudo chmod g+s $(which mupen64plus)
