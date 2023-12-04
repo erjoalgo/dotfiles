@@ -414,8 +414,10 @@ done
 
 sagiy pgformatter
 
+pushd .
 cd ~/git/githost
 python3 setup.py install --user || true
+popd
 
 sagiy figlet
 
