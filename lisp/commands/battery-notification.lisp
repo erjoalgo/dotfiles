@@ -97,7 +97,7 @@
            (when (<= percentage min-percent-window-popup)
              (run-shell-command "xmessage battery low!"))
            (when (<= percentage min-percent-beep)
-             (beep))
+             '(beep))
            (when (<= percentage min-percent-suspend)
              (run-shell-command "systemctl suspend"))))))))
 
