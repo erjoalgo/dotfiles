@@ -67,7 +67,7 @@ def read_lid_state():
     lid_glob = "/proc/acpi/button/lid/LID*/state"
     fnames = glob.glob(lid_glob)
     if not fnames:
-        raise Exception("no lid-state files found: {lid_glob}")
+        raise Exception(f"no lid-state files found: {lid_glob}")
     with open(fnames[0], "r") as fh:
         text = fh.read()
         m = re.match("^state: +(.*)", text)
