@@ -121,7 +121,7 @@ def custom_sedation(idleSecs, lidState, batteryInfo):
     cmd = ["sedator", "-i", str(idleSecs)]
     if lidState is not None:
         cmd.extend(["-l", lidState])
-    if batteryInfo["present"] == "yes":
+    if batteryInfo and batteryInfo["present"] == "yes":
         cmd.extend(["-b", batteryInfo["percentage"]])
         cmd.extend(["-c", batteryInfo["state"]])
     retcode = subprocess.call(cmd)
