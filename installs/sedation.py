@@ -103,7 +103,11 @@ def loop(inter_sedation_cycles=20):
         if last_activity is None or detector.has_new_input():
             last_activity = now
         idle_secs = int(now - last_activity)
-        lid_state = read_lid_state()
+        try:
+            lid_state = read_lid_state()
+        except Exception:
+            loging.error("failed to read lid state: %s", lid_state)
+            lid_state = None
         batteryInfo = read_battery_info()
         if counter % (1 + inter_sedation_cycles):
             continue
@@ -114,7 +118,9 @@ def loop(inter_sedation_cycles=20):
 
 def custom_sedation(idleSecs, lidState, batteryInfo):
     logging.info(f"idle: {idleSecs}s, lid: {lidState}")
-    cmd = ["sedator", "-i", str(idleSecs), "-l", lidState]
+    cmd = ["sedator", "-i", str(idleSecs)]
+    if lidState is not None:
+        cmd.extend(["-l", lidState])
     if batteryInfo["present"] == "yes":
         cmd.extend(["-b", batteryInfo["percentage"]])
         cmd.extend(["-c", batteryInfo["state"]])
