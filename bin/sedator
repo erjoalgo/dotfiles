@@ -29,7 +29,6 @@ shift $((OPTIND -1))
 MINS=$((${IDLE_SECS} / 60))
 echo "idle time: ${MINS}m"
 
-exit 0
 if test -z "${BATTERY:-}"; then
     # battery detected. considering sedation
     if test ${MINS} -gt 60; then
