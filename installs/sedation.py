@@ -31,8 +31,15 @@ class InputDetector(object):
 
     def has_new_input(self):
         count = 0
-        for fh in self.fh_map.values():
-            count += len(fh.read() or "")
+        for k in self.fh_map.keys():
+            fh = self.fh_map[k]
+            try:
+                count += len(fh.read() or "")
+            except OSError as ex:
+                logging.warning(
+                    "forgtting input %s which failed to read: %s",
+                    k, ex)
+                del self.fh_map[k]
         return count
 
 class XInputDetector(object):
