@@ -105,8 +105,8 @@ def loop(inter_sedation_cycles=20):
         idle_secs = int(now - last_activity)
         try:
             lid_state = read_lid_state()
-        except Exception:
-            logging.error("failed to read lid state: %s", lid_state)
+        except Exception as ex:
+            logging.error("failed to read lid state: %s", ex)
             lid_state = None
         batteryInfo = read_battery_info()
         if counter % (1 + inter_sedation_cycles):
