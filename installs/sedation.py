@@ -101,7 +101,7 @@ def loop(inter_sedation_cycles=20):
         detector = XInputDetector()
         detector.has_new_input()
     except Exception:
-        logging.warn("falling back to non-x input detector")
+        logging.warning("falling back to non-x input detector")
         detector = InputDetector()
 
     while True:
