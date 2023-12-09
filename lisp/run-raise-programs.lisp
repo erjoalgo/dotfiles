@@ -81,7 +81,8 @@ seconds ago")
               (when raise-window-in-original-group-secs
                 (push (cons (sb-ext:process-pid proc)
                             (cons (current-group) (GET-UNIVERSAL-TIME)))
-                      pid-original-group-alist))))))))
+                      pid-original-group-alist))
+              log-file))))))
 
 (defmacro define-run-or-pull-program (name
 				      &key
