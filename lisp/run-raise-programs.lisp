@@ -58,7 +58,7 @@ seconds ago")
               (loop for arg in cmd-list
                     collect
                     (if (pathnamep arg)
-                        (namestring arg)
+                        (uiop:native-namestring arg)
                         arg))
 	    (let* ((log-file (merge-pathnames #P"/tmp/"
                                               (make-pathname
