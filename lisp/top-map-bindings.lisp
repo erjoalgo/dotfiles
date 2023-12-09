@@ -34,7 +34,11 @@
         :cmd eclipse-cmd
         :raise-key "H-r")))
 
-(define-run-or-pull-program "zathura")
+(define-run-or-pull-program "zathura"
+  :classes '("Zathura")
+  :cmd "zathura"
+  :raise-key "H-t H-z"
+  :pull-key "H-t H-z")
 
 (define-run-or-pull-program "virtualbox"
   :classes '("VirtualBox Machine" "VirtualBox Manager")
