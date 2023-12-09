@@ -40,11 +40,21 @@ if test -n "${BATTERY:-}"; then
     fi
 fi
 
-if test ${MINS} -gt 10; then
-    echo "invoking lightdm locker"
-    light-locker-command -l
-else
+if test ${MINS} -lt 10; then
     echo "taking no sedating action"
+elif command -v light-locker-command; then
+    light-locker-command -l
+elif command -v xsecurelock; then
+    if ! pgrep xsecurelock; then
+        export DISPLAY=:0
+        xhost +SI:localuser:root
+        nohup xsecurelock &
+        disown
+    fi
+elif pgrep X; then
+    echo "no desktop locker found!" && exit ${LINENO}
+else
+    echo "no desktop locker found but no X server"
 fi
 
 # Local Variables:
