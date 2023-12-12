@@ -18,8 +18,8 @@ while getopts "hli:" OPT; do
 done
 shift $((OPTIND -1))
 
-export DISPLAY=:$(ls /tmp/.X11-unix | tr -d 'X')
-export XAUTHORITY=~/.Xauthority
+export DISPLAY=${DISPLAY:-:$(ls /tmp/.X11-unix | tr -d 'X')}
+export XAUTHORITY=${XAUTHORITY:-${HOME}/.Xauthority}
 
 echo "KEYBOARD_ID is ${KEYBOARD_ID:-}"
 
