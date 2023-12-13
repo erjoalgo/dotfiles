@@ -44,7 +44,7 @@ test -d "${CHROOT:-}"
 sudo mount -t sysfs /sys "${CHROOT}/sys" || true
 sudo mount -t proc /proc "${CHROOT}/proc" || true
 sudo mount --bind /dev "${CHROOT}/dev" || true
-sudo mount -t devpts /dev/pts "${CHROOT}/dev/pts" || true
+sudo mount -t devpts "${CHROOT}/pts" "${CHROOT}/dev/pts" || true
 
 if test -n "${BOOT_PARTITION:-}"; then
     sudo mount --bind "${BOOT_PARTITION}" "${CHROOT}/boot" || true
