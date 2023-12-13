@@ -76,8 +76,8 @@
                     (car (directory #P"~/Downloads/Creality*.AppImage")))))
 
 (define-run-or-pull-program "vnc"
-  :raise-key "H-t H-v"
-  :pull-key "H-t H-v"
+  :raise-key "H-t H-x"
+  :pull-key "H-t H-x"
   :classes '("Vncviewer")
   :cmd nil)
 
