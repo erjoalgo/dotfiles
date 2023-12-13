@@ -3,6 +3,7 @@
 set -euo pipefail
 
 URL=https://ftp.gnu.org/gnu/emacs/emacs-29.1.tar.xz
+GNU_KEYRING_URL=https://ftp.gnu.org/gnu/gnu-keyring.gpg
 
 EMACS_VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
 EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
@@ -32,8 +33,9 @@ elif command -v apt-get; then
     sudo apt-get build-dep -y emacs
     sudo apt-get install -y aspell-es emacs-goodies-el uuid-runtime  \
          libgmp-dev gnutls-dev libncurses5-dev uuid-runtime
+    curl -s ${GNU_KEYRING_URL} --output /dev/stdout | gpg --import
 fi
 
-install-from-source -u ${URL} -g 7C207910
+install-from-source -u ${URL}
 cd /usr/local/src/emacs-${EMACS_VERSION}
 sudo make && sudo make install
