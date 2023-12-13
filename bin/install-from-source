@@ -57,12 +57,8 @@ function top_dir () {
 TOP=$(top_dir)
 
 if ! test -d "${TOP}"; then
-    if test "${SKIP:-}" != "${GPG_KEY_ID}"; then
+    if true; then
         test -f ${FNAME}.sig || wget ${URL}.sig
-        if test -n "${GPG_KEY_ID}"; then
-            gpg --recv-keys "${GPG_KEY_ID}" || \
-                gpg --keyserver keyserver.ubuntu.com --recv-keys "${GPG_KEY_ID}"
-        fi
         gpg --verify ${FNAME}{.sig,}
     fi
     if ! tar -C ${INSTALL_DIR} -xvf ${FNAME}; then
