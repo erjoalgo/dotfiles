@@ -4,8 +4,11 @@ set -euo pipefail
 
 UMOUNT=false
 
-while getopts "hub:" OPT; do
+while getopts "d:ub:h" OPT; do
     case ${OPT} in
+    d)
+        CHROOT=${OPTARG}
+        ;;
     u)
         UMOUNT=true
         ;;
@@ -20,7 +23,7 @@ while getopts "hub:" OPT; do
 done
 shift $((OPTIND -1))
 
-CHROOT=${1} && shift
+test -n "${CHROOT}"
 
 if test "${UMOUNT:-}" = true; then
     for DIR in ${CHROOT}/{sys,proc,boot,dev/pts,dev}; do
