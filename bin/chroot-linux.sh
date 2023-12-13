@@ -47,7 +47,7 @@ sudo mount --bind /dev "${CHROOT}/dev" || true
 sudo mount -t devpts /dev/pts "${CHROOT}/dev/pts" || true
 
 if test -n "${BOOT_PARTITION:-}"; then
-    sudo mount --bind "${BOOT_PARTITION}" "${ROOT}/boot" || true
+    sudo mount --bind "${BOOT_PARTITION}" "${CHROOT}/boot" || true
 fi
 
 sudo chroot "${CHROOT}"
