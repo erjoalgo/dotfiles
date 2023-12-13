@@ -2,12 +2,9 @@
 
 set -euo pipefail
 
-# URL=http://gnu.mirrors.pair.com/gnu/emacs/emacs-25.2.tar.gz
-# URL=http://gnu.mirrors.hoobly.com/emacs/emacs-25.2.tar.gz
-# URL=http://ftp.gnu.org/gnu/emacs/emacs-25.3.tar.xz
+URL=https://ftp.gnu.org/gnu/emacs/emacs-29.1.tar.xz
 
 EMACS_VERSION=27.2
-URL=https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz
 EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
 
 if false && emacs --version | grep -F "${EMACSS_VERSION}"; then
