@@ -4,10 +4,10 @@ set -euo pipefail
 
 URL=https://ftp.gnu.org/gnu/emacs/emacs-29.1.tar.xz
 
-EMACS_VERSION=27.2
+EMACS_VERSION=$(grep -Po '(?<=emacs-)[0-9]+[.][0-9]+' <<< "${URL}")
 EXT=$(grep -o "[.]tar..z$" <<< "${URL}")
 
-if false && emacs --version | grep -F "${EMACSS_VERSION}"; then
+if command -v emacs && emacs --version | grep -F "${EMACSS_VERSION}"; then
     echo emacs ${EMACS_VERSION} already installed
     exit 0
 fi
