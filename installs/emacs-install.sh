@@ -30,15 +30,8 @@ if command -v yum; then
     sudo yum install -y uuid-runtime
 elif command -v apt-get; then
     sudo apt-get build-dep -y emacs
-    sudo apt-get install -y aspell-es emacs-goodies-el
-    sudo apt-get install -y uuid-runtime || true
-    # gpg --keyserver hkps://keyserver.ubuntu.com --recv-key 91C1262F01EB8D39
-    curl -sSL https://www.gnutls.org/pgpkey-nmav.txt | gpg --import -
-    sudo apt-get install -y libgmp-dev
-    sudo apt-get install -y gnutls-dev libncurses5-dev
-    sudo apt-get install -y uuid-runtime
-
-    # install-from-source -u "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/gnutls-3.6.5.tar.xz"
+    sudo apt-get install -y aspell-es emacs-goodies-el uuid-runtime  \
+         libgmp-dev gnutls-dev libncurses5-dev uuid-runtime
 fi
 
 install-from-source -u ${URL} -g 7C207910
