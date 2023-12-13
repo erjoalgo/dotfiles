@@ -24,6 +24,7 @@ done
 shift $((OPTIND -1))
 
 test -n "${CHROOT}"
+CHROOT=$(sed 's|/$||' <<< "${CHROOT}")
 
 if test "${UMOUNT:-}" = true; then
     for DIR in ${CHROOT}/{sys,proc,boot,dev/pts,dev}; do
