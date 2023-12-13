@@ -22,3 +22,8 @@ sudo find /etc/apt/sources.list.d -type f -exec  \
      sed -i 's/non-free /non-free-firmware /g' {} \;
 
 sudo apt-get update
+
+sudo apt-get install -y linux-image-amd64
+
+sudo apt purge -y '~c'
+sudo apt purge -y '~o'
