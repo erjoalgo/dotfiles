@@ -27,11 +27,12 @@ shift $((OPTIND -1))
 sudo sysctl -w net.ipv4.ip_forward=1
 
 set -x
+
+sudo iptables -I FORWARD 1 -i ${IFACE_OUT} -o ${IFACE_SOURCE} -m state --state ESTABLISHED,RELATED -j ACCEPT
 for TARGET in NFLOG ACCEPT; do
     sudo iptables -I FORWARD 1 -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ${TARGET}
 done
 sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
-sudo iptables -A FORWARD -i ${IFACE_OUT} -o ${IFACE_SOURCE} -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 if test -n "${PERSIST:-}"; then
     sudo apt-get install -y iptables-persistent
