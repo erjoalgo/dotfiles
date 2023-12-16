@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
-while getopts "d:v:h" OPT; do
+while getopts "d:n:h" OPT; do
     case ${OPT} in
     d)
         RAW_DRIVE=${OPTARG}
+        ;;
+    n)
+        # optional
+        NAME=${OPTARG}
         ;;
     h)
         less $0
@@ -23,7 +27,8 @@ TOP=/var/vmdk
 
 sudo mkdir -p "${TOP}"
 
-VMDK=${TOP}/$(basename "${RAW_DRIVE}").vmdk
+NAME=${NAME:-$(basename "${RAW_DRIVE}")}.vmdk
+VMDK=${TOP}/${NAME}
 
 echo "attempting to close existing medium first if it exists..."
 sudo vboxmanage closemedium "${VMDK}" --delete || true
