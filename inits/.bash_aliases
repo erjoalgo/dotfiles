@@ -452,6 +452,9 @@ alias ufw-ls='sudo ufw status numbered'
 alias ufw-delete='ufw-ls; sudo ufw delete'
 
 
+alias iptables-list='sudo iptables -vnL --line-numbers | less'
+
+
 # Local Variables:
 # mode: sh
 # End:
