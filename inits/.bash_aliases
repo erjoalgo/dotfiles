@@ -168,6 +168,7 @@ alias gsl='git stash list'
 alias gsp='git stash pop'
 alias gsh='__git-commit-interactive-wrapper git stash'
 alias grvt='wte git-revert-HEAD'
+alias gcl='git clone'
 
 # never used
 # alias gm='git commit'
