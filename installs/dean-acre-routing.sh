@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+LOG_FILE=/tmp/routing.log
+exec &> >(tee -a "$LOG_FILE")
+
 while getopts "ih:" OPT; do
     case ${OPT} in
     i)
