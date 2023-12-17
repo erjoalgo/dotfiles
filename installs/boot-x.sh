@@ -153,7 +153,12 @@ pushd .
 cd ~/git/chromeurl/native
 source ~/.venv/bin/activate
 pip3 install -U .
-chromeurl --install-manifest all
+for _ in $(seq 2); do
+  if chromeurl --install-manifest all; then
+    break
+  fi
+  mkdir ~/.config/chromium
+fi
 popd
 
 echo success
