@@ -64,7 +64,7 @@ sudo mkdir -p $(dirname "${GDM_CONFIG_FILENAME}")
 sudo cat <<EOF | sudo tee "${GDM_CONFIG_FILENAME}"
 [User]
 Session=stumpwm
-Icon=$(realpath ../../data/public/.face)
+Icon=$(realpath ../data/public/.face)
 SystemAccount=false
 
 [InputSource0]
