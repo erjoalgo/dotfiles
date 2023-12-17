@@ -158,7 +158,7 @@ for _ in $(seq 2); do
     break
   fi
   mkdir ~/.config/chromium
-fi
+done
 popd
 
 echo success
