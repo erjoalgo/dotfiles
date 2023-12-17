@@ -12,12 +12,10 @@
 (export '(file-string) :STUMPWM)
 
 (defun machine-get-uuid ()
-  (let ((fstab (file-string #P"/etc/fstab")))
+  (let ((mount-output (run-shell-command "mount" t)))
     (cl-ppcre:register-groups-bind
-        (root-device-name root)
-        ("(?m)^([^	 ]+)[ 	]+(/)[	 ]+" fstab)
-      (declare (ignore root))
-      (assert fstab)
+        (root-device-name)
+        ("(?m)^([^	 ]+) on / " mount-output)
       (let* ((cmd (format nil "lsblk ~A -o uuid" root-device-name))
              (lsblk-out (run-shell-command cmd t))
              (uuid (second (cl-ppcre:split #\Newline lsblk-out))))
