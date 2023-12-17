@@ -135,7 +135,7 @@ insert-text-block '# 0d475bf3-8e6c-4ce3-a676-c07485f4fc5c-add-ledger-passwords-c
 export PATH+=:${HOME}/git/ledger-passwords-cli/
 EOF
 
-${HOME}/git/ledger-passwords-cli/install.sh
+${HOME}/git/ledger-passwords-cli/install.sh || true
 
 if ! which google-chrome chromium chrome; then
   sudo apt-get install -y chromium || sudo snap install chromium;
