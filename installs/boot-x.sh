@@ -161,4 +161,7 @@ for _ in $(seq 2); do
 done
 popd
 
+sudo apt-get purge -y pipewire-pulse
+sudo apt-get install -y pipewire-jack
+
 echo success
