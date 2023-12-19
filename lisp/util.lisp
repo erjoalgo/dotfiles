@@ -51,7 +51,8 @@
 (export '(trim-spaces) :STUMPWM)
 
 (defun string-blank-p (string)
-  (zerop (length (trim-spaces string))))
+  (or (null string)
+      (zerop (length (trim-spaces string)))))
 
 (defun log-timestamped-entry (entry fn)
   (with-open-file (fh fn
