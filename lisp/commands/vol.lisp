@@ -4,8 +4,8 @@
 
 (defun vol-find-backend ()
   (cond
-    ((which "amixer") :amixer)
     ((which "pactl") :pactl)
+    ((which "amixer") :amixer)
     (t (warn "no volume cli found"))))
 
 (defparameter *vol-backend* (vol-find-backend))
