@@ -12,11 +12,15 @@
 (defparameter *pulseaudio-default-sink-index* nil)
 
 (defun pulseaudio-sink-indices ()
-  (let ((output (run-shell-command "pacmd list-sinks" t))
-        indices)
-    (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^ +[*] +index: ([0-9]+)" output)
-      (push index indices))
-    (reverse indices)))
+  (or
+   (let* ((output (run-shell-command "pactl list sinks | grep -Po '(?<=^Sink #)[0-9]+'" t))
+          (sinks (ppcre:split #\Newline output)))
+     sinks)
+   (let ((output (run-shell-command "pacmd list-sinks" t))
+         indices)
+     (ppcre:do-register-groups ((#'parse-integer index)) ("(?m)^ +[*] +index: ([0-9]+)" output)
+       (push index indices))
+     (reverse indices))))
 
 (defun pulseaudio-default-sink-index ()
   (setf *pulseaudio-default-sink-index*
