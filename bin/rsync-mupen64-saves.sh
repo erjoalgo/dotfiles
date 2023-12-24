@@ -17,5 +17,5 @@ shift $((OPTIND -1))
 test -n "${HOST}"
 ping -c1 "${HOST}"
 SAVE_PATH=.local/share/mupen64plus/save/
-test -d "${HOME}/${SAVE_PATH}"
+mkdir -p "${HOME}/${SAVE_PATH}"
 rsync -rv --update "${HOST}:${SAVE_PATH}" "${HOME}/${SAVE_PATH}"
