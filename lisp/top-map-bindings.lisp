@@ -216,6 +216,7 @@
       ("M-H-q" "remove")
 
       ;;volume
+      ("XF86AudioMute" "vol-mute-toggle")
       ("XF86AudioLowerVolume" "vol-down")
       ("XF86AudioRaiseVolume" "vol-up")
 
