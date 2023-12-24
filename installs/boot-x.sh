@@ -8,7 +8,7 @@ sudo apt-get install -y dirmngr || true
 
 ./install-stumpwm.sh
 
-EMACS_MAJOR_VERSION=$(emacs --version | head -1 | grep -Po '(?<=GNU Emacs )[^.]+')
+EMACS_MAJOR_VERSION=$(emacs --version | head -1 | grep -Po '(?<=GNU Emacs )[^.]+') || true
 if ! test "${EMACS_MAJOR_VERSION}" -le 28; then
   if ! ./emacs-install.sh; then
     echo "warning: failed to build emacs from source"
