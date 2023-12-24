@@ -80,7 +80,14 @@
          :wait nil
          :search t))
        (:get (error "not implemented"))
-       (:mute-toggle (error "not implemented"))))
+       (:mute-toggle
+        (sb-ext:run-program
+         "pactl"
+         (list "set-sink-mute"
+               (format nil "~D" (pulseaudio-default-sink-index))
+               "toggle")
+         :wait nil
+         :search t))))
     (t (error "unknown backend ~A" backend))))
 
 (defcommand vol-up ()() "volume up"
