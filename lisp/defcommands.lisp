@@ -309,3 +309,6 @@
                         (message "keys are: ~A" keys)))
 
 (define-key *help-map* (kbd "k") "describe-key-+")
+
+(defcommand unmap-all-message-windows-command () ()
+  (unmap-all-message-windows))
