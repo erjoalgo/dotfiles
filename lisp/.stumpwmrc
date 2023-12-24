@@ -115,7 +115,7 @@
 (safe-sexp (progn (ql:quickload :swank)
                   (start-swank)))
 
-(safe-sexp (style-options-init :debugging t))
+(safe-sexp (style-options-init))
 
 (defun load-stumpwmrc-file (relative-path)
   (let ((source-directory
