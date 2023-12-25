@@ -217,12 +217,15 @@
 
       ;;volume
       ("XF86AudioMute" "vol-mute-toggle")
+      ("S-XF86AudioLowerVolume" "vol-mute-toggle")
       ("XF86AudioLowerVolume" "vol-down")
       ("XF86AudioRaiseVolume" "vol-up")
+      ("S-XF86AudioRaiseVolume" "audio-set-default-sink")
 
-      ("H-F8" "vol-mute-toggle")
+      ("H-S-F9" "vol-mute-toggle")
       ("H-F9" "vol-down")
       ("H-F10" "vol-up")
+      ("H-S-F10" "audio-set-default-sink")
       ("H-SPC" "speak-key")
 
       ("H-N" "gnext")
