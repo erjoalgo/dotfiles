@@ -9,7 +9,7 @@
     (t (warn "no volume cli found"))))
 
 (defparameter *vol-backend* (vol-find-backend))
-(defparameter *pulseaudio-default-sink-index* nil)
+(defparameter *audio-default-sink* nil)
 
 (defun pulseaudio-sink-indices ()
   (or
@@ -22,11 +22,48 @@
        (push index indices))
      (reverse indices))))
 
-(defun pulseaudio-default-sink-index ()
-  (setf *pulseaudio-default-sink-index*
-        (or *pulseaudio-default-sink-index*
-            (car (pulseaudio-sink-indices))
+(defstruct audio-sink
+  index
+  description
+  muted
+  ports)
+
+(defun audio-parse-sinks ()
+  (let ((output (run-shell-command "pactl list sinks" t))
+        sinks)
+    (ppcre:do-register-groups (index description muted ports)
+        ("(?sm)^Sink #([0-9]+).*?Description: ([^
+]+).*?Mute: +([^
+]+).*?Ports:[
+ 	]+([^
+]+)" output)
+      (push (make-audio-sink :index index :description description
+                             :muted (cond ((equal muted "yes") t)
+                                         ((equal muted "no") nil)
+                                         (t (error "unknown mute value: ~A" muted)))
+                             :ports ports) sinks))
+    sinks))
+
+
+(defun audio-select-sink ()
+  (selcand:select :candidates
+                  (audio-parse-sinks)
+                  :prompt "select audio sink: "
+                  :stringify-fn #'AUDIO-SINK-PORTS
+                  :display-candidates t
+                  :autoselect-if-single nil))
+
+(defun audio-get-default-sink (&key force)
+  (setf *audio-default-sink*
+        (or (unless force *audio-default-sink*)
+            (car (audio-parse-sinks))
             (error "no pulseaudio sinks found"))))
+
+(defcommand audio-set-default-sink () ()
+  "set the default sink"
+  (let ((sink (audio-select-sink)))
+    (setf *audio-default-sink* sink)
+    (run-command-async-notify "pactl" (list "set-default-sink" (audio-sink-index sink)))))
 
 (defun vol (action
             &key
@@ -70,7 +107,7 @@
         (sb-ext:run-program
          "pactl"
          (list "set-sink-volume"
-               (format nil "~D" (pulseaudio-default-sink-index))
+               (format nil "~D" (audio-sink-index (audio-get-default-sink)))
                (format nil "~A~D%"
                        (case action
                          (:set "")
@@ -81,13 +118,15 @@
          :search t))
        (:get (error "not implemented"))
        (:mute-toggle
-        (sb-ext:run-program
-         "pactl"
-         (list "set-sink-mute"
-               (format nil "~D" (pulseaudio-default-sink-index))
-               "toggle")
-         :wait nil
-         :search t))))
+        (let ((sink (audio-get-default-sink)))
+          (sb-ext:run-program
+           "pactl"
+           (list "set-sink-mute"
+                 (format nil "~D" (audio-sink-index sink))
+                 "toggle")
+           :wait nil
+           :search t)
+          (audio-sink-muted (audio-get-default-sink :force t))))))
     (t (error "unknown backend ~A" backend))))
 
 (defcommand vol-up ()() "volume up"
