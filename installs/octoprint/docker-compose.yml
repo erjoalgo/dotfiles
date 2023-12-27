@@ -10,7 +10,7 @@ services:
     devices:
       # use `python -m serial.tools.miniterm` to see what the name is of the printer, this requires pyserial
       - ${PRINTER_DEVICE}:/dev/ttyACM0
-      - /dev/video0:/dev/video0
+      - ${VIDEO_DEVICE}:/dev/video0
     volumes:
      - octoprint:/octoprint
     # uncomment the lines below to ensure camera streaming is enabled when
