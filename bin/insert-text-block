@@ -44,6 +44,9 @@ parser.add_argument("-p", "--parents", help = "make parent directories",
                     action="store_true")
 parser.add_argument("-e", "--echo", help = "echo contents to stdout",
                     action="store_true")
+parser.add_argument("-s", "--skip_closing_newline",
+                    help = "skip adding newline at the end of a file",
+                    action="store_true")
 
 args=parser.parse_args()
 
@@ -102,6 +105,9 @@ if not args.skip_separating_line:
         block = block + "\n"
 
 new_text="\n".join(b for b in (new_before, block, new_after) if b)
+
+if not args.skip_closing_newline and new_text and new_text[-1] != "\n":
+    new_text += "\n"
 
 with open( output, "w") as fh:
     fh.write(new_text)
