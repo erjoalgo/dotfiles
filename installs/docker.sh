@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+sudo usermod -aG docker ${USER}
+
 sudo apt-get update
 
 sudo apt-get install -y \
@@ -30,5 +32,4 @@ if ! grep '^docker' /etc/group; then
     sudo groupadd docker
 fi
 
-sudo usermod -aG docker ${USER}
 sudo -u ${USER} docker run hello-world
