@@ -20,7 +20,7 @@ while getopts "b:f:h" OPT; do
 done
 shift $((OPTIND -1))
 
-sudo apt-get install -y usbip
+command -v usbip || sudo apt-get install -y usbip
 sudo modprobe usbip_host
 
 if test -z "${DEVICE:-}"; then
