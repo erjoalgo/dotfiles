@@ -416,7 +416,7 @@ sagiy pgformatter
 
 pushd .
 cd ~/git/githost
-python3 setup.py install --user || true
+python3 setup.py install || true
 popd
 
 sagiy figlet
