@@ -455,7 +455,7 @@ source ~/.venv/bin/activate || true
 function maybe_setup_post_command_notification {
     if command -v notify-send-stumpwm >/dev/null \
             &&  \
-            timeout -s9 5 notify-send-stumpwm -m "connected to $(hostname)" -c green \
+            timeout -s9 5 notify-send-stumpwm -m "connected to $(hostname)" -c green > /dev/null\
        ; then
         PROMPT_COMMAND=post-command-maybe-notify
         trap '_command-start-time-set-maybe' DEBUG
