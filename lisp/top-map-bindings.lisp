@@ -95,6 +95,23 @@
           (uiop:native-namestring
            #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
 
+(define-run-or-pull-program "ledger-live"
+  :raise-key "H-t H-l"
+  :pull-key "H-t H-l"
+  :classes '("Ledger Live")
+  :cmd
+  (cond
+    ((which "ledger-live")
+     "ledger-live")
+    (t
+     (error "ledger live not found"))))
+
+(define-run-or-pull-program "audacity"
+  :raise-key "H-t H-a"
+  :pull-key "H-t H-a"
+  :classes '("Audacity")
+  :cmd "audacity")
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
