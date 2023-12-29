@@ -19,7 +19,7 @@ while getopts "r:f:h" OPT; do
 done
 shift $((OPTIND -1))
 
-sudo apt-get install -y usbip
+command -v usbip || sudo apt-get install -y usbip
 sudo modprobe vhci-hcd
 
 test -n "${REMOTE_SERVER_ADDRESS}"
