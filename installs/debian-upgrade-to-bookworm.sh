@@ -18,8 +18,10 @@ sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get full-upgrade -y
 
-sudo find /etc/apt/sources.list.d -type f -exec  \
-     sed -i 's/non-free /non-free-firmware /g' {} \;
+sudo find /etc/apt/ -type f -exec  \
+     sed -i 's/non-free\( \|$\)/non-free-firmware /g' {} \;
+
+sudo find /etc/apt/ -name '*.bak'  -exec rm {} +
 
 sudo apt-get update
 
