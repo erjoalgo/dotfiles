@@ -112,6 +112,12 @@
   :classes '("Audacity")
   :cmd "audacity")
 
+(define-run-or-pull-program "wireshark"
+  :raise-key "H-t H-w"
+  :pull-key "H-t H-w"
+  :classes '("Wireshark")
+  :cmd "wireshark")
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
