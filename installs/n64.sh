@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-sudo apt-get install -y mupen64plus-qt
 
 INI=/usr/share/games/mupen64plus/InputAutoCfg.ini
 ORIG="${INI}.orig"
