@@ -466,8 +466,8 @@ function maybe_setup_post_command_notification {
     fi
 }
 
-set +m; { maybe_setup_post_command_notification 1>&2 > /dev/null & }
-set -m;
+set -m; { maybe_setup_post_command_notification 1>&2 > /dev/null & }
+set +m;
 
 function jar-to-classes {
     for JAR in ${*}; do
