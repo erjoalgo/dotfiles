@@ -3,7 +3,7 @@ version: '2.4'
 services:
   octoprint:
     image: octoprint/octoprint
-    restart: unless-stopped
+    restart: always
     ports:
       - $PORT:80
       - 0.0.0.0:5000:5000
