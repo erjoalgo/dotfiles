@@ -454,7 +454,7 @@ alias ufw-delete='ufw-ls; sudo ufw delete'
 
 
 alias iptables-list='sudo iptables -vnL --line-numbers | less'
-
+alias ssh-universal='ledger-agent -vs erjoalgo@gmail.com'
 
 # Local Variables:
 # mode: sh
