@@ -34,6 +34,7 @@
         :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
         :cmd eclipse-cmd
         :raise-key "H-r")))
+        :pull-key "H-t H-R")))
 
 (define-run-or-pull-program "zathura"
   :classes '("Zathura")
