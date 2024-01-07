@@ -312,3 +312,20 @@
 
 (defcommand unmap-all-message-windows-command () ()
   (unmap-all-message-windows))
+
+(defun password-id-from-url (url)
+  (let* ((host (multiple-value-bind (scheme user host)
+                   (quri:parse-uri url)
+                 host))
+         (components (ppcre:split "[.]" host))
+         (password-id (second (reverse components))))
+    password-id))
+
+(defcommand ledger-password-backup-restore
+    ;; (password-id) ((:string ))
+    () ()
+  (let* ((url (mozrepl:chrome-get-url))
+         (password-id
+           (read-one-line (current-screen) "enter ledger password id: "
+                          :initial-input (if url (password-id-from-url url) ""))))
+    (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
