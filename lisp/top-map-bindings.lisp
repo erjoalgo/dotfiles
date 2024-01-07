@@ -54,9 +54,10 @@
   :pull-key "H-o"
   :raise-key "H-O")
 
-(define-run-or-pull-program "eboard"
+(define-run-or-pull-program "emulator-run.sh"
   :raise-key "H-t H-e"
   :pull-key "H-t H-E"
+  :cmd "emulator-run.sh"
   :classes '("eboard" "Eboard"))
 
 (define-run-or-pull-program "signal-desktop"
