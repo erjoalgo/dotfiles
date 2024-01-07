@@ -24,10 +24,11 @@
     :classes emacs-classes)
 
 (let ((eclipse-cmd
-       (first-existing-command
-        "eclipse"
-        "android-studio"
-        "STS")))
+        (first-existing-command
+         "eclipse"
+         "android-studio"
+         "STS"
+         "studio.sh")))
   (when eclipse-cmd
     (define-run-or-pull-program "android-studio"
         :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
