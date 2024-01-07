@@ -1,5 +1,5 @@
 [Appearance]
-ColorScheme=BlackOnLightYellow
+ColorScheme=Linux
 Font=monospace,35,-1,2,50,0,0,0,0,0
 
 [General]
