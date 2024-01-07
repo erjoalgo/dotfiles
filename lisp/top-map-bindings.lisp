@@ -31,10 +31,10 @@
          "studio.sh")))
   (when eclipse-cmd
     (define-run-or-pull-program "android-studio"
-        :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
-        :cmd eclipse-cmd
-        :raise-key "H-r")))
-        :pull-key "H-t H-R")))
+      :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
+      :cmd (list "sudo" "-u" "ealfonso" eclipse-cmd)
+      :raise-key "H-t H-r"
+      :pull-key "H-t H-R")))
 
 (define-run-or-pull-program "zathura"
   :classes '("Zathura")
