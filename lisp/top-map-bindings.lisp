@@ -78,9 +78,15 @@
                     "cura"
                     (car (directory #P"~/Downloads/Creality*.AppImage")))))
 
-(define-run-or-pull-program "vnc"
+(define-run-or-pull-program "xournal"
   :raise-key "H-t H-x"
   :pull-key "H-t H-x"
+  :classes '("Xournal")
+  :cmd nil)
+
+(define-run-or-pull-program "vnc"
+  :raise-key "H-t H-t"
+  :pull-key "H-t H-t"
   :classes '("Vncviewer")
   :cmd nil)
 
