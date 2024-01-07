@@ -115,6 +115,12 @@
     (t
      (error "ledger live not found"))))
 
+(define-run-or-pull-program "linphone"
+  :raise-key "H-t H-p"
+  :pull-key "H-t H-p"
+  :classes '("linphone")
+  :cmd "linphone")
+
 (define-run-or-pull-program "audacity"
   :raise-key "H-t H-a"
   :pull-key "H-t H-a"
