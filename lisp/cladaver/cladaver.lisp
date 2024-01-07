@@ -26,6 +26,10 @@
   (with-slots (base-url username password) info
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
+                (cmd `("curl"
+                       "-s"
+                       ,(format nil "-u~A:~A" username password)
+                       "-XPROPFIND" "-HDepth:1" ,url))
                 (raw-resp
                  ;; (http-request-or-error url
                  ;;                        :method :PROPFIND
@@ -34,10 +38,7 @@
                  ;;                                               (list username password)))
                  (with-output-to-string (fh)
                    (sb-ext:run-program
-                    "curl"
-                    `("-s"
-                      ,(format nil "-u~A:~A" username password)
-                      "-XPROPFIND" "-HDepth:1" ,url)
+                    (car cmd) (cdr cmd)
                     :search t :output fh)))
                 (doc (cxml:parse raw-resp (stp:make-builder)))
                 (nodeset
