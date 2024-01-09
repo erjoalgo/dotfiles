@@ -343,7 +343,7 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
 alias svlogs='sudo journalctl -feu'
-alias svlogs-user='sudo journalctl --user -feu'
+alias svlogs-user='journalctl --user -feu'
 alias svless='sudo journalctl -u'
 complete-alias _service svlogs service
 complete-alias _service svless service
