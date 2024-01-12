@@ -395,12 +395,18 @@ function docker-working-dir {
     docker inspect "${CONTAINER}" | jq -r '.[0].Config.WorkingDir'
 }
 
-function docker-cp {
+function docker-push {
+    LOCAL_PATH=${1} && shift
     CONTAINER=$(docker-select-container)
     WORKDIR=$(docker-working-dir "${CONTAINER}")
-    SOURCE=${1} && shift
-    DEST=${1} && shift
-    docker cp "${SOURCE}" "${CONTAINER}:${WORKDIR}/${DEST}"
+    docker cp "${LOCAL_PATH}" "${CONTAINER}:${WORKDIR}/"
+}
+
+function docker-pull {
+    CONTAINER_RELPATH=${1} && shift
+    CONTAINER=$(docker-select-container)
+    WORKDIR=$(docker-working-dir "${CONTAINER}")
+    docker cp "${CONTAINER}:${WORKDIR}/${CONTAINER_RELPATH}" "./"
 }
 
 function docker-kill {
