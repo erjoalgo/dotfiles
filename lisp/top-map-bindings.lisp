@@ -127,6 +127,14 @@
   :classes '("Audacity")
   :cmd "audacity")
 
+(define-run-or-pull-program "scrcpy"
+  :raise-key "H-t H-a"
+  :pull-key "H-t H-a"
+  :classes '("scrcpy")
+  :cmd (lambda ()
+         (let ((device-id (adb-select-device)))
+           (list "scrcpy" "-s" device-id "--shortcut-mod=lalt" "-S"))))
+
 (define-run-or-pull-program "wireshark"
   :raise-key "H-t H-w"
   :pull-key "H-t H-w"

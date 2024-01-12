@@ -329,3 +329,15 @@
            (read-one-line (current-screen) "enter ledger password id: "
                           :initial-input (if url (password-id-from-url url) ""))))
     (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
+
+
+(defun adb-select-device () ()
+  (let* ((device-line
+           (selcand:select
+            :candidates (->> (run-shell-command "adb devices" t)
+                             (ppcre:split #\Newline)
+                             (cdr))
+            :prompt "select adb device: "
+            :display-candidates t))
+         (device-id (car (ppcre:split #\Tab device-line))))
+    device-id))
