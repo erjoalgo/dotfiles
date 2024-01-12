@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+set -euo pipefail
+DEVICES=$(adb devices)
+echo "${DEVICES}" 1>&2
+
+echo "select adb device: " 1>&2
+DEVICES=$(grep -vF 'List of devices attached'  <<< "${DEVICES}"| \
+              cut -f1 -d' ')
+select DEVICE in ${DEVICES}; do
+    break
+done
+
+echo "${DEVICE}"
+# Local Variables:
+# mode: sh-mode
+# End:
