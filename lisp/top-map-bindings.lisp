@@ -122,8 +122,8 @@
   :cmd "linphone")
 
 (define-run-or-pull-program "audacity"
-  :raise-key "H-t H-a"
-  :pull-key "H-t H-a"
+  :raise-key "H-t H-y"
+  :pull-key "H-t H-y"
   :classes '("Audacity")
   :cmd "audacity")
 
