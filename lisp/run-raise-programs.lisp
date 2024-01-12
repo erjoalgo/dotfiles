@@ -43,10 +43,7 @@ seconds ago")
                                        (position (string-downcase (window-class win))
                                                  win-classes :test #'equal))))
 	 (cand-no-curr (car (remove curr-win cands)))
-         (cmd-list (if (listp cmd-line)
-                       cmd-line
-                       (when cmd-line
-                         (ppcre:split " +" cmd-line)))))
+         cmd-list)
     (if cand-no-curr
 	(progn (funcall (if pull-p 'pull-window
 			    'raise-window)
@@ -54,6 +51,11 @@ seconds ago")
 	       (focus-all cand-no-curr))
 	(when (and cmd-line
                    (not (funcall win-matches curr-win)))
+          (setf cmd-list
+                (when cmd-line
+                  (cond ((listp cmd-line) cmd-line)
+                        ((stringp cmd-line) (ppcre:split " +" cmd-line))
+                        ((functionp cmd-line) (funcall cmd-line)))))
           (destructuring-bind (command . args)
               (loop for arg in cmd-list
                     collect
