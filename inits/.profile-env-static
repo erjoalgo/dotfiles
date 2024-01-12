@@ -1,5 +1,9 @@
 export GNUPGHOME="${HOME}/.gnupg/ledger"
 
+export PATH="${PATH}:${HOME}/src/android-studio/bin/"
+export PATH="${PATH}:${HOME}/Android/Sdk/emulator/"
+export PATH="${PATH}:${HOME}/Android/Sdk/platform-tools/"
+
 # Local Variables:
 # mode: sh-mode
 # End:
