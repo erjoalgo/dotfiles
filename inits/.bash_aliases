@@ -462,8 +462,23 @@ alias ufw-delete='ufw-ls; sudo ufw delete'
 
 alias iptables-list='sudo iptables -vnL --line-numbers | less'
 alias ssh-universal='ledger-agent -vs erjoalgo@gmail.com'
-alias bolos-dev='docker run --rm -ti --user "$(id -u):$(id -g)" -v "$(realpath .):/app" ghcr.io/ledgerhq/ledger-app-builder/ledger-app-dev-tools:latest'
 
+function bolos-app-build {
+    docker run --rm -ti --user "$(id -u):$(id -g)" -v "$(realpath .):/app" \
+           ghcr.io/ledgerhq/ledger-app-builder/ledger-app-dev-tools:latest \
+           make DEBUG=1
+    docker-pull bin/app.elf
+}
+
+function bolos-app-run {
+    ELF=${1} && shift
+    docker run --rm -it -v $(pwd)/apps:/speculos/apps \
+           --publish 41000:41000  \
+           speculos \
+           --display headless \
+           --vnc-port 41000 \
+           ${ELF}
+}
 
 # Local Variables:
 # mode: sh
