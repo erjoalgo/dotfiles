@@ -1,0 +1,40 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "s:h" OPT; do
+    case ${OPT} in
+    s)
+        SERVER=${OPTARG}
+        ;;
+    p)
+        REMOTE_LISTEN_PORT=${OPTARG}
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+REMOTE_LISTEN_PORT=${REMOTE_LISTEN_PORT:-2222}
+
+install-systemd-service.sh ssh-tunnel-${SERVER} <<EOF
+[Unit]
+Description=ssh tunnel to workstation to expose an ssh service
+
+[Service]
+ExecStart=/home/ealfonso/git/dotfiles/bin/ssh-expose-local-port ${SERVER} -l 22:${REMOTE_LISTEN_PORT}
+User=$(whoami)
+Restart=on-failure
+RestartSec=30s
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Local Variables:
+# mode: sh-mode
+# mode: sh-mode
+# End:
