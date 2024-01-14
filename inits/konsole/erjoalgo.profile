@@ -1,5 +1,5 @@
 [Appearance]
-ColorScheme=Linux
+ColorScheme=DarkPastels
 Font=monospace,35,-1,2,50,0,0,0,0,0
 
 [General]
