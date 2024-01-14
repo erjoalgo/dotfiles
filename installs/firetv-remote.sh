@@ -4,7 +4,7 @@ set -euo pipefail
 
 REPO=${HOME}/git/firetv-remote
 
-test -d "${REPO}" || git clone github.com/erjoalgo/firetv-remote "${REPO}"
+test -d "${REPO}" || git clone ssh://git@github.com/erjoalgo/firetv-remote "${REPO}"
 cd "${REPO}"
 git checkout insignia
 git pull --ff-only
