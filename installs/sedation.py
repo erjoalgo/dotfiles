@@ -31,6 +31,7 @@ class InputDetector(object):
 
     def has_new_input(self):
         count = 0
+        self.update_input_fh_map()
         for k in self.fh_map.keys():
             fh = self.fh_map[k]
             try:
