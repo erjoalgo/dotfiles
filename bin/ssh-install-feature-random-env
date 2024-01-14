@@ -16,6 +16,7 @@ fi
 
 cd "${LOCAL_REPO}"
 
+git set-url fork https://github.com/erjoalgo/openssh-portable
 git fetch fork
 git checkout non-debian
 if git pull fork --ff-only non-debian; then
