@@ -42,19 +42,14 @@ fi
 
 if test ${MINS} -lt 10; then
     echo "taking no sedating action"
-elif command -v light-locker-command; then
-    light-locker-command -l
-elif command -v xsecurelock; then
-    if ! pgrep xsecurelock; then
-        export DISPLAY=:0
-        xhost +SI:localuser:root
-        nohup xsecurelock &
-        disown
-    fi
 elif pgrep X; then
-    echo "no desktop locker found!" && exit ${LINENO}
+    export DISPLAY=:0
+    export XAUTHORITY=${XAUTHORITY:-${HOME}/.Xauthority}
+    xhost +SI:localuser:root || true
+    nohup bash -c "light-locker-command -l || xsecurelock" &
+    disown
 else
-    echo "no desktop locker found but no X server"
+    echo "no X server"
 fi
 
 # Local Variables:
