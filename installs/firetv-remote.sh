@@ -8,7 +8,8 @@ test -d "${REPO}" || git clone ssh://git@github.com/erjoalgo/firetv-remote "${RE
 cd "${REPO}"
 git checkout insignia
 git pull --ff-only
-
+cd ${REPO}
+npm install
 
 install-systemd-service.sh -u firetv <<EOF
 [Unit]
