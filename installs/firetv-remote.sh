@@ -28,6 +28,7 @@ WorkingDirectory=${REPO}
 WantedBy=default.target
 EOF
 
+systemctl --user restart firetv
 
 # Local Variables:
 # mode: sh-mode
