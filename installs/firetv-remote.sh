@@ -13,7 +13,7 @@ npm install
 
 install-systemd-service.sh -u firetv <<EOF
 [Unit]
-Description=redshift
+Description=firetv remote
 After=default.target
 
 [Service]
