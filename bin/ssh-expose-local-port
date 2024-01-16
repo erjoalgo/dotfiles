@@ -8,13 +8,15 @@ function usage  {
 
 SSH_HOST_SPEC="${1}" && shift
 
-while getopts "l:h" OPT; do
+ALL_INTERFACES_OPT=""
+
+while getopts "l:ah" OPT; do
     case ${OPT} in
+        a)
+            ALL_INTERFACES_OPT=0.0.0.0:
+            ;;
         l)
-            LOCAL_FORWARD_PORT=$(cut -d: -f1  <<< "${OPTARG}")
-            REMOTE_LISTEN_PORT=$(cut -d: -f2  <<< "${OPTARG}")
-            REMOTE_LISTEN_PORT=${REMOTE_LISTEN_PORT:-$LOCAL_FORWARD_PORT}
-            FORWARD_SPEC+="-R ${REMOTE_LISTEN_PORT}:localhost:${LOCAL_FORWARD_PORT} "
+            LOCAL_FORWARD_PORT_FLAGS+=${OPTARG}
             ;;
         h)
             less $0
@@ -24,11 +26,18 @@ while getopts "l:h" OPT; do
 done
 shift $((OPTIND -1))
 
-
-if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_FORWARD_PORT:-}"; then
+if test -z "${SSH_HOST_SPEC:-}" -o -z "${LOCAL_FORWARD_PORT_FLAG:-}"; then
     usage
     exit ${LINENO}
 fi
+
+for LOCAL_FORWARD_PORT_FLAG in ${LOCAL_FORWARD_PORT_FLAGS}; do
+    LOCAL_FORWARD_PORT=$(cut -d: -f1  <<< "${LOCAL_FORWARD_PORT_FLAG}")
+    REMOTE_LISTEN_PORT=$(cut -d: -f2  <<< "${LOCAL_FORWARD_PORT_FLAG}")
+    REMOTE_LISTEN_PORT=${REMOTE_LISTEN_PORT:-$LOCAL_FORWARD_PORT}
+    FORWARD_SPEC+="-R ${ALL_INTERFACES_OPT}${REMOTE_LISTEN_PORT}:localhost:${LOCAL_FORWARD_PORT} "
+done
+
 
 ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
 
