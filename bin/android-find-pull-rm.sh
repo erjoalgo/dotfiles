@@ -1,9 +1,13 @@
 #!/bin/bash -x
 
-while getopts "n:h" OPT; do
+ADB_CMD=adb
+while getopts "n:s:h" OPT; do
     case ${OPT} in
         n)
             NO_PULL=true
+            ;;
+        s)
+            ADB_CMD="adb -s ${OPTARG}"
             ;;
         h)
             # example to pull videos and images:
@@ -15,14 +19,12 @@ while getopts "n:h" OPT; do
 done
 shift $((OPTIND -1))
 
+${ADB_CMD} shell command -v find
 
-adb shell command -v find
-
-export ADB_CMD=adb
+export ADB_CMD
 
 if test -z "${NO_PULL:-}"; then
-    sudo adb shell "find ${@}" \
-        | xargs -L1 $(which adb-pull-rm.sh)
+    ${ADB_CMD} shell "find ${@}" | xargs -L1 $(which adb-pull-rm.sh)
 else
-    sudo adb shell "find ${@}"
+    ${ADB_CMD} shell "find ${@}"
 fi
