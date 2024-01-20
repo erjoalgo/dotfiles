@@ -44,7 +44,7 @@
 
 (define-run-or-pull-program "virtualbox"
   :classes '("VirtualBox Machine" "VirtualBox Manager" "Virt-manager")
-        :cmd "virtualbox"
+        :cmd "virt-manager"
   :raise-key "H-t H-v"
   :pull-key "H-t H-V")
 
