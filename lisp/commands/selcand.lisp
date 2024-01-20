@@ -39,7 +39,7 @@
                  read-char-if-possible)
   "Use PROMPT to prompt for a selection from CANDIDATES."
   (assert (or candidates hints-candidates) nil on-empty-error)
-  (assert (not (and candidates hints-candidates)))
+  (assert (alexandria:xor candidates hints-candidates))
   (let* ((hints-cands
           (cond
             (hints-candidates hints-candidates)
