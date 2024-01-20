@@ -1,0 +1,61 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+while getopts "h" OPT; do
+    case ${OPT} in
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+COMMAND=docker-${1} && shift
+
+function docker-select-container {
+    echo "select docker container: " 1>&2
+    IFS=$'\n'
+    select LINE in $(docker compose ps) $(docker ps); do
+        break
+    done
+    cut -f1 -d' ' <<< "${LINE}"
+}
+
+function docker-bash {
+    CONTAINER=$(docker-select-container)
+    docker exec -it --user root "${CONTAINER}" bash
+}
+
+function docker-working-dir {
+    CONTAINER=${1} && shift
+    if ! command -v jq > /dev/null; then
+        sudo apt-get install -y jq
+    fi
+    test -z "${CONTAINER:-}"
+    docker inspect "${CONTAINER}" | jq -r '.[0].Config.WorkingDir'
+}
+
+function docker-push {
+    LOCAL_PATH=${1} && shift
+    CONTAINER=$(docker-select-container)
+    WORKDIR=$(docker-working-dir "${CONTAINER}")
+    docker cp "${LOCAL_PATH}" "${CONTAINER}:${WORKDIR}/"
+}
+
+function docker-pull {
+    CONTAINER_RELPATH=${1} && shift
+    CONTAINER=$(docker-select-container)
+    WORKDIR=$(docker-working-dir "${CONTAINER}")
+    docker cp "${CONTAINER}:${WORKDIR}/${CONTAINER_RELPATH}" "./"
+}
+
+function docker-kill {
+    docker kill $(docker-select-container)
+}
+
+${COMMAND} ${*}
+
+# Local Variables:
+# mode: sh-mode
+# End:

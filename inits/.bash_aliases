@@ -372,47 +372,6 @@ function android-pull-rm-media {
     android-find-pull-rm.sh sdcard/DCIM -name "'*mp4'" -o -name "'*jpg'"
 }
 
-function docker-select-container {
-    echo "select docker container: " 1>&2
-    IFS=$'\n'
-    select LINE in $(docker compose ps) $(docker ps); do
-        break
-    done
-    cut -f1 -d' ' <<< "${LINE}"
-}
-
-function docker-bash {
-    CONTAINER=$(docker-select-container)
-    docker exec -it --user root "${CONTAINER}" bash
-}
-
-function docker-working-dir {
-    CONTAINER=${1} && shift
-    if ! command -v jq > /dev/null; then
-        sudo apt-get install -y jq
-    fi
-    test -z "${CONTAINER:-}"
-    docker inspect "${CONTAINER}" | jq -r '.[0].Config.WorkingDir'
-}
-
-function docker-push {
-    LOCAL_PATH=${1} && shift
-    CONTAINER=$(docker-select-container)
-    WORKDIR=$(docker-working-dir "${CONTAINER}")
-    docker cp "${LOCAL_PATH}" "${CONTAINER}:${WORKDIR}/"
-}
-
-function docker-pull {
-    CONTAINER_RELPATH=${1} && shift
-    CONTAINER=$(docker-select-container)
-    WORKDIR=$(docker-working-dir "${CONTAINER}")
-    docker cp "${CONTAINER}:${WORKDIR}/${CONTAINER_RELPATH}" "./"
-}
-
-function docker-kill {
-    docker kill $(docker-select-container)
-}
-
 alias dcl='docker compose logs -f'
 alias dcps='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
@@ -469,6 +428,8 @@ function bolos-app-build {
            make DEBUG=1
     docker-pull bin/app.elf
 }
+alias docker-pull='docker-util pull'
+alias docker-push='docker-util push'
 
 function bolos-app-run {
     ELF=${1} && shift
