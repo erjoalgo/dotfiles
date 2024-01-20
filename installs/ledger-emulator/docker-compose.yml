@@ -1,0 +1,16 @@
+# docker pull ghcr.io/ledgerhq/speculos
+# docker image tag ghcr.io/ledgerhq/speculos speculos
+# And run the image with a few arguments from the root of the speculos project:
+# docker run --rm -it -v $(pwd)/apps:/speculos/apps --publish 41000:41000 speculos --display headless --vnc-port 41000 apps/btc.elf
+
+services:
+  speculos:
+    image: ghcr.io/ledgerhq/speculos
+    # restart: always
+    ports:
+      - 41000:41000
+    volumes:
+     - speculos:/speculos/apps
+    entrypoint: /speculos/speculos.py --display headless --vnc-port 41000 -m nanos /speculos/speculos/cxlib/nanos-cx-2.0.elf
+volumes:
+  speculos:
