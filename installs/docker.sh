@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+if ! grep '^docker' /etc/group; then
+    sudo groupadd docker
+fi
 sudo usermod -aG docker ${USER}
 
 sudo apt-get update
@@ -27,9 +30,5 @@ EOF
 sudo apt-get update
 
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-if ! grep '^docker' /etc/group; then
-    sudo groupadd docker
-fi
 
 sudo -u ${USER} docker run hello-world
