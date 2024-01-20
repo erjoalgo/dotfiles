@@ -425,15 +425,6 @@ alias ssh-universal='ledger-agent -vs erjoalgo@gmail.com'
 alias docker-pull='docker-util pull'
 alias docker-push='docker-util push'
 
-function bolos-app-run {
-    ELF=${1} && shift
-    docker run --rm -it -v $(pwd)/apps:/speculos/apps \
-           --publish 41000:41000  \
-           speculos \
-           --display headless \
-           --vnc-port 41000 \
-           ${ELF}
-}
 
 # Local Variables:
 # mode: sh
