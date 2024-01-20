@@ -33,10 +33,12 @@
                  (prompt "select candidate: ")
                  (stringify-fn #'prin1-to-string)
                  (autoselect-if-single t)
+                 (on-empty-error "No candidates available!")
                  no-hints
                  display-candidates
                  read-char-if-possible)
   "Use PROMPT to prompt for a selection from CANDIDATES."
+  (assert (or candidates hints-candidates) nil on-empty-error)
   (assert (not (and candidates hints-candidates)))
   (let* ((hints-cands
           (cond

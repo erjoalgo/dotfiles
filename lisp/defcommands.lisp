@@ -338,6 +338,7 @@
                              (ppcre:split #\Newline)
                              (cdr))
             :prompt "select adb device: "
-            :display-candidates t))
+            :display-candidates t
+            :on-empty-error "no adb devices found!"))
          (device-id (car (ppcre:split #\Tab device-line))))
     device-id))
