@@ -131,7 +131,7 @@
 
 (defcommand vol-up ()() "volume up"
             (vol :up)
-            (message-wrapped "volup"))
+            (message-wrapped "🔊"))
 
 (defcommand vol-down ()() "volume down"
             (vol :down)
