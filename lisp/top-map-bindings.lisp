@@ -129,7 +129,8 @@
 
 (define-run-or-pull-program "scrcpy"
   :raise-key "H-t H-a"
-  :pull-key "H-t H-a"
+  :pull-key "H-t H-A"
+  :run-key "H-t C-H-a"
   :classes '("scrcpy")
   :cmd (lambda ()
          (let ((device-id (adb-select-device)))
