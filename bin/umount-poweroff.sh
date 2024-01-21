@@ -49,4 +49,8 @@ for MOUNT_POINT in \
     sudo umount ${MOUNT_POINT}
 done
 
+if ! command -v udisksctl; then
+    sudo apt-get install -y udisks2
+fi
+
 sudo udisksctl power-off --block-device ${BLOCK_DEVICE}
