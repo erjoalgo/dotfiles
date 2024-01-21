@@ -12,7 +12,7 @@ ADB_CMD=${ADB_CMD:-"adb"}
 FILE="${*}"
 echo ${FILE}
 ANDROID_PATH="${PATH_PREFIX}/$(tr -d '\r' <<< ${FILE})"
-NAME=$(basename "${ANDROID_PATH}")
+LOCAL_NAME=$(sed 's|//*|/|g'  <<< "$(pwd)/${ANDROID_PATH}")
 
 # TODO make sure 'adb shell ls' succeeds
 OUT=$(${ADB_CMD} shell ls "\"${ANDROID_PATH}\"")
@@ -23,11 +23,12 @@ if grep -i "no such file\|does not exist" <<< "${OUT}"; then
     exit ${LINENO}
 fi
 
-if ! test -e "${NAME}"; then
-    ${ADB_CMD} pull "${ANDROID_PATH}"
+if ! test -e "${LOCAL_NAME}"; then
+    mkdir -p $(dirname "${LOCAL_NAME}")
+    ${ADB_CMD} pull "${ANDROID_PATH}" "${LOCAL_NAME}"
 fi
 
-MD5_HDD=$(md5sum "${NAME}" | tr ' ' '\t' | cut -f1)
+MD5_HDD=$(md5sum "${LOCAL_NAME}" | tr ' ' '\t' | cut -f1)
 MD5_ANDROID=$(${ADB_CMD} shell md5sum "\"${ANDROID_PATH}\"" | tr ' ' '\t' | cut -f1)
 
 if test "${MD5_ANDROID}" = "${MD5_HDD}"; then
@@ -36,5 +37,5 @@ if test "${MD5_ANDROID}" = "${MD5_HDD}"; then
 else
     echo "unexpected checksum for ${ANDROID_PATH}: ${MD5_ANDROID} vs ${MD5_HDD}"
     echo "${ANDROID_PATH}\t$(${ADB_CMD} shell du -b ${ANDROID_PATH})"
-    echo "${NAME}\t$(du -b ${NAME})"
+    echo "${LOCAL_NAME}\t$(du -b ${LOCAL_NAME})"
 fi
