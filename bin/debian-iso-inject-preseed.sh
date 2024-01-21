@@ -7,6 +7,7 @@ while getopts "hi:p:" OPT; do
     i)
         ISO=${OPTARG}
         ;;
+    # optional
     p)
         PRESEED=${OPTARG}
         ;;
@@ -21,10 +22,13 @@ while getopts "hi:p:" OPT; do
 done
 shift $((OPTIND -1))
 
-if test -z "${ISO:-}" -o -z "${PRESEED:-}"; then
-    echo "usage: $(basename $0) -i <ISO> -p <PRESEED_FILE>"
+if test -z "${ISO:-}" -o ! -e "${ISO}"; then
+    echo "usage: $(basename $0) -i <ISO>"
     exit ${LINENO}
 fi
+
+PRESEED=${PRESEED:-${HOME}/git/dotfiles/data/public/debian-preseed.cfg}
+test -e "${PRESEED}"
 
 OUTPUT=${OUTPUT:-$(pwd)/preseeded-$(basename "${ISO}")}
 
