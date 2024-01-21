@@ -32,15 +32,11 @@ test -e "${PRESEED}"
 
 OUTPUT=${OUTPUT:-$(pwd)/preseeded-$(basename "${ISO}")}
 
-# sudo apt-get install -y p7zip-full udevil
-# sudo apt-get install -y udevil genisoimage
 sudo apt-get install -y p7zip-full genisoimage syslinux-utils isolinux
 
 DIR=$(mktemp -d)
 
 7z x "-o${DIR}" "${ISO}"
-# udevil mount "${ISO}"
-# cp -rT /media/$(basename "${ISO}") .
 
 cd "${DIR}"
 
