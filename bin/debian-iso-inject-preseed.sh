@@ -10,6 +10,9 @@ while getopts "hi:p:" OPT; do
     p)
         PRESEED=${OPTARG}
         ;;
+    o)
+        OUTPUT=${OPTARG}
+        ;;
     h)
         less $0
         exit 0
@@ -23,6 +26,7 @@ if test -z "${ISO:-}" -o -z "${PRESEED:-}"; then
     exit ${LINENO}
 fi
 
+OUTPUT=${OUTPUT:-$(pwd)/preseeded-$(basename "${ISO}")}
 
 # sudo apt-get install -y p7zip-full udevil
 # sudo apt-get install -y udevil genisoimage
@@ -63,8 +67,6 @@ find -follow -type f ! -name md5sum.txt -print0 |  \
 chmod -w md5sum.txt
 
 cd ..
-
-OUTPUT=$(pwd)/preseeded-$(basename "${ISO}")
 
 genisoimage -r -J -b  \
             isolinux/isolinux.bin -c isolinux/boot.cat \
