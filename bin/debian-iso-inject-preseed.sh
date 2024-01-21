@@ -39,16 +39,18 @@ DIR=$(mktemp -d)
 7z x "-o${DIR}" "${ISO}"
 
 cd "${DIR}"
+chmod +w -R install*/
 
-chmod +w -R install.*/
+INITRD_GZ=$(echo $(pwd)/install*/initrd.gz)
+INITRD="${INITRD_GZ%.*}"
 
-gunzip install.*/initrd.gz
+gunzip "${INITRD_GZ}"
 
 PRESEED_CFG=preseed.cfg
 cp "${PRESEED}" "${PRESEED_CFG}"
-echo "${PRESEED_CFG}" | cpio -H newc -o -A -F install.*/initrd
+echo "${PRESEED_CFG}" | cpio -H newc -o -A -F "${INITRD}"
 
-INITRD=$(echo $(pwd)/install.*/initrd)
+# show a diff with the original preseed.cfg file
 pushd .
 cd $(mktemp -d)
 cp "${INITRD}" .
@@ -56,9 +58,9 @@ cpio -idv < ./initrd || true
 diff "${PRESEED}" preseed.cfg
 popd
 
-gzip install.*/initrd
+gzip "${INITRD}"
 
-chmod -w -R install.*/
+chmod -w -R install*/
 
 chmod +w md5sum.txt
 
