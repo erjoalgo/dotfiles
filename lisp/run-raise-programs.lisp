@@ -38,13 +38,14 @@ seconds ago")
 			(when win
                           (member (string-downcase (window-class win))
 				win-classes :test #'equal))))
+         (curr-screen-matches-p (funcall win-matches curr-win))
 	 (cands (remove-if-not win-matches win-list))
          (cands (sort cands #'< :key (lambda (win)
                                        (position (string-downcase (window-class win))
                                                  win-classes :test #'equal))))
 	 (cand-no-curr (car (remove curr-win cands)))
          cmd-list)
-    (when (and (null cand-no-curr) cmd-line)
+    (when (and (null cand-no-curr) cmd-line (not curr-screen-matches-p))
        (setf raise-type :run))
     (ecase raise-type
       (:raise (when cand-no-curr
