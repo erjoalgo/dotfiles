@@ -55,7 +55,6 @@ fi
 
 cd "${MARLIN_DIR}"
 
-
 function marlin-get-motherboard {
     grep -Po " *(?<=#define MOTHERBOARD BOARD_).*" "${MARLIN_DIR}/Marlin/Configuration.h"
 }
