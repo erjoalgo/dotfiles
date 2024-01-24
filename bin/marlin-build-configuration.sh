@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SKIP_BRANCH_SELECTION=false
-while getopts "d:m:sh" OPT; do
+while getopts "d:m:sn:h" OPT; do
     case ${OPT} in
     d)
         CONFIG_DIR=${OPTARG}
@@ -13,6 +13,9 @@ while getopts "d:m:sh" OPT; do
         ;;
     s)
         SKIP_BRANCH_SELECTION=true
+        ;;
+    n)
+        CUSTOM_NAME_PREFIX=${OPTARG}
         ;;
     h)
         less $0
@@ -27,6 +30,7 @@ CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations/}
 MARLIN_DIR=${MARLIN_DIR:-${HOME}/git/Marlin}
 # may not exist until after switching branches
 CONFIG_PATH=${CONFIG_DIR}/config/examples/Creality/Ender-3\ Pro/CrealityV422
+CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-"Ernesto's"}
 
 test -d "${CONFIG_DIR}"
 test -d "${MARLIN_DIR}"
@@ -47,7 +51,9 @@ fi
 cp -t ${MARLIN_DIR}/Marlin  \
    "${CONFIG_PATH}"/{Configuration.h,Configuration_adv.h,_Bootscreen.h,_Statusscreen.h}
 
-sed -i "s/^#define CUSTOM_MACHINE_NAME \"/\0Ernesto's /" "${MARLIN_DIR}/Marlin/Configuration.h"
+CONFIGURATIONS=$(echo "${MARLIN_DIR}"/Marlin/Configuration{,_adv}.h)
+
+sed -i "s/^#define CUSTOM_MACHINE_NAME \"/\0${CUSTOM_NAME_PREFIX} /" ${CONFIGURATIONS}
 
 if ! command -v platformio; then
     pip install platformio
