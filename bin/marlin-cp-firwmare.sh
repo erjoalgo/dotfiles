@@ -23,8 +23,8 @@ FIRMWARE=$(find ${HOME}/git/Marlin/.pio/build/STM32F103RE_creality -name firmwar
 test -e "${FIRMWARE}"
 
 function get-mount-point {
-    DEICE=${1} && shift
-    mount | grep -Po "(?<=${DEVICE} on ) .*"
+    DEVICE=${1} && shift
+    mount | grep -Po "(?<=${DEVICE} on )[^ ]*"
 }
 if ! MOUNTP=$(get-mount-point); then
     mount-partition.sh -b "${DEVICE}"
