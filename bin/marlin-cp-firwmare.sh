@@ -18,19 +18,18 @@ shift $((OPTIND -1))
 test -n "${DEVICE:-}"
 DEVICE=/dev/sdb
 
-FIRMWARE=$(find ${HOME}/git/Marlin/.pio/build/STM32F103RE_creality -name firmware* \
-               | head -1)
+FIRMWARE=$(echo ${HOME}/git/Marlin/.pio/build/*/firmware*bin)
 test -e "${FIRMWARE}"
 
 function get-mount-point {
     DEVICE=${1} && shift
     mount | grep -Po "(?<=${DEVICE} on )[^ ]*"
 }
+
 if ! MOUNTP=$(get-mount-point "${DEVICE}"); then
     mount-partition.sh -b "${DEVICE}"
     MOUNTP=$(get-mount-point "${DEVICE}")
 fi
-
 
 if ls ${MOUNTP}/*firmware*bin; then
     if diff "${FIRMWARE}" ${MOUNTP}/*firmware*bin; then
