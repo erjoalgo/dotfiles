@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "m:q:h" OPT; do
+while getopts "m:qh" OPT; do
     case ${OPT} in
     m)
         MOUNT_POINT=${OPTARG}
