@@ -26,9 +26,9 @@ function get-mount-point {
     DEVICE=${1} && shift
     mount | grep -Po "(?<=${DEVICE} on )[^ ]*"
 }
-if ! MOUNTP=$(get-mount-point); then
+if ! MOUNTP=$(get-mount-point "${DEVICE}"); then
     mount-partition.sh -b "${DEVICE}"
-    MOUNTP=$(get-mount-point)
+    MOUNTP=$(get-mount-point "${DEVICE}")
 fi
 
 
