@@ -55,6 +55,22 @@ CONFIGURATIONS=$(echo "${MARLIN_DIR}"/Marlin/Configuration{,_adv}.h)
 
 sed -i "s/^#define CUSTOM_MACHINE_NAME \"/\0${CUSTOM_NAME_PREFIX} /" ${CONFIGURATIONS}
 
+ENABLE_FEATURES=$(cat<<EOF
+PROBE_MANUALLY
+LCD_BED_LEVELING
+MESH_BED_LEVELING
+NOZZLE_PARK_FEATURE
+ADVANCED_PAUSE_FEATURE
+EOF
+)
+
+for FEATURE in ${ENABLE_FEATURES}; do
+    sed -i "s|^//* *\(#define *${FEATURE}\)|\1|g" ${CONFIGURATIONS}
+done
+
+read -p"proceeding to view enabled/disabled features: "
+grep '#define' ${CONFIGURATIONS} --color=always | less || true
+
 if ! command -v platformio; then
     pip install platformio
 fi
