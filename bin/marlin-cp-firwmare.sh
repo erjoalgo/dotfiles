@@ -31,8 +31,8 @@ if ! MOUNTP=$(get-mount-point "${DEVICE}"); then
     MOUNTP=$(get-mount-point "${DEVICE}")
 fi
 
-if ls ${MOUNTP}/*firmware*bin; then
-    if diff "${FIRMWARE}" ${MOUNTP}/*firmware*bin; then
+if ls ${MOUNTP}/*.bin; then
+    if diff "${FIRMWARE}" ${MOUNTP}/*.bin; then
         read -p"warn: new and old firmware files are identical!"
     fi
 fi
