@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-MNT=${HOME}/.usb-drive-symlink
 
 while getopts "m:h" OPT; do
     case ${OPT} in
