@@ -47,7 +47,7 @@ fi
 cp -t ${MARLIN_DIR}/Marlin  \
    "${CONFIG_PATH}"/{Configuration.h,Configuration_adv.h,_Bootscreen.h,_Statusscreen.h}
 
-sed "s/^#define CUSTOM_MACHINE_NAME \"/\0Ernesto's /" "${MARLIN_DIR}/Marlin/Configuration.h"
+sed -i "s/^#define CUSTOM_MACHINE_NAME \"/\0Ernesto's /" "${MARLIN_DIR}/Marlin/Configuration.h"
 
 if ! command -v platformio; then
     pip install platformio
