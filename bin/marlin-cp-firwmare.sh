@@ -38,7 +38,9 @@ if ls ${MOUNTP}/*firmware*bin; then
 fi
 
 sudo rm -f ${MOUNTP}/*bin
-sudo cp "${FIRMWARE}" ${MOUNTP}/Ender-3S1_Pro_HWv$(head -c2  <<< "${RANDOM}")S1_301_SWV2.0.8.23F1_F103_FDM_LASER.bin
+BASENAME="GD-Ender-3 ProHW4.2.2SW2.0.8.2CRTouchFilamentEuropeMulti"
+BASENAME="${RANDOM}-${BASENAME}"
+sudo cp "${FIRMWARE}" "${MOUNTP}/${BASENAME}.bin"
 sudo ls "${MOUNTP}"
 
 umount-poweroff.sh -qm "${MOUNTP}"
