@@ -18,11 +18,10 @@ while getopts "m:q:h" OPT; do
 done
 shift $((OPTIND -1))
 
-MOUNT_POINT=${MOUNT_POINT:-}
 PARTITION=${PARTITION:-}
 
-if test -n "${MOUNT_POINT}"; then
-    for PART in $(findmnt -n -o SOURCE --target ${MOUNT_POINT}); do
+if test -n "${MOUNT_POINT:-}"; then
+    for PART in $(findmnt -n -o SOURCE --target "${MOUNT_POINT:-}"); do
         if test -e ${PART}; then
             PARTITION=${PART}
             break
