@@ -324,7 +324,7 @@
                           (append (cdr *browser-cmd*) (list url))
                           :search t :wait nil :output t :error t)
     (when raise-browser-window-p
-      (stumpwm::raise-window-browser))))
+      (stumpwm::raise-browser))))
 
 (export '(x-www-browser) :STUMPWM)
 

@@ -2,8 +2,8 @@
 
 (defun start-apps-default ()
   (correct-screen-fix-display-prefs)
-  (raise-window-browser)
-  (raise-window-x-terminal-emulator)
+  (raise-browser)
+  (raise-x-terminal-emulator)
   (emacs))
 
 (defun startup-apps-run ()
