@@ -38,7 +38,7 @@ if ls ${MOUNTP}/*firmware*bin; then
     fi
 fi
 
-sudo rm -f ${MOUNTP}/*firmware*bin
+sudo rm -f ${MOUNTP}/*bin
 sudo cp "${FIRMWARE}" ${MOUNTP}/firmware$(head -c 2 <<< ${RANDOM}).bin
 sudo ls "${MOUNTP}"
 
