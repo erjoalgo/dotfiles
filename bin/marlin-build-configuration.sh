@@ -2,13 +2,17 @@
 
 set -euo pipefail
 
-while getopts "d:m:" OPT; do
+SKIP_BRANCH_SELECTION=false
+while getopts "d:m:sh" OPT; do
     case ${OPT} in
     d)
         CONFIG_DIR=${OPTARG}
         ;;
     m)
         MARLIN_DIR=${OPTARG}
+        ;;
+    s)
+        SKIP_BRANCH_SELECTION=true
         ;;
     h)
         less $0
@@ -19,14 +23,29 @@ done
 shift $((OPTIND -1))
 
 
-CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations/config/examples/Creality/Ender-3\ Pro/CrealityV422/}
+CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations/}
 MARLIN_DIR=${MARLIN_DIR:-${HOME}/git/Marlin}
+# may not exist until after switching branches
+CONFIG_PATH=${CONFIG_DIR}/config/examples/Creality/Ender-3\ Pro/CrealityV422
 
 test -d "${CONFIG_DIR}"
 test -d "${MARLIN_DIR}"
 
-cp -t ${MARLIN_DIR}/Marlin "${CONFIG_DIR}"/Configuration{,_adv}.h
-cp -t ${MARLIN_DIR}/Marlin "${CONFIG_DIR}"/{_Bootscreen.h,_Statusscreen.h}
+if test "${SKIP_BRANCH_SELECTION}" != true; then
+    for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
+    cd "${DIR}"
+    echo "select $(basename $(pwd)) branch: " 1>&2
+    BRANCHES=$(git for-each-ref --format='%(refname:short)' refs)
+    select BRANCH in ${BRANCHES}; do
+        git checkout -- .
+        git checkout "${BRANCH}"
+        break
+    done
+    done
+fi
+
+cp -t ${MARLIN_DIR}/Marlin  \
+   "${CONFIG_PATH}"/{Configuration.h,Configuration_adv.h,_Bootscreen.h,_Statusscreen.h}
 
 
 if ! command -v platformio; then
