@@ -95,7 +95,7 @@ select ENV in ${ENVS}; do
     break
 done
 
-rm "${MARLIN_DIR}"/.pio/build/*/firmware*
+rm -f "${MARLIN_DIR}"/.pio/build/*/firmware*
 platformio run -e "${ENV}"
 
 echo "note: built using platformio env: ${ENV}"
