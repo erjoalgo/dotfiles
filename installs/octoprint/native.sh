@@ -20,7 +20,7 @@ Description=octoprint-native
 After=default.target
 
 [Service]
-ExecStart=authbind --deepep $(which octoprint) serve --port 80 --debug
+ExecStart=authbind --deep $(which octoprint) serve --port 80
 SyslogIdentifier=octoprint-native
 Restart=always
 Type=simple
