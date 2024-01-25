@@ -14,14 +14,13 @@ sudo usermod -a -G dialout $(whoami)
 sudo apt-get install -y libffi-dev
 pip install octoprint
 
-install-systemd-service.sh octoprint <<EOF
+install-systemd-service.sh -u octoprint <<EOF
 [Unit]
 Description=octoprint-native
 After=default.target
 
 [Service]
 ExecStart=authbind --deepep $(which octoprint) serve --port 80 --debug
-User=$(whoami)
 SyslogIdentifier=octoprint-native
 Restart=always
 Type=simple
