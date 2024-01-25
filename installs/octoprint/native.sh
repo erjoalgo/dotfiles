@@ -11,6 +11,7 @@ sudo chmod 777 "${PORT_80}"
 # allow access to /dev/ttyUSB*
 sudo usermod -a -G dialout $(whoami)
 
+sudo apt-get install -y libffi-dev
 pip install octoprint
 
 install-systemd-service.sh octoprint <<EOF
