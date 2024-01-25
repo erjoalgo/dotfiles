@@ -24,7 +24,6 @@ ExecStart=authbind --deep $(which octoprint) serve --port 80
 SyslogIdentifier=octoprint-native
 Restart=always
 Type=simple
-RestartSec=30s
 
 [Install]
 WantedBy=default.target
