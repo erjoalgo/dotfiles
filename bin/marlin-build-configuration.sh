@@ -71,11 +71,12 @@ PROBE_OFFSET_WIZARD
 BABYSTEPPING
 BABYSTEP_ZPROBE_OFFSET
 BABYSTEP_GLOBAL_Z
+Z_SAFE_HOMING
 EOF
 )
 
 for FEATURE in ${ENABLE_FEATURES}; do
-    sed -i "s|^\( *\)//* *\(#define *${FEATURE}\)|\1\2|g" ${CONFIGURATIONS}
+    sed -i -Ee "s|^( *)//* *(#define *${FEATURE})($\|[^_A-Z0-9])|\1\2\3|g" ${CONFIGURATIONS}
 done
 
 DISABLE_FEATURES=$(cat<<EOF
