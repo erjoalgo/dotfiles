@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-SKIP_BRANCH_SELECTION=false
-while getopts "d:m:sn:h" OPT; do
+INTERACTIVE=false
+while getopts "d:m:in:qh" OPT; do
     case ${OPT} in
     d)
         CONFIG_DIR=${OPTARG}
@@ -11,8 +11,8 @@ while getopts "d:m:sn:h" OPT; do
     m)
         MARLIN_DIR=${OPTARG}
         ;;
-    s)
-        SKIP_BRANCH_SELECTION=true
+    i)
+        INTERACTIVE=true
         ;;
     n)
         CUSTOM_NAME_PREFIX=${OPTARG}
@@ -35,7 +35,7 @@ CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-"Ernesto's"}
 test -d "${CONFIG_DIR}"
 test -d "${MARLIN_DIR}"
 
-if test "${SKIP_BRANCH_SELECTION}" != true; then
+if test "${INTERACTIVE:-}" = true; then
     for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
     cd "${DIR}"
     echo "select $(basename $(pwd)) branch: " 1>&2
@@ -62,15 +62,32 @@ MESH_BED_LEVELING
 NOZZLE_PARK_FEATURE
 ADVANCED_PAUSE_FEATURE
 FILAMENT_RUNOUT_SENSOR
+GLOBAL_MESH_Z_OFFSET
+PROBE_OFFSET_WIZARD
+BABYSTEPPING
+BABYSTEP_ZPROBE_OFFSET
+BABYSTEP_GLOBAL_Z
 EOF
 )
 
 for FEATURE in ${ENABLE_FEATURES}; do
-    sed -i "s|^//* *\(#define *${FEATURE}\)|\1|g" ${CONFIGURATIONS}
+    sed -i "s|^\( *\)//* *\(#define *${FEATURE}\)|\1\2|g" ${CONFIGURATIONS}
 done
 
-read -p"proceeding to view enabled/disabled features: "
-grep '#define' ${CONFIGURATIONS} --color=always | less || true
+DISABLE_FEATURES=$(cat<<EOF
+MANUAL_PROBE_START_Z
+EOF
+)
+
+for FEATURE in ${DISABLE_FEATURES}; do
+    sed -i "s|^\(.*#define *${FEATURE}\)|// \1|g" ${CONFIGURATIONS}
+done
+
+
+if test "${INTERACTIVE:-}" = true; then
+    read -p"proceeding to view enabled/disabled features: "
+    grep '#define' ${CONFIGURATIONS} --color=always | less || true
+fi
 
 if ! command -v platformio; then
     pip install platformio
@@ -91,10 +108,14 @@ function marlin-list-environments-for-motherboard {
 MB=$(marlin-get-motherboard)
 ENVS=$(marlin-list-environments-for-motherboard "${MB}")
 
-echo "select environment: " 1>&2
-select ENV in ${ENVS}; do
-    break
-done
+if test "${INTERACTIVE:-}" = true; then
+    echo "select environment: " 1>&2
+    select ENV in ${ENVS}; do
+        break
+    done
+else
+    ENV=$(head -1 <<< "${ENVS}")
+fi
 
 rm -f "${MARLIN_DIR}"/.pio/build/*/firmware*
 platformio run -e "${ENV}"
