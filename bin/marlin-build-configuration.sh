@@ -3,7 +3,8 @@
 set -euo pipefail
 
 INTERACTIVE=false
-while getopts "d:m:in:qh" OPT; do
+INTERACTIVE_BRANCH_SELECTION=false
+while getopts "d:m:ibn:qh" OPT; do
     case ${OPT} in
     d)
         CONFIG_DIR=${OPTARG}
@@ -13,6 +14,9 @@ while getopts "d:m:in:qh" OPT; do
         ;;
     i)
         INTERACTIVE=true
+        ;;
+    b)
+        INTERACTIVE_BRANCH_SELECTION=true
         ;;
     n)
         CUSTOM_NAME_PREFIX=${OPTARG}
@@ -35,7 +39,7 @@ CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-"Ernesto's"}
 test -d "${CONFIG_DIR}"
 test -d "${MARLIN_DIR}"
 
-if test "${INTERACTIVE:-}" = true; then
+if test "${INTERACTIVE_BRANCH_SELECTION:-}" = true; then
     for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
     cd "${DIR}"
     echo "select $(basename $(pwd)) branch: " 1>&2
