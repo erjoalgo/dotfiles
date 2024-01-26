@@ -16,7 +16,6 @@ done
 shift $((OPTIND -1))
 
 test -n "${DEVICE:-}"
-DEVICE=/dev/sdb
 
 FIRMWARE=$(echo ${HOME}/git/Marlin/.pio/build/*/firmware*bin)
 test -e "${FIRMWARE}"
