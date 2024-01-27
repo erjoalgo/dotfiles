@@ -101,7 +101,7 @@ def partition_text_by_block_id(original_text, block_id):
     Returns a 3-tuple: (before_text, block_text, after_text)
     If block id is not found, returns (original_text, "", "")
     """
-    regexp = "(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(block_id))
+    regexp = "(?sm)^(.*?)(\n*^{0}\n.*{0}$\n*)(.*)$".format(re.escape(block_id))
     match = re.match(regexp, original_text)
     if match:
         return match.group(1), match.group(2), match.group(3)
