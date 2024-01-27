@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-ON_FAILURE=exit
-while getopts "nd:ih" OPT; do
+ON_FAILURE=ignore
+while getopts "nd:eh" OPT; do
     case ${OPT} in
         n)
             NO_PROMPT=true
@@ -12,8 +12,8 @@ while getopts "nd:ih" OPT; do
             # e.g. "0,1" for plughw:0,1
             SELECTED_DEVICE=${OPTARG}
             ;;
-        i)
-            ON_FAILURE=ignore
+        e)
+            ON_FAILURE=exit
             ;;
         h)
             less $0
@@ -43,7 +43,7 @@ if test -z "${SELECTED_DEVICE:-}"; then
                 STATUS=$?
                 echo "ERROR: failed to test ${DEVICE_SPEC}"
                 if test "${ON_FAILURE}" = kill-pulseaudio; then
-                    pulseaudio -k
+                    pulseaudio -k || true
                 elif test "${ON_FAILURE}" = exit; then
                     exit ${STATUS}
                 elif test "${ON_FAILURE}" = ignore; then
