@@ -164,6 +164,7 @@ pip install git+https://github.com/mupuf/requests-unixsocket || true
 
 for SCRIPT in  \
         ./gen-git-config.sh \
+            ./install-sedation.sh  \
     ;do
     ./${SCRIPT} || true
 done
@@ -430,20 +431,5 @@ popd
 sagiy figlet
 
 figlet $(hostname) | sudo tee /etc/motd
-
-install-systemd-service.sh sedation <<EOF
-[Unit]
-Description=Run user-provided sedation command based on idle time, lid and battery state
-StartLimitInterval=0
-
-[Service]
-ExecStart=$(realpath $(pwd)/sedation.py)
-Restart=always
-RestartSec=5
-Environment=PATH=$PATH:$(realpath $(pwd)/../bin)
-
-[Install]
-WantedBy=multi-user.target
-EOF
 
 echo "success"
