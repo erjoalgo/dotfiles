@@ -104,7 +104,8 @@ def partition_text_by_block_id(original_text, block_id):
     regexp = "(?sm)^(.*?)(\n*^{0}\n.*{0}$\n*)(.*)$".format(re.escape(block_id))
     match = re.match(regexp, original_text)
     if match:
-        return match.group(1), match.group(2), match.group(3)
+        before, middle, after = match.group(1), match.group(2), match.group(3)
+        return before, middle, after
     return original_text, "", ""
 
 
@@ -130,11 +131,14 @@ def insert_text_block(original_text,
                       line_index=0,
                       delete=False,
                       skip_closing_newline=False):
-    old_before, _, old_after = partition_text_by_block_id(original_text, block_id)
+    old_before, middle, old_after = partition_text_by_block_id(original_text, block_id)
 
     if delete:
         assert block_contents is None
         block = None
+        if not middle:
+            print(f"warn: no block found to delete! block_id='{block_id}'",
+                  file = sys.stderr)
     else:
         block = "\n".join((block_id, block_contents, block_id))
 
