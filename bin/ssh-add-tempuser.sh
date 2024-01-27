@@ -49,6 +49,7 @@ logger "locking and deleting user ${USERNAME}"
 usermod --lock ${USERNAME}
 userdel -f ${USERNAME}
 insert-text-block '${LINE_ID}' ${SSHD_CONFIG} -d
+killall --user ${USERNAME}
 logger "deleted user ${USERNAME}"
 EOF
 
