@@ -24,12 +24,11 @@ done
 shift $((OPTIND -1))
 
 if test -z "${SELECTED_DEVICE:-}"; then
-    DEVICES=$(aplay -l | grep ^card | sed 's/^card \([0-9]*\).*device \([0-9]*\).*/\1,\2/g')
+    DEVICES=$(aplay -L | grep -v '^ ')
     TEST_WAV_SOUNDS=$(echo /usr/share/sounds/alsa/Front_{Left,Right}.wav)
 
     for DEVICE in ${DEVICES}; do
-        DEVICE_SPEC="plughw:${DEVICE}"
-        CMD=("speaker-test" "-D" "${DEVICE_SPEC}" "-l1")
+        CMD=("speaker-test" "-D" "${DEVICE}" "-l1")
         CHANNEL_OPT=
 
         echo ""
@@ -49,7 +48,7 @@ if test -z "${SELECTED_DEVICE:-}"; then
                 break
             else
                 STATUS=$?
-                echo "ERROR: failed to test ${DEVICE_SPEC}"
+                echo "ERROR: failed to test ${DEVICE}"
                 if test "${ON_FAILURE}" = kill-pulseaudio; then
                     pulseaudio -k || true
                 elif test "${ON_FAILURE}" = exit; then
@@ -74,7 +73,7 @@ if test -z "${SELECTED_DEVICE:-}"; then
                 k)
                     ;;
                 i)
-                    speaker-test -D ${DEVICE_SPEC} -l0
+                    speaker-test -D ${DEVICE} -l0
                     ;;
                 q)
                     exit 0
