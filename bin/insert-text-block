@@ -29,93 +29,148 @@ import re
 import sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument("block_id", help = "universally unique line")
-parser.add_argument("filename", help = "input/output file")
-parser.add_argument("-b", "--begining_append",  action="store_true",
-                    help = "preppend instead of append")
-parser.add_argument("-l", "--line",  type = int,
-                    help = "skip the first N lines of the file, then insert")
-parser.add_argument("-o", "--output", help = "specify a different output file")
-parser.add_argument("-n", "--no_strip_newline",  action="store_true",
-                    help = "don't strip trailing newline from stdin")
+parser.add_argument("block_id", help="universally unique line")
+parser.add_argument("filename", help="input/output file")
+parser.add_argument("-b", "-P", "--prepend",  action="store_true",
+                    # using -P instead of -p for backwards compatibility
+                    # and avoiding flag conflicts
+                    help="preppend instead of append")
+parser.add_argument("-l", "--line_index",  type=int,
+                    help="insert the text at the N-th line")
+parser.add_argument("-o", "--output", help="specify a different output file")
+parser.add_argument("-n", "--keep_newline",  action="store_true",
+                    help="don't strip trailing newline from stdin")
 parser.add_argument("-N", "--skip_separating_line",  action="store_true",
-                    help = "skip adding a separating newline when file exists and is not empty")
-parser.add_argument("-p", "--parents", help = "make parent directories",
+                    help="skip adding a separating newline when file exists and is not empty")
+parser.add_argument("-p", "--parents", help="make parent directories",
                     action="store_true")
-parser.add_argument("-e", "--echo", help = "echo contents to stdout",
+parser.add_argument("-e", "--echo", help="echo contents to stdout",
                     action="store_true")
 parser.add_argument("-s", "--skip_closing_newline",
-                    help = "skip adding newline at the end of a file",
+                    help="skip adding newline at the end of a file",
+                    action="store_true")
+parser.add_argument("-d", "--delete",
+                    help="delete the entire block, including header lines",
                     action="store_true")
 
-args=parser.parse_args()
 
-stdin=sys.stdin.read()
-if not args.no_strip_newline and stdin and stdin[-1]=="\n":
-    stdin=stdin[:-1]
-block="\n".join((args.block_id, stdin, args.block_id))
-if not args.filename.startswith("/dev/fd") and not os.path.exists(args.filename):
-    if args.parents:
-        def mkparent(path):
-            """Recursively make directories in path."""
-            if not os.path.exists(path):
-                mkparent(os.path.dirname(path))
-                os.mkdir(path)
-        mkparent(os.path.dirname(args.filename))
-
-    with open(args.filename, "w") as fh:
-        pass
-
-orig_text = open(args.filename).read()
-output = args.output or args.filename
-if output=="-":
-    output = "/dev/stdout"
+def mkdir_parents(path):
+    """Recursively make directories in path."""
+    if not os.path.exists(path):
+        mkdir_parents(os.path.dirname(path))
+        os.mkdir(path)
 
 
-def before_middle_after(original_text, block_id):
-    # try to find an existing block with the given block id
-    # partition the file into the text before and after the block
+def main():
+    args = parser.parse_args()
+    if not args.delete:
+        block_contents = sys.stdin.read()
+    else:
+        block_contents = None
+    if not args.keep_newline and block_contents and block_contents[-1]=="\n":
+        block_contents = block_contents[:-1]
 
-    regexp="(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(block_id))
-    match=re.match(regexp, original_text)
+    if not os.path.exists(args.filename) and not args.filename.startswith("/dev/fd"):
+        if args.parents:
+            mkdir_parents(os.path.dirname(args.filename))
+        with open(args.filename, "w") as fh:
+            pass
+
+    output_filename = args.output or args.filename
+    if output_filename == "-":
+        output_filename = "/dev/stdout"
+
+    with open(args.filename, "r") as fh:
+        original_text = fh.read()
+
+    new_text = insert_text_block(
+        original_text, args.block_id, block_contents,
+        prepend = args.prepend,
+        line_index = args.line_index,
+        delete = args.delete,
+        skip_separating_line = args.skip_separating_line,
+        skip_closing_newline = args.skip_closing_newline)
+
+    with open(output_filename, "w") as fh:
+        fh.write(new_text)
+
+    if args.echo:
+        print(new_text)
+
+
+def partition_text_by_block_id(original_text, block_id):
+    """
+    Try to partition the text into before/after a block with the given id.
+    Returns a 3-tuple: (before_text, block_text, after_text)
+    If block id is not found, returns (original_text, "", "")
+    """
+    regexp = "(?sm)^(.*?)(\n*{0}.*{0}\n*)(.*)$".format(re.escape(block_id))
+    match = re.match(regexp, original_text)
     if match:
         return match.group(1), match.group(2), match.group(3)
     return original_text, "", ""
 
-old_before, _, old_after = before_middle_after(orig_text, args.block_id)
 
-if args.begining_append:
-    args.line = 0
 
-if args.line is not None:
+def split_text_at_line_index(old_before, old_after, line_index):
+    """Split the before-and-after text at the given line index.
+       Returns a two-tuple: (new_before, new_after)
+    """
     lines_before = old_before.split("\n") if old_before else []
     lines_after = old_after.split("\n") if old_after else []
-    new_before = "\n".join(lines_before[:args.line])
+    new_before = "\n".join(lines_before[:line_index])
     yet_to_skip = 0
-    if args.line > len(lines_before):
-        yet_to_skip = args.line - len(lines_before)
-    new_after = "\n".join(lines_before[args.line:] + lines_after[yet_to_skip:])
-else:
-    new_before, new_after = old_before, old_after
+    if line_index > len(lines_before):
+        yet_to_skip = line_index - len(lines_before)
+    new_after = "\n".join(lines_before[line_index:] + lines_after[yet_to_skip:])
+    return new_before, new_after
 
-if not args.skip_separating_line:
-    if new_before:
-        block = "\n" + block
-    if new_after:
-        block = block + "\n"
 
-new_text="\n".join(b for b in (new_before, block, new_after) if b)
+def insert_text_block(original_text,
+                      block_id,
+                      block_contents,
+                      prepend=False,
+                      line_index=0,
+                      delete=False,
+                      skip_separating_line=False,
+                      skip_closing_newline=False):
+    old_before, _, old_after = partition_text_by_block_id(original_text, block_id)
 
-if not args.skip_closing_newline and new_text and new_text[-1] != "\n":
-    new_text += "\n"
+    if delete:
+        assert block_contents is None
+        block = None
+    else:
+        block = "\n".join((block_id, block_contents, block_id))
 
-with open( output, "w") as fh:
-    fh.write(new_text)
+    if prepend:
+        assert not line_index
+        line_index = 0
 
-if args.echo:
-    print(new_text)
+    if delete:
+        new_before, new_after = old_before, old_after
+    if line_index is not None:
+        new_before, new_after = split_text_at_line_index(old_before, old_after, line_index)
+    else:
+        new_before, new_after = old_before, old_after
+
+    if not skip_separating_line:
+        if new_before: # don't prepend newline to empty file
+            block = "\n" + block
+        if new_after: # don't append newline at the end of file
+            block = block + "\n"
+
+    new_text = "\n".join(b for b in (new_before, block, new_after) if b)
+
+    if not skip_closing_newline and new_text and new_text[-1] != "\n":
+        new_text += "\n"
+
+    return new_text
+
+
+if __name__ == "__main__":
+    main()
 
 # Local Variables:
 # mode: python
-# compile-command: "./text-block '# 07b37c2c-a63f-11e7-94e3-cff9e57fa83f' test -b  <<< \"$(echo -e 'LINEA\\nLINEB')\""
+# compile-command: "./insert-text-block '# 07b37c2c-a63f-11e7-94e3-cff9e57fa83f' /tmp/test  <<< some-text-to-insert"
 # End:
