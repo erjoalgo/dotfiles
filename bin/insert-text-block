@@ -40,8 +40,6 @@ parser.add_argument("-l", "--line_index",  type=int,
 parser.add_argument("-o", "--output", help="specify a different output file")
 parser.add_argument("-n", "--keep_newline",  action="store_true",
                     help="don't strip trailing newline from stdin")
-parser.add_argument("-N", "--skip_separating_line",  action="store_true",
-                    help="skip adding a separating newline when file exists and is not empty")
 parser.add_argument("-p", "--parents", help="make parent directories",
                     action="store_true")
 parser.add_argument("-e", "--echo", help="echo contents to stdout",
@@ -88,7 +86,6 @@ def main():
         prepend = args.prepend,
         line_index = args.line_index,
         delete = args.delete,
-        skip_separating_line = args.skip_separating_line,
         skip_closing_newline = args.skip_closing_newline)
 
     with open(output_filename, "w") as fh:
@@ -132,7 +129,6 @@ def insert_text_block(original_text,
                       prepend=False,
                       line_index=0,
                       delete=False,
-                      skip_separating_line=False,
                       skip_closing_newline=False):
     old_before, _, old_after = partition_text_by_block_id(original_text, block_id)
 
@@ -152,12 +148,6 @@ def insert_text_block(original_text,
         new_before, new_after = split_text_at_line_index(old_before, old_after, line_index)
     else:
         new_before, new_after = old_before, old_after
-
-    if not skip_separating_line:
-        if new_before: # don't prepend newline to empty file
-            block = "\n" + block
-        if new_after: # don't append newline at the end of file
-            block = block + "\n"
 
     new_text = "\n".join(b for b in (new_before, block, new_after) if b)
 
