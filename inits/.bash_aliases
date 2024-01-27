@@ -342,11 +342,27 @@ alias git-delete-show-unpublished-commits='git --no-pager log --branches --not -
 alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
-alias svlogs='sudo journalctl -feu'
-alias svlogs-user='journalctl --user -feu'
-alias svless='sudo journalctl -u'
-complete-alias _service svlogs service
-complete-alias _service svless service
+
+for COMMAND in stop restart status logs ; do
+    for USR_OPT in "" "usr"; do
+        ALIAS="sv${USR_OPT}${COMMAND}"
+        if test "${COMMAND}" = logs; then
+            if test -z "${USR_OPT:-}"; then
+                alias ${ALIAS}="sudo journalctl -feu"
+            else
+                alias ${ALIAS}="journalctl --user -feu"
+            fi
+        else
+            if test -z "${USR_OPT:-}"; then
+                alias ${ALIAS}="sudo systemctl ${COMMAND}"
+            else
+                alias ${ALIAS}="systemctl --user ${COMMAND}"
+            fi
+        fi
+    done
+    complete-alias _service ${ALIAS} service
+done
+
 # complete -F _service service-disable-stop-remove stop
 alias service-delete='service-disable-stop-remove'
 complete-alias _service service-delete service
