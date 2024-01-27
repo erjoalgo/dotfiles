@@ -15,7 +15,7 @@ while getopts "hm:" OPT; do
 done
 shift $((OPTIND -1))
 
-MINS=${MINS:-3}
+MINS=${MINS:-2}
 test "${MINS}" -le 60
 
 function genpasswd {
