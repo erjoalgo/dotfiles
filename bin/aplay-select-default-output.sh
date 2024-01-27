@@ -30,6 +30,7 @@ if test -z "${SELECTED_DEVICE:-}"; then
     for DEVICE in ${DEVICES}; do
         DEVICE_SPEC="plughw:${DEVICE}"
         CMD=("speaker-test" "-D" "${DEVICE_SPEC}" "-l1")
+        CHANNEL_OPT=
 
         echo ""
         echo ""
@@ -37,7 +38,14 @@ if test -z "${SELECTED_DEVICE:-}"; then
         echo ""
 
         while true; do
-            if ${CMD[@}}; then
+            DONE=false
+            for CHAN_OPT in "" -c0 -c1 -c2; do
+                if ${CMD[@]} $CHAN_OPT; then
+                    DONE=true
+                    break
+                fi
+            done
+            if test ${DONE} = true; then
                 break
             else
                 STATUS=$?
