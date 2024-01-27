@@ -29,15 +29,15 @@ if test -z "${SELECTED_DEVICE:-}"; then
 
     for DEVICE in ${DEVICES}; do
         DEVICE_SPEC="plughw:${DEVICE}"
-        CMD="speaker-test -D ${DEVICE_SPEC} -l1"
+        CMD=("speaker-test" "-D" "${DEVICE_SPEC}" "-l1")
 
         echo ""
         echo ""
-        echo "Testing device ${DEVICE} via ${CMD}"
+        echo "Testing device ${DEVICE} via ${CMD[@]}"
         echo ""
 
         while true; do
-            if ${CMD}; then
+            if ${CMD[@}}; then
                 break
             else
                 STATUS=$?
