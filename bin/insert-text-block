@@ -153,7 +153,7 @@ def insert_text_block(original_text,
     else:
         new_before, new_after = old_before, old_after
 
-    if True:
+    if block:
         # add a newline around block to improve readability
         if new_before and new_before[-1] != "\n": # don't prepend newline to empty file
             block = "\n" + block
