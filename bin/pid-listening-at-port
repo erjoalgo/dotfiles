@@ -2,7 +2,6 @@
 
 set -euo pipefail
 PORT=${1} && shift
-LINE=$(sudo netstat -tlpn 2>/dev/null | grep "[^0-9]${PORT}[^0-9]")
 
 function ps-tree	{
     CURR=${1:-$$}
@@ -11,6 +10,8 @@ function ps-tree	{
 	CURR=$(ps -o ppid= -p ${CURR})
     done
 }
+
+LINE=$(sudo netstat -tlnp4 | tr -s ' ' | grep $PORT)
 
 if test -n "${LINE}"; then
     PIDS=$(grep -Po '[0-9]*(?=/)' <<< "${LINE}")
