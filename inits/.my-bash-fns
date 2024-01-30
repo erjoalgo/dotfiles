@@ -139,6 +139,10 @@ function beep-on-success {
     notify-send-stumpwm -m "SUCCESS: ${*}" -c green
 }
 
+function beep-after-last-job {
+    wait $(jobs -p) && x-service-curl /beep
+}
+
 function straceall {
     set -x
     NAME="${1}"
