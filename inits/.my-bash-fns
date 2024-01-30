@@ -739,7 +739,7 @@ function apt-get-source {
     cd ${HOME}/src/${PACKAGE}
     apt-get source ${PACKAGE}
     cd $(find . -maxdepth 1 -mindepth 1 -type d)
-    sudo apt-get builddep -y ${PACKAGE}
+    sudo apt-get build-dep -y ${PACKAGE}
 }
 
 function git-add-commit-file {
