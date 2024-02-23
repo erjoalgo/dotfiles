@@ -23,6 +23,12 @@
   "type a given string, slowly"
   (type-string (get-x-selection) :delay-millis 1000))
 
+(defcommand type-clipbpard-after-pause () ()
+  "type the clipboard contents"
+  (sleep 3)
+  (type-string (get-x-selection))
+  (message "done"))
+
 (defvar *text-shortcuts* nil)
 
 (define-stumpwm-type-for-completion :text-shortcut *text-shortcuts*)
