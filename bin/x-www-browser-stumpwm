@@ -5,7 +5,7 @@ set -euo pipefail
 URL=${1:-} && shift
 
 x-service-curl "/browse" -d "${URL}" ||  \
-    chromium-browser "${URL}" ||  \
+    chromium "${URL}" ||  \
     google-chrome "${URL}" ||  \
     firefox "${URL}"
 
