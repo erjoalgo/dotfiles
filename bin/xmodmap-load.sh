@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
-while getopts "hli:" OPT; do
+while getopts "hli:b" OPT; do
     case ${OPT} in
     l)
         IS_LOGITECH=true
+        ;;
+    b)
+        IS_BT=true
+        KEYBOARD_ID=0005:04E8:7021.0012
         ;;
     i)
         KEYBOARD_ID=${OPTARG}*
