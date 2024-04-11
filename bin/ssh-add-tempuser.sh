@@ -15,6 +15,7 @@ while getopts "hm:" OPT; do
 done
 shift $((OPTIND -1))
 
+command -v at
 MINS=${MINS:-2}
 test "${MINS}" -le 60
 
