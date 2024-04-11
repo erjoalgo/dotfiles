@@ -30,6 +30,19 @@ function genpasswd {
 USERNAME=$(genpasswd 8)
 PASS=$(genpasswd 12)
 
+function schedule-clean-up {
+    sudo at now + "${MINS}" minutes<<EOF
+logger "locking and deleting user ${USERNAME}"
+killall --user ${USERNAME}
+usermod --lock ${USERNAME}
+userdel -f ${USERNAME}
+insert-text-block '${LINE_ID}' ${SSHD_CONFIG} -d
+logger "deleted user ${USERNAME}"
+EOF
+}
+
+schedule-clean-up
+
 TOMORROW=$(date '+%Y-%m-%d' -d '+1days')
 sudo useradd "${USERNAME}" --expiredate "${TOMORROW}"
 sudo chpasswd <<EOF
@@ -44,14 +57,5 @@ Match User "${USERNAME}"
 	PasswordAuthentication yes
 EOF
 sudo service ssh restart
-
-sudo at now + "${MINS}" minutes<<EOF
-logger "locking and deleting user ${USERNAME}"
-killall --user ${USERNAME}
-usermod --lock ${USERNAME}
-userdel -f ${USERNAME}
-insert-text-block '${LINE_ID}' ${SSHD_CONFIG} -d
-logger "deleted user ${USERNAME}"
-EOF
 
 echo "${USERNAME} ${PASS}"
