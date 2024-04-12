@@ -390,6 +390,9 @@ function android-pull-rm-media {
     android-find-pull-rm.sh sdcard/DCIM -name "'*mp4'" -o -name "'*jpg'"
 }
 
+function docker-compose-exec {
+    docker compose exec $(docker-select-container) ${*}
+}
 alias dcl='docker compose logs -f'
 alias dcps='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
@@ -399,6 +402,7 @@ alias dc='docker compose'
 alias db='docker-bash'
 alias dcp='docker-cp'
 alias dps='docker ps'
+alias dc-exec='docker-compose-exec'
 
 alias lrsh='lein ring server-headless'
 
