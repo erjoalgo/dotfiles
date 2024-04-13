@@ -26,21 +26,12 @@
   (with-slots (base-url username password) info
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
-                (cmd `("curl"
-                       "-s"
-                       ,(format nil "-u~A:~A" username password)
-                       "-XPROPFIND" "-HDepth:1" ,url))
-                (raw-resp
-                 ;; (http-request-or-error url
-                 ;;                        :method :PROPFIND
-                 ;;                        :additional-headers '(("Depth" . "1"))
-                 ;;                        :basic-authorization (when (and username password)
-                 ;;                                               (list username password)))
-                 (with-output-to-string (fh)
-                   (sb-ext:run-program
-                    (car cmd) (cdr cmd)
-                    :search t :output fh)))
-                (doc (cxml:parse raw-resp (stp:make-builder)))
+                (output (curl url
+                              :method "PROPFIND"
+                              :username username
+                              :password password
+                              :headers `(("Depth" . "1"))))
+                (doc (cxml:parse output (stp:make-builder)))
                 (nodeset
                  (xpath:with-namespaces (("D" "DAV:"))
                    (xpath:evaluate "//D:href/text()" doc)))
@@ -62,45 +53,50 @@
                    collect pathname
                  do (setf iter (xpath:node-set-iterator-next iter))))))
 
+(defun curl (url &key (method "GET") username password data headers)
+  (let (output error proc args)
+    (push (format nil "-X~A" method) args)
+    (push (format nil "-u~A:~A" username password) args)
+    (push url args)
+    (when data
+      (setf args (append args `("-d" ,data))))
+    (loop for (k . v) in headers
+          do (push (format nil "~A:~A" k v) args))
+    (setf output
+          (with-output-to-string (fh-out)
+            (setf error
+                  (with-output-to-string (fh-err)
+                    (setf proc
+                          (sb-ext:run-program
+                           "curl"
+                           args
+                           :search t :output fh-out
+                           :error fh-err))))))
+    (let ((exit-code (slot-value proc 'SB-IMPL::%EXIT-CODE)))
+      (if (zerop exit-code) output
+          (error (format nil "non-zero exit status ~A for curl ~A: ~A"
+                         exit-code args error))))))
+
+
 (defun cat (info path)
   (with-slots (base-url username password) info
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
-                (raw-resp
-                 ;; (http-request-or-error url :method :GET
-                 ;;                        :basic-authorization (when (and username password)
-                 ;;                                               (list username password)))
-                 (with-output-to-string (fh)
-                   (sb-ext:run-program
-                    "curl"
-                    `("-s" ,(format nil "-u~A:~A" username password) "-XGET" ,url)
-                    :search t :output fh)))
-                (string (if (stringp raw-resp)
-                            raw-resp
-                            (babel:octets-to-string raw-resp))))
-               string)))
+                (output (curl url :method "GET" :username username :password password)))
+               output)))
 
 (defun put (info path data)
   (with-slots (base-url username password) info
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
-                (raw-resp
-                 (with-output-to-string (fh)
-                   (sb-ext:run-program
-                    "curl"
-                    `("-s" ,(format nil "-u~A:~A" username password)
-                           "-XPUT" ,url "-d" ,data)
-                    :search t :output fh))))
-               raw-resp)))
+                (output
+                 (curl url :method "GET" :username username :password password :data data)))
+               output)))
 
 (defun mkdir (info path)
   (with-slots (base-url username password) info
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
-                (raw-resp
-                 (http-request-or-error
-                  url
-                  :method :MKCOL
-                  :basic-authorization (when (and username password)
-                                         (list username password)))))
-               raw-resp)))
+                (output
+                 (curl url :method "MKCOL" :username username :password password)))
+               output)))

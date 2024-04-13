@@ -77,7 +77,8 @@
           (stumpwm::lparallel-future
             (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
         (prog1
-            (setf val (cladaver:cat *webdav-server-info* webdav-path))
+            (setf val (statusor:error-to-signal
+                       (cladaver:cat *webdav-server-info* webdav-path)))
           (pushnew (cons webdav-path val) *url-values-cache*)))))
 
 (define-stumpwm-type-with-completion :aliased-url
