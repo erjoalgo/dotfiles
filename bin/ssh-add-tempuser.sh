@@ -30,6 +30,9 @@ function genpasswd {
 USERNAME=$(genpasswd 8)
 PASS=$(genpasswd 12)
 
+LINE_ID="# 56921664-b73c-4409-8219-e63c61b8f589-allow-tempuser-${USERNAME}"
+SSHD_CONFIG=/etc/ssh/sshd_config
+
 function schedule-clean-up {
     sudo at now + "${MINS}" minutes<<EOF
 logger "locking and deleting user ${USERNAME}"
@@ -49,8 +52,6 @@ sudo chpasswd <<EOF
 ${USERNAME}:${PASS}
 EOF
 
-LINE_ID="# 56921664-b73c-4409-8219-e63c61b8f589-allow-tempuser-${USERNAME}"
-SSHD_CONFIG=/etc/ssh/sshd_config
 
 sudo insert-text-block "${LINE_ID}" "${SSHD_CONFIG}" <<EOF
 Match User "${USERNAME}"
