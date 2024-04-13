@@ -98,17 +98,7 @@
            (opener (url-command url)))
       (if (functionp opener)
           (stumpwm::lparallel-future (funcall opener url))
-          (progn
-            (run-shell-command (format nil "~A ~A" opener url))
-            ;;TODO why this causes hang
-            '(SB-EXT:RUN-PROGRAM opener  (list url)
-              ;;TODO output to tmp?
-              :search t
-              :wait nil
-              :output t
-              :error t
-              :input t)
-            nil ))
+          (run-shell-command (format nil "~A ~A" opener url)))
       ;;log to different file? or at least add tags
       (log-timestamped-entry url *search-history-filename*))))
 
