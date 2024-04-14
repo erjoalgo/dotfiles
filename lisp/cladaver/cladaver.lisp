@@ -61,7 +61,7 @@
     (when data
       (setf args (append args `("-d" ,data))))
     (loop for (k . v) in headers
-          do (push (format nil "~A:~A" k v) args))
+          do (push (format nil "-H~A:~A" k v) args))
     (setf output
           (with-output-to-string (fh-out)
             (setf error
