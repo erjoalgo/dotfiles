@@ -1,0 +1,32 @@
+#!/bin/bash -x
+
+set -u
+
+BEEP=false
+while getopts "hn:b" OPT; do
+    case ${OPT} in
+    n)
+        NAME=${OPTARG}
+        ;;
+    b)
+        BEEP=true
+        ;;
+    h)
+        less $0
+        exit 0
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
+MSG="alarm: ${NAME}"
+if test "${BEEP}" = true; then
+    x-service-curl /beep
+fi
+notify-send-stumpwm -m "${MSG}" -cmagenta
+notify-send "${MSG}"
+xmessage "${MSG}"
+
+# Local Variables:
+# mode: sh-mode
+# End:
