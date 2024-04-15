@@ -307,6 +307,8 @@ alias grep-ip="sudo grep -o '\([0-9]\{1,3\}[.]\)\{3\}[0-9]\{1,3\}'"
 alias fail2ban-unban-ip='sudo fail2ban-client set ssh unbanip'
 alias ping-echo='sudo tcpdump ip proto \\icmp'
 alias gen-cert="openssl req  -nodes -new -x509  -keyout server.key -out server.cert"
+alias cert-cat='sudo openssl x509 -noout -text -in'
+
 alias httpd="python -m SimpleHTTPServer"
 
 alias gpg-list-keys-long-format='gpg --list-keys --keyid-format long'
