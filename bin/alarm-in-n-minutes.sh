@@ -22,9 +22,9 @@ done
 shift $((OPTIND -1))
 
 if test -n "${MINUTES:-}"; then
-    TIMESPEC="NOW + ${MINUTES}"
+    TIMESPEC="NOW + ${MINUTES} minutes"
 fi
 
-at ${TIMESPEC} minutes <<EOF
+at ${TIMESPEC} <<EOF
 alarm-now -n "${NAME}"
 EOF
