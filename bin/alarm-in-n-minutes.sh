@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "hm:n:" OPT; do
+while getopts "hm:n:t:" OPT; do
     case ${OPT} in
     m)
         MINUTES=${OPTARG}
