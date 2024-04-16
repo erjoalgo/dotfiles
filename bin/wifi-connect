@@ -316,6 +316,19 @@ def wifi_forget(essid=None, **kwargs):
     assert config_file
     os.remove(config_file)
 
+def netconfig(iface=None, essid=None, password=None, **config):
+    "connect to one of the available wifi networks"
+    iface_down_up(iface=iface)
+    cell = select_cell(iface=iface, essid=essid, prompt=prompt)
+    assert cell, "no cell was selected"
+    assert cell.essid, "cell has no ESSID"
+    filename = f"/etc/networking/interfaces.d/{iface}"
+    assert(not os.path.exists(filename))
+    p = subprocess.Popen(["sudo", "tee", filename], stdin=subprocess.PIPE,
+                         stdout=sys.stdout, stderr=sys.stderr)
+    _, _ = p.communicate(contents)
+    assert(p.returncode == 0)
+
 def main():
     "main method"
     parser = argparse.ArgumentParser()
@@ -352,6 +365,13 @@ def main():
 
     subparser_remove = subparsers.add_parser("forget", help="forget the specified network")
     subparser_remove.set_defaults(func="wifi_forget")
+
+    subparser_netconfig = subparsers.add_parser(
+        "netconfig",
+        help="configure the wireless interface with the networking service")
+    subparser_netconfig.add_argument("-p", "--password",
+                        help="the password, option to avoid interactive prompt")
+    subparser_netconfig.set_defaults(func="netconfig")
 
     args = parser.parse_args()
 
