@@ -8,10 +8,12 @@ from __future__ import print_function
 
 
 import argparse
+import getpass
 import logging
 import os
 import re
 import subprocess
+import sys
 import time
 
 logger = logging.getLogger(__name__)
@@ -319,14 +321,34 @@ def wifi_forget(essid=None, **kwargs):
 def netconfig(iface=None, essid=None, password=None, **config):
     "connect to one of the available wifi networks"
     iface_down_up(iface=iface)
-    cell = select_cell(iface=iface, essid=essid, prompt=prompt)
-    assert cell, "no cell was selected"
-    assert cell.essid, "cell has no ESSID"
-    filename = f"/etc/networking/interfaces.d/{iface}"
-    assert(not os.path.exists(filename))
+    cell = None
+    if not essid:
+        cell = select_cell(iface=iface, essid=essid, prompt=prompt)
+        assert cell, "no cell was selected"
+        assert cell.essid, "cell has no ESSID"
+        essid = cell.essid
+    filename = f"/etc/network/interfaces.d/{iface}"
+    assert(os.path.exists(os.path.dirname(filename)))
+    if os.path.exists(filename):
+        subprocess.call(["sudo", "cat", filename])
+        input(f"file exists: {filename}. press Enter to proceed with removal: ")
+    if not password:
+        if not cell:
+            # TODO(ealfonso): ...
+            pass
+        if cell:
+            # TODO(ealfonso): ...
+            pass
+        password = getpass.getpass(f"enter password for {essid}: ")
+    assert password
     p = subprocess.Popen(["sudo", "tee", filename], stdin=subprocess.PIPE,
                          stdout=sys.stdout, stderr=sys.stderr)
-    _, _ = p.communicate(contents)
+    contents = f"""
+iface {iface} inet dhcp
+  wpa-ssid {essid}
+  wpa-psk {password}
+"""
+    _, _ = p.communicate(contents.encode())
     assert(p.returncode == 0)
 
 def main():
@@ -369,6 +391,9 @@ def main():
     subparser_netconfig = subparsers.add_parser(
         "netconfig",
         help="configure the wireless interface with the networking service")
+    subparser_netconfig.add_argument(
+        "-e", "--essid",
+        help="the network's ESSID to avoid interactive prompting")
     subparser_netconfig.add_argument("-p", "--password",
                         help="the password, option to avoid interactive prompt")
     subparser_netconfig.set_defaults(func="netconfig")
