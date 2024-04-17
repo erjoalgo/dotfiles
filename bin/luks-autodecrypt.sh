@@ -4,11 +4,8 @@ set -euo pipefail
 
 # based on https://askubuntu.com/questions/996155/
 
-while getopts "ha:" OPT; do
+while getopts "h:" OPT; do
     case ${OPT} in
-    KEY_PARTITION)
-        SOMEARG=${OPTARG}
-        ;;
     h)
         less $0
         exit 0
