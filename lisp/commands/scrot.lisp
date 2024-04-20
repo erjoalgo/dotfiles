@@ -49,7 +49,8 @@
                      (scrot-top *scrots-top*)
                      (verbose t)
                      (show t)
-                     (timeout-secs 20))
+                     (timeout-secs 20)
+                     (overwrite nil))
   "save a scrot to *scrots-top*"
   (ensure-directories-exist scrot-top)
   ;;TODO allow selecting region
@@ -66,6 +67,7 @@
          (args
            (append
             (list out-png "-z")
+            (when overwrite '("-o"))
             (case selection
               (:interactive
                ;; (message "select a box in the screen...")
@@ -143,10 +145,12 @@
   "interactively prompt for a region of the screen, take a screenshot,
 perform ocr on it, place ocr'd text into clipboard"
   (let* ((ocr-name "last-ocr")
-         (ocr-png-filename (take-scrot ocr-name
-                                       :selection :interactive
-                                       :verbose nil
-                                       :show nil))
+         (ocr-png-filename
+           (take-scrot ocr-name
+                       :selection :interactive
+                       :verbose nil
+                       :show nil
+                       :overwrite t))
          (ocr-text (image-fn-to-text ocr-png-filename)))
     (set-x-selection ocr-text :clipboard)
     (message "copied ocr of length ~D to clipboard..."
