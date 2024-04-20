@@ -142,6 +142,12 @@
   :classes '("Wireshark")
   :cmd "wireshark")
 
+(define-run-or-pull-program "tor-browser"
+    :cmd '(#P"~/src/tor-browser/Browser/start-tor-browser")
+    :raise-key "H-t H-t"
+    :pull-key "H-t H-T"
+    :classes '("Tor Browser"))
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
