@@ -138,7 +138,7 @@
 
 
 (defun image-fn-to-text (image-fn)
-  (let ((cmd (format nil "tesseract ~A -" image-fn)))
+  (let ((cmd (format nil "tesseract.sh ~A -" image-fn)))
     (run-shell-command cmd t)))
 
 (defcommand ocr-scrot-clipboard () ()
