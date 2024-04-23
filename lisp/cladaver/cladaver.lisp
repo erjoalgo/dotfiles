@@ -90,7 +90,7 @@
     (if-let-ok nil
                ((url (format nil "~A~A" base-url path))
                 (output
-                 (curl url :method "GET" :username username :password password :data data)))
+                 (curl url :method "PUT" :username username :password password :data data)))
                output)))
 
 (defun mkdir (info path)
