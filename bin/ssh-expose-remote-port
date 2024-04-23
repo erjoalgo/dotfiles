@@ -10,14 +10,15 @@ function usage  {
 FORWARD_SPEC=""
 
 SSH_HOST_SPEC="${1}" && shift
+REMOTE_HOST=${REMOTE_HOST:-localhost}
 
-while getopts "r:h" OPT; do
+while getopts "r:R:h" OPT; do
     case ${OPT} in
         r)
-            REMOTE_SERVICE_PORT=$(cut -d: -f1  <<< "${OPTARG}")
-            LOCAL_LISTEN_PORT=$(cut -d: -f2  <<< "${OPTARG}")
-            LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
-            FORWARD_SPEC+="-L ${LOCAL_LISTEN_PORT}:localhost:${REMOTE_SERVICE_PORT} "
+            R_OPT=${OPTARG}
+            ;;
+        R)
+            REMOTE_HOST=${OPTARG}
             ;;
         h)
             less $0
@@ -27,6 +28,15 @@ while getopts "r:h" OPT; do
 done
 shift $((OPTIND -1))
 
+if test -z "${R_OPT:-}"; then
+    echo "missing -r option" && exit ${LINENO}
+fi
+
+REMOTE_SERVICE_PORT=$(cut -d: -f1  <<< "${R_OPT}")
+LOCAL_LISTEN_PORT=$(cut -d: -f2  <<< "${R_OPT}")
+
+LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
+FORWARD_SPEC+="-L ${LOCAL_LISTEN_PORT}:${REMOTE_HOST}:${REMOTE_SERVICE_PORT} "
 
 if test -z "${SSH_HOST_SPEC:-}" -o -z "${REMOTE_SERVICE_PORT:-}"; then
     usage
