@@ -14,14 +14,11 @@
 			:wait t)))
 
 (defun speak-string (text &key (speed-wpm 160) (word-gap-ms 10))
-  (SB-EXT:RUN-PROGRAM "espeak"
-		      (list (format nil "-s~D" speed-wpm)
-                            (format nil "-g~D" word-gap-ms)
-                            text)
-		      :search t
-		      :output t
-		      :error t
-		      :wait t))
+  (run-command-async-notify-on-error
+   "espeak"
+   (list (format nil "-s~D" speed-wpm)
+         (format nil "-g~D" word-gap-ms)
+         text)))
 
 (defcommand speak-string-cmd (text)
     ((:string "enter string to speak: " ))
