@@ -1,8 +1,8 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -euo pipefail
 
-if ! command -v tesseract; then
+if ! command -v tesseract > /dev/null; then
     sudo apt-get install -y tesseract
 fi
 
