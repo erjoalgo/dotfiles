@@ -204,6 +204,14 @@
     "^1non-zero exit: ~A of '~A ~{~A~^ ~}':~%~%~A^*"
     ret command args out)))
 
+(defun run-command-async-notify-on-error (command &optional args)
+  (run-command-async
+   command
+   (mapcar 'princ-to-string args)
+   (ret out)
+   t
+   nil))
+
 (defun wrap-text (text &optional max-chars-per-line)
   (loop for text in (ppcre:split #\Newline text)
         with chunks
