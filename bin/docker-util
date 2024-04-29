@@ -46,7 +46,11 @@ function docker-push {
 function docker-pull {
     CONTAINER_RELPATH=${1} && shift
     CONTAINER=$(docker-select-container)
-    WORKDIR=$(docker-working-dir "${CONTAINER}")
+    if [[ $CONTAINER_RELPATH =~ /* ]]; then
+        WORKDIR=/
+    else
+        WORKDIR=$(docker-working-dir "${CONTAINER}")
+    fi
     docker cp "${CONTAINER}:${WORKDIR}/${CONTAINER_RELPATH}" "./"
 }
 
