@@ -397,7 +397,11 @@ function docker-compose-exec {
 alias dcl='docker compose logs -f'
 alias dcps='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
-alias dcub='docker compose up --build -d; docker compose logs -f'
+function dcub {
+    docker compose up --build -d ${*}
+    docker compose logs -f ${*}
+}
+
 alias dcr='docker compose restart;'
 alias dc='docker compose'
 alias db='docker-util bash'
