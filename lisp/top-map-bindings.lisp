@@ -51,8 +51,8 @@
 (define-run-or-pull-program "pavucontrol"
   :classes '("Pavucontrol" )
   :cmd "pavucontrol"
-  :pull-key "H-o"
-  :raise-key "H-O")
+  :pull-key "H-O"
+  :raise-key "H-o")
 
 (define-run-or-pull-program "emulator-run.sh"
   :raise-key "H-t H-e"
