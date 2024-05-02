@@ -5,10 +5,7 @@ set -euo pipefail
 command -v firefox
 
 
-sudo apt-get install -y xmlstarlet
-
 which git-fetch-ff
-which xmlstarlet
 
 GIT_HOME="${HOME}/git" git-fetch-ff \
     "https://github.com/erjoalgo/erjoalgo-firefox-addons" \
@@ -60,14 +57,7 @@ EOF
 # add content type handlers
 #   mailto => emacsmail
 
-EMACSMAIL_EXE=$(which emacsmail)
-
-xmlstarlet ed -L -S \
-	   -a "/RDF:RDF/RDF:Description[last()]" -t elem -n "RDF:Description"  \
-	   -a '$prev' -t attr -n RDF:about -v "urn:scheme:externalApplication:mailto" \
-	   -a '$prev/..' -t attr -n NC:prettyName -v "emacsmail" \
-	   -a '$prev/..' -t attr -n NC:path -v "${EMACSMAIL_EXE}" \
-	   "${PROFILE}/mimeTypes.rdf"
+EMACSMAIL_EXE=$(which emacs-mail)
 
 # CHROME=$(find "${PROFILE}" -name chrome)
 CHROME="${PROFILE}/chrome"
