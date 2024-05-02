@@ -120,6 +120,11 @@
          (cladaver:put *webdav-server-info*
                        (merge-pathnames webdav-urls-prefix key)
                        url))
+        (setf *url-values-cache*
+              (remove-if
+               (lambda (val)
+                 (equal (pathname-name (car val)) key))
+               *url-values-cache*))
 	(echo (format nil "added: ~A" url)))))
 
 
