@@ -51,6 +51,12 @@ insert-text-block '# ee72ded3-b0d4-4804-9348-44f0f5e01e14-tree-style-tab-prefs' 
 user_pref("extensions.treestyletab.closeParentBehavior", 2);
 EOF
 
+insert-text-block '# ee72ded3-b0d4-4804-9348-44f0f5e01e14-tree-style-tab-prefs'  \
+		  "${PREFSJS}" <<EOF
+user_pref("layout.css.devPixelsPerPx", 3);
+EOF
+
+
 # add content type handlers
 #   mailto => emacsmail
 
