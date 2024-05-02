@@ -30,7 +30,10 @@ ${HOME}/git/erjoalgo-firefox-addons/install-addons.sh "${PROFILE}"
 
 
 PREFSJS=$(find "${PROFILE}" -name prefs.js | head -1)
-test -f "${PREFSJS}"
+if ! test -f "${PREFSJS}"; then
+    PREFSJS="${PROFILE}/prefs.js"
+    touch "${PREFSJS}"
+fi
 
 
 while pidof firefox; do
