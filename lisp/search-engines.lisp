@@ -30,7 +30,8 @@
       ("h" "home-depot" "https://www.homedepot.com/s/~A")
       ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")
       ("a" "address" "~A")
-      ("3" "3d-printables" ("https://www.yeggi.com/q/~A"
-                            "https://www.printables.com/search/models?q=~A"
-                            "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"))
+      ("3" "3d-printables"
+           ("https://www.yeggi.com/q/~A"
+            "https://www.printables.com/search/models?q=~A"
+            "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"))
       ("o" "orders" ("https://www.amazon.com/gp/your-account/order-history/search=~A"))))
