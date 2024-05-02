@@ -60,6 +60,61 @@ EOF
 EMACSMAIL_EXE=$(which emacs-mail)
 
 # CHROME=$(find "${PROFILE}" -name chrome)
+HANDLERS_JSON="${PROFILE}/handlers.json"
+if ! test -e "${HANDLERS_JSON}"; then
+    cat <<EOF > "${HANDLERS_JSON}"
+{
+  "defaultHandlersVersion": {},
+  "mimeTypes": {
+    "application/pdf": {
+      "action": 3,
+      "extensions": [
+        "pdf"
+      ]
+    },
+    "image/webp": {
+      "action": 3,
+      "extensions": [
+        "webp"
+      ]
+    },
+    "image/avif": {
+      "action": 3,
+      "extensions": [
+        "avif"
+      ]
+    }
+  },
+  "schemes": {
+    "mailto": {
+      "stubEntry": true,
+      "handlers": [
+        null,
+        {
+          "name": "Gmail",
+          "uriTemplate": "https://mail.google.com/mail/?extsrc=mailto&url=%s"
+        }
+      ]
+    }
+  },
+  "isDownloadsImprovementsAlreadyMigrated": true,
+  "isSVGXMLAlreadyMigrated": true
+}
+EOF
+fi
+
+# python3 -c /dev/stdin<<EOF
+# import json
+# with open('"${HANDLER_JSON}"', 'rw') as fh:
+#   handlers = json.load(fh)
+#   print(handlers)
+#   handlers.setdefault('schemes', {})
+#   handlers.schemes.setdefault('mailto', {})
+#   handlers.schemes.mailto.setdefault('handlers', [])
+#   handlers.schemes.mailto.handlers.push({name: "emacs-mail",
+#     uriTemplate: "urn:scheme:externalApplication:mailto"})
+# EOF
+
 CHROME="${PROFILE}/chrome"
 mkdir -p "${CHROME}"
 ln -sf  "${VIMFX_CONFIG_DIR}/userChrome.css" "${CHROME}"
