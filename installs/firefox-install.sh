@@ -5,6 +5,8 @@ set -euo pipefail
 command -v firefox
 
 
+sudo apt-get install -y xmlstarlet
+
 which git-fetch-ff
 which xmlstarlet
 
