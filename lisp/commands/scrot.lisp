@@ -154,7 +154,8 @@ perform ocr on it, place ocr'd text into clipboard"
          (ocr-text (image-fn-to-text ocr-png-filename)))
     (set-x-selection ocr-text '(:interactive :primary :secondary :clipboard))
     (message "copied ocr of length ~D to clipboard..."
-             (length ocr-text))))
+             (length ocr-text))
+    (spell-clipboard)))
 
 (define-stumpwm-type :point (input prompt)
   (declare (ignore input))
