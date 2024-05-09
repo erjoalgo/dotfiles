@@ -41,10 +41,15 @@ else
     LINPHONE_COMMAND_ARGS="${ADDRESS}";
 fi
 
+function display-tel {
+    TEL=${1} && shift
+    sed 's/\(...\)\(...\)\(....\)/(\1)-\2-\3/' <<< "${TEL}"
+}
+
 if command -v x-service-curl; then
     RESP=$(x-service-curl  \
                /read-char  \
-               -H"STUMPWM-PROMPT:call (c) or (t) text ${TEL}? ")
+               -H"STUMPWM-PROMPT:call (c) or (t) text $(display-tel ${TEL}) ? ")
     if test "${RESP}" = "t"; then
         # text
         if command -v emacs-sip; then
