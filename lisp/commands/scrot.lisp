@@ -152,7 +152,7 @@ perform ocr on it, place ocr'd text into clipboard"
                        :show nil
                        :overwrite t))
          (ocr-text (image-fn-to-text ocr-png-filename)))
-    (set-x-selection ocr-text :clipboard)
+    (set-x-selection ocr-text '(:interactive :primary :secondary :clipboard))
     (message "copied ocr of length ~D to clipboard..."
              (length ocr-text))))
 
