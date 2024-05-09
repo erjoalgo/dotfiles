@@ -139,7 +139,7 @@
 
 (defun image-fn-to-text (image-fn)
   (let ((cmd (format nil "tesseract.sh ~A -" image-fn)))
-    (run-shell-command cmd t)))
+    (trim-spaces (run-shell-command cmd t))))
 
 (defcommand ocr-scrot-clipboard () ()
   "interactively prompt for a region of the screen, take a screenshot,
