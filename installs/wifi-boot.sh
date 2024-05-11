@@ -84,8 +84,7 @@ fi
 
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
-    echo "^^ unknown network card!"
-    exit ${LINENO}
+    echo "no drivers found to install"
 else
     echo "installed: ${INSTALLED}"
 fi
