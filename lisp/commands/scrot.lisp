@@ -193,14 +193,36 @@ perform ocr on it, place ocr'd text into clipboard"
     (declare (ignore win))
     (cons x y)))
 
+(defun grab-pointer-prompt (prompt)
+  (read-one-line (current-screen) prompt)
+  (grab-pointer-position))
+
+(defun grab-box (&optional prompt)
+  (let ((tl (grab-pointer-prompt
+             (format nil "~A: move cursor to top-left corner of the box: " prompt)))
+        (br (grab-pointer-prompt
+             (format nil "~A: move cursor to bottom-right corner of the box: " prompt)))
+        w h)
+    (destructuring-bind (top . l) tl
+      (destructuring-bind (b . r) br
+        (setf w (- b top)
+              h (- r l))))
+    (assert (> w 0))
+    (assert (> h 0))
+    (list tl br (cons w h))))
+
+(define-stumpwm-type :box (input prompt)
+  (declare (ignore input))
+  (grab-box prompt))
 
 (add-hook *click-hook* 'record-box-and-funcall)
 
 (defvar *byzanz-recording-control-port* 17909)
 
-(defcommand byzanz-record (name duration)
+(defcommand byzanz-record (name duration box)
     ((:string " recording name: ")
-     (:number "recording duration in seconds: "))
+     (:number "recording duration in seconds: ")
+     (:box "byzanz bounding box: "))
   (assert (which "byzanz-record"))
   (let* ((name (or name
                    (time-format *scrot-date-format*)))
@@ -214,21 +236,29 @@ perform ocr on it, place ocr'd text into clipboard"
                (list "-e"
                      (format nil "nc -l ~A ~D"
                              "-p" ;; not always the same
-                             *byzanz-recording-control-port*)))))
+                             *byzanz-recording-control-port*))))
+         (box-args
+           (when box
+             (destructuring-bind ((x . y) _ (w . h)) box
+               (list
+                (format nil "--x=~D" x)
+                (format nil "--y=~D" y)
+                (format nil "--width=~D" w)
+                (format nil "--height=~D" h))))))
     (set-x-selection (namestring recording-pathname) :clipboard)
     (message "starting byzanz recording in 1s...")
     (sleep 1)
     (unmap-all-message-windows)
     (run-command-async-notify
      "byzanz-record"
-     `(,@duration-args ,recording-pathname))))
+     `(,@duration-args ,@box-args ,recording-pathname))))
 
 (defcommand byzanz-record-auto () ()
   (handler-case (byzanz-record-auto-stop)
     (USOCKET:CONNECTION-REFUSED-ERROR (_ex)
       (declare (ignore _ex))
       ;; no recording in progress. start a new one...
-      (byzanz-record nil nil))))
+      (byzanz-record nil nil (grab-box "byzanz box: ")))))
 
 (defcommand byzanz-record-auto-stop () ()
   (mozrepl:nc "localhost" *byzanz-recording-control-port* "1"))
