@@ -191,7 +191,7 @@ perform ocr on it, place ocr'd text into clipboard"
   (multiple-value-bind (x y win)
       (xlib:global-pointer-position *display*)
     (declare (ignore win))
-    (cons x y)))
+    (cons y x)))
 
 (defun grab-pointer-prompt (prompt)
   (read-one-line (current-screen) prompt)
@@ -205,8 +205,8 @@ perform ocr on it, place ocr'd text into clipboard"
         w h)
     (destructuring-bind (top . l) tl
       (destructuring-bind (b . r) br
-        (setf w (- b top)
-              h (- r l))))
+        (setf w (- r l)
+              h (- b top))))
     (assert (> w 0))
     (assert (> h 0))
     (list tl br (cons w h))))
