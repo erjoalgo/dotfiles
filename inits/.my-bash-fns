@@ -787,3 +787,17 @@ function sshfs-mount {
     echo "mounting ${SPEC} at ${MOUNT_LOCAL} via sshfs"
     sshfs ${SPEC} ${*} ${MOUNT_LOCAL}
 }
+
+function docker-cd-volume {
+    VOLUMES=$(docker volume ls | tr -s ' ' | cut -f2 -d' ')
+    echo "select volume: " 1>&2
+    OLD_IFS="$IFS"
+    IFS=$'\n'
+    select VOLUME in ${VOLUMES}; do
+        break
+    done
+    IFS="${OLD_IFS}"
+    DIR=$(docker inspect "${VOLUME}" | jq '.[0].Mountpoint' | tr -d \")
+    echo "DDEBUG xj4j .my-bash-fns VALUE OF \$DIR: $DIR"
+    su -c "cd ${DIR}; bash"
+}
