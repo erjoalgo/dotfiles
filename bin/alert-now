@@ -2,14 +2,14 @@
 
 set -u
 
-BEEP=false
+BEEP=true
 while getopts "hn:b" OPT; do
     case ${OPT} in
     n)
         NAME=${OPTARG}
         ;;
-    b)
-        BEEP=true
+    B)
+        BEEP=false
         ;;
     h)
         less $0
