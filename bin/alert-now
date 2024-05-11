@@ -19,7 +19,8 @@ while getopts "hn:b" OPT; do
 done
 shift $((OPTIND -1))
 
-MSG="alarm: ${NAME}"
+NAME=${NAME:-unnamed alert}
+MSG="alert: ${NAME}"
 if test "${BEEP}" = true; then
     x-service-curl /beep
 fi
