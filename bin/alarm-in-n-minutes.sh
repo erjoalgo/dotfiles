@@ -28,6 +28,8 @@ if test -n "${MINUTES:-}"; then
     TIMESPEC="NOW + ${MINUTES} minutes"
 fi
 
+NAME=${NAME:-unnamed alert}
+
 at "${TIMESPEC}" <<EOF
 alarm-now -n "${NAME}"
 EOF
