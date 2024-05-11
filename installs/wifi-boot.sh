@@ -67,6 +67,21 @@ if  sudo dmesg | grep 'Direct firmware load for .*failed with error'; then
     sudo apt-get install -y firmware-misc-nonfree
 fi
 
+if (sudo grep /var/log/syslog 'idVendor=0bda.*idProduct=b812' ||  \
+        sudo lsusb | grep "RTL88x2bu") \
+       && ! lsmod | grep 88x2bu; then
+    cd ${HOME}/git
+    URL=https://github.com/cilynx/rtl88x2bu
+    DIR=${HOME}/git/$(basename "${URL}")
+    test -e "${DIR}" || git clone "${URL}" "${DIR}"
+    sudo apt-get install -y linux-headers-$(uname -r)
+    pushd .
+    cd "${DIR}"
+    make
+    sudo modprobe cfg80211
+    sudo insmod 88x2bu.ko
+fi
+
 if test -z "${INSTALLED}"; then
     echo ${LSPCI}
     echo "^^ unknown network card!"
