@@ -448,7 +448,8 @@ alias ufw-delete='ufw-ls; sudo ufw delete'
 
 
 alias iptables-list='sudo iptables -vnL --line-numbers | less'
-alias ssh-universal='ledger-agent -vs erjoalgo@gmail.com'
+alias ssh-universal='ledger-agent -v erjoalgo@gmail.com ssh'
+alias ssh-universal-shell='ledger-agent -vs erjoalgo@gmail.com'
 
 alias docker-pull='docker-util pull'
 alias docker-push='docker-util push'
