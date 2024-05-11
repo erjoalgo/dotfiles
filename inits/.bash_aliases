@@ -454,7 +454,12 @@ alias ssh-universal-shell='ledger-agent -vs erjoalgo@gmail.com'
 alias docker-pull='docker-util pull'
 alias docker-push='docker-util push'
 
-
+alias udevadm-monitor='sudo udevadm monitor'
+function device-monitor {
+    { sudo udevadm monitor &  \
+      sudo tail /var/log/syslog | grep -v UFW &  \
+      sudo dmesg -w | grep -v UFW; }
+}
 # Local Variables:
 # mode: sh
 # End:
