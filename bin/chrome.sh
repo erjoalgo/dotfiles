@@ -29,4 +29,4 @@ ARGS=( \
            --flag-switches-end
 )
 
-${EXE} ${ARGS[@]}
+${EXE} ${ARGS[@]} ${*}
