@@ -22,14 +22,7 @@
     "Tor Browser" "Google-chrome" "Firefox-esr"))
 
 (defparameter *browser-cmd*
-  (list
-   (or
-    (pathname-name
-     (string-trim '(#\newline)
-                  (run-shell-command "which chromium-browser chrome google-chrome chromium" t)))
-    "chromium")
-   "--high-dpi-support=1"
-   "--force-device-scale-factor=2"))
+  `("chrome.sh"))
 
 (defparameter emacs-classes
   (list "emacs" "GoogleEmacs"))
