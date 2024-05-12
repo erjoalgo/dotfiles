@@ -93,7 +93,7 @@ echo "added remote ${REMOTE_NAME} as ${REMOTE_URL}"
 
 git fetch ${REMOTE_NAME}
 
-if ! git log; then
+if ! git log > /dev/null; then
     echo "error: missing initial commit" && exit ${LINENO}
 fi
 
