@@ -7,7 +7,7 @@ if ! EXE=$(which chromium-browser chrome google-chrome chromium | sort | head -1
 fi
 
 ENABLE_FEATURES="AsyncDns"
-if test $(redshift -p | grep -Po '(?<=Period: ).*') != Daytime; then
+if test "$(redshift -p | grep -Po '(?<=Period: ).*')" != Daytime; then
     ENABLE_FEATURES+=,WebContentsForceDark
 fi
 
