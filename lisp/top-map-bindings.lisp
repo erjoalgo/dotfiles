@@ -346,6 +346,7 @@
    ("S" "scrot-cmd-current-window-anon")
    ("n" "take-scrot-snipit")
    ("o" "ocr-scrot-clipboard")
+   ("O" "spell-clipboard")
    ("k" "speak-string")
    ("l" "spell-clipboard")
    ("H-l" "screen-lock")
