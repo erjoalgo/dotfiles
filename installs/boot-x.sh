@@ -97,28 +97,11 @@ for XDG_OPEN_SCRIPT in ./xdg-open-*; do
 done
 
 sudo apt-get install -y python3-pip
-python3 -m pip install pyudev
+
 # for the logitech wireless keyboard
 python3 -m pip install solaar
 
-install-systemd-service.sh pyudevs <<EOF
-[Unit]
-Description=Run custom udev scripts via pyudev
-Requires=systemd-udevd.service
-After=systemd-udevd.service
-StartLimitInterval=0
-
-[Service]
-ExecStart=$(realpath $(pwd)/../bin/pyudevs.py)
-User=$(whoami)
-Restart=always
-RestartSec=5
-Environment=PATH=$PATH:$(pwd)/bin
-
-[Install]
-WantedBy=graphical.target
-
-EOF
+./pyudevs.sh
 
 mkdir -p ~/pictures/auto-scrots
 
