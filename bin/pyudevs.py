@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from __future__ import absolute_import
 import argparse
 import asyncio
 import logging
@@ -11,7 +10,6 @@ import threading
 import time
 import traceback
 
-from six.moves import range
 import pyudev
 
 def x_service_curl(path, post_data=None, headers=None):
