@@ -799,5 +799,5 @@ function docker-cd-volume {
     IFS="${OLD_IFS}"
     DIR=$(docker inspect "${VOLUME}" | jq '.[0].Mountpoint' | tr -d \")
     echo "DDEBUG xj4j .my-bash-fns VALUE OF \$DIR: $DIR"
-    su -c "cd ${DIR}; bash"
+    sudo su -c "cd ${DIR}; bash"
 }
