@@ -5,7 +5,8 @@
    #:ls
    #:cat
    #:put
-   #:mkdir))
+   #:mkdir
+   #:rm))
 
 (in-package #:cladaver)
 
@@ -99,4 +100,12 @@
                ((url (format nil "~A~A" base-url path))
                 (output
                  (curl url :method "MKCOL" :username username :password password)))
+               output)))
+
+(defun rm (info path)
+  (with-slots (base-url username password) info
+    (if-let-ok nil
+               ((url (format nil "~A~A" base-url path))
+                (output
+                 (curl url :method "DELETE" :username username :password password)))
                output)))

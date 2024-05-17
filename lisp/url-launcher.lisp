@@ -92,6 +92,12 @@
     (statusor:error-to-signal
      (url-launcher-cat-webdav-path webdav-path))))
 
+(define-stumpwm-type-with-completion :url-launcher-key
+    (progn
+      (statusor:error-to-signal (webdav-maybe-init))
+      (statusor:error-to-signal (url-launcher-list-url-keys)))
+  :key-fn file-namestring)
+
 (defcommand launch-url (url) ((:aliased-url "enter url key: "))
   "Do a completing read of stored keys, then launch url"
   (when url
@@ -128,6 +134,10 @@
                *url-values-cache*))
 	(echo (format nil "added: ~A" url)))))
 
+(defcommand url-launcher-delete-url (webdav-path) ((:url-launcher-key "enter url key: "))
+  "Do a completing read of stored keys, then delete the url"
+  (cladaver:rm *webdav-server-info* webdav-path)
+  (url-launcher-list-url-keys :skip-cache t))
 
 (defun uri-decode (url)
   (reduce
