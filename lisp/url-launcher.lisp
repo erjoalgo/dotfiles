@@ -90,7 +90,7 @@
   :value-fn
   (lambda (webdav-path)
     (statusor:error-to-signal
-     (url-launcher-cat-webdav-path webdav-path))))
+     (cons webdav-path (url-launcher-cat-webdav-path webdav-path)))))
 
 (define-stumpwm-type-with-completion :url-launcher-key
     (progn
@@ -98,10 +98,10 @@
       (statusor:error-to-signal (url-launcher-list-url-keys)))
   :key-fn file-namestring)
 
-(defcommand launch-url (url) ((:aliased-url "enter url key: "))
+(defcommand launch-url (key-url) ((:aliased-url "enter url key: "))
   "Do a completing read of stored keys, then launch url"
-  (when url
-    (let* ((url (expand-user url))
+  (when key-url
+    (let* ((url (expand-user (cdr key-url)))
            (opener (url-command url)))
       (if (functionp opener)
           (stumpwm::lparallel-future (funcall opener url))
