@@ -289,6 +289,7 @@
          (temp (max temp 1000))
          (temp (min temp 25000)))
     ;; (redshift-oneshot (format nil "-Pt ~A:~A" temp temp))
+    (redshift-stop-service)
     (redshift-oneshot (format nil "-PO ~A" temp))
     (setf *redshift-temp* temp)))
 
@@ -302,6 +303,9 @@
           "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
           t)))
     (parse-integer output)))
+
+(defun redshift-stop-service ()
+  (run-shell-command "systemctl --user stop redshift.service"))
 
 (defcommand describe-key-+ (keys) ((:key-seq "Describe key:"))
   (with-message-queuing t
