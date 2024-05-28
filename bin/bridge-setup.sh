@@ -49,6 +49,11 @@ iface ${BRIDGE_NAME} inet dhcp
         bridge_fd 0          # no forwarding delay
 EOF
 
+sudo ip link add "${BRIDGE_NAME}" type bridge
+
+for IFACE in ${BRIDGE_PORTS}; do
+    sudo ip link set "${IFACE}" master "${BRIDGE_NAME}"
+done
 
 NETFILTER_CONF=/etc/sysctl.d/99-netfilter-bridge.conf
 sudo insert-text-block  \
