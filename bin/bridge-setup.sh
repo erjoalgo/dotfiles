@@ -4,7 +4,7 @@ set -euo pipefail
 
 # based on https://linuxconfig.org/how-to-use-bridged-networking-with-libvirt-and-kvm
 
-KVM=true
+KVM=false
 
 while getopts "p:n:kh" OPT; do
     case ${OPT} in
@@ -14,9 +14,9 @@ while getopts "p:n:kh" OPT; do
         n)
             BRIDGE_NAME=${OPTARG}
             ;;
-        K)
-            # skip KVM setup
-            KVM=false
+        k)
+            # enable KVM setup
+            KVM=true
             ;;
         h)
             less $0
