@@ -44,6 +44,9 @@ auto ${BRIDGE_NAME}
 # Bridge setup
 iface ${BRIDGE_NAME} inet dhcp
     bridge_ports ${BRIDGE_PORTS}
+    bridge_stp off       # disable Spanning Tree Protocol
+        bridge_waitport 0    # no delay before a port becomes available
+        bridge_fd 0          # no forwarding delay
 EOF
 
 sudo systemctl enable --now networking
