@@ -323,7 +323,7 @@ def netconfig(iface=None, essid=None, password=None, **config):
     iface_down_up(iface=iface)
     cell = None
     if not essid:
-        cell = select_cell(iface=iface, essid=essid, prompt=prompt)
+        cell = select_cell(iface=iface, essid=essid, prompt="select ESSID")
         assert cell, "no cell was selected"
         assert cell.essid, "cell has no ESSID"
         essid = cell.essid
