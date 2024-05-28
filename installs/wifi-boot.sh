@@ -73,6 +73,7 @@ if (sudo grep /var/log/syslog 'idVendor=0bda.*idProduct=b812' ||  \
     cd ${HOME}/git
     URL=https://github.com/cilynx/rtl88x2bu
     DIR=${HOME}/git/$(basename "${URL}")
+    sudo apt-get install -y bc
     test -e "${DIR}" || git clone "${URL}" "${DIR}"
     sudo apt-get install -y linux-headers-$(uname -r)
     pushd .
