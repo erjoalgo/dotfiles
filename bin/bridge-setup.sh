@@ -49,7 +49,6 @@ iface ${BRIDGE_NAME} inet dhcp
         bridge_fd 0          # no forwarding delay
 EOF
 
-sudo systemctl enable --now networking
 
 NETFILTER_CONF=/etc/sysctl.d/99-netfilter-bridge.conf
 sudo insert-text-block  \
