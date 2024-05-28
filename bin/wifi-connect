@@ -250,7 +250,7 @@ def select_cell(iface=None, essid=None, prompt="if_needed", known_cells_only=Fal
                 "*" if cell.essid in known_essids else " ",
                 cell))
     elif not matching:
-        raise Exception("no matching access points")
+        raise Exception("no matching access points. try connecting manually first")
     else:
         return matching[0]
 
