@@ -450,6 +450,14 @@ alias ufw-delete='ufw-ls; sudo ufw delete'
 alias iptables-list='sudo iptables -vnL --line-numbers | less'
 alias ssh-universal='ledger-agent -v erjoalgo@gmail.com ssh'
 alias ssh-universal-shell='ledger-agent -vs erjoalgo@gmail.com'
+function ssh-universal-copy-id {
+    REMOTE_HOST=${1} && shift
+    ID_RSA_PUB=$(cat ~/.ssh/id_rsa.pub)
+    set -x
+    ledger-agent -v erjoalgo@gmail.com  \
+                 ssh ${REMOTE_HOST} "tee -a .ssh/authorized_keys <<< '${ID_RSA_PUB}'"
+    set +x
+}
 
 alias docker-pull='docker-util pull'
 alias docker-push='docker-util push'
