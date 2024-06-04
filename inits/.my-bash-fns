@@ -126,7 +126,7 @@ function test-port	{
         nc -vz -u ${HOST} ${PORT}
     else
         # http://stackoverflow.com/questions/9609130/quick-way-to-find-if-a-port-is-open-on-linux
-        exec "6<>/dev/${PROTOCOL}/${HOST}/${PORT}"
+        exec 6<>/dev/${PROTOCOL}/${HOST}/${PORT}
     fi
 }
 
