@@ -215,7 +215,7 @@ def monitor_forever():
             logging.info("skipping non-initialized device")
             continue
 
-        logging.debug("")
+        logging.debug("device properties:")
         for key in device.keys():
           logging.debug("%s: %s", key, device.get(key))
         logging.debug("")
