@@ -115,7 +115,7 @@ function pass-show-xs	{
 function test-port	{
     PROTOCOL=${PROTOCOL:-tcp}
     if test $# = 1; then
-        HOST=localhost
+        HOST=127.0.0.1
     else
         HOST="${1}" && shift
     fi
