@@ -36,6 +36,7 @@ class DeviceHandler(object):
     locks = {}
     handlers = []
     max_retries = 5
+    delay_secs = 2
 
     def __init__(self):
         self.last_triggered = None
@@ -47,7 +48,18 @@ class DeviceHandler(object):
     async def run(self):
         class_name = self.__class__.__name__
         logging.info("running handler for %s", class_name)
-        self.__retry__(self.retry, name=class_name)
+        error = None
+        for _ in range(self.max_retries):
+            try:
+              self.retry()
+              DeviceHandler.notify_success(f"success: {class_name}")
+              return True
+            except Exception as ex:
+              logging.info("failed: %s", ex)
+              time.sleep(self.delay_secs)
+              error = ex
+        DeviceHandler.notify_error("{} failed: {}".format(name, str(error)))
+
 
 
     @staticmethod
@@ -65,21 +77,6 @@ class DeviceHandler(object):
         logging.info(text)
         return notify_send(text, color="green")
 
-    @classmethod
-    def __retry__(cls, retriable_fn, delay_secs=2, name=""):
-        error = None
-        for retry in range(cls.max_retries):
-            try:
-              retriable_fn()
-              DeviceHandler.notify_success("success: {}".format(name))
-              return True
-            except Exception as ex:
-              logging.info("failed: %s", ex)
-              time.sleep(delay_secs)
-              error = ex
-        assert error
-        DeviceHandler.notify_error("{} failed: {}".format(name, str(error)))
-
     @staticmethod
     def check_call(cmd, name=""):
         ret = subprocess.call(cmd)
@@ -92,8 +89,9 @@ class DeviceHandler(object):
 
 class KeyboardHandler(DeviceHandler):
 
-    def __init__(self, is_logitech=False, keyboard_id=None):
-        self.is_logitech = is_logitech
+    def __init__(self, device, keyboard_id=None):
+        super().__init__()
+        self.device = device
         self.keyboard_id = keyboard_id
 
     @staticmethod
@@ -114,17 +112,18 @@ class KeyboardHandler(DeviceHandler):
             keyboard_id = vendor_product
 
         if matches:
-            is_logitech = device.get("ID_VENDOR") == "Logitech"
             logging.info(
-                "got keyboard. vendor:product: %s, logitech? %s devname: %s input_class: %s",
-                vendor_product, is_logitech, devname, input_class)
-            return KeyboardHandler(is_logitech=is_logitech,
-                                   keyboard_id=keyboard_id)
+                "got keyboard. vendor:product: %s, devname: %s input_class: %s",
+                vendor_product, devname, input_class)
+            return KeyboardHandler(device, keyboard_id=keyboard_id)
 
     def retry(self):
+        is_logitech = self.device.get("ID_VENDOR") == "Logitech"
+        logging.info(f"is logitech? {is_logitech}")
         filename = "xmodmap-load.sh"
         cmd = [filename]
-        if self.is_logitech:
+        if is_logitech:
+            self.set_desc("logitech")
             cmd.push("-l")
         if self.keyboard_id:
               cmd.extend(["-i", self.keyboard_id])
@@ -132,7 +131,7 @@ class KeyboardHandler(DeviceHandler):
         self.check_call(cmd)
 
 
-DeviceHandler.handlers.append(KeyboardHandler())
+DeviceHandler.handlers.append(KeyboardHandler.matches)
 
 
 class MonitorHandler(DeviceHandler):
@@ -140,7 +139,7 @@ class MonitorHandler(DeviceHandler):
     @staticmethod
     def matches(device):
         if device.get("SUBSYSTEM") == "drm":
-            return MonitorHandler()
+            return MonitorHandler(device)
 
     def retry(self):
         self.notify_info("atempting to set up external monitor")
@@ -156,7 +155,7 @@ class MonitorHandler(DeviceHandler):
             logging.warn("keynav-restart failed: %s", output)
 
 
-DeviceHandler.handlers.append(MonitorHandler())
+DeviceHandler.handlers.append(MonitorHandler.matches)
 
 
 class ScrcpyHandler(DeviceHandler):
@@ -164,7 +163,7 @@ class ScrcpyHandler(DeviceHandler):
     @staticmethod
     def matches(device):
         if device.action == "bind" and device.get("adb_user") == "yes":
-            return ScrcpyHandler()
+            return ScrcpyHandler(device)
 
     def retry(self):
         script = "install-scrcpy-docker.sh"
@@ -217,8 +216,8 @@ def monitor_forever():
           logging.debug("%s: %s", key, device.get(key))
         logging.debug("")
 
-        for match_handler in DeviceHandler.handlers:
-            specific_handler = match_handler.matches(device)
+        for match_fn in DeviceHandler.handlers:
+            specific_handler = match_fn(device)
             if specific_handler:
                 logging.info("matched: %s", specific_handler)
                 asyncio.run_coroutine_threadsafe(
