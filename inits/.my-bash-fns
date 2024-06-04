@@ -740,7 +740,7 @@ function apt-get-source {
     apt-get source ${PACKAGE}
     cd $(find . -maxdepth 1 -mindepth 1 -type d)
     sudo apt-get build-dep -y ${PACKAGE} || true
-    dpkg-buildpackage -us -uc
+    debuild -uc -us
 }
 
 function git-add-commit-file {
