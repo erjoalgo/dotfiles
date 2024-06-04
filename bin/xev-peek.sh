@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
-{ xev | grep keycode; } &
+xev | grep keycode &
+jobs
+PID=$(jobs -p)
 sleep 1;
-pkill xev
+kill ${PID}
