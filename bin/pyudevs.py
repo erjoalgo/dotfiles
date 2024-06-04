@@ -40,10 +40,7 @@ class DeviceHandler(object):
 
     def __init__(self):
         self.last_triggered = None
-
-    @staticmethod
-    def matches(device):
-        raise NotImplementedError()
+        self.desc = ""
 
     async def run(self):
         class_name = self.__class__.__name__
@@ -52,7 +49,7 @@ class DeviceHandler(object):
         for _ in range(self.max_retries):
             try:
               self.retry()
-              DeviceHandler.notify_success(f"success: {class_name}")
+              DeviceHandler.notify_success(f"success: {class_name} {self.desc}")
               return True
             except Exception as ex:
               logging.info("failed: %s", ex)
@@ -61,6 +58,8 @@ class DeviceHandler(object):
         DeviceHandler.notify_error("{} failed: {}".format(name, str(error)))
 
 
+    def set_desc(self, desc):
+        self.desc = desc
 
     @staticmethod
     def notify_info(text):
@@ -219,7 +218,7 @@ def monitor_forever():
         for match_fn in DeviceHandler.handlers:
             specific_handler = match_fn(device)
             if specific_handler:
-                logging.info("matched: %s", specific_handler)
+                logging.info(f"matched: {specific_handler} {specific_handler.desc}")
                 asyncio.run_coroutine_threadsafe(
                     specific_handler.run(), loop)
                 break
