@@ -116,6 +116,12 @@ class KeyboardHandler(DeviceHandler):
             return KeyboardHandler(device, keyboard_id=keyboard_id)
 
     def retry(self):
+        if self.device.get("ID_USB_MODEL") == "2.4G_Mouse":
+            self.set_desc("media remote")
+            script = os.path.expanduser("~/git/dotfiles/inits/.xmodmap/media-remote.sh")
+            self.check_call([script])
+            return
+
         is_logitech = self.device.get("ID_VENDOR") == "Logitech"
         logging.info(f"is logitech? {is_logitech}")
         filename = "xmodmap-load.sh"
