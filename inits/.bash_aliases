@@ -366,6 +366,33 @@ for COMMAND in stop restart status logs ; do
     complete-alias _service ${ALIAS} service
 done
 
+function __svlogs-multi {
+    set -x
+    LAST=()
+    for SERVICE_OR_FILE in ${*}; do
+        if test -e ${SERVICE_OR_FILE}; then
+            sudo tail -f "${SERVICE_OR_FILE}"
+            LAST+=($!)
+        else
+            sudo journalctl -fu ${SERVICE_OR_FILE} &
+            LAST+=($!)
+        fi
+    done
+    for PID in "${LAST[@]}"; do
+        echo "DDEBUG rs3p .bash_aliases VALUE OF \PID: $PID"
+        wait ${PID}
+    done
+    set +x
+}
+
+function svlogs-multi {
+    (trap 'kill 0' SIGINT; __svlogs-multi ${*})
+}
+
+# TODO support repeated completion of multiple service arguments
+
+complete-alias _service svlogs-multi service
+
 # complete -F _service service-disable-stop-remove stop
 alias service-delete='service-disable-stop-remove'
 complete-alias _service service-delete service
