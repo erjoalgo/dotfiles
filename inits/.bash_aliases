@@ -394,7 +394,7 @@ function android-pull-rm-media {
 function docker-compose-exec {
     docker compose exec $(docker-select-container) ${*}
 }
-alias dcl='docker compose logs -f'
+alias dcl='docker compose logs -f --tail 1000'
 alias dcps='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
 function dcub {
