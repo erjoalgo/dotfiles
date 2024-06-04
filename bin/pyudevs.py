@@ -109,7 +109,6 @@ class KeyboardHandler(DeviceHandler):
             keyboard_id = m.group(1)
         else:
             keyboard_id = vendor_product
-
         if matches:
             logging.info(
                 "got keyboard. vendor:product: %s, devname: %s input_class: %s",
@@ -219,8 +218,7 @@ def monitor_forever():
             specific_handler = match_fn(device)
             if specific_handler:
                 logging.info(f"matched: {specific_handler} {specific_handler.desc}")
-                asyncio.run_coroutine_threadsafe(
-                    specific_handler.run(), loop)
+                asyncio.run_coroutine_threadsafe(specific_handler.run(), loop)
                 break
         else:
             logging.info("nothing matched: %s", device)
