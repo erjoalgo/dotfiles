@@ -107,7 +107,7 @@ mkdir -p ~/pictures/auto-scrots
 
 sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
-sudo apt-get install -y redshift xcalib xbacklight
+sudo apt-get install -y redshift xcalib xbacklight xinput
 
 sudo apt-get install -y linphone linphone-cli redshift
 
