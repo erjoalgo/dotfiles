@@ -42,7 +42,7 @@ else
     CONF=${HOME}/.config/systemd/user/${SERVICE_NAME}.service
     mkdir -p $(dirname "${CONF}")
     insert-text-block \
-        '# 7119bd41-07d2-429a-ae51-cc16f0878169-${SERVICE_NAME}'  \
+        "# 7119bd41-07d2-429a-ae51-cc16f0878169-${SERVICE_NAME}"  \
         "${CONF}" < /dev/stdin
     systemctl --user enable ${SERVICE_NAME}.service
     systemctl --user daemon-reload
