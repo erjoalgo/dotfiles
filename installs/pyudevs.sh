@@ -9,8 +9,6 @@ python3 -m pip install pyudev
 install-systemd-service.sh -u pyudevs <<EOF
 [Unit]
 Description=Run custom udev scripts via pyudev
-Requires=systemd-udevd.service
-After=systemd-udevd.service
 StartLimitInterval=0
 
 [Service]
