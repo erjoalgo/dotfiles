@@ -12,7 +12,8 @@ function usage {
 
 SSH_OPTS=""
 PORT_OPT=""
-while getopts "ht:p:r:n:d:" OPT; do
+SKIP_INIT=""
+while getopts "ht:p:r:n:d:k" OPT; do
     case ${OPT} in
     t)
         SSH_USERHOST=${OPTARG}
@@ -29,6 +30,9 @@ while getopts "ht:p:r:n:d:" OPT; do
         ;;
     r)
         REMOTE_NAME=${OPTARG}
+        ;;
+    k)
+        SKIP_INIT=true
         ;;
     h)
         less $0
@@ -54,7 +58,8 @@ if test -z "${REMOTE_NAME:-}"; then
     fi
 fi
 
-ssh -vv ${SSH_USERHOST} ${SSH_OPTS} sudo bash -xs <<EOF
+if test -n "${SKIP_INIT}"; then
+    ssh -vv ${SSH_USERHOST} ${SSH_OPTS} sudo bash -xs <<EOF
 set -euxo pipefail
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
@@ -64,6 +69,7 @@ chown -R git:git .
 chmod -R g=u .
 exit
 EOF
+fi
 
 # TODO remove possible user from SSH_USERHOST
 # TODO add possible non-standard port
