@@ -38,6 +38,7 @@ log_file ${TMPFILE}
 
 spawn bluetoothctl
 send -- "scan on\r"
+send -- "devices\r"
 expect {
     -re { Device ([A-Z0-9:]+)} {
         set device \$expect_out(1,string);
