@@ -97,8 +97,7 @@
   :cmd
   (cond
    ((which "mupen64plus")
-    (list "mupen64plus"
-          #P"~/Downloads/n64/Legend of Zelda, The - Ocarina of Time (USA) (Rev 2).z64"))
+    (list "mupen64plus" (n64-select-rom)))
    ((which "wine")
     (list "wine"
           (uiop:native-namestring
