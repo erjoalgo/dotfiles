@@ -38,14 +38,14 @@ send -- "scan on\r"
 expect {
     -re { Device ([A-Z0-9:]+)} {
         set device \$expect_out(1,string);
-        send -- "info \$device\r"
+        # send -- "info \$device\r"
         exp_continue
     }
     -re {ManufacturerData Key: (0x[0-9a-zA-Z]+)} {
         set key \$expect_out(1,string);
         puts "key is \$key"
-        set status [catch {exec grep -A1 -F "\$key" "$BLE_COMPANY_IDS"} output]
-        puts "grep output: \$output"
+        # set status [catch {exec grep -A1 -F "\$key" "$BLE_COMPANY_IDS"} output]
+        # puts "grep output: \$output"
         exp_continue
     }
 
