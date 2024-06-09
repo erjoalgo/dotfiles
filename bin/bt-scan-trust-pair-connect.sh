@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "m:h" OPT; do
+while getopts "m:rh" OPT; do
     case ${OPT} in
     m)
         MAC=${OPTARG}
+        ;;
+    r)
+        REMOVE=true
         ;;
     h)
         less "$0"
@@ -70,7 +73,25 @@ EOF
 fi
 
 
-expect -f - <<EOF
+if test "${REMOVE:-}" = true; then
+    expect -f - <<EOF
+set timeout -1
+set prompt "# "
+spawn bluetoothctl
+send -- "scan off\r"
+expect -- \$prompt
+send -- "cancel-pairing ${MAC}\r"
+expect -- \$prompt
+send -- "disconnect ${MAC}\r"
+expect -- \$prompt
+send -- "untrust ${MAC}\r"
+expect -- \$prompt
+send -- "remove ${MAC}\r"
+expect -- \$prompt
+EOF
+else
+    expect -f <<EOF
+exp_internal 1
 set timeout -1
 spawn bluetoothctl
 send -- "scan off\r"
