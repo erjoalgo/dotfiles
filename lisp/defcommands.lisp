@@ -346,3 +346,33 @@
             :on-empty-error "no adb devices found!"))
          (device-id (car (ppcre:split #\Tab device-line))))
     device-id))
+
+(defun openafs-this-cell ()
+  (format nil "~A/" (trim-spaces (file-string #P"/etc/openafs/ThisCell"))))
+
+(defun openafs-this-cell-root ()
+  (merge-pathnames (openafs-this-cell) "/afs/"))
+
+(defun symlinkp (pathname)
+  (sb-posix:s-islnk (sb-posix:stat-mode (sb-posix:lstat pathname))))
+
+(defun n64-select-rom (&key directory (last-rom-symlink #P"~/.n64-last-rom"))
+  (let ((last-rom-truepath (when (probe-file last-rom-symlink) (truename last-rom-symlink)))
+        (candidates (directory (merge-pathnames #P"public/n64/roms/*.*" (openafs-this-cell-root))))
+        initial-candidate
+        selection)
+    (when last-rom-truepath
+      (setf candidates (cons last-rom-truepath (delete last-rom-truepath candidates :test #'equal)))
+      (setf initial-candidate 0))
+    (setf selection
+          (selcand:select
+            :candidates candidates
+            :prompt "select n64 rom to play: "
+            :display-candidates t
+            :stringify-fn #'pathname-name
+            ;; :initial-candidate-index initial-candidate
+            :on-empty-error "no adb devices found!"))
+    (when (probe-file last-rom-symlink)
+      (sb-posix:unlink last-rom-symlink))
+    (sb-posix:symlink selection last-rom-symlink)
+    selection))
