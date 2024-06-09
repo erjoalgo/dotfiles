@@ -36,7 +36,8 @@
                  (on-empty-error "No candidates available!")
                  no-hints
                  display-candidates
-                 read-char-if-possible)
+                 read-char-if-possible
+                 initial-candidate-index)
   "Use PROMPT to prompt for a selection from CANDIDATES."
   (assert (or candidates hints-candidates) nil on-empty-error)
   (assert (alexandria:xor candidates hints-candidates))
@@ -84,7 +85,9 @@
                     (stumpwm::unmap-all-message-windows)
                     (return choice))))
             (t (or (stumpwm:completing-read
-                    (stumpwm:current-screen) prompt choices)
+                    (stumpwm:current-screen) prompt choices
+                    :initial-input (when initial-candidate-index
+                                     (nth initial-candidate-index choices)))
                    (throw 'error "Abort.")))))
          (cand (cdr (assoc hint-selected hints-cands :test #'equal))))
     (assert (or (null hint-selected) cand))
