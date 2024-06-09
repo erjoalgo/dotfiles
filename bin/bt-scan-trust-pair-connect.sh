@@ -52,7 +52,6 @@ expect {
         # puts "grep output: \$output"
         exp_continue
     }
-
 }
 EOF
     SCAN_PID=$!
