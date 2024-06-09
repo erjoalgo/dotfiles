@@ -27,3 +27,9 @@ Rumble=Yes
 ; Subscreen Delay Fixes
 Cheat0=801DAE8B 0002
 EOF
+
+DEST=${HOME}/.local/share/mupen64plus
+if test -d "${DEST}" -a ! -L "${DEST}"; then
+    mv -n "${DEST}" "${DEST}.bak"
+fi
+ln -fs /afs/asus.erjoalgo.com/public/n64/mupen64plus ~/.local/share/
