@@ -61,7 +61,7 @@
                    cand)))))
          (choices (mapcar #'car hints-cands))
          (prompt (if (not display-candidates) prompt
-                     (format nil "~A~%~{~A~^~%~}~% " prompt
+                     (format nil "~A~%~{~A~^~%~}~%~% " prompt
                              (if (eq display-candidates :include-values)
                                  hints-cands
                                  choices))))
