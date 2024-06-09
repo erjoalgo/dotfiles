@@ -90,7 +90,7 @@ send -- "remove ${MAC}\r"
 expect -- \$prompt
 EOF
 else
-    expect -f <<EOF
+    expect -f <(cat <<EOF
 exp_internal 1
 set timeout -1
 spawn bluetoothctl
@@ -102,3 +102,5 @@ expect -- "Pairing successful"
 send -- "connect ${MAC}\r"
 expect -- "Connection successful"
 EOF
+)
+fi
