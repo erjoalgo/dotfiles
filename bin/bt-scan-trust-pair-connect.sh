@@ -106,7 +106,10 @@ expect {
     "Pairing successful" {}
 }
 send -- "connect ${MAC}\r"
-expect -- "Connection successful"
+expect {
+       "Connection successful"
+       "Connected: yes"
+}
 EOF
 )
 fi
