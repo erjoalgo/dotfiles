@@ -98,7 +98,13 @@ send -- "scan off\r"
 send -- "trust ${MAC}\r"
 expect -- "trust succeeded"
 send -- "pair ${MAC}\r"
-expect -- "Pairing successful"
+expect {
+    "Confirm passkey" {
+        expect_user -re "(.+)\[\r\n]"
+        send "\$expect_out(1,string)\r\n"
+    }
+    "Pairing successful" {}
+}
 send -- "connect ${MAC}\r"
 expect -- "Connection successful"
 EOF
