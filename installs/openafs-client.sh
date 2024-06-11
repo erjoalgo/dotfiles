@@ -53,7 +53,7 @@ EOF
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openafs-{modules-dkms,client,krb5}
 sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openafs-client
 
-LINE=">${THIS_CELL}"
+LINE=">${THIS_CELL}   #"
 CELLSERVDB=/etc/openafs/CellServDB
 
 if ! grep -F "${LINE}" "${CELLSERVDB}"; then
