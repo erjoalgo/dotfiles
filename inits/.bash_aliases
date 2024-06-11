@@ -69,6 +69,14 @@ elif command -v pbcoby; then
 else
     alias xs='cat'
 fi
+
+function xC {
+    FILENAME=${1} && shift
+    ABS=$(realpath "${FILENAME}" | tr -d '\n' | tr -d '\r')
+    xs <<< "${ABS}"
+    echo "copied: ${ABS}"
+}
+
 alias pd='pushd .'
 alias ppd='popd'
 
