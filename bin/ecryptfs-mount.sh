@@ -15,7 +15,7 @@ done
 shift $((OPTIND -1))
 
 if ! command -v mount.ecryptfs; then
-    sudo apt-get install -y ecryptfs
+    sudo apt-get install -y ecryptfs-utils
 fi
 
 THIS_CELL=$(cat /etc/openafs/ThisCell)
