@@ -25,6 +25,10 @@ shift $((OPTIND -1))
 
 AFS_CACHE_GB=${AFS_CACHE_GB:-20}
 
+if ! command -v bc; then
+    sudo apt-get install -y bc
+fi
+
 AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
 
 ping -c3 "${THIS_CELL}"
