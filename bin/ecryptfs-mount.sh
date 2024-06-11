@@ -14,6 +14,10 @@ while getopts "ha:" OPT; do
 done
 shift $((OPTIND -1))
 
+if ! command -v mount.ecryptfs; then
+    sudo apt-get install -y ecryptfs
+fi
+
 THIS_CELL=$(cat /etc/openafs/ThisCell)
 SRC="/afs/${THIS_CELL}/public/backup"
 DEST="${HOME}/mnts/backup"
