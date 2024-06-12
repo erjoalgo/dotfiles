@@ -33,6 +33,8 @@ AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
 
 ping -c3 "${THIS_CELL}"
 
+sudo apt-get install -y linux-headers-$(uname -r)
+
 sudo debconf-set-selections <<EOF
 # Size of AFS cache in kB:
 openafs-client  openafs-client/cachesize        string  ${AFS_CACHE_KB}
