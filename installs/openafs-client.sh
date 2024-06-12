@@ -59,9 +59,12 @@ EOF
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openafs-{modules-dkms,client,krb5}
 sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openafs-client
 
-LINE=">${THIS_CELL}   #"
 CELLSERVDB=/etc/openafs/CellServDB
 
-if ! grep -F "${LINE}" "${CELLSERVDB}"; then
-    sudo sed -i.old "1s;^;${LINE}\n;" "${CELLSERVDB}"
+if ! grep -F "^>{THIS_CELL}" "${CELLSERVDB}"; then
+    IP_ADDR=$(dig +short ${THIS_CELL})
+    sudo tee -a "${CELLSERVDB}" <<EOF
+>${THIS_CELL}
+${IP_ADDR} #${THIS_CELL}
+EOF
 fi
