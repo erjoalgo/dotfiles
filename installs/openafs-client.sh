@@ -61,5 +61,5 @@ LINE=">${THIS_CELL}   #"
 CELLSERVDB=/etc/openafs/CellServDB
 
 if ! grep -F "${LINE}" "${CELLSERVDB}"; then
-    sudo sed -i.old '1s;^;${LINE};' "${CELLSERVDB}"
+    sudo sed -i.old "1s;^;${LINE}\n;" "${CELLSERVDB}"
 fi
