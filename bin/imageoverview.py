@@ -15,6 +15,7 @@ import os
 import queue
 import re
 import shutil
+import socket
 import subprocess
 import threading
 import urllib.parse
@@ -200,7 +201,8 @@ def main():
                                                         image_regexp=args.image_regexp,
                                                         skip_image_regexp=args.skip_image_regexp))
     logging.info("starting http server on %s", server_address)
-    subprocess.Popen(["x-www-browser", f"http://localhost:{args.port}"])
+    hostname = socket.gethostname()
+    subprocess.Popen(["x-www-browser", f"http://{hostname}.local:{args.port}"])
     httpd.serve_forever()
 
 
