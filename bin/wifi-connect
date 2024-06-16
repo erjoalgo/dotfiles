@@ -344,6 +344,8 @@ def netconfig(iface=None, essid=None, password=None, **config):
     p = subprocess.Popen(["sudo", "tee", filename], stdin=subprocess.PIPE,
                          stdout=sys.stdout, stderr=sys.stderr)
     contents = f"""
+allow-hotplug wlan0
+
 iface {iface} inet dhcp
   wpa-ssid {essid}
   wpa-psk {password}
