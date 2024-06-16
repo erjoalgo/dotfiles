@@ -73,7 +73,7 @@ fi
 function xC {
     FILENAME=${1} && shift
     ABS=$(realpath "${FILENAME}" | tr -d '\n' | tr -d '\r')
-    xs <<< "${ABS}"
+    echo -n "${ABS}" | xs
     echo "copied: ${ABS}"
 }
 
