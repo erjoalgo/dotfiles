@@ -56,7 +56,9 @@ openafs-client  openafs-client/fakestat boolean true
 openafs-client  openafs-client/run-client       boolean true
 EOF
 
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openafs-{modules-dkms,client,krb5}
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openafs-{modules-dkms,client,krb5}  \
+     krb5-user libpam-krb5
+
 sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openafs-client
 
 CELLSERVDB=/etc/openafs/CellServDB
