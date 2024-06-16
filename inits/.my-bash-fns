@@ -747,6 +747,12 @@ function apt-get-source {
     debuild -uc -us
 }
 
+function debian-readme-less {
+    PACKAGE=${1} && shift
+    dpkg -L "${PACKAGE}" | grep -i README | xargs -L1 zless
+}
+complete-alias _apt_get debian-readme-less apt-get install
+
 function git-add-commit-file {
     git add ${*}
     git commit -m "new file: ${*}"
