@@ -28,17 +28,32 @@ sudo sysctl -w net.ipv4.ip_forward=1
 
 set -x
 
-sudo iptables -I FORWARD 1 -i ${IFACE_OUT} -o ${IFACE_SOURCE} -m state --state ESTABLISHED,RELATED -j ACCEPT
-for TARGET in NFLOG ACCEPT; do
-    sudo iptables -I FORWARD 1 -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ${TARGET}
-done
-sudo iptables -t nat -I POSTROUTING 1 -o ${IFACE_OUT} -j MASQUERADE
-
+BASENAME="share-internet-${IFACE_SOURCE}-to-${IFACE_OUT}"
 if test -n "${PERSIST:-}"; then
     sudo apt-get install -y iptables-persistent
-    IDENTIFIER="${IFACE_SOURCE}-to-${IFACE_OUT}"
-    sudo iptables-save |  \
-        sudo insert-text-block \
-             "# b674161f-f554-4255-86cb-80065761abdc-share-internet-${IDENTIFIER}" \
-             /etc/iptables/rules.v4
+    RULES_FILE="/etc/iptables/${BASENAME}"
+else
+    RULES_FILE="/tmp/${BASENAME}"
 fi
+
+
+sudo insert-text-block '# 48adcfbc-82d3-4d35-aaab-3ede23c1cad9-iptables-share-internet'  \
+     "${RULES_FILE}"<<EOF
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A FORWARD -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j ACCEPT
+-A FORWARD -i ${IFACE_SOURCE} -o ${IFACE_OUT} -j NFLOG
+-A FORWARD -i ${IFACE_OUT} -o ${IFACE_SOURCE} -m state --state RELATED,ESTABLISHED -j ACCEPT
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -o ${IFACE_OUT} -j MASQUERADE
+COMMIT
+EOF
+
+sudo iptables-restore "${RULES_FILE}"
