@@ -92,7 +92,7 @@ def read_battery_info():
             continue
         _key, val = items
         key = re.sub("[^a-zA-Z_]+", "", _key)
-        info[key] = val
+        info[key] = val.strip()
     return info
 
 def loop(inter_sedation_cycles=20):
