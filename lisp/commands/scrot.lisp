@@ -38,6 +38,9 @@
                  (directory #P"/dev/input/*")))
 
 
+(defun pathname-to-url (pathname)
+  (format nil "file://~A" pathname))
+
 (defun take-scrot (name
                    &rest args
                    &key
@@ -106,13 +109,9 @@
                (args (list "-crop" crop-spec out-png)))
           (message "scrot: ~A ~{~A~^ ~}~%" cmd args)
           (run-command-sync-notify-on-error cmd args))))
-
     ;;why does this crash the session
     (when show
-      (SB-EXT:RUN-PROGRAM "eog"
-                          (list out-png)
-                          :search t
-                          :wait nil))
+      (x-www-browser (pathname-to-url out-png) t))
 
     (set-x-selection out-png :clipboard)
 
@@ -218,7 +217,8 @@ perform ocr on it, place ocr'd text into clipboard"
     (unmap-all-message-windows)
     (run-command-async-notify
      "byzanz-record"
-     `(,@duration-args ,@box-args ,recording-pathname))))
+     `(,@duration-args ,@box-args ,recording-pathname)
+     (lambda () (x-www-browser (pathname-to-url recording-pathname) t)))))
 
 (defcommand byzanz-record-auto () ()
   (handler-case (byzanz-record-auto-stop)
