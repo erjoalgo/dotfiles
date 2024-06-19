@@ -7,6 +7,7 @@ CMD=(sudo horst)
 while getopts "i:c:e:h" OPT; do
     case ${OPT} in
     i)
+        # interface
         CMD+=(-i ${OPTARG})
         ;;
     c)
