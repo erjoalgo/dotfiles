@@ -198,18 +198,22 @@ perform ocr on it, place ocr'd text into clipboard"
   (grab-pointer-position))
 
 (defun grab-box (&optional prompt)
-  (let ((tl (grab-pointer-prompt
-             (format nil "~A: move cursor to top-left corner of the box: " prompt)))
-        (br (grab-pointer-prompt
-             (format nil "~A: move cursor to bottom-right corner of the box: " prompt)))
-        w h)
+  "Returns a 3-tuple: (left top) (right bottom) (width height)"
+  (let* ((prefix (if prompt (format nil "~A: " prompt) ""))
+         (tl (grab-pointer-prompt
+              (format nil "~Amove cursor to top-left corner of the box: " prefix)))
+         (br (grab-pointer-prompt
+              (format nil "~Amove cursor to bottom-right corner of the box: " prefix)))
+         w h x y)
     (destructuring-bind (top . l) tl
       (destructuring-bind (b . r) br
         (setf w (- r l)
-              h (- b top))))
-    (assert (> w 0))
-    (assert (> h 0))
-    (list tl br (cons w h))))
+              h (- b top)
+              x l
+              y top)
+        (assert (> w 0))
+        (assert (> h 0))
+        (list (cons x y) (cons r b) (cons w h))))))
 
 (define-stumpwm-type :box (input prompt)
   (declare (ignore input))
