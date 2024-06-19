@@ -96,7 +96,6 @@
                  (error "scrot command failed:~%~A"
                         (if (not done-p) "timeout"
                             "non-zero exit status"))))
-
     (when box
       (destructuring-bind ((x . y) (_right . _bot) (width . height)) box
         (assert (equal x (min x _right)))
