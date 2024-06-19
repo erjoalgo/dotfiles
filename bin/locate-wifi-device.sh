@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-CMD=(sudo horst
+CMD=(sudo horst)
+
 while getopts "i:c:e:h" OPT; do
     case ${OPT} in
     i)
