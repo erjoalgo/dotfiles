@@ -95,13 +95,13 @@
                             "non-zero exit status"))))
 
     (when box
-      (destructuring-bind ((x1 . y1) (x2 . y2)) box
-        (let* ((width (abs (- x2 x1)))
-               (height (abs (- y2 y1)))
-               (crop-spec (format nil "~Dx~D+~D+~D"
+      (destructuring-bind ((x . y) (_right . _bot) (width . height)) box
+        (assert (equal x (min x _right)))
+        (assert (equal y (min y _bot)))
+        (let* ((crop-spec (format nil "~Dx~D+~D+~D"
                                   width
                                   height
-                                  (min x1 x2) (min y1 y2)))
+                                  x y))
                (cmd "mogrify")
                (args (list "-crop" crop-spec out-png)))
           (message "scrot: ~A ~{~A~^ ~}~%" cmd args)
