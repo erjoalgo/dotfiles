@@ -37,9 +37,6 @@
                    (ppcre:scan "mouse" (pathname-name pathname)))
                  (directory #P"/dev/input/*")))
 
-(defvar *record-box-and-funcall-state*
-  nil
-  "Internal to record-box-and-funcall")
 
 (defun take-scrot (name
                    &rest args
@@ -67,35 +64,23 @@
          (args
            (append
             (list out-png "-z")
-            (when overwrite '("-o"))
-            (case selection
-              (:interactive
-               ;; (message "select a box in the screen...")
-               ;; (sleep .5)
-               ;; (unmap-all-message-windows)
-               (if (mouse-available-p)
-                   '("-s")
-                   (progn
-                     (echo (concat "scrot will resume after two "
-                                   "clicks at the box edges..."))
-                     (return-from take-scrot
-                       (setf *record-box-and-funcall-state*
-                             (list
-                              (lambda (box)
-                                (apply #'take-scrot name
-                                       :selection box args))))))))
-              (:fullscreen nil)
-              (:window '("-u"))
-              (t
-               (setf box selection)
-               nil))))
-         (proc (SB-EXT:RUN-PROGRAM program
+            (when overwrite '("-o"))))
+         proc)
+    (case selection
+      (:interactive
+       (if (mouse-available-p)
+           (push "-s" args)
+           (setf box (grab-box))))
+      (:fullscreen nil)
+      (:window (push "-u" args))
+      (t
+       (setf box selection)))
+    (setf proc (SB-EXT:RUN-PROGRAM program
                                    args
                                    :search t
                                    :output t
                                    :error t
-                                   :wait nil)))
-
+                                   :wait nil))
     (loop with start-time-secs = (GET-UNIVERSAL-TIME)
           as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
           as elapsed-secs = (- (get-universal-time) start-time-secs)
@@ -167,26 +152,6 @@ perform ocr on it, place ocr'd text into clipboard"
     (declare (ignore win))
     (cons x y)))
 
-(defun record-box-and-funcall (&optional screen code x y)
-  (declare (ignore screen code))
-  (when *record-box-and-funcall-state*
-    (let ((p (cons x y)))
-      (message "~A" p)
-      (case (length *record-box-and-funcall-state*)
-        (1 (push p *record-box-and-funcall-state*)
-         (echo "one more click..."))
-        (2 (destructuring-bind (p1 fn) *record-box-and-funcall-state*
-             (unmap-all-message-windows)
-             (setf *record-box-and-funcall-state* nil)
-             (sb-thread:make-thread
-              (lambda (fn p1 p)
-                (sleep .5)
-                (funcall fn (list p1 p)))
-              :arguments (list fn p1 p))))
-        (t (error "record-box-and-funcall usage error: ~A"
-                  *record-box-and-funcall-state*))))))
-
-
 (defun grab-pointer-position ()
   (multiple-value-bind (x y win)
       (xlib:global-pointer-position *display*)
@@ -218,8 +183,6 @@ perform ocr on it, place ocr'd text into clipboard"
 (define-stumpwm-type :box (input prompt)
   (declare (ignore input))
   (grab-box prompt))
-
-(add-hook *click-hook* 'record-box-and-funcall)
 
 (defvar *byzanz-recording-control-port* 17909)
 
