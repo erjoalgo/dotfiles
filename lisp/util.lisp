@@ -193,16 +193,23 @@
                     ,command ,args
                     ,output-sym)))))))
 
-(defun run-command-async-notify (command &optional args)
+(defun run-command-async-notify (command
+                                 &optional args
+                                   on-success-callback
+                                   on-error-callback)
   (run-command-async
    command
    (mapcar 'princ-to-string args)
    (ret out)
-   (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
-                    command args)
-   (message-wrapped
-    "^1non-zero exit: ~A of '~A ~{~A~^ ~}':~%~%~A^*"
-    ret command args out)))
+   (progn
+     (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
+                      command args)
+     (when on-success-callback (funcall on-success-callback)))
+   (progn
+     (message-wrapped
+      "^1non-zero exit: ~A of '~A ~{~A~^ ~}':~%~%~A^*"
+      ret command args out)
+     (when on-error-callback (funcall on-error-callback)))))
 
 (defun run-command-async-notify-on-error (command &optional args)
   (run-command-async
