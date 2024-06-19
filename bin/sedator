@@ -32,10 +32,10 @@ echo "idle time: ${MINS}m"
 if test -n "${BATTERY:-}"; then
     # battery detected. considering sedation
     if test ${MINS} -gt 60; then
-        echo "hibernating"
+        echo "attempting to hibernate"
         sudo systemctl hibernate
     elif test ${MINS} -gt 30; then
-        echo "suspending..."
+        echo "attempting to suspend..."
         sudo systemctl suspend
     fi
 fi
@@ -43,6 +43,7 @@ fi
 if test ${MINS} -lt 10; then
     echo "taking no sedating action"
 elif pgrep X; then
+    echo "attempting to lock the display"
     export DISPLAY=:0
     export XAUTHORITY=${XAUTHORITY:-${HOME:-}/.Xauthority} || true
     xhost +SI:localuser:root || true
