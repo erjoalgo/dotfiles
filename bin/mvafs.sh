@@ -55,7 +55,9 @@ function mvafs {
 
 if test -n "${DIRNAME:-}"; then
     mvafs "${DIRNAME}"
-    echo "${DIRNAME}" >> "${AFS_DIRS_FILE}"
+    if ! grep -F "${DIRNAME}" "${AFS_DIRS_FILE}"; then
+        echo "${DIRNAME}" >> "${AFS_DIRS_FILE}"
+    fi
 elif test -n "${ALL:-}"; then
     for DIRNAME in $(cat "${AFS_DIRS_FILE}"); do
         mvafs "${DIRNAME}"
