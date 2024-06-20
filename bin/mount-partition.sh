@@ -41,7 +41,7 @@ if test -z "${PARTITION:-}"; then
     OLDIFS=$IFS
     IFS=$'\n'
     select PARTITION in  \
-        $(sudo lsblk -o PATH,NAME,MODEL,SIZE,FSTYPE,MOUNTPOINT |  \
+        $(sudo lsblk -o PATH,NAME,MODEL,SIZE,FSTYPE,MOUNTPOINT,UUID |  \
               grep --color=always -E '.*crypto_LUKS|$'); do
         PARTITION=$(cut -f1 -d' ' <<< "${PARTITION}")
         PARTITION=$(sed  -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"  \
