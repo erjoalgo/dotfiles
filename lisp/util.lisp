@@ -347,3 +347,12 @@
 
 (defmacro lparallel-future (form)
   `(push (cons ',form (lparallel:future ,form)) *lparallel-futures-log*))
+
+(defun fix-deadlock ()
+  (loop for thread in (sb-thread:list-all-threads)
+        do (when-let*
+               ((mutex
+                 (waiting-for
+                  (slot-value thread 'sb-thread::waiting-for)))
+                (owner (sb-thread:mutex-owner mutex)))
+             (sb-thread:terminate-thread owner))))
