@@ -5,7 +5,8 @@ set -euo pipefail
 UMOUNT=false
 
 
-while getopts "hub:k:" OPT; do
+OPTS_OPT=()
+while getopts "hub:k:o:" OPT; do
     case ${OPT} in
     u)
         UMOUNT=true
@@ -15,6 +16,9 @@ while getopts "hub:k:" OPT; do
         ;;
     k)
         UUID=${OPTARG}
+        ;;
+    o)
+        OPTS_OPT=(-o ${OPTARG})
         ;;
     h)
         less $0
@@ -105,7 +109,7 @@ else
     fi
     MNT=$(get-mountpoint)
     sudo mkdir -p ${MNT}
-    if ! sudo mount  "${DEVICE_PATH}" "${MNT}"; then
+    if ! sudo mount  "${DEVICE_PATH}" "${MNT}" ${OPTS_OPT[@]}; then
         VG=$(sudo pvdisplay "${DEVICE_PATH}" -C --noheadings |  \
                  tr -s ' '| cut -f3 -d' ')
         echo "select root partition: "
