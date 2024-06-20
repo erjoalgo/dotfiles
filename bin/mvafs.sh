@@ -8,7 +8,7 @@ while getopts "hd:a:" OPT; do
     case ${OPT} in
     d)
         # directory or filename
-        DIRNAME=${OPTARG}
+        DIRNAME=$(realpath ${OPTARG})
         ;;
     a)
         ALL=${OPTARG}
