@@ -74,9 +74,29 @@ Z_SAFE_HOMING
 EOF
 )
 
+OLDIFS=$IFS
+IFS=$'\n'
+
 for FEATURE in ${ENABLE_FEATURES}; do
-    sed -i -Ee "s|^( *)//* *(#define *${FEATURE})($\|[^_A-Z0-9])|\1\2\3|g" ${CONFIGURATIONS}
+    echo "${FEATURE}"
+    KEY=$(cut -f1 -d' ' <<< "${FEATURE}")
+    VAL=$(cut -f2- -d' ' -s <<< "${FEATURE}")
+
+    WORD_ENDS="($\|[^_A-Z0-9])" # make sure we don't match on common prefixes
+    REST=""
+    if test -z "${VAL:-}"; then
+        REP="\1\3\4"
+    else
+        REP="\1\3 ${VAL}"
+        REST=".*"
+    fi
+    IFS=' '
+    sed -i -Ee  \
+        "s|^( *)(// *)?(#define *${KEY})${WORD_ENDS}${REST}|${REP}|g"  \
+        ${CONFIGURATIONS}
+    IFS=$'\n'
 done
+IFS=$OLDIFS
 
 DISABLE_FEATURES=$(cat<<EOF
 MANUAL_PROBE_START_Z
