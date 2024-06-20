@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-MOUNT_PARTITION_CMD=(mount-partition.sh)
+MOUNT_PARTITION_CMD=(mount-partition.sh -o rw,umask=000)
 while getopts "d:k:ha:" OPT; do
     case ${OPT} in
     d)
@@ -58,7 +58,7 @@ fi
 sudo rm -f ${MOUNTP}/*bin
 BASENAME="GD-Ender-3 ProHW4.2.2SW2.0.8.2CRTouchFilamentEuropeMulti"
 BASENAME="${RANDOM}-${BASENAME}"
-sudo cp "${FIRMWARE}" "${MOUNTP}/${BASENAME}.bin"
+cp "${FIRMWARE}" "${MOUNTP}/${BASENAME}.bin"
 sudo ls "${MOUNTP}"
 
 umount-poweroff.sh -qm "${MOUNTP}"
