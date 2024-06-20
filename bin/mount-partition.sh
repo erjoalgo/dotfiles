@@ -21,6 +21,14 @@ while getopts "hub:" OPT; do
 done
 shift $((OPTIND -1))
 
+function get-partition-by-attr {
+    KEY_SPEC=${1} && shift
+    COLUMN=${1} && shift
+    KEY_COL=$(cut -f1 -d= <<< "${KEY_SPEC}")
+    KEY_VAL=$(cut -f2 -d= <<< "${KEY_SPEC}")
+    sudo lsblk -o ${KEY_COL},${COLUMN} | grep "${KEY_VAL}" | tr -s ' ' | cut -f2 -d' '
+}
+
 if test -z "${PARTITION:-}"; then
     echo "select partition to mount: "
     OLDIFS=$IFS
@@ -38,15 +46,7 @@ if test -z "${PARTITION:-}"; then
     IFS=${OLDIFS}
 fi
 
-function get-partition-attr {
-    KEY_SPEC=${1} && shift
-    COLUMN=${1} && shift
-    KEY_COL=$(cut -f1 -d= <<< "${KEY_SPEC}")
-    KEY_VAL=$(cut -f2 -d= <<< "${KEY_SPEC}")
-    sudo lsblk -o ${KEY_COL},${COLUMN} | grep "${KEY_VAL}" | tr -s ' ' | cut -f2 -d' '
-}
-
-FSTYPE=$(get-partition-attr PATH="${PARTITION}" FSTYPE)
+FSTYPE=$(get-partition-by-attr PATH="${PARTITION}" FSTYPE)
 
 if test "${FSTYPE}" = crypto_LUKS; then
     LUKS_NAME="decrypted-${UID}"
@@ -59,8 +59,8 @@ fi
 
 
 function get-unique-label {
-    LABEL=$(get-partition-attr PATH="${DEVICE_PATH}" LABEL)
-    PART_UID=${LABEL:-$(get-partition-attr PATH="${DEVICE_PATH}" UUID)}
+    LABEL=$(get-partition-by-attr PATH="${DEVICE_PATH}" LABEL)
+    PART_UID=${LABEL:-$(get-partition-by-attr PATH="${DEVICE_PATH}" UUID)}
     echo "${PART_UID}"
 }
 
