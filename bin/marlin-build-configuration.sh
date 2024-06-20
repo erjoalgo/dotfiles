@@ -34,7 +34,7 @@ CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations/}
 MARLIN_DIR=${MARLIN_DIR:-${HOME}/git/Marlin}
 # may not exist until after switching branches
 CONFIG_PATH=${CONFIG_DIR}/config/examples/Creality/Ender-3\ Pro/CrealityV422
-CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-"Ernesto's"}
+CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-$(date "+%Y-%m-%d %H:%M%p")}
 
 test -d "${CONFIG_DIR}"
 test -d "${MARLIN_DIR}"
