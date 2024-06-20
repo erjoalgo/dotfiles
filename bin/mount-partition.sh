@@ -5,13 +5,16 @@ set -euo pipefail
 UMOUNT=false
 
 
-while getopts "hub:" OPT; do
+while getopts "hub:k:" OPT; do
     case ${OPT} in
     u)
         UMOUNT=true
         ;;
     b)
         PARTITION=${OPTARG}
+        ;;
+    k)
+        UUID=${OPTARG}
         ;;
     h)
         less $0
@@ -28,6 +31,10 @@ function get-partition-by-attr {
     KEY_VAL=$(cut -f2 -d= <<< "${KEY_SPEC}")
     sudo lsblk -o ${KEY_COL},${COLUMN} | grep "${KEY_VAL}" | tr -s ' ' | cut -f2 -d' '
 }
+
+if test -n "${UUID:-}"; then
+    PARTITION=$(get-partition-by-attr UUID=${UUID} PATH)
+fi
 
 if test -z "${PARTITION:-}"; then
     echo "select partition to mount: "
