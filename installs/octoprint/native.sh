@@ -28,3 +28,5 @@ Type=simple
 [Install]
 WantedBy=default.target
 EOF
+
+sudo ufw allow 80/tcp
