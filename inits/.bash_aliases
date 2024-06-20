@@ -504,7 +504,9 @@ function device-monitor {
       sudo dmesg -w | grep -v UFW; }
 }
 
-alias cdafs="cd /afs/$(tr -d '\n' < /etc/openafs/ThisCell)/public/"
+function cdafs {
+    cd "/afs/$(tr -d '\n' < /etc/openafs/ThisCell)/public/"
+}
 
 # Local Variables:
 # mode: sh
