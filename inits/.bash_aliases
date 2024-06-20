@@ -503,6 +503,9 @@ function device-monitor {
       sudo tail /var/log/syslog | grep -v UFW &  \
       sudo dmesg -w | grep -v UFW; }
 }
+
+alias cdafs="cd /afs/$(tr -d '\n' < /etc/openafs/ThisCell)/public/"
+
 # Local Variables:
 # mode: sh
 # End:
