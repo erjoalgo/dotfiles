@@ -12,8 +12,9 @@ function usage {
 
 SSH_OPTS=""
 PORT_OPT=""
-SKIP_INIT=""
-while getopts "ht:p:r:n:d:k" OPT; do
+SKIP_GIT_SETUP=""
+SET_UPSTREAM_OPT="--set-upstream"
+while getopts "ht:p:r:n:d:kaU" OPT; do
     case ${OPT} in
     t)
         SSH_USERHOST=${OPTARG}
@@ -32,7 +33,15 @@ while getopts "ht:p:r:n:d:k" OPT; do
         REMOTE_NAME=${OPTARG}
         ;;
     k)
-        SKIP_INIT=true
+        SKIP_GIT_SETUP=true
+        ;;
+    a)
+        AFS=true
+        SET_UPSTREAM_OPT=""
+        REMOTE_NAME=afs
+        ;;
+    U)
+        SET_UPSTREAM_OPT=""
         ;;
     h)
         less $0
@@ -45,7 +54,7 @@ done
 
 REPO_NAME=${REPO_NAME:-$(basename $(git rev-parse --show-toplevel))}
 SRV_PREFIX=${SRV_PREFIX:-/opt/git}
-if test -z "${SSH_USERHOST:-}"; then
+if test -z "${SSH_USERHOST:-}" -a -z "${AFS:-}"; then
     usage
     exit 1
 fi
@@ -58,24 +67,31 @@ if test -z "${REMOTE_NAME:-}"; then
     fi
 fi
 
-if test -n "${SKIP_INIT}"; then
-    ssh -vv ${SSH_USERHOST} ${SSH_OPTS} sudo bash -xs <<EOF
+if test -z "${AFS:-}"; then
+    REMOTE_URL="ssh://git@${SSH_USERHOST}${PORT_OPT}${SRV_PREFIX}/${REPO_NAME}"
+else
+    REMOTE_URL="/afs/$(tr -d '\n' < /etc/openafs/ThisCell)/home/${USER}/git-bare/${REPO_NAME}"
+fi
+
+if test -z "${SKIP_GIT_SETUP}"; then
+    if test -z "${AFS:-}"; then
+        ssh -vv ${SSH_USERHOST} ${SSH_OPTS} sudo bash -xs <<EOF
 set -euxo pipefail
 
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
-mkdir -p \$REPO_PATH && cd \$REPO_PATH
-git init --bare
+mkdir -p \$REPO_PATH
+git init --bare \$REPO_PATH
 chown -R git:git .
 chmod -R g=u .
-exit
 EOF
+    else
+        mkdir -p "${REMOTE_URL}"
+        git init --bare "${REMOTE_URL}"
+    fi
 fi
 
 # TODO remove possible user from SSH_USERHOST
 # TODO add possible non-standard port
-
-REMOTE_URL="ssh://git@${SSH_USERHOST}${PORT_OPT}${SRV_PREFIX}/${REPO_NAME}"
-ORIGIN_NAME=origin
 
 function git-remote-url {
     REMOTE=${1} && shift
@@ -104,4 +120,5 @@ if ! git log > /dev/null; then
 fi
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || true
-git push --set-upstream ${REMOTE_NAME} ${BRANCH:-}
+git push ${SET_UPSTREAM_OPT} ${REMOTE_NAME} ${BRANCH:-}
+
