@@ -2,10 +2,16 @@
 
 set -euo pipefail
 
-while getopts "d:ha:" OPT; do
+MOUNT_PARTITION_CMD=(mount-partition.sh)
+while getopts "d:k:ha:" OPT; do
     case ${OPT} in
     d)
         DEVICE=${OPTARG}
+        MOUNT_PARTITION_CMD+=("-b" "${DEVICE}")
+        ;;
+    k)
+        DISK_UUID=${OPTARG}
+        MOUNT_PARTITION_CMD+=("-k" "${DISK_UUID}")
         ;;
     h)
         less $0
@@ -14,6 +20,19 @@ while getopts "d:ha:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+
+function get-partition-by-attr {
+    KEY_SPEC=${1} && shift
+    COLUMN=${1} && shift
+    KEY_COL=$(cut -f1 -d= <<< "${KEY_SPEC}")
+    KEY_VAL=$(cut -f2 -d= <<< "${KEY_SPEC}")
+    sudo lsblk -o ${KEY_COL},${COLUMN} | grep "${KEY_VAL}" | tr -s ' ' | cut -f2 -d' '
+}
+
+if test -n "${DISK_UUID:-}"; then
+    DEVICE=$(get-partition-by-attr UUID=${DISK_UUID} PATH)
+fi
 
 test -n "${DEVICE:-}"
 
@@ -26,7 +45,7 @@ function get-mount-point {
 }
 
 if ! MOUNTP=$(get-mount-point "${DEVICE}"); then
-    mount-partition.sh -b "${DEVICE}"
+    ${MOUNT_PARTITION_CMD[@]}
     MOUNTP=$(get-mount-point "${DEVICE}")
 fi
 
