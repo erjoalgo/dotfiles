@@ -6,10 +6,6 @@ AFS_DIRS_FILE="${HOME}/git/dotfiles/inits/afs-dirs"
 
 while getopts "hd:a:" OPT; do
     case ${OPT} in
-    d)
-        # directory or filename
-        DIRNAME=$(realpath ${OPTARG})
-        ;;
     a)
         ALL=${OPTARG}
         ;;
@@ -23,6 +19,10 @@ while getopts "hd:a:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+if test -z "${ALL:-}"; then
+    DIRNAME=$(realpath ${1}) && shift
+fi
 
 function mvafs {
     DIRNAME=$(realpath ${1}) && shift
