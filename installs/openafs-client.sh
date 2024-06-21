@@ -85,3 +85,5 @@ if ! grep -F "^>{THIS_CELL}" "${CELLSERVDB}"; then
 ${IP_ADDR} #${THIS_CELL}
 EOF
 fi
+
+ln -s "/afs/${THIS_CELL}/" ${HOME}/afs
