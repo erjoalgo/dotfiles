@@ -36,7 +36,7 @@ if test -n "${BATTERY:-}"; then
         sudo systemctl hibernate
     elif test ${MINS} -gt 30; then
         echo "attempting to suspend..."
-        sudo systemctl suspend
+        # sudo systemctl suspend
     fi
 fi
 
