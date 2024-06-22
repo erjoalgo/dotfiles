@@ -2,11 +2,9 @@
 
 set -euo pipefail
 
-while getopts "m:qh" OPT; do
+MOUNT_POINT=${1} && shift
+while getopts "qh" OPT; do
     case ${OPT} in
-    m)
-        MOUNT_POINT=${OPTARG}
-        ;;
     q)
         set +x # quiet
         ;;
