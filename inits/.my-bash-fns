@@ -744,6 +744,9 @@ function apt-get-source {
     apt-get source ${PACKAGE}
     cd $(find . -maxdepth 1 -mindepth 1 -type d)
     sudo apt-get build-dep -y ${PACKAGE} || true
+    if ! command -v build-dep; then
+        sudo apt-get install -y devscripts
+    fi
     debuild -uc -us
 }
 
