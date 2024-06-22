@@ -64,12 +64,14 @@ if sudo grep "Possible missing firmware /lib/firmware/radeon" -R /var/log/syslog
 fi
 
 if  sudo dmesg | grep 'Direct firmware load for .*failed with error'; then
+    add-non-free-apt-source
     sudo apt-get install -y firmware-misc-nonfree
 fi
 
 if (sudo grep /var/log/syslog 'idVendor=0bda.*idProduct=b812' ||  \
         sudo lsusb | grep "RTL88x2bu") \
        && ! lsmod | grep 88x2bu; then
+    add-non-free-apt-source
     cd ${HOME}/git
     URL=https://github.com/cilynx/rtl88x2bu
     DIR=${HOME}/git/$(basename "${URL}")
