@@ -31,8 +31,6 @@ fi
 
 AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
 
-ping -c3 "${THIS_CELL}"
-
 sudo apt-get install -y linux-headers-$(uname -r)
 
 sudo debconf-set-selections <<EOF
@@ -87,3 +85,5 @@ EOF
 fi
 
 ln -s "/afs/${THIS_CELL}/" ${HOME}/afs
+
+ping -c3 "${THIS_CELL}"
