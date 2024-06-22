@@ -84,6 +84,6 @@ ${IP_ADDR} #${THIS_CELL}
 EOF
 fi
 
-ln -s "/afs/${THIS_CELL}/" ${HOME}/afs
+ln -fs "/afs/${THIS_CELL}/" ${HOME}/afs
 
 ping -c3 "${THIS_CELL}"
