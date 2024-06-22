@@ -6,7 +6,7 @@ UMOUNT=false
 
 
 OPTS_OPT=()
-while getopts "hub:k:o:" OPT; do
+while getopts "hub:k:o:w" OPT; do
     case ${OPT} in
     u)
         UMOUNT=true
@@ -19,6 +19,9 @@ while getopts "hub:k:o:" OPT; do
         ;;
     o)
         OPTS_OPT=(-o ${OPTARG})
+        ;;
+    w)
+        OPTS_OPT=(-o rw,umask=000)
         ;;
     h)
         less $0
