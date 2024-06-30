@@ -507,6 +507,8 @@ function device-monitor {
 function cdafs {
     cd "/afs/$(tr -d '\n' < /etc/openafs/ThisCell)/public/"
 }
+alias efm=ecryptfs-mount.sh
+
 
 # Local Variables:
 # mode: sh
