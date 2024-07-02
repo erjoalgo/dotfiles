@@ -2262,6 +2262,7 @@ def main():
         assert bip39.is_valid()
         for (i, idx) in enumerate(bip39.indices()):
             logging.info("%d: %d %s", i, idx, WORDS[idx])
+        print(" ".join(WORDS[idx] for idx in bip39.indices()))
     else:
         unittest.main()
 
