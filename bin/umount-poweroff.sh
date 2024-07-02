@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-MOUNT_POINT=${1} && shift
 while getopts "qh" OPT; do
     case ${OPT} in
     q)
@@ -15,6 +14,8 @@ while getopts "qh" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+MOUNT_POINT=${1} && shift
 
 PARTITION=${PARTITION:-}
 
