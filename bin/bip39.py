@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import logging
 import math
+import random
 import unittest
 
 WORDS = [
@@ -2158,7 +2159,7 @@ class BIP39(object):
         return bip39"""
 
     @staticmethod
-    def generate(word_count, base):
+    def generate(word_count, base, use_random):
         """Generate a mnemonic passphrase of the given length."""
         total_bits = BITS_PER_WORD * word_count
         assert base > 2
@@ -2177,8 +2178,10 @@ class BIP39(object):
         """Prompt for a BASE-sided dice roll."""
         while True:
             try:
-                roll = int(eval(input("enter dice roll [1-{}]: ".format(base))))
-                # roll = int(random.randint(1,6))
+                if use_random:
+                    roll = int(random.randint(1,6))
+                else:
+                    roll = int(eval(input("enter dice roll [1-{}]: ".format(base))))
             except Exception as ex:
                 logging.error("error: %s", ex)
                 continue
@@ -2231,6 +2234,9 @@ def main():
     parser.add_argument("--word_count",
                         help="the length of the mnemonic seed phrase",
                         default=24)
+    parser.add_argument("-r", "--use_random",
+                        help="use python's random instead of prompting for a dice roll",
+                        action="store_true")
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("--base", help="the number of die faces", default=6)
     # parser.add_argument("--test", help="run tests", action="store_true")
@@ -2252,7 +2258,7 @@ def main():
                 print (w)
 
     elif args.generate:
-        bip39 = BIP39.generate(word_count=args.word_count, base=args.base)
+        bip39 = BIP39.generate(word_count=args.word_count, base=args.base, use_random=args.use_random)
         assert bip39.is_valid()
         for (i, idx) in enumerate(bip39.indices()):
             logging.info("%d: %d %s", i, idx, WORDS[idx])
