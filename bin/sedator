@@ -29,8 +29,8 @@ shift $((OPTIND -1))
 MINS=$((${IDLE_SECS} / 60))
 echo "idle time: ${MINS}m"
 
-if test -n "${BATTERY:-}"; then
-    # battery detected. considering sedation
+if test -n "${BATTERY:-}" -a "${CHARGING:-}" = discharging; then
+    # battery detected and discharging
     if test ${MINS} -gt 60; then
         echo "attempting to hibernate"
         sudo systemctl hibernate
