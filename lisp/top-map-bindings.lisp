@@ -360,6 +360,7 @@
    ("H-s" "toggle-screen-key")
    ("b" *brightness-map*)
    ("H-p" "ledger-password-backup-restore")
+   ("H-P" "ledger-password-type")
    ("p" "center-pointer")
    ("d" "dict-lookup-command")
    ("D" "cat-message-command ~/vocab")

@@ -325,14 +325,24 @@
          (password-id (second (reverse components))))
     password-id))
 
-(defcommand ledger-password-backup-restore
-    ;; (password-id) ((:string ))
-    () ()
+(defun ledger-read-password-id ()
   (let* ((url (mozrepl:chrome-get-url))
          (password-id
            (read-one-line (current-screen) "enter ledger password id: "
                           :initial-input (if url (password-id-from-url url) ""))))
-    (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
+    password-id))
+
+(defcommand ledger-password-backup-restore
+    ;; (password-id) ((:string ))
+    () ()
+    (let* ((password-id (ledger-read-password-id)))
+      (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
+
+(defcommand ledger-password-type
+    ;; (password-id) ((:string ))
+    () ()
+    (let* ((password-id (ledger-read-password-id)))
+      (run-shell-command (format nil "type.sh -p ~A" password-id))))
 
 
 (defun adb-select-device () ()
