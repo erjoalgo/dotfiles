@@ -34,5 +34,6 @@
       ("3" "3d-printables"
            ("https://www.yeggi.com/q/~A"
             "https://www.printables.com/search/models?q=~A"
-            "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"))
+            "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"
+            "https://thangs.com/search/~A"))
       ("o" "orders" ("https://www.amazon.com/gp/your-account/order-history/search=~A"))))
