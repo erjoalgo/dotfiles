@@ -2,15 +2,16 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
+
+from six.moves import input
+from six.moves import range
+from six.moves import zip
+
 import argparse
 import hashlib
 import logging
 import math
 import unittest
-from six.moves import range
-from six.moves import zip
-from six.moves import input
-
 logging.basicConfig(level=logging.INFO)
 
 WORDS = [
