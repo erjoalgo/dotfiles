@@ -38,10 +38,10 @@ function mvafs {
     fi
 
     DEST="${AFS_HOME}/${RELPATH}"
-    mkdir -p "${DEST}"
+    mkdir -p $(dirname "${DEST}")
     if test -e "${DIRNAME}" -a ! -L "${DIRNAME}"; then
         if test -e "${DEST}"; then
-            rsync -arv --remove-source-files "${DIRNAME}" "${DEST}"
+            rsync -arv --remove-source-files "${DIRNAME}" $(dirname "${DEST}")
             if ! rmdir "${DIRNAME}"; then
                 echo "unable to merge all files from ${DIRNAME} into ${DEST}"
                 exit ${LINENO}
