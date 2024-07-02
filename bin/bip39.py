@@ -12,7 +12,6 @@ import hashlib
 import logging
 import math
 import unittest
-logging.basicConfig(level=logging.INFO)
 
 WORDS = [
 "abandon",
@@ -2232,9 +2231,15 @@ def main():
     parser.add_argument("--word_count",
                         help="the length of the mnemonic seed phrase",
                         default=24)
+    parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("--base", help="the number of die faces", default=6)
     # parser.add_argument("--test", help="run tests", action="store_true")
     args = parser.parse_args()
+
+    if args.quiet:
+        logging.basicConfig(level=logging.WARN)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
     if args.phrase:
         bip39 = BIP39.from_phrase(args.phrase)
