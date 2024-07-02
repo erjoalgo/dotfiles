@@ -61,4 +61,4 @@ BASENAME="${RANDOM}-${BASENAME}"
 cp "${FIRMWARE}" "${MOUNTP}/${BASENAME}.bin"
 sudo ls "${MOUNTP}"
 
-umount-poweroff.sh -qm "${MOUNTP}"
+umount-poweroff.sh -q "${MOUNTP}"
