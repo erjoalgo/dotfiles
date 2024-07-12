@@ -1,15 +1,16 @@
 #!/bin/bash -x
 
+set -euo pipefail
+
 ADB_CMD=(adb)
-FIND_CMD=()
-FIND_ARGS=()
+FIND_CMD=(find)
 ADB_DEVICE=
 
 while getopts "s:p:e:nh" OPT; do
     case ${OPT} in
         p)
             # find path
-            FIND_CMD=(find ${OPTARG})
+            FIND_CMD+=(${OPTARG})
             ;;
         s)
             # device
@@ -17,12 +18,15 @@ while getopts "s:p:e:nh" OPT; do
             ADB_CMD+=("-s" "${OPTARG}")
             ;;
         e)
+            IS_FIRST=true
             for EXT in $(sed 's/,/ /g' <<< ${OPTARG}); do
-                if test "${#FIND_ARGS[@]}" -gt 0; then
-                    FIND_ARGS+=("-o")
+                if test ${IS_FIRST} != true; then
+                    FIND_CMD+=("-o")
+                else
+                    IS_FIRST=false
                 fi
-                FIND_ARGS+=("-name")
-                FIND_ARGS+=("*.${EXT}")
+                FIND_CMD+=("-iname")
+                FIND_CMD+=("*.${EXT}")
             done
             ;;
         n)
@@ -39,8 +43,6 @@ while getopts "s:p:e:nh" OPT; do
 done
 shift $((OPTIND -1))
 
-test -n "${FIND_PATH:-}"
-FIND_CMD+=("${FIND_ARGS[@]}")
 
 "${ADB_CMD[@]}" shell command -v find
 
