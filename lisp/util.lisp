@@ -352,7 +352,7 @@
   (loop for thread in (sb-thread:list-all-threads)
         do (when-let*
                ((mutex
-                 (waiting-for
-                  (slot-value thread 'sb-thread::waiting-for)))
+                  (slot-value thread 'sb-thread::waiting-for))
                 (owner (sb-thread:mutex-owner mutex)))
+             (format t "terminating thread: ~A" owner)
              (sb-thread:terminate-thread owner))))
