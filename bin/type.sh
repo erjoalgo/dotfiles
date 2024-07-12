@@ -5,6 +5,7 @@ set -euo pipefail
 DELAY_MS=${DELAY_MS:-50}
 PORT=5000
 . ${HOME}/afs/home/${USER}/.profile || true
+_USE_XDOTOOL=true
 
 while getopts "p:s:d:h" OPT; do
     case ${OPT} in
@@ -47,9 +48,29 @@ function press {
     TIMES=${1:-1}
     echo "moving ${KEY} ${TIMES} times"
     DELAY_SECS=$(bc <<< "scale=2; ${DELAY_MS} / 1000")
+    case "${KEY}" in
+        Left)
+            BUTTON="left"
+            ;;
+        Right)
+            BUTTON="right"
+            ;;
+        Left+Right)
+            BUTTON="both"
+            ;;
+        *)
+            echo "unknown key: ${KEY}"
+            return ${LINENO}
+            ;;
+    esac
     for _ in $(seq "${TIMES}"); do
-        xdotool key "${KEY}"
-        sleep "${DELAY_SECS}"
+        if test "${_USE_XDOTOOL:-}" = true; then
+            xdotool key "${KEY}"
+            sleep "${DELAY_SECS}"
+        else
+            curl -d '{"action":"press-and-release"}'  \
+                 "http://127.0.0.1:5000/button/${BUTTON}"
+        fi
     done
 }
 
