@@ -214,8 +214,7 @@ function build-speculos-app {
 function build-app-passwords {
     REPO=${HOME}/git/app-passwords
     if ! test -d "${REPO}"; then
-        # URL=https://github.com/LedgerHQ/app-passwords
-        URL=/afs/asus.erjoalgo.com/home/ealfonso/git-bare/speculos
+        URL=https://github.com/LedgerHQ/app-passwords
         git clone "${URL}" "${REPO}"
     fi
     APP_ELF="${REPO}/bin/app.elf"
