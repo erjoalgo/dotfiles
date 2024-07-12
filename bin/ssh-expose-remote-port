@@ -9,16 +9,18 @@ function usage  {
 
 FORWARD_SPEC=""
 
-SSH_HOST_SPEC="${1}" && shift
 REMOTE_HOST=${REMOTE_HOST:-localhost}
 
-while getopts "r:R:h" OPT; do
+while getopts "r:R:t:h" OPT; do
     case ${OPT} in
         r)
             R_OPT=${OPTARG}
             ;;
         R)
             REMOTE_HOST=${OPTARG}
+            ;;
+        t)
+            SSH_HOST_SPEC=${OPTARG}
             ;;
         h)
             less $0
