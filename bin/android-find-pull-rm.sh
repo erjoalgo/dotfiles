@@ -11,6 +11,7 @@ while getopts "s:p:e:nh" OPT; do
         p)
             # find path
             FIND_CMD+=(${OPTARG})
+            _FIND_PATH_SET=true
             ;;
         s)
             # device
@@ -43,6 +44,7 @@ while getopts "s:p:e:nh" OPT; do
 done
 shift $((OPTIND -1))
 
+test "${_FIND_PATH_SET:-}" = true
 
 "${ADB_CMD[@]}" shell command -v find
 
