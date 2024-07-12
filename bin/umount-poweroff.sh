@@ -49,7 +49,7 @@ else
 fi
 
 for MOUNT_POINT in \
-    $(sudo mount | grep -Po "${BLOCK_DEVICE}[0-9]* on [^ ]+" |  \
+    $(sudo mount | grep -Po "${BLOCK_DEVICE}[^ ]* on [^ ]+" |  \
           cut -d' ' -f3 | tr '\n' ' '); do
     sudo umount ${MOUNT_POINT}
 done
