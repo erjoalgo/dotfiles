@@ -138,7 +138,7 @@ perform ocr on it, place ocr'd text into clipboard"
     (set-x-selection ocr-text '(:interactive :primary :secondary :clipboard))
     (message "copied ocr of length ~D to clipboard..."
              (length ocr-text))
-    (spell-clipboard)))
+    '(spell-clipboard)))
 
 (define-stumpwm-type :point (input prompt)
   (declare (ignore input))
