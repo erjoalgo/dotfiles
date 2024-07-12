@@ -2,12 +2,18 @@
 
 set -euo pipefail
 
+THIS_CELL=$(tr -d '\n' < /etc/openafs/ThisCell)
+AFS_HOME="/afs/${THIS_CELL}/home/${USER}"
 AFS_DIRS_FILE="${HOME}/git/dotfiles/inits/afs-dirs"
 
-while getopts "hd:a:" OPT; do
+while getopts "hd:a:b" OPT; do
     case ${OPT} in
     a)
         ALL=${OPTARG}
+        ;;
+    b)
+        AFS_HOME="${HOME}/mnts/backup/"
+        test -e "${AFS_HOME}/hello"
         ;;
     h)
         less "$0"
@@ -26,8 +32,6 @@ fi
 
 function mvafs {
     DIRNAME=$(realpath ${1}) && shift
-    THIS_CELL=$(tr -d '\n' < /etc/openafs/ThisCell)
-    AFS_HOME="/afs/${THIS_CELL}/home/${USER}"
     test -e "${AFS_HOME}"
     touch "${AFS_HOME}/.hola"
 
