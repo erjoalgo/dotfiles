@@ -4,7 +4,7 @@ set -euo pipefail
 
 THIS_CELL=$(tr -d '\n' < /etc/openafs/ThisCell)
 AFS_HOME="/afs/${THIS_CELL}/home/${USER}"
-AFS_DIRS_FILE="${HOME}/git/dotfiles/inits/afs-dirs"
+AFS_DIRS_LOG="${HOME}/git/dotfiles/inits/afs-dirs"
 
 while getopts "hd:a:b" OPT; do
     case ${OPT} in
@@ -59,11 +59,11 @@ function mvafs {
 
 if test -n "${DIRNAME:-}"; then
     mvafs "${DIRNAME}"
-    if ! grep -F "${DIRNAME}" "${AFS_DIRS_FILE}"; then
-        echo "${DIRNAME}" >> "${AFS_DIRS_FILE}"
+    if ! grep -F "${DIRNAME}" "${AFS_DIRS_LOG}"; then
+        echo "${DIRNAME}" >> "${AFS_DIRS_LOG}"
     fi
 elif test -n "${ALL:-}"; then
-    for DIRNAME in $(cat "${AFS_DIRS_FILE}"); do
+    for DIRNAME in $(cat "${AFS_DIRS_LOG}"); do
         mvafs "${DIRNAME}"
     done
 else
