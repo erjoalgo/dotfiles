@@ -186,7 +186,7 @@ function build-speculos {
          python3-pyqt5 python3-construct python3-flask-restful python3-jsonschema \
          python3-mnemonic python3-pil python3-pyelftools python3-requests \
          qemu-user-static libvncserver-dev
-    URL=https://github.com/LedgerHQ/speculos
+    URL=/afs/asus.erjoalgo.com/home/ealfonso/git-bare/speculos
     REPO=${HOME}/git/$(basename "${URL}")
     test -d "${REPO}" || git clone "${URL}" "${REPO}"
     cd "${REPO}"
