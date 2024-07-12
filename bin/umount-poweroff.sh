@@ -2,8 +2,14 @@
 
 set -euo pipefail
 
-while getopts "qh" OPT; do
+while getopts "qhp:m:" OPT; do
     case ${OPT} in
+    p)
+        PARTITION=${OPTARG}
+        ;;
+    m)
+        MOUNT_POINT=${OPTARG}
+        ;;
     q)
         set +x # quiet
         ;;
@@ -15,9 +21,9 @@ while getopts "qh" OPT; do
 done
 shift $((OPTIND -1))
 
-MOUNT_POINT=${1} && shift
-
-PARTITION=${PARTITION:-}
+if test -z "${PARTITION:-}" -a -z "${MOUNT_POINT:-}"; then
+    MOUNT_POINT=${1} && shift
+fi
 
 if test -n "${MOUNT_POINT:-}"; then
     for PART in $(findmnt -n -o SOURCE --target "${MOUNT_POINT:-}"); do
@@ -26,7 +32,7 @@ if test -n "${MOUNT_POINT:-}"; then
             break
         fi
     done
-else
+elif test -z "${PARTITION:-}"; then
     select PARTITION in $(sudo blkid | cut -f1 -d:); do
         break
     done
