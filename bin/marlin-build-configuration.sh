@@ -41,14 +41,14 @@ test -d "${MARLIN_DIR}"
 
 if test "${INTERACTIVE_BRANCH_SELECTION:-}" = true; then
     for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
-    cd "${DIR}"
-    echo "select $(basename $(pwd)) branch: " 1>&2
-    BRANCHES=$(git for-each-ref --format='%(refname:short)' refs)
-    select BRANCH in ${BRANCHES}; do
-        git checkout -- .
-        git checkout "${BRANCH}"
-        break
-    done
+        cd "${DIR}"
+        echo "select $(basename $(pwd)) branch: " 1>&2
+        BRANCHES=$(git for-each-ref --format='%(refname:short)' refs)
+        select BRANCH in ${BRANCHES}; do
+            git checkout -- .
+            git checkout "${BRANCH}"
+            break
+        done
     done
 fi
 
