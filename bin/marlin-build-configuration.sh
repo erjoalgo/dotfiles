@@ -18,6 +18,10 @@ while getopts "d:m:ibn:qh" OPT; do
     b)
         INTERACTIVE_BRANCH_SELECTION=true
         ;;
+
+    B)
+        BASE_BRANCH=${OPTARG}
+        ;;
     n)
         CUSTOM_NAME_PREFIX=${OPTARG}
         ;;
@@ -50,6 +54,9 @@ if test "${INTERACTIVE_BRANCH_SELECTION:-}" = true; then
             break
         done
     done
+else
+    cd ${MARLIN_DIR}
+    git reset --hard "${BASE_BRANCH}"
 fi
 
 cp -t ${MARLIN_DIR}/Marlin  \
