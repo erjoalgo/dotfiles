@@ -31,21 +31,24 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
     Display all images recursively contained in a directory on a web browser.
     """
 
-    def __init__(self, directory, dimensions, image_size, image_regexp, skip_image_regexp):
+    def __init__(self, directory, dimensions, image_size, image_regexp, skip_image_regexp,
+                 reverse):
         self.images = []
         self.directory = directory
         self.dimensions = dimensions
         self.image_size = image_size
-        threading.Thread(target=self.crawl_images, args=(image_regexp, skip_image_regexp)).start()
+        self.reverse = reverse
+        threading.Thread(target=self.crawl_images, args=(
+            image_regexp, skip_image_regexp, reverse)).start()
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
         super(ImageOverviewHandler, self).__init__(*args, **kwargs)
 
 
-    def crawl_images(self, image_regexp, skip_image_regexp):
+    def crawl_images(self, image_regexp, skip_image_regexp, reverse):
         for (root, dirs, files) in os.walk(self.directory):
-            for filename in files:
+            for filename in sorted(files, reverse=reverse):
                 if re.search(image_regexp, filename) and not (
                         skip_image_regexp and re.search(skip_image_regexp, filename)):
                     self.images.append(os.path.join(root, filename))
@@ -187,6 +190,9 @@ def main():
                         default="(?i)[.](jpe?g|png|mp4)$")
     parser.add_argument("-X", "--skip_image_regexp",
                         help="negative regexp used to filter out image files")
+    parser.add_argument("-r", "--reverse",
+                        help="reverse sorting of filenames, show latest first",
+                        action="store_true")
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     args = parser.parse_args()
 
@@ -199,7 +205,8 @@ def main():
                                                         dimensions=args.dimensions,
                                                         image_size=args.image_size,
                                                         image_regexp=args.image_regexp,
-                                                        skip_image_regexp=args.skip_image_regexp))
+                                                        skip_image_regexp=args.skip_image_regexp,
+                                                        reverse=args.reverse))
     logging.info("starting http server on %s", server_address)
     hostname = socket.gethostname()
     subprocess.Popen(["x-www-browser", f"http://{hostname}.local:{args.port}"])
