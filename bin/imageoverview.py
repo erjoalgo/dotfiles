@@ -6,7 +6,12 @@ Display all images recursively contained in a directory on a web browser.
 
 
 from __future__ import absolute_import
+
+from six.moves.urllib import parse
+
 import argparse
+import base64
+import cgi
 import http.server
 import logging
 import math
@@ -18,6 +23,7 @@ import shutil
 import socket
 import subprocess
 import threading
+import traceback
 import urllib.parse
 
 try:
@@ -82,6 +88,39 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             # ignore errors from typical browser clients
             pass
 
+    @staticmethod
+    def generate_pdf(files, output, quality=15):
+        cmd = ["convert"] + files + [output]
+        logging.warning("generating pdf: %s", cmd)
+        subprocess.check_output(cmd)
+
+    def do_POST(self):
+        """Handle POST requests."""
+        try:
+            if self.path.startswith("/generate-pdf"):
+                ctype, pdict = cgi.parse_header(self.headers["Content-Type"])
+                if ctype == 'multipart/form-data':
+                    postvars = cgi.parse_multipart(self.rfile, pdict)
+                elif ctype == 'application/x-www-form-urlencoded':
+                    length = int(self.headers["Content-Length"])
+                    data = self.rfile.read(length)
+                    postvars = parse.parse_qs(data, keep_blank_values=1)
+                else:
+                    postvars = {}
+                files = postvars[b"files"][0].decode().split(",")
+                output = "/tmp/generated.pdf" # TODO
+                try:
+                    self.generate_pdf(files, output)
+                except Exception as ex:
+                    traceback.print_exc(ex)
+                    self.respond(500, str(ex))
+                    return
+                self.serve_file(output)
+            else:
+                self.respond(400, "unknown route: {}".format(self.path))
+        except ConnectionResetError:
+            # ignore errors from typical browser clients
+            pass
 
     def serve_page(self, page_number):
         rows, cols = self.dimensions
@@ -94,16 +133,19 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         for (i, filename) in enumerate(page_images):
             if i%cols == 0:
                 table += "<tr>"
+            filename_href = f"{self.FILE_PREFIX}{filename}"
+            checkbox_id = base64.b64encode(filename.encode()).decode()
             table += (
-                """<td><a href="{filename_href}">
-                <img src="{filename_href}" width="{image_size}" height="{image_size}">
-                </a></td>\n""".format(
-                    filename_href="{}{}".format(self.FILE_PREFIX, filename),
-                    image_size=self.image_size)
+                f"""<td>
+                <a href="{filename_href}">
+                <img src="{filename_href}" width="{self.image_size}" height="{self.image_size}">
+                </a>
+                <input type="checkbox" id="{checkbox_id}">
+                </td>\n"""
             )
             if i % cols == cols - 1:
                 table += "</tr>\n\n"
-
+        table += """</table>"""
         prev_page_href = "/page/{}".format(page_number - 1)
         next_page_href = "/page/{}".format(page_number + 1)
 
@@ -137,6 +179,23 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
 }}, true);"""
         title = f"Page {page_number}/{total_pages} of {self.directory}"
 
+        javascript += """
+function fillInFilenames() {
+        const boxes = [...document.querySelectorAll("input[type='checkbox']:checked")];
+        const filenames = boxes.map(x => atob(x.id));
+        console.log(filenames);
+        const filesInput = document.getElementById("generate-pdf-filenames");
+        filesInput.value = filenames.join(",");
+        return true;
+}
+
+function deselectAll() {
+   const boxes = [...document.querySelectorAll("input[type='checkbox']:checked")];
+   for (var box of boxes) box.checked = false;
+}
+"""
+
+
         doc = f"""<!DOCTYPE html>
 <html>
   <head>
@@ -144,8 +203,17 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
     <title>{title}</title>
   </head>
   <body>
-{table}
+
+<form id="generate-pdf" action="/generate-pdf" method="POST" onsubmit="fillInFilenames()">
+   <input type="hidden" name="files" id="generate-pdf-filenames" value="" />
+   <input type="submit" value="Generate PDF" />
+</form>
+
+<input type="button" value="Deselect All" onclick="deselectAll()"/>
+
 <script>{javascript}</script>
+
+{table}
 <br>
  <a href={prev_page_href}>Prev</a> <a href="/page/1"> Home </a> <a href={next_page_href}>Next</a>
   </body>
