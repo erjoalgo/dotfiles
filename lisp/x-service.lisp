@@ -30,7 +30,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (defun ,name ()
        ,docstring
        (ppcre:register-groups-bind ,capture-names
-           (,url-regexp (hunchentoot:script-name*))
+         (,url-regexp (hunchentoot:script-name*))
          (handler-case (progn ,@body)
            (error (err)
              (setf (hunchentoot:return-code*)
@@ -48,15 +48,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     ((null (hunchentoot:raw-post-data))
      "")
     (t (-> (hunchentoot:raw-post-data)
-          (babel:octets-to-string)))))
+           (babel:octets-to-string)))))
 
 (defun read-header (header-sym)
   (->> (hunchentoot:headers-in*)
-    (assoc header-sym)
-    cdr))
+       (assoc header-sym)
+       cdr))
 
 (define-regexp-route notify-handler ("/notify")
-    "Issue a notification"
+  "Issue a notification"
   (let* ((text (hunchentoot-post-data-or-err))
          (color (read-header :STUMPWM-MESSAGE-COLOR)))
     (when color
@@ -65,15 +65,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     ""))
 
 (define-regexp-route browse-handler ("/browse")
-    "Browse to a URL"
+  "Browse to a URL"
   (let ((url (hunchentoot-post-data-or-err))
         (raise-browser-window-p
-          (string-equal (read-header :STUMPWM-RAISE-BROWSER-WINDOW) "TRUE")))
+         (string-equal (read-header :STUMPWM-RAISE-BROWSER-WINDOW) "TRUE")))
     (format t "x-service: value of url: ~A~%" url)
     (stumpwm::x-www-browser url raise-browser-window-p) ""))
 
 (define-regexp-route clipboard-handler ("/clipboard")
-    "get/set clipboard contents"
+  "get/set clipboard contents"
   (case (hunchentoot:request-method*)
     (:post
      (let ((contents (hunchentoot-post-data-or-err))
@@ -86,7 +86,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (:get (stumpwm:get-x-selection :clipboard))))
 
 (define-regexp-route visible-window-pids-handler ("/visible-window-pids")
-    "get a list of pids of windows that are visible"
+  "get a list of pids of windows that are visible"
   (->>
    (stumpwm:group-windows (stumpwm:current-group))
    (remove-if-not
@@ -95,7 +95,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
    (format nil "~{~A~^~%~}")))
 
 (define-regexp-route read-char-handler ("/read-char")
-    "Read a single character"
+  "Read a single character"
   (let ((prompt
          (read-header :STUMPWM-PROMPT)))
     (when prompt
@@ -119,7 +119,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
         (throw 'error "Abort."))))
 
 (define-regexp-route search-handler ("/search")
-                     "Web search"
+  "Web search"
   (let* ((query (hunchentoot-post-data-or-err))
          (engine-header (read-header :ENGINE))
          (engine-letter-header (read-header :ENGINE-LETTER))
@@ -133,12 +133,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (stumpwm::search-engine-search-noninteractive query engine)))
 
 (define-regexp-route run-handler ("/run")
-    "Run command"
+  "Run command"
   (let ((command (hunchentoot-post-data-or-err)))
     (stumpwm::eval-command command t)))
 
 (define-regexp-route beep-handler ("/beep")
-                     "Beep"
+  "Beep"
   (let* ((freq (read-header :STUMPWM-BEEP-FREQ))
          (duration-secs (read-header :STUMPWM-BEEP-DURATION-SECS))
          kwargs)
@@ -151,7 +151,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     ""))
 
 (define-regexp-route lock-handler ("/lock")
-                     "Lock the display"
+  "Lock the display"
   (stumpwm::screen-lock))
 
 ;; (x-service:start 1959)
