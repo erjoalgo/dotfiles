@@ -232,7 +232,7 @@ function deselectAll() {
             if content_type:
                 self.send_header("Content-type", content_type)
             else:
-                logging.warn("no content-type found for %s", filename)
+                logging.warning("no content-type found for %s", filename)
             self.send_header("Cache-Control", "private")
             self.end_headers()
             shutil.copyfileobj(fh, self.wfile)
