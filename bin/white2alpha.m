@@ -1,6 +1,6 @@
 #!/usr/bin/octave -qf
 
-function [] = white2alpha(input_file, output_file)
+function [] = white2alpha(input_file, output_file, threshold)
   img = imread(input_file);
 
   ## convert to grayscale
@@ -8,8 +8,7 @@ function [] = white2alpha(input_file, output_file)
 
   ## TODO parameterize threshold
   ## white/back threshold
-  THRESH = 140;
-  thresh = img > THRESH;
+  thresh = img > threshold;
   tmp_file = sprintf("/tmp/white-black.png");
   imwrite(thresh, tmp_file);
   cmd = sprintf("convert -transparent white %s %s",
@@ -25,22 +24,26 @@ function [] = white2alpha(input_file, output_file)
 endfunction
 
 function [] = usage()
-  printf ("usage: firma-transparente.m [original_signature_png] [output_png]");
+  printf ("usage: firma-transparente.m [original_signature_png] [output_png] [threshold]");
 endfunction
   
 arg_list = argv ();
 nargs = size(arg_list, 1);
-if nargs != 2;
+if nargs > 0 && strcmp(arg_list{1}, "-h") || strcmp(arg_list{1}, "--help");
   usage();
-  if nargs > 0 && strcmp(arg_list{1}, "-h") || strcmp(arg_list{1}, "--help");
-    exit(0);
-  else
-    exit(1);
-  end
+  exit(0);
+else if nargs != 2 &&  nargs != 3;
+  usage();
+  exit(1);
 else
   input = arg_list{1};
   output_png = arg_list{2};
-  white2alpha(input, output_png);
+  if nargs >= 3;
+    threshold = str2double(arg_list{3});
+  else
+    threshold = 140;
+  end
+  white2alpha(input, output_png, threshold);
 end
 
 
