@@ -150,7 +150,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                                     append kv))
     ""))
 
-(define-regexp-route beep-handler ("/lock")
+(define-regexp-route lock-handler ("/lock")
                      "Lock the display"
   (stumpwm::screen-lock))
 
