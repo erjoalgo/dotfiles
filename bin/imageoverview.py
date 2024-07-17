@@ -65,18 +65,23 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Handle GET requests."""
-        m = re.match("/page/([0-9]+)$", self.path)
-        if m:
-            self.serve_page(int(m.group(1)))
-        elif self.path in ("/", ""):
-            self.serve_page(1)
-        elif self.path.startswith(self.FILE_PREFIX):
-            filename = urllib.parse.unquote(self.path[len(self.FILE_PREFIX):])
-            self.serve_file(filename)
-        elif self.path == "/version":
-            self.respond(200, __version__)
-        else:
-            self.respond(400, "unknown route: {}".format(self.path))
+        try:
+            m = re.match("/page/([0-9]+)$", self.path)
+            if m:
+                self.serve_page(int(m.group(1)))
+            elif self.path in ("/", ""):
+                self.serve_page(1)
+            elif self.path.startswith(self.FILE_PREFIX):
+                filename = urllib.parse.unquote(self.path[len(self.FILE_PREFIX):])
+                self.serve_file(filename)
+            elif self.path == "/version":
+                self.respond(200, __version__)
+            else:
+                self.respond(400, "unknown route: {}".format(self.path))
+        except ConnectionResetError:
+            # ignore errors from typical browser clients
+            pass
+
 
     def serve_page(self, page_number):
         rows, cols = self.dimensions
