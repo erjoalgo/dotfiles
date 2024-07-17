@@ -138,7 +138,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (stumpwm::eval-command command t)))
 
 (define-regexp-route beep-handler ("/beep")
-                     "Run command"
+                     "Beep"
   (let* ((freq (read-header :STUMPWM-BEEP-FREQ))
          (duration-secs (read-header :STUMPWM-BEEP-DURATION-SECS))
          kwargs)
