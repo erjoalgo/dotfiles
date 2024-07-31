@@ -82,7 +82,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
                 self.respond(200, __version__)
             else:
                 self.respond(400, "unknown route: {}".format(self.path))
-        except ConnectionResetError:
+        except (ConnectionResetError, BrokenPipeError):
             # ignore errors from typical browser clients
             pass
 
