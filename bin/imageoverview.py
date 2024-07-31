@@ -107,6 +107,11 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
                     postvars = {}
                 files = postvars[b"files"][0].decode().split(",")
                 output = "/tmp/generated.pdf" # TODO
+                if not files:
+                    self.send_response(400)
+                    self.end_headers()
+                    self.wfile.write("no files selected")
+                    return
                 try:
                     self.generate_pdf(files, output)
                 except subprocess.CalledProcessError as exc:
