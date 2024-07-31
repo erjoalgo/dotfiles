@@ -1,7 +1,7 @@
 (in-package :STUMPWM)
 
 (defun start-apps-default ()
-  (correct-screen-fix-display-prefs)
+  (correct-screen-all-connected-displays)
   (raise-browser)
   (raise-x-terminal-emulator)
   (emacs))
