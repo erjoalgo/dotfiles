@@ -90,7 +90,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
     def generate_pdf(files, output, quality=15):
         cmd = ["convert"] + files + [output]
         logging.warning("generating pdf: %s", cmd)
-        subprocess.check_output(cmd)
+        subprocess.check_output(cmd, stderr=subprocess.PIPE)
 
     def do_POST(self):
         """Handle POST requests."""
@@ -109,9 +109,14 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
                 output = "/tmp/generated.pdf" # TODO
                 try:
                     self.generate_pdf(files, output)
-                except Exception as ex:
-                    traceback.print_exc(ex)
-                    self.respond(500, str(ex))
+                except subprocess.CalledProcessError as exc:
+                    traceback.print_exc()
+                    self.send_response(500)
+                    contents = str(exc).encode()
+                    contents += "\n\noutput: ".encode() + exc.output
+                    contents += "\n\nerror: ".encode() + (exc.stderr or b"")
+                    self.end_headers()
+                    self.wfile.write(contents)
                     return
                 self.serve_file(output)
             else:
