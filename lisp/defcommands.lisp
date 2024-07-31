@@ -71,10 +71,14 @@
 	      win-class))
 	   (screen-windows (current-screen)))))
 
-(defcommand move-window-toggle () ()
-  "move window to next monitor (display)"
-  (move-window  (if (neighbour :right (tile-group-current-frame (current-group))
-			       (group-frames (current-group))) :right :left)))
+(defcommand move-window-toggle ()
+    () "move window to next monitor (display)"
+  (move-window
+   (if (neighbour :right
+                  (tile-group-current-frame (current-group))
+		  (group-frames (current-group)))
+       :right
+       :left)))
 
 (defcommand dict-lookup-command (word)
     ((:string "Word to lookup: "))
@@ -200,11 +204,11 @@
          (offset 10)
          (delay-secs .1))
     (loop for (dx dy) in '((-1 -1) (1 -1) (-1 1) (1 1) (0 0))
-       do
-         (warp-pointer (current-screen)
-                       (+ x (* dx offset))
-                       (+ y (* dy offset)))
-       do (sleep delay-secs))))
+          do
+             (warp-pointer (current-screen)
+                           (+ x (* dx offset))
+                           (+ y (* dy offset)))
+          do (sleep delay-secs))))
 
 (defcommand ignore-lid-close-temporarily (hours)
     ((:number "duration in hours: "))
@@ -299,9 +303,9 @@
 
 (defun redshift-current-temp ()
   (let ((output
-         (run-shell-command
-          "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
-          t)))
+          (run-shell-command
+           "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
+           t)))
     (parse-integer output)))
 
 (defun redshift-stop-service ()
@@ -309,8 +313,8 @@
 
 (defcommand describe-key-+ (keys) ((:key-seq "Describe key:"))
   (with-message-queuing t
-                        (describe-key keys)
-                        (message "keys are: ~A" keys)))
+    (describe-key keys)
+    (message "keys are: ~A" keys)))
 
 (define-key *help-map* (kbd "k") "describe-key-+")
 
@@ -335,14 +339,14 @@
 (defcommand ledger-password-backup-restore
     ;; (password-id) ((:string ))
     () ()
-    (let* ((password-id (ledger-read-password-id)))
-      (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
+  (let* ((password-id (ledger-read-password-id)))
+    (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
 
 (defcommand ledger-password-type
     ;; (password-id) ((:string ))
     () ()
-    (let* ((password-id (ledger-read-password-id)))
-      (run-shell-command (format nil "type.sh -p ~A" password-id))))
+  (let* ((password-id (ledger-read-password-id)))
+    (run-shell-command (format nil "type.sh -p ~A" password-id))))
 
 
 (defun adb-select-device () ()
@@ -376,12 +380,12 @@
       (setf initial-candidate 0))
     (setf selection
           (selcand:select
-            :candidates candidates
-            :prompt "select n64 rom to play: "
-            :display-candidates t
-            :stringify-fn #'pathname-name
-            ;; :initial-candidate-index initial-candidate
-            :on-empty-error "no adb devices found!"))
+           :candidates candidates
+           :prompt "select n64 rom to play: "
+           :display-candidates t
+           :stringify-fn #'pathname-name
+           ;; :initial-candidate-index initial-candidate
+           :on-empty-error "no adb devices found!"))
     (when (probe-file last-rom-symlink)
       (sb-posix:unlink last-rom-symlink))
     (sb-posix:symlink selection last-rom-symlink)
