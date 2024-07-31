@@ -11,7 +11,6 @@ from six.moves.urllib import parse
 
 import argparse
 import base64
-import cgi
 import http.server
 import logging
 import math
