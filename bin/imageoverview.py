@@ -96,9 +96,9 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         """Handle POST requests."""
         try:
             if self.path.startswith("/generate-pdf"):
-                ctype, pdict = cgi.parse_header(self.headers["Content-Type"])
+                ctype = self.headers["Content-Type"]
                 if ctype == 'multipart/form-data':
-                    postvars = cgi.parse_multipart(self.rfile, pdict)
+                    raise NotImplementedError("unimplemented")
                 elif ctype == 'application/x-www-form-urlencoded':
                     length = int(self.headers["Content-Length"])
                     data = self.rfile.read(length)
