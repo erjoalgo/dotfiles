@@ -181,28 +181,6 @@
           do (incf pos-x (xrandr-mode-width mode)))
     (run-command-sync-notify-on-error "xrandr" cmd)))
 
-'(defun correct-screen-fix-display-prefs ()
-  (loop with fixes = nil
-        with prefs = (xdisplays-parse-preferences)
-        for display in (xrandr-displays) do
-          (with-slots (id mode state) display
-            (when (equal state "connected")
-              (loop for pref in prefs
-                                (let* ((id-mode-pref (assoc id id-mode-prefs :test #'equal))
-                                       (mode-pref (cdr id-mode-pref))
-                                       (mode-current (xrandr-display-mode display)))
-                                  (when (and mode-pref
-                                             (or (null mode-current)
-                                                 (not (equal (xrandr-mode-resolution-string mode-pref)
-                                                             (xrandr-mode-resolution-string mode-current)))))
-                                    (push (format nil "--output ~A --mode ~A" id
-                                                  (xrandr-mode-resolution-string mode-pref))
-                                          fixes)))))
-            finally (when fixes
-                      (let ((cmd (format nil "xrandr ~{~A~^ ~}" fixes)))
-                        (format t "running... ~A~%" fixes)
-                        (run-shell-command cmd))))))
-
 (defcommand correct-screen-prompt-display-order () ()
   "Correct screen, prompting for display order"
   (let* ((displays (xrandr-connected-displays))
