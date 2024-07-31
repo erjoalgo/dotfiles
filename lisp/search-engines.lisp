@@ -20,6 +20,7 @@
       ("L" "linguee" "https://www.linguee.com/english-spanish/search?source=auto&query=~A")
       ("g" "google" "https://www.google.com/search?num=20&q=~A")
       ("m" "music" "https://music.erjoalgo.com/by-lyrics?lucky=true&lyrics=~A")
+      ("u" "youtube-music" "https://music.youtube.com/search?q=~A")
       ("m" "mvnrepository" "http://mvnrepository.com/search?q=~A")
       ("W" "Who" "https://moma.corp.google.com/person/~A")
       ("Y" "Yaqs" "https://yaqs.googleplex.com/eng?query=~A")
