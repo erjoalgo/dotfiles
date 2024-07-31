@@ -8,7 +8,6 @@ while getopts "hli:b" OPT; do
         IS_LOGITECH=true
         ;;
     b)
-        IS_BT=true
         KEYBOARD_ID=0005:04E8:7021.0012
         ;;
     i)
