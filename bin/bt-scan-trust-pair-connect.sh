@@ -107,8 +107,8 @@ expect {
 }
 send -- "connect ${MAC}\r"
 expect {
-       "Connection successful"
-       "Connected: yes"
+       "Connection successful" {}
+       "Connected: yes" {}
 }
 EOF
 )
