@@ -95,7 +95,7 @@
                 (setf proc (sb-ext:run-program
                             "insert-text-block"
                             (list line-id
-                                  (namestring (truename prefs-file)))
+                                  (uiop:native-namestring prefs-file))
                             :wait t
                             :search t
                             :input in-fh
