@@ -33,6 +33,7 @@ class InputDetector(object):
         count = 0
         self.update_input_fh_map()
         for k in list(self.fh_map.keys()):
+            logging.info("registered input device: %s", k)
             fh = self.fh_map[k]
             try:
                 count += len(fh.read() or "")
@@ -110,6 +111,9 @@ def loop(inter_sedation_cycles=20):
         now = time.time()
         if last_activity is None or detector.has_new_input():
             last_activity = now
+        else:
+            logging.warning("no new input detected in the last interval")
+
         idle_secs = int(now - last_activity)
         try:
             lid_state = read_lid_state()
