@@ -212,18 +212,25 @@ function deselectAll() {
   </head>
   <body>
 
+<table>
+        <tr>
+        <td>
 <form id="generate-pdf" action="/generate-pdf" method="POST" onsubmit="fillInFilenames()">
    <input type="hidden" name="files" id="generate-pdf-filenames" value="" />
    <input type="submit" value="Generate PDF" />
 </form>
-
+        </td>
+        <td>
 <input type="button" value="Deselect All" onclick="deselectAll()"/>
+        </td>
+        </tr>
+        </table>
 
 <script>{javascript}</script>
 
-{table}
-<br>
  <a href={prev_page_href}>Prev</a> <a href="/page/1"> Home </a> <a href={next_page_href}>Next</a>
+
+{table}
   </body>
 </html>
 """
