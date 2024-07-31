@@ -15,6 +15,10 @@ while getopts "hd:a:b" OPT; do
         AFS_HOME="${HOME}/mnts/backup/"
         test -e "${AFS_HOME}/hello"
         ;;
+    n)
+        # skip symlink to afs
+        SKIP_SYMLINK=true
+        ;;
     h)
         less "$0"
         exit 0
@@ -54,12 +58,15 @@ function mvafs {
             mv -n "${DIRNAME}" "${DEST}"
         fi
     fi
-    ln -sf "${DEST}" $(dirname "${DIRNAME}")
+    if test "${SKIP_SYMLINK:-}" != true; then
+        ln -sf "${DEST}" $(dirname "${DIRNAME}")
+    fi
 }
 
 if test -n "${DIRNAME:-}"; then
     mvafs "${DIRNAME}"
-    if ! grep -F "${DIRNAME}" "${AFS_DIRS_LOG}"; then
+    if ! grep -F "${DIRNAME}" "${AFS_DIRS_LOG}" &&
+            test "${SKIP_SYMLINK:-}" != true; then
         echo "${DIRNAME}" >> "${AFS_DIRS_LOG}"
     fi
 elif test -n "${ALL:-}"; then
