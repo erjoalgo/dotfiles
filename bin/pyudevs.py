@@ -111,8 +111,8 @@ class KeyboardHandler(DeviceHandler):
             keyboard_id = vendor_product
         if matches:
             logging.info(
-                "got keyboard. vendor:product: %s, devname: %s input_class: %s",
-                vendor_product, devname, input_class)
+                "got keyboard. vendor:product: %s, devname: %s input_class: %s, keyboard_id: %s",
+                vendor_product, devname, input_class, keyboard_id)
             return KeyboardHandler(device, keyboard_id=keyboard_id)
 
     def retry(self):
