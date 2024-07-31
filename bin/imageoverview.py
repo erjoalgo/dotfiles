@@ -154,8 +154,8 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
             if i % cols == cols - 1:
                 table += "</tr>\n\n"
         table += """</table>"""
-        prev_page_href = "/page/{}".format(page_number - 1)
-        next_page_href = "/page/{}".format(page_number + 1)
+        prev_page_href = "/page/{}".format(max(1, page_number - 1))
+        next_page_href = "/page/{}".format(min(page_number + 1, total_pages))
 
         javascript = f"""
             window.addEventListener("keydown", function (event) {{
