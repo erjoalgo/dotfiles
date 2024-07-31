@@ -22,10 +22,14 @@ else
   SUDOCMD="su -c"
 fi
 
-if ! which sudo && test -n "${APT_GET}"; then
-   ${SUDOCMD} "${APT_GET} install -y sudo"
-   ${SUDOCMD} "${APT_GET} install -y ntp" || true
-fi
+function maybe-install-sudo {
+    if ! which sudo && test -n "${APT_GET}"; then
+        ${SUDOCMD} "${APT_GET} install -y sudo" || true
+        ${SUDOCMD} "${APT_GET} install -y ntp" || true
+    fi
+}
+
+maybe-install-sudo
 
 cd
 
@@ -54,6 +58,8 @@ if which apt-get; then
         ${SUDOCMD} "apt-get install -y ntp" || true
     fi
 fi
+
+maybe-install-sudo
 
 # set up passwordless sudo
 NOPASSWD_LINE="${USER} ALL=(ALL:ALL) NOPASSWD:ALL"
