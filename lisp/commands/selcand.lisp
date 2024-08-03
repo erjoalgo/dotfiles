@@ -37,7 +37,8 @@
                  no-hints
                  display-candidates
                  read-char-if-possible
-                 initial-candidate-index)
+                 initial-candidate-index
+                 columns)
   "Use PROMPT to prompt for a selection from CANDIDATES."
   (assert (or candidates hints-candidates) nil on-empty-error)
   (assert (alexandria:xor candidates hints-candidates))
@@ -60,12 +61,21 @@
                        ") " (funcall stringify-fn cand)))
                      cand)))))
          (choices (mapcar #'car hints-cands))
-         (prompt (if (not display-candidates) prompt
-                     (format nil "~A~%~{~A~^~%~}~%~% "
-                             prompt
-                             (if (eq display-candidates :include-values)
-                                 hints-cands
-                                 choices))))
+         (prompt (cond
+                   ((not display-candidates) prompt)
+                   ((null columns)
+                    (format nil "~A~%~{~A~^~%~}~%~% "
+                            prompt
+                            (if (eq display-candidates :include-values)
+                                hints-cands
+                                choices)))
+                   (columns
+                    (format nil "~{~A~^~%~}"
+                            (stumpwm::columnize (cons prompt
+                                                      (if (eq display-candidates :include-values)
+                                                          hints-cands
+                                                          choices))
+                                                columns)))))
          (hint-selected
            (cond
              ((and autoselect-if-single (null (cdr choices))) (car choices))
