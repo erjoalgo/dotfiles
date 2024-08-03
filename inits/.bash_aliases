@@ -512,6 +512,12 @@ alias efm=ecryptfs-mount.sh
 alias gpg-symmetric-encrypt="gpg --symmetric --no-symkey-cache --batch"
 alias gpg-symmetric-decrypt="gpg --decrypt --no-symkey-cache --batch"
 
+function cdmkdir {
+    DIR=${1} && shift
+    mkdir "${DIR}"
+    cd "${DIR}"
+}
+
 # Local Variables:
 # mode: sh
 # End:
