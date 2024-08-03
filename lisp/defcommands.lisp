@@ -286,13 +286,15 @@
   (redshift-shift 500))
 
 (defvar *redshift-temp* 5000)
+(defconstant +redshift-min-temp+ 1000)
+(defconstant +redshift-max-temp+ 25000)
 
 (defun redshift-shift (delta)
   "Redshift shift red"
   (let* ((curr *redshift-temp*)
          (temp (+ delta curr))
-         (temp (max temp 1000))
-         (temp (min temp 25000)))
+         (temp (max temp +redshift-min-temp+))
+         (temp (min temp +redshift-max-temp+)))
     ;; (redshift-oneshot (format nil "-Pt ~A:~A" temp temp))
     (redshift-stop-service)
     (redshift-oneshot (format nil "-PO ~A" temp))
