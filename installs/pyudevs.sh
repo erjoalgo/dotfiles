@@ -14,7 +14,7 @@ StartLimitInterval=0
 [Service]
 ExecStart=$(realpath $(pwd)/../bin/pyudevs.py)
 Restart=always
-RestartSec=5
+RestartSec=60
 Environment=PATH=$PATH:$(pwd)/bin
 
 [Install]
