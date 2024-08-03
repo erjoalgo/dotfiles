@@ -278,7 +278,8 @@
                                            (if active "*" "")
                                            width height
                                            (/ width height))))
-                               :display-candidates t))
+                               :display-candidates t
+                               :columns 3))
          (mode-string (with-slots (width height active) mode
                         (format nil "~Dx~D"
                                 width height))))
