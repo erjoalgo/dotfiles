@@ -6,22 +6,22 @@
 (setf *real-top-map* *top-map*)
 
 (define-run-or-pull-program "BROWSER"
-    :cmd (format nil "~{~A~^ ~}" *browser-cmd*)
-    :raise-key "H-f"
-    :pull-key "H-F"
-    :classes *browser-classes*)
+  :cmd (format nil "~{~A~^ ~}" *browser-cmd*)
+  :raise-key "H-f"
+  :pull-key "H-F"
+  :classes *browser-classes*)
 
 (define-run-or-pull-program "X-TERMINAL-EMULATOR"
-    :raise-key "H-c"
-    :cmd (trim-spaces
-          (run-shell-command
-           "which konsole roxterm gnome-terminal xterm | head -1" t))
-    :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
-		   "xterm" "XTerm" "Gnome-terminal"))
+  :raise-key "H-c"
+  :cmd (trim-spaces
+        (run-shell-command
+         "which konsole roxterm gnome-terminal xterm | head -1" t))
+  :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
+		 "xterm" "XTerm" "Gnome-terminal"))
 
 (define-run-or-pull-program "emacs"
-    :pull-key "H-E"
-    :classes emacs-classes)
+  :pull-key "H-E"
+  :classes emacs-classes)
 
 (let ((eclipse-cmd
         (first-existing-command
@@ -44,7 +44,7 @@
 
 (define-run-or-pull-program "virtualbox"
   :classes '("VirtualBox Machine" "VirtualBox Manager" "Virt-manager")
-        :cmd "virt-manager"
+  :cmd "virt-manager"
   :raise-key "H-t H-v"
   :pull-key "H-t H-V")
 
@@ -96,12 +96,12 @@
   :classes '("project64.exe" "mupen64plus")
   :cmd
   (cond
-   ((which "mupen64plus")
-    (list "mupen64plus" (n64-select-rom)))
-   ((which "wine")
-    (list "wine"
-          (uiop:native-namestring
-           #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
+    ((which "mupen64plus")
+     (list "mupen64plus" (n64-select-rom)))
+    ((which "wine")
+     (list "wine"
+           (uiop:native-namestring
+            #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
 
 (define-run-or-pull-program "ledger-live"
   :raise-key "H-t H-l"
@@ -142,10 +142,10 @@
   :cmd "wireshark")
 
 (define-run-or-pull-program "tor-browser"
-    :cmd '(#P"~/src/tor-browser/Browser/start-tor-browser")
-    :raise-key "H-t H-t"
-    :pull-key "H-t H-T"
-    :classes '("Tor Browser"))
+  :cmd '(#P"~/src/tor-browser/Browser/start-tor-browser")
+  :raise-key "H-t H-t"
+  :pull-key "H-t H-T"
+  :classes '("Tor Browser"))
 
 (per-window-bindings-reload-from-fn)
 
@@ -155,19 +155,19 @@
   (loop with kmap-list = (if (listp kmap-or-kmap-list)
 			     kmap-or-kmap-list
 			     (list kmap-or-kmap-list))
-     for kmap in kmap-list do
-       (loop for (key action) in bindings
-          as kbd = (if (stringp key) (kbd key)
-                       key)
-          do
-	    (define-key kmap kbd action))))
+        for kmap in kmap-list do
+          (loop for (key action) in bindings
+                as kbd = (if (stringp key) (kbd key)
+                             key)
+                do
+	           (define-key kmap kbd action))))
 
 
 (defmacro def-several-vars (value-form &rest vars)
   `(progn ,@(loop for var in vars collect `(defvar ,var ,value-form))))
 
 (def-several-vars
-  (make-sparse-keymap)
+    (make-sparse-keymap)
   *screen-rotation-map*
   *utils-map*
   *special-chars-map*
@@ -181,7 +181,7 @@
   (append (list *real-top-map*)
 	  (when *per-window-bindings-class-to-map*
 	    (loop for map being the hash-value of *per-window-bindings-class-to-map*
-	       collect map))))
+	          collect map))))
 
 (define-key-bindings
     (all-top-maps)
@@ -330,51 +330,51 @@
       ("H-m" "correct-screen-select-mode")))
 
 (define-key-bindings
- *utils-map*
- '(
-   ("i" "invert-screen")
-   ("M" "echo-pointer")
-   ("m" "toggle-magnifier")
-   ("H-c" *correct-screen-map*)
-   ("r" *screen-rotation-map*)
-   ("c" *special-chars-map*)
-   ("H-w" "connect-to-internet-maybe")
-   ("w" "connect-to-internet-maybe")
-   ("h" *help-map*)
-   ("s" "scrot-cmd-anon")
-   ("S" "scrot-cmd-current-window-anon")
-   ("n" "take-scrot-snipit")
-   ("o" "ocr-scrot-clipboard")
-   ("O" "spell-clipboard")
-   ("k" "speak-string")
-   ("l" "spell-clipboard")
-   ("H-l" "screen-lock")
-   ("l" "screen-lock")
-   ;; ("H-e" "echo-current-tab" )
-   ("H-e" "emacs-killusr2")
-   ("H-E" "emacs-killusr2-tmux")
-   ("z" "window-sleep-toggle")
-   ("H-t" "tmp")
-   ("H-b" "byzanz-record-auto")
-   ("H-B" "byzanz-record-auto-stop")
-   ("H-s" "toggle-screen-key")
-   ("b" *brightness-map*)
-   ("H-p" "ledger-password-backup-restore")
-   ("H-P" "ledger-password-type")
-   ("p" "center-pointer")
-   ("d" "dict-lookup-command")
-   ("D" "cat-message-command ~/vocab")
-   ("H-v" "pulseaudio-load-module-loopback")
-   ("H-V" "pulseaudio-unload-module-loopback")
-   ("H-m" *click-map*)))
+    *utils-map*
+    '(
+      ("i" "invert-screen")
+      ("M" "echo-pointer")
+      ("m" "toggle-magnifier")
+      ("H-c" *correct-screen-map*)
+      ("r" *screen-rotation-map*)
+      ("c" *special-chars-map*)
+      ("H-w" "connect-to-internet-maybe")
+      ("w" "connect-to-internet-maybe")
+      ("h" *help-map*)
+      ("s" "scrot-cmd-anon")
+      ("S" "scrot-cmd-current-window-anon")
+      ("n" "take-scrot-snipit")
+      ("o" "ocr-scrot-clipboard")
+      ("O" "spell-clipboard")
+      ("k" "speak-string")
+      ("l" "spell-clipboard")
+      ("H-l" "screen-lock")
+      ("l" "screen-lock")
+      ;; ("H-e" "echo-current-tab" )
+      ("H-e" "emacs-killusr2")
+      ("H-E" "emacs-killusr2-tmux")
+      ("z" "window-sleep-toggle")
+      ("H-t" "tmp")
+      ("H-b" "byzanz-record-auto")
+      ("H-B" "byzanz-record-auto-stop")
+      ("H-s" "toggle-screen-key")
+      ("b" *brightness-map*)
+      ("H-p" "ledger-password-backup-restore")
+      ("H-P" "ledger-password-type")
+      ("p" "center-pointer")
+      ("d" "dict-lookup-command")
+      ("D" "cat-message-command ~/vocab")
+      ("H-v" "pulseaudio-load-module-loopback")
+      ("H-V" "pulseaudio-unload-module-loopback")
+      ("H-m" *click-map*)))
 
 
 (define-key-bindings *screen-rotation-map*
- '(
-   ("a" "rotate-screen left")
-   ("d" "rotate-screen right")
-   ("w" "rotate-screen normal")
-   ("s" "rotate-screen inverted")))
+    '(
+      ("a" "rotate-screen left")
+      ("d" "rotate-screen right")
+      ("w" "rotate-screen normal")
+      ("s" "rotate-screen inverted")))
 
 (define-key-bindings
     *special-chars-map*
@@ -401,12 +401,12 @@
     *brightness-map*
     (append
      (loop for c across "`1234567890"
-       for percentage in '(.01 .05 .1 .5 .8
-                           1 30 50 70 90
-                           100)
-       collect
-         (list (format nil "~C" c)
-               (format nil "set-brightness ~A" percentage)))
+           for percentage in '(.01 .05 .1 .5 .8
+                               1 30 50 70 90
+                               100)
+           collect
+           (list (format nil "~C" c)
+                 (format nil "set-brightness ~A" percentage)))
      `(("r" "redshift-shift-red")
        ("b" "redshift-shift-blue")
        ("x" "redshift-reset"))))
