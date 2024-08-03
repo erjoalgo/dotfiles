@@ -68,7 +68,7 @@
 (define-run-or-pull-program "blender"
   :raise-key "H-t H-b"
   :pull-key "H-t H-B"
-  :classes '("Blender"))
+  :classes '("Blender" "OpenSCAD"))
 
 (define-run-or-pull-program "creality"
   :raise-key "H-t H-c"
