@@ -219,8 +219,7 @@ alias spsi='sudo python setup.py install'
 
 
 function source-personal-bash-files {
-  . ~/.bash_aliases
-  for SRC in $(find -L ~/.bash-fns/ -type f) ~/.profile-env; do
+  for SRC in $(find -L ~/.bash-fns/ -type f) ~/.profile-env ~/.bash_aliases; do
     echo sourcing $SRC
     . $SRC
   done
