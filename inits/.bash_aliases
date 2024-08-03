@@ -351,9 +351,11 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
 
-for COMMAND in stop restart status logs ; do
-    for USR_OPT in "" "usr"; do
-        ALIAS="sv${USR_OPT}${COMMAND}"
+for LETTER_COMMAND in "d stop" "r restart" "s status" "l logs" ; do
+    COMMAND=$(cut -f2  -d' '  <<< "${LETTER_COMMAND}")
+    LETTER=$(cut -f1  -d' '  <<< "${LETTER_COMMAND}")
+    for USR_OPT in "" "u"; do
+        ALIAS="s${USR_OPT}${LETTER}"
         if test "${COMMAND}" = logs; then
             if test -z "${USR_OPT:-}"; then
                 alias ${ALIAS}="sudo journalctl -feu"
