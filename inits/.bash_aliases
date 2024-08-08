@@ -517,6 +517,8 @@ function cdmkdir {
     cd "${DIR}"
 }
 
+alias mvhere='mv -t.'
+
 # Local Variables:
 # mode: sh
 # End:
