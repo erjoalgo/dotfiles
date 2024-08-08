@@ -244,3 +244,4 @@ if __name__ == "__main__":
             monitor_forever()
         except Exception:
             traceback.print_exc()
+            time.sleep(5)
