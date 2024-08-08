@@ -4,13 +4,12 @@ import argparse
 import asyncio
 import logging
 import os
+import pyudev
 import re
 import subprocess
 import threading
 import time
 import traceback
-
-import pyudev
 
 def x_service_curl(path, post_data=None, headers=None):
     script = "x-service-curl"
