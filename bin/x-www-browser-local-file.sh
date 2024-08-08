@@ -4,6 +4,6 @@ set -euo pipefail
 
 FILENAME=${1} && shift
 
-URL="file://${FILENAME}"
+URL="file://$(realpath ${FILENAME})"
 
 x-www-browser "${URL}"
