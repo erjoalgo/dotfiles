@@ -6,6 +6,8 @@ cd "$(realpath $(dirname "${BASH_SOURCE[0]}"))"
 
 python3 -m pip install pyudev
 
+sudo apt-get install -y python3-pyudev
+
 install-systemd-service.sh -u pyudevs <<EOF
 [Unit]
 Description=Run custom udev scripts via pyudev
