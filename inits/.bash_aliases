@@ -249,7 +249,9 @@ complete -F _usermod chown-rec
 alias gitlag='git-notify-lagging-repos.sh ~/git/*'
 alias less-auth='sudo less -f /var/log/auth.log'
 alias less-syslog='sudo less -f /var/log/syslog'
-alias grep-syslog='sudo grep -a /var/log/syslog -e'
+function grep-syslog {
+    sudo grep -a ${*} /var/log/syslog
+}
 alias less-mail='sudo less /var/mail/$(whoami)'
 alias tail-auth='sudo tail -f /var/log/auth.log'
 alias tail-syslog='sudo tail -f /var/log/syslog'
