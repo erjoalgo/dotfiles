@@ -44,12 +44,19 @@ if test ${MINS} -lt 10; then
     echo "taking no sedating action"
 elif pgrep X; then
     echo "attempting to lock the display"
-    x-service-curl /lock
-    export DISPLAY=:0
-    export XAUTHORITY=${XAUTHORITY:-${HOME:-}/.Xauthority} || true
-    xhost +SI:localuser:root || true
-    nohup bash -c "light-locker-command -l || xsecurelock" &
-    disown
+    if ! x-service-curl /lock; then
+        export DISPLAY=:0
+        export XAUTHORITY=${XAUTHORITY:-${HOME:-}/.Xauthority} || true
+        xhost +SI:localuser:root || true
+        if command -v light-locker-command; then
+            LOCK_COMMAND=(light-locker-command -l)
+        elif command -v xsecurelock; then
+            LOCK_COMMAND=(xsecurelock)
+        else
+            echo "no lock command found" && exit ${LINENO}
+        fi
+        ${LOCK_COMMAND[@]}
+    fi
 else
     echo "no X server"
 fi
