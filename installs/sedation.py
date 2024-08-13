@@ -32,11 +32,14 @@ class InputDetector(object):
     def has_new_input(self):
         count = 0
         self.update_input_fh_map()
+        logging.info("input devices found: %s", len(self.fh_map))
         for k in list(self.fh_map.keys()):
-            logging.info("registered input device: %s", k)
             fh = self.fh_map[k]
             try:
-                count += len(fh.read() or "")
+                new_chars = len(fh.read() or "")
+                count += new_chars
+                logging.info("input device %s has %s more chars",
+                             k, new_chars)
             except OSError as ex:
                 logging.warning(
                     "forgtting input %s which failed to read: %s",
@@ -63,6 +66,9 @@ class XInputDetector(object):
         curr_input = self._read_xinput()
         result = curr_input == self.last_input
         self.last_input = curr_input
+        if not result:
+            logging.info("no new input detected. xinput output")
+            print(curr_input)
         return result
 
 def read_lid_state():
