@@ -152,6 +152,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (define-regexp-route lock-handler ("/lock")
                      "Lock the display"
-  (stumpwm::screen-lock))
+  (stumpwm::screen-lock)
+  "ok")
 
 ;; (x-service:start 1959)
