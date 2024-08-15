@@ -8,7 +8,7 @@
   current-mode primary-p features inverted-p raw-line)
 
 (defstruct xrandr-mode width height rates active preferred
-  resolution-string)
+  resolution-string ratio)
 
 (defstruct xrandr-pref display-mode order)
 
@@ -26,7 +26,8 @@
                      "[0-9]+[.][0-9]+"
                      mode-line))
      :preferred (not (null (ppcre:scan "[+]" mode-line)))
-     :active (not (null (ppcre:scan "[*]" mode-line))))))
+     :active (not (null (ppcre:scan "[*]" mode-line)))
+     :ratio (/ w h))))
 
 (defun xrandr-displays ()
   ;; return a list of xrandr-display
@@ -61,7 +62,9 @@
                ((equal state "connected") t)
                ((equal state "disconnected") nil)
                (t (error "invalid state value: ~A" state)))
-             :current-mode current-mode
+             :current-mode (loop for mode in modes
+                                   thereis (when (xrandr-mode-active mode)
+                                             mode))
              :primary-p primary-p
              :features features
              :inverted-p (member "inverted" features :test #'equal)
@@ -269,7 +272,13 @@
                                   (xrandr-connected-displays)
                                   :prompt "select display: "
                                   :stringify-fn #'XRANDR-DISPLAY-ID))
-         (mode (selcand:select :candidates (XRANDR-DISPLAY-MODES display)
+         (all-modes (XRANDR-DISPLAY-MODES display))
+         (current-mode (xrandr-display-current-mode display))
+         (similar-modes (loop for mode in all-modes
+                              with ratio = (xrandr-mode-ratio current-mode)
+                              when (equal ratio (xrandr-mode-ratio mode))
+                                collect mode))
+         (mode (selcand:select :candidates (or similar-modes all-modes)
                                :prompt "select mode: "
                                :stringify-fn
                                (lambda (mode)
