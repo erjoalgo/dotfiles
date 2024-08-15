@@ -147,6 +147,12 @@
   :pull-key "H-t H-T"
   :classes '("Tor Browser"))
 
+(define-run-or-pull-program "gqrx"
+  :cmd '("gqrx")
+  :raise-key "H-t H-q"
+  :pull-key "H-t H-Q"
+  :classes '("gqrx"))
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
