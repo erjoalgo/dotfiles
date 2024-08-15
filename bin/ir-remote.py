@@ -5,6 +5,7 @@ import broadlink
 import http.server
 import logging
 import os
+import pdb
 import re
 import sys
 import time
@@ -159,6 +160,8 @@ def main():
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
                         default=os.path.expanduser("/home/ealfonso/afs/public/ir-buttons"))
+    parser.add_argument("-i", "--interact", help="enter an interactive session",
+                        action="store_true")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
@@ -197,6 +200,8 @@ def main():
             # print(packet.hex())
             name = input("enter last button name: ")
             persist_button(name, packet, args.directory)
+    elif args.interact:
+        pdb.set_trace()
     else:
         parser.print_help(sys.stderr)
         raise Exception("no action specified")
