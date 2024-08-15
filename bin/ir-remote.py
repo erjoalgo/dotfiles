@@ -155,7 +155,7 @@ def main():
                         action="store_true")
     parser.add_argument("-s", "--seconds",
                         help="delay in seconds between subsequent presses",
-                        type=float, default=2)
+                        type=float, default=1)
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
                         default=os.path.expanduser("~/afs/public/ir-buttons"))
