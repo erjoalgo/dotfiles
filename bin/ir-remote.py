@@ -81,6 +81,7 @@ def persist_button(name, packet_bytes, directory,
 
 
 def list_buttons(directory):
+    logging.info("listing directory: %s", directory)
     for filename in os.listdir(directory):
         yield (filename, os.path.join(directory, filename))
 
