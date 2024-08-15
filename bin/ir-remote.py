@@ -86,12 +86,12 @@ def list_buttons(directory):
         yield (filename, os.path.join(directory, filename))
 
 def load_button(name, directory=None):
+    if name in BUTTONS:
+        return BUTTONS[name]
     buttons_map = dict(item for item in list_buttons(directory))
     if name in buttons_map:
         with open(buttons_map[name], "rb") as fh:
             return fh.read()
-    if name in buttons:
-        return buttons[name]
     raise KeyError("no such key: {name}")
 
 class IRService(http.server.BaseHTTPRequestHandler):
