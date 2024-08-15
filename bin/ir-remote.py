@@ -158,7 +158,7 @@ def main():
                         type=float, default=1)
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
-                        default=os.path.expanduser("~/afs/public/ir-buttons"))
+                        default=os.path.expanduser("/home/ealfonso/afs/public/ir-buttons"))
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
