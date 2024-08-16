@@ -298,7 +298,8 @@
       (,(make-key :keysym 65535) "middle-click")
       ("H-r" "redshift-shift-red")
       ("H-R" "redshift-shift-blue")
-      ("H-`" "unmap-all-message-windows-command"))
+      ("H-`" "unmap-all-message-windows-command")
+      ("H-s" *press-ir-button-map*))
   ;;not efficient nor necessary but only run at initialization
   )
 
