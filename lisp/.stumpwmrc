@@ -71,13 +71,13 @@
 
 ;; apply font size options
 (defun style-options-init (&key debugging (font-size 40))
-    (setq *message-window-gravity* :center)
-    (setq *input-window-gravity* :center)
-    (setq *run-or-raise-all-groups* nil)
-    (setq *timeout-wait* (if debugging 120 5))
-    (set-font (format nil "-*-*-bold-r-*-*-~D-240-*-*-*-*-*-*"
-		      font-size))
-    (define-key *input-map* (kbd "C-v") 'input-yank-selection))
+  (setq *message-window-gravity* :center)
+  (setq *input-window-gravity* :center)
+  (setq *run-or-raise-all-groups* nil)
+  (setq *timeout-wait* (if debugging 120 5))
+  (set-font (format nil "-*-*-bold-r-*-*-~D-240-*-*-*-*-*-*"
+		    font-size))
+  (define-key *input-map* (kbd "C-v") 'input-yank-selection))
 
 (defun source-shell-vars (filename)
   (ppcre:do-register-groups (key val)
