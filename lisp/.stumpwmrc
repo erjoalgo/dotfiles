@@ -101,16 +101,16 @@
 
 (defun start-swank (&key (port 4005))
   (let ((conn (car (symbol-value (find-symbol "*CONNECTIONS*" :SWANK)))))
-  (if conn
-      (message "swank appears to already be running: ~A"
-               (slot-value conn (intern "SOCKET" :SWANK)))
-      (progn
-        (message "attempting to start swank at port ~A" port)
-        (safe-sexp
-          (progn
-            (funcall (find-symbol "CREATE-SERVER" "SWANK")
-                     :port port :dont-close t)
-            (message "swank started at port ~A" port)))))))
+    (if conn
+        (message "swank appears to already be running: ~A"
+                 (slot-value conn (intern "SOCKET" :SWANK)))
+        (progn
+          (message "attempting to start swank at port ~A" port)
+          (safe-sexp
+            (progn
+              (funcall (find-symbol "CREATE-SERVER" "SWANK")
+                       :port port :dont-close t)
+              (message "swank started at port ~A" port)))))))
 
 (safe-sexp (progn (ql:quickload :swank)
                   (start-swank)))
