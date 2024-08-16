@@ -393,3 +393,9 @@
       (sb-posix:unlink last-rom-symlink))
     (sb-posix:symlink selection last-rom-symlink)
     selection))
+
+
+(defcommand press-ir-button (button-name) ((:string ))
+  (run-shell-command
+   (format nil "curl http://localhost:2727/~A" button-name)))
+
