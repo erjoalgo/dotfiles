@@ -417,6 +417,37 @@
        ("b" "redshift-shift-blue")
        ("x" "redshift-reset"))))
 
+(defmacro define-tv-buttons (brand-name brand-keymap &optional extra)
+  (loop
+    for (l action) in
+    `(("p" "POWER")
+      ("u" "UP")
+      ("d" "DOWN")
+      ("l" "LEFT")
+      ("r" "RIGHT")
+      ("m" "MENU")
+      ("q" "EXIT"))
+    as command = (format nil "press-ir-button ~A_~A" brand-name action)
+    collect `(list ,l ,command) into buttons
+    finally
+       (return
+         `(progn
+            (defparameter ,brand-keymap (make-sparse-keymap))
+            (define-key-bindings
+                ,brand-keymap
+                (list ,@buttons ,@extra))
+            ,brand-keymap))))
+
+
+
+(defparameter *press-ir-button-map* (make-sparse-keymap))
+
+(define-key-bindings
+    *press-ir-button-map*
+    `(
+      ("v" ,(define-tv-buttons "VIZIO" *tv-buttons-vizio*))))
+
+
 (set-prefix-key (kbd "F19"))
 (pop-top-map)
 ;; TODO use buttons framework
