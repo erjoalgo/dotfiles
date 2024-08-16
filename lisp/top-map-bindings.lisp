@@ -61,8 +61,8 @@
   :classes '("eboard" "Eboard"))
 
 (define-run-or-pull-program "signal-desktop"
-  :raise-key "H-s"
-  :pull-key "H-S"
+  :raise-key "H-t H-s"
+  :pull-key "H-t H-S"
   :classes '("signal" "Signal"))
 
 (define-run-or-pull-program "blender"
