@@ -164,7 +164,7 @@ source ~/.venv/bin/activate
 
 pip3 install getchwrap -U || true
 pip install requests
-pip install git+https://github.com/mupuf/requests-unixsocket || true
+pip install git+https://gitlab.com/thelabnyc/requests-unixsocket2
 
 ./link-inits.sh
 
