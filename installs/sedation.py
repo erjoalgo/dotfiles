@@ -66,14 +66,14 @@ class XInputDetector(object):
 
     def has_new_input(self):
         curr_input = self._read_xinput()
-        result = curr_input == self.last_input
+        nothing_new = curr_input == self.last_input
         self.last_input = curr_input
-        if not result:
+        if nothing_new:
             logging.info("no new input detected. xinput output")
             print(curr_input)
         else:
             logging.info("new input detected in the last interval")
-        return result
+        return nothing_new
 
 def read_lid_state():
     lid_glob = "/proc/acpi/button/lid/LID*/state"
