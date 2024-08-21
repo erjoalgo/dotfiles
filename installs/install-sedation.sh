@@ -14,8 +14,6 @@ ExecStart=$(realpath $(pwd)/sedation.py)
 Restart=always
 RestartSec=5
 Environment=PATH=$PATH:$(realpath $(pwd)/../bin)
-StandardOutput=file:/var/log/sedator.log
-StandardError=file:/var/log/sedator.log
 
 [Install]
 WantedBy=multi-user.target
