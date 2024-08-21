@@ -1,6 +1,6 @@
 #!/usr/bin/octave -qf
 
-function [] = white2alpha(input_file, output_file, threshold)
+function white2alpha_fn(input_file, output_file, threshold)
   img = imread(input_file);
 
   ## convert to grayscale
@@ -43,7 +43,7 @@ else
   else
     threshold = 140;
   end
-  white2alpha(input, output_png, threshold);
+  white2alpha_fn(input, output_png, threshold);
 end
 
 
