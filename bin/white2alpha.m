@@ -32,7 +32,7 @@ nargs = size(arg_list, 1);
 if nargs > 0 && strcmp(arg_list{1}, "-h") || strcmp(arg_list{1}, "--help");
   usage();
   exit(0);
-else if nargs != 2 &&  nargs != 3;
+elseif nargs != 2 &&  nargs != 3;
   usage();
   exit(1);
 else
