@@ -23,8 +23,10 @@ class InputDetector(object):
 
 
     def update_input_fh_map(self):
+        logging.info("updating input device list")
         for fname in glob.glob("/dev/input/by-path/*"):
             if fname not in self.fh_map:
+                logging.info("adding new input device: %s", fname)
                 fh = open(fname, "rb")
                 InputDetector._set_nonblock(fh)
                 self.fh_map[fname] = fh
@@ -69,6 +71,8 @@ class XInputDetector(object):
         if not result:
             logging.info("no new input detected. xinput output")
             print(curr_input)
+        else:
+            logging.info("new input detected in the last interval")
         return result
 
 def read_lid_state():
