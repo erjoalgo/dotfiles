@@ -21,6 +21,9 @@ while getopts "t:l:r:m:h" OPT; do
             # number of minutes before killing and restarting ssh forwarding
             SLEEP_INTERVAL_MINUTES=${OPTARG}
             ;;
+        s)
+            INSTALL_SERVICE=true
+            ;;
         h)
             less $0
             exit 0
@@ -32,6 +35,24 @@ shift $((OPTIND -1))
 LOCAL_SSH_PORT=${LOCAL_SSH_PORT:-22}
 REMOTE_SSH_LISTEN_PORT=${REMOTE_SSH_LISTEN_PORT:-23}
 SLEEP_INTERVAL_MINUTES=${SLEEP_INTERVAL_MINUTES:-60}
+
+if test -n "${INSTALL_SERVICE:-}"; then
+    SERVICE_NAME=$(sed 's/[^a-zA-Z0-9-]/-/g' <<< ssh-auto-${SSH_HOST_SPEC})
+    install-systemd-service.sh -u "${SERVICE_NAME}" <<EOF
+[Unit]
+Description=Auto SSH to "${SSH_HOST_SPEC}"
+Requires=systemd-networkd-wait-online.service
+After=systemd-networkd-wait-online.service
+
+[Service]
+ExecStart=/home/ealfonso/.stumpwmrc.d/bin/ssh-auto.sh -t "${SSH_HOST_SPEC}" -r "${REMOTE_SSH_LISTEN_PORT}" -l "${LOCAL_SSH_PORT}"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    exit 0
+fi
+
 
 while true; do
     echo connecting
