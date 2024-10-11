@@ -37,6 +37,13 @@ BUTTONS = {
 }
 
 def press_button(device, name_spec, delay, directory):
+    sequence = name_spec.split(",")
+    if len(sequence) > 1:
+        logging.info("pressing sequence of %s buttons", len(sequence))
+        for button in sequence:
+            press_button(device, button, delay, directory)
+            time.sleep(delay)
+        return
     m = re.match("(.*)x([0-9]+)$", name_spec)
     if m:
         name = m.group(1)
@@ -49,9 +56,10 @@ def press_button(device, name_spec, delay, directory):
     assert value, f"no such button: {name}"
     if isinstance(value, list):
         buttons = value
-        for button in buttons:
-            press_button(device, button, delay, directory)
-            time.sleep(delay)
+        press_button(device, ",".join(buttons), delay, directory)
+    elif isinstance(value, str):
+        buttons = value
+        press_button(device, buttons, delay, directory)
     elif isinstance(value, bytes):
         packet = value
         for _ in range(repeat):
@@ -62,6 +70,9 @@ def press_button(device, name_spec, delay, directory):
     else:
         raise Exception(f"unknown type for button {name}")
 
+
+def button_text_is_valid(button_text):
+    return re.match("(([A-Z0-9_]+(x[0-9]+)?),?)+$", button_text)
 
 def persist_button(name, packet_bytes, directory,
                    prompt_overwrites = False):
@@ -93,7 +104,15 @@ def load_button(name, directory=None):
     buttons_map = dict(item for item in list_buttons(directory))
     if name in buttons_map:
         with open(buttons_map[name], "rb") as fh:
-            return fh.read()
+            data = fh.read()
+            text = None
+            try:
+                text = data.decode().strip()
+            except UnicodeDecodeError:
+                pass
+            if text and button_text_is_valid(text):
+                return text
+            return data
     raise KeyError("no such key: {name}")
 
 class IRService(http.server.BaseHTTPRequestHandler):
@@ -121,16 +140,12 @@ class IRService(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         """Handle GET requests."""
         try:
-            m = re.match("/([A-Z0-9_]+(x[0-9]+)?)$", self.path)
-            if not m:
+            buttons = self.path.strip("/")
+            if not button_text_is_valid(buttons):
                 logging.warning("unknown request: %s", self.path)
                 self.respond(400, f"unknown route: {self.path}")
                 return
-            buttons = m.group(1)
-            for button in buttons.split(","):
-                press_button(self.device, button, self.delay,
-                             self.directory)
-                time.sleep(self.delay)
+            press_button(self.device, buttons, self.delay, self.directory)
             self.respond(200, "success!")
         except Exception as ex:
             logging.error("error during request handling: %s", ex)
@@ -180,9 +195,7 @@ def main():
     device = devices[0]
 
     if args.buttons:
-        for button in args.buttons:
-            press_button(device, button, args.seconds, args.directory)
-            time.sleep(args.seconds)
+        press_button(device, ",".join(args.buttons), args.seconds, args.directory)
     elif args.port:
         server_address = ('', args.port)
         httpd = http.server.HTTPServer(
