@@ -3,7 +3,8 @@
 set -euo pipefail
 
 GOROOT=/usr/local/go
-GO_URL=https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+GO_URL=https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
+CLEAN_UP_DEBIAN_GO=false
 
 if ! command -v go || test ${UPGRADE_GO:-} = true; then
     mkdir -p ~/src && cd ~/src
@@ -18,6 +19,11 @@ if ! command -v go || test ${UPGRADE_GO:-} = true; then
         VERSION=$(go version | cut -f3 -d' ')
         export GOROOT_BOOTSTRAP=${GOROOT}-${VERSION}
         sudo mv ${GOROOT} ${GOROOT_BOOTSTRAP}
+    else
+        # need go to bootstrap go
+        sudo apt-get install -y golang-go
+        # GOROOT_BOOTSTRAP=$(dirname $(which go))
+        CLEAN_UP_DEBIAN_GO=true
     fi
 
     test -d ${GOROOT} || sudo tar -C $(dirname ${GOROOT}) -xzf ${FNAME}
@@ -35,11 +41,12 @@ EOF
     if test -e ${GOROOT}/src/all.bash; then
         pushd .
         cd ${GOROOT}/src
-        if ! command -v go; then
+        if ! which go; then
             # need go to bootstrap go
             sudo apt-get install -y golang-go
         fi
-        sudo ./all.bash
+        which go
+        sudo GOROOT_BOOTSTRAP=$(dirname $(dirname $(which go))) ./all.bash
         popd
     fi
     go version
@@ -51,7 +58,6 @@ GOPATH=/usr/share/gopath
 sudo $(which insert-text-block) \
      '# 387b6046-a715-11e7-b87e-2be468b96d0a-set-default-gopath'  \
      /etc/bash.bashrc <<EOF
-export GOPATH=$GOPATH
 export PATH=\$PATH:\$GOPATH/bin
 EOF
 
@@ -63,6 +69,10 @@ insert-text-block \
 export GOPATH=$GOPATH
 export PATH=\$PATH:\$GOPATH/bin:${GOROOT}/bin
 EOF
+
+if test "${CLEAN_UP_DEBIAN_GO}" = true; then
+    sudo apt-get remove -y golang-go
+fi
 
 sudo $(which insert-text-block)  \
      '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
