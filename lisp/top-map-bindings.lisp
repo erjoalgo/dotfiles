@@ -427,7 +427,10 @@
       ("l" "LEFT")
       ("r" "RIGHT")
       ("m" "MENU")
-      ("q" "EXIT"))
+      ("q" "EXIT")
+      ("x" "EXIT")
+      ("D" "VOLDOWN")
+      ("U" "VOLUP"))
     as command = (format nil "press-ir-button ~A_~A" brand-name action)
     collect `(list ,l ,command) into buttons
     finally
@@ -446,7 +449,9 @@
 (define-key-bindings
     *press-ir-button-map*
     `(
-      ("v" ,(define-tv-buttons "VIZIO" *tv-buttons-vizio*))))
+      ("v" ,(define-tv-buttons "VIZIO" *tv-buttons-vizio*))
+      ("d" ,(define-tv-buttons "DYNEX" *tv-buttons-dynex*))
+      ("t" ,(define-tv-buttons "TCL" *tv-buttons-tcl*))))t
 
 
 (set-prefix-key (kbd "F19"))
