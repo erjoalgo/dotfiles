@@ -396,6 +396,7 @@
 
 
 (defcommand press-ir-button (button-name) ((:string ))
+  (message "pressing button: ~A" button-name)
   (run-shell-command
    (format nil "curl http://localhost:2727/~A" button-name)))
 
