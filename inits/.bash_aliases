@@ -353,7 +353,9 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
 
-for LETTER_COMMAND in "d stop" "r restart" "s status" "l logs" ; do
+for LETTER_COMMAND in "down stop" "r restart"  \
+                               "s status" "l logs"  \
+                               "up start"; do
     COMMAND=$(cut -f2  -d' '  <<< "${LETTER_COMMAND}")
     LETTER=$(cut -f1  -d' '  <<< "${LETTER_COMMAND}")
     for USR_OPT in "" "u"; do
