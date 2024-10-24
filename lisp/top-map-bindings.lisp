@@ -462,9 +462,9 @@
 (define-key-bindings
     *press-ir-button-map*
     `(
-      ("v" ,(define-tv-buttons "VIZIO" *tv-buttons-vizio*))
-      ("d" ,(define-tv-buttons "DYNEX" *tv-buttons-dynex*))
-      ("t" ,(define-tv-buttons "TCL" *tv-buttons-tcl*))))t
+      ("v" ,(define-tv-buttons "VIZIO" *ir-buttons-vizio-tv*))
+      ("d" ,(define-tv-buttons "DYNEX" *ir-buttons-dynex-tv*))
+      ("t" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))))
 
 
 (set-prefix-key (kbd "F19"))
