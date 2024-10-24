@@ -113,7 +113,7 @@ def load_button(name, directory=None):
             if text and button_text_is_valid(text):
                 return text
             return data
-    raise KeyError("no such key: {name}")
+    raise KeyError(f"no such key: {name}")
 
 class IRService(http.server.BaseHTTPRequestHandler):
     """
