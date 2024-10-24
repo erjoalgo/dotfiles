@@ -153,6 +153,12 @@
   :pull-key "H-t H-Q"
   :classes '("gqrx"))
 
+(define-run-or-pull-program "vmpk"
+  :cmd '("vmpk")
+  :raise-key "H-t H-m"
+  :pull-key "H-t H-M"
+  :classes '("VMPK"))
+
 (per-window-bindings-reload-from-fn)
 
 (push-top-map (make-sparse-keymap))
