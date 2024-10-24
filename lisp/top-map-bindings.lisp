@@ -464,7 +464,8 @@
     `(
       ("v" ,(define-tv-buttons "VIZIO" *ir-buttons-vizio-tv*))
       ("d" ,(define-tv-buttons "DYNEX" *ir-buttons-dynex-tv*))
-      ("t" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))))
+      ("t" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))
+      ("s" ,(define-tv-buttons "SOUNDBAR" *ir-buttons-vizio-soundbar*))))
 
 
 (set-prefix-key (kbd "F19"))
