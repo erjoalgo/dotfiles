@@ -428,10 +428,12 @@
   (loop
     for (l action) in
     `(("p" "POWER")
-      ("u" "UP")
-      ("d" "DOWN")
-      ("l" "LEFT")
-      ("r" "RIGHT")
+
+      ("Up" "UP")
+      ("Down" "DOWN")
+      ("Left" "LEFT")
+      ("Right" "RIGHT")
+
       ("m" "MENU")
       ("q" "EXIT")
       ("x" "EXIT")
