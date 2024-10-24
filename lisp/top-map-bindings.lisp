@@ -434,6 +434,9 @@
       ("Left" "LEFT")
       ("Right" "RIGHT")
 
+      ("Return" "ENTER")
+      ("SPC" "ENTER")
+
       ("m" "MENU")
       ("q" "EXIT")
       ("x" "EXIT")
