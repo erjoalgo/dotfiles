@@ -440,6 +440,8 @@
       ("m" "MENU")
       ("q" "EXIT")
       ("x" "EXIT")
+      ("DEL" "EXIT")
+
       ("XF86AudioLowerVolume" "VOLDOWN")
       ("XF86AudioRaiseVolume" "VOLUP"))
     as command = (format nil "press-ir-button ~A_~A" brand-name action)
