@@ -470,13 +470,17 @@
       ("Return" "ENTER")
       ("SPC" "ENTER")
 
+      ("i" "INPUT")
+      ("c" "PICTURE")
       ("m" "MENU")
+      ("h" "HOME")
       ("q" "EXIT")
       ("x" "EXIT")
       ("DEL" "EXIT")
 
       ("XF86AudioLowerVolume" "VOLDOWN")
-      ("XF86AudioRaiseVolume" "VOLUP"))
+      ("XF86AudioRaiseVolume" "VOLUP")
+      ("XF86AudioMute" "MUTE"))
     as command = (format nil "press-ir-button ~A_~A" brand-name action)
     collect `(list ,l ,command) into buttons
     finally
