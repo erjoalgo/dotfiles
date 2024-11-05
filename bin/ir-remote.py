@@ -188,7 +188,7 @@ def main():
     if args.list:
         names = list(k for (k, _) in list_buttons(args.directory))
         names.extend(list(BUTTONS.keys()))
-        print("\n".join(names))
+        print("\n".join(sorted(names)))
         return
     elif args.buttons:
         for button in args.buttons:
