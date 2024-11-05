@@ -7,6 +7,7 @@ import logging
 import os
 import pdb
 import re
+import requests
 import sys
 import time
 import traceback
@@ -187,6 +188,17 @@ def main():
         names.extend(list(BUTTONS.keys()))
         print("\n".join(names))
         return
+    elif args.buttons:
+        for button in args.buttons:
+            url = f"http://localhost:2727/{button}"
+            resp = requests.get(url)
+            if resp.status_code != 200:
+                logging.warn("failed to request button as a client")
+                break
+            else:
+                logging.info("response: %s", resp.text)
+        else:
+            return
 
     logging.info("discovering at ip %s", args.ip)
     devices = broadlink.discover(discover_ip_address=args.ip)
