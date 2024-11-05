@@ -424,6 +424,38 @@
        ("b" "redshift-shift-blue")
        ("x" "redshift-reset"))))
 
+(defun key-equal (a b)
+  (equal (print-key a) (print-key b)))
+
+(defun run-keymap-repeatedly (keymap-name keymap &key (quit-key (kbd "ESC")))
+  (loop
+    as (cmd . seq) = (multiple-value-bind (cmd seq)
+                         (with-focus (screen-key-window (current-screen))
+                           (message "reading key from ~A~%" keymap-name)
+                           (read-from-keymap (list keymap)))
+                       (cons cmd seq))
+    while
+    (cond
+      ((and (null (cdr seq))
+            (key-equal (car seq) quit-key))
+       (message "quit key pressed. quitting...")
+       nil)
+      ((null cmd) (message "no comannd bound. quitting...")
+       nil)
+      (t
+       (message "calling ~A~%" cmd)
+       (eval-command cmd)
+       (sleep .5)
+       t))))
+
+(defmacro run-keymap-repeatedly-command (keymap)
+  (let ((cmd-name (format nil "CALL-REPEATEDLY-~A" keymap)))
+    `(progn
+       (defcommand ,(intern cmd-name) () ()
+         (run-keymap-repeatedly ,(format nil "~A" keymap) ,keymap))
+       ,cmd-name)))
+
+
 (defmacro define-tv-buttons (brand-name brand-keymap &optional extra)
   (loop
     for (l action) in
