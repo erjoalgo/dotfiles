@@ -171,6 +171,8 @@ def main():
                         action="store_true")
     parser.add_argument("-L", "--learn", help="learn a new button",
                         action="store_true")
+    parser.add_argument("-t", "--learn-tv",
+                        help="learn a typical set of buttons for a TV of the given name")
     parser.add_argument("-s", "--seconds",
                         help="delay in seconds between subsequent presses",
                         type=float, default=1)
@@ -225,6 +227,31 @@ def main():
             print(packet)
             # print(packet.hex())
             name = input("enter last button name: ")
+            persist_button(name, packet, args.directory)
+    elif args.learn_tv:
+        tv_name = args.learn_tv
+        TV_BUTTONS = ["POWER", "MENU", "INPUT", "UP", "DOWN", "LEFT", "RIGHT", "VOLUP",
+                      "VOLDOWN", "ENTER", "BACK", "EXIT", "MUTE", "HOME", "PICTURE"]
+        for suffix in TV_BUTTONS:
+            name = f"{tv_name}_{suffix}"
+            skip = False
+            while True:
+                resp = input(f"learn {name} (y/n)?")
+                if resp == "n":
+                    skip = True
+                    break
+                elif resp == "y":
+                    skip = False
+                    break
+                else:
+                    print("unrecognized response")
+            if skip:
+                continue
+            device.auth()
+            device.enter_learning()
+            input(f"emit IR code for {name}, then press Return to continue...")
+            packet = device.check_data()
+            print(packet)
             persist_button(name, packet, args.directory)
     elif args.interact:
         pdb.set_trace()
