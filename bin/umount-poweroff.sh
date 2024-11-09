@@ -21,7 +21,7 @@ while getopts "qhp:m:" OPT; do
 done
 shift $((OPTIND -1))
 
-if test -z "${PARTITION:-}" -a -z "${MOUNT_POINT:-}"; then
+if test -z "${PARTITION:-}" -a -z "${MOUNT_POINT:-}" -a $# -ge 1; then
     MOUNT_POINT=${1} && shift
 fi
 
