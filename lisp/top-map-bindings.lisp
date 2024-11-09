@@ -508,6 +508,7 @@
       ("T" ,(run-keymap-repeatedly-command *ir-buttons-tcl-tv*))
 
       ("s" ,(define-tv-buttons "SOUNDBAR" *ir-buttons-vizio-soundbar*))
+      ("S" ,(run-keymap-repeatedly-command *ir-buttons-vizio-soundbar*))
 
       ("a" ,(define-tv-buttons "AC" *ir-buttons-ac*))
       ("A" ,(run-keymap-repeatedly-command *ir-buttons-ac*))))
