@@ -75,7 +75,11 @@ ROTATED="${PREFIX}-rotated.pdf"
 
 pdftk "${PDF}" cat 1-endright output "${ROTATED}"
 
-echo "print using #10 envelope size and portrait orientation. "
+echo ""
+echo ""
+echo ""
+echo "INSTRUCTIONS"
+echo "print using settings 'Paper Size: #10 envelope' size and 'Orientation: Portrait'. "
 echo "feed #10 envelope into tray with the stamp on the top-left"
 
 # lpr ${ROTATED} -o media=COM10
