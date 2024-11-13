@@ -32,11 +32,16 @@ function read-lines {
     FILENAME=${1} && shift
     cat ${FILENAME} | sed 's/$/\n/g'
 }
+
+function escape-ampersand {
+    sed 's/&/\\&/g'
+}
+
 echo "reading sender lines..."
-SENDER_LINES=$(read-lines "${SENDER_FILENAME}")
+SENDER_LINES=$(read-lines "${SENDER_FILENAME}" | escape-ampersand)
 
 echo "reading recipient lines..."
-RECIPIENT_LINES=$(read-lines "${RECIPIENT_FILENAME}")
+RECIPIENT_LINES=$(read-lines "${RECIPIENT_FILENAME}" | escape-ampersand)
 
 TEX=$(mktemp XXXXX.tex --tmpdir)
 PREFIX="${TEX%.*}"
