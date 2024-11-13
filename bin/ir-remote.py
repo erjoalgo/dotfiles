@@ -195,7 +195,7 @@ def main():
             url = f"http://localhost:2727/{button}"
             resp = requests.get(url)
             if resp.status_code != 200:
-                logging.warn("failed to request button as a client")
+                logging.warn("failed to request button as a client: %s", resp)
                 break
             else:
                 logging.info("response: %s", resp.text)
