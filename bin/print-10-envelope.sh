@@ -58,7 +58,7 @@ cat <<EOF > ${TEX}
 \LARGE
 ${SENDER_LINES}
 
-\vspace{1.0in}\LARGE
+\vspace{.5in}\LARGE
 \setlength\parindent{${RECIPIENT_OFFSET_INCHES}in}
 
 ${RECIPIENT_LINES}
