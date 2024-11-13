@@ -55,9 +55,8 @@ cat <<EOF > ${TEX}
 
 \begin{document}
 
-\large{
+\LARGE
 ${SENDER_LINES}
-}
 
 \vspace{1.0in}\LARGE
 \setlength\parindent{${RECIPIENT_OFFSET_INCHES}in}
