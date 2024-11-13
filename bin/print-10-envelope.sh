@@ -82,4 +82,5 @@ echo "print using settings 'Paper Size: #10 envelope' size and 'Orientation: Por
 echo "feed #10 envelope into tray with the stamp on the top-left"
 
 # lpr ${ROTATED} -o media=COM10
+# x-www-browser-local-file.sh "${ROTATED}"
 evince ${ROTATED}
