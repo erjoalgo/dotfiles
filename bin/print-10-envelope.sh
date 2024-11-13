@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-4.1}
+RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-5.5}
 
 while getopts "ha:s:r:o:" OPT; do
     case ${OPT} in
