@@ -70,13 +70,22 @@
   :pull-key "H-t H-B"
   :classes '("Blender" "OpenSCAD"))
 
+(defun last-modified-file (dir ext)
+  (let ((cmd (format nil
+                     "find-last-modified-file-fast.sh -d \"~A\" -e ~A"
+                     (truename dir)
+                     ext)))
+    (trim-spaces (run-shell-command cmd t))))
+
 (define-run-or-pull-program "creality"
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
-  :classes '("cura" "Creative3D")
-  :cmd (namestring (or
-                    "cura"
-                    (car (directory #P"~/Downloads/Creality*.AppImage")))))
+  :classes '("cura" "Creative3D" "Creality Print")
+  :cmd (list
+        (namestring (or
+                     (car (directory #P"~/bin/Creality*.AppImage"))
+                     "cura"))
+        (last-modified-file "~/git/3d" "stl")))
 
 (define-run-or-pull-program "xournal"
   :raise-key "H-t H-x"
