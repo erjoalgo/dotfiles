@@ -23,11 +23,14 @@
       ("u" "youtube-music" "https://music.youtube.com/search?q=~A")
       ("m" "mvnrepository" "http://mvnrepository.com/search?q=~A")
       ;; ("W" "Who" "https://moma.corp.google.com/person/~A")
+      ;; ("W" "walmart" "https://moma.corp.google.com/person/~A")
       ("Y" "Yaqs" "https://yaqs.googleplex.com/eng?query=~A")
       ("c" "codesearch" "https://cs.corp.google.com/?q=~A")
       ("t" "contacts" "http://localhost:1959/contacts")
-      ("z" "amazon" "https://www.amazon.com/s?k=~A")
-      ("Z" "temu" "https://www.temu.com/search_result.html?search_key=~A")
+      ("z" "shopping"
+           ("https://www.amazon.com/s?k=~A"
+            "https://www.temu.com/search_result.html?search_key=~A"
+            "https://www.walmart.com/search?q=~A"))
       ("f" "whole-foods" "https://www.amazon.com/s?i=wholefoods&k=~A")
       ("h" "home-depot" "https://www.homedepot.com/s/~A")
       ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")
