@@ -523,6 +523,8 @@ function cdmkdir {
 
 alias mvhere='mv -t.'
 
+alias .idf='deactivate; . $HOME/git/esp-idf/export.sh'
+
 # Local Variables:
 # mode: sh
 # End:
