@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-5.5}
-
-while getopts "ha:s:r:o:" OPT; do
+while getopts "ha:s:r:o:7" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
@@ -15,6 +13,12 @@ while getopts "ha:s:r:o:" OPT; do
     o)
         RECIPIENT_OFFSET_INCHES=${OPTARG}
         ;;
+    1)
+        ENVELOPE_TYPE="10"
+        ;;
+    7)
+        ENVELOPE_TYPE="7"
+        ;;
     h)
         less $0
         exit 0
@@ -22,6 +26,22 @@ while getopts "ha:s:r:o:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+case "${ENVELOPE_TYPE}" in
+
+    10)
+        RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-5.5}
+        SIZE=4.12in,9.50in
+        ;;
+
+    7)
+        RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-2}
+        SIZE=5in,7in
+        ;;
+    *)
+        echo "unknown envelope type" && exit ${LINENO}
+        ;;
+esac
 
 if ! command -v evince || ! command -v pdftk || ! command -v pdflatex; then
     sudo apt-get install -y evince pdftk
@@ -49,7 +69,7 @@ PREFIX="${TEX%.*}"
 cat <<EOF > ${TEX}
 
 \documentclass{letter}
-\usepackage[left=.8in,top=.8in,papersize={4.12in,9.50in},landscape,twoside=false]{geometry}
+\usepackage[left=.8in,top=.8in,papersize={${SIZE}},landscape,twoside=false]{geometry}
 \setlength\parskip{0pt}
 \pagestyle{empty}
 
@@ -78,8 +98,8 @@ echo ""
 echo ""
 echo ""
 echo "INSTRUCTIONS"
-echo "print using settings 'Paper Size: #10 envelope' size and 'Orientation: Portrait'. "
-echo "feed #10 envelope into tray with the stamp on the top-left"
+echo "print using settings 'Paper Size: #${ENVELOPE_TYPE} envelope' size and 'Orientation: Portrait'. "
+echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
 
 # lpr ${ROTATED} -o media=COM10
 # x-www-browser-local-file.sh "${ROTATED}"
