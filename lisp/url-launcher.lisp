@@ -47,7 +47,9 @@
     (".*[.]pdf$" "zathura")
     ("(^https?://.*|.*[.]html.*).*" ,#'x-www-browser)
     (".*[.](docx?|odt)$" "libreoffice")
-    ("about:config" ,#'mozrepl:firefox-new-tab)))
+    ("about:config" ,#'mozrepl:firefox-new-tab)
+    ;; ("" ,#'mozrepl:firefox-new-tab)
+    ("^file://.*" "file-open.el")))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
@@ -105,7 +107,8 @@
            (opener (url-command url)))
       (if (functionp opener)
           (stumpwm::lparallel-future (funcall opener url))
-          (run-shell-command (format nil "~A ~A" opener url)))
+          (let ((command (format nil "~A \"~A\"" opener url)))
+            (run-shell-command command)))
       ;;log to different file? or at least add tags
       (log-timestamped-entry url *search-history-filename*))))
 
