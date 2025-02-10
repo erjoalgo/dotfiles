@@ -77,12 +77,13 @@
                                :require-match t)))
          (engine (or (search-engine-find-by-id engine-id)
                      (error "No engine found with id '~A': " engine-id)))
-         (query (STUMPWM:read-one-line
+         (raw-query (STUMPWM:read-one-line
                  (STUMPWM:current-screen)
                  (format nil "~A query: ~%" engine-id)
                  :initial-input
                  ;; (unless no-clipboard (STUMPWM:get-x-selection))
-                 "")))
+                     ""))
+         (query (ppcre:regex-replace-all "/" raw-query "%2F")))
     (when query
       (search-engine-search-noninteractive query engine))))
 
