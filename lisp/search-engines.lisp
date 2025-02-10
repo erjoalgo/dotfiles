@@ -41,4 +41,5 @@
             "https://www.thingiverse.com/search?q=~A&page=1&type=things&sort=relevant"
             "https://sketchfab.com/search?q=~A&type=models"
             "https://thangs.com/search/~A"))
-      ("o" "orders" ("https://www.amazon.com/gp/your-account/order-history/search=~A"))))
+      ("o" "orders" ("https://www.amazon.com/gp/your-account/order-history/search=~A"))
+      ("i" "ikea" "https://www.ikea.com/us/en/search/?q=~A")))
