@@ -155,4 +155,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (stumpwm::screen-lock)
   "ok")
 
+(define-regexp-route url-launcher-put ("/url-launcher-put")
+                     "add an entry to url-launcher"
+  (let* ((url (read-header :URL))
+         (alias (read-header :ALIAS)))
+    (stumpwm:message-wrapped (format nil "URL: ~A" url))
+    (stumpwm:message-wrapped (format nil "ALIAS: ~A" ALIAS))
+    (stumpwm::launcher-append-url alias url)))
+
 ;; (x-service:start 1959)
