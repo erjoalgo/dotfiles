@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "ha:s:r:o:7x" OPT; do
+while getopts "ha:s:r:o:7bx" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
@@ -18,6 +18,9 @@ while getopts "ha:s:r:o:7x" OPT; do
         ;;
     7)
         ENVELOPE_TYPE="7"
+        ;;
+    b)
+        BLUE=true
         ;;
     x)
         X_WWW_BROWSER=true
@@ -94,9 +97,18 @@ pdflatex ${TEX} # -output-directory /tmp
 
 PDF="${PREFIX}.pdf"
 ROTATED="${PREFIX}-rotated.pdf"
-
 pdftk "${PDF}" cat 1-endright output "${ROTATED}"
 
+
+OUTPUT="${ROTATED}"
+
+if test "${BLUE:-}" = true; then
+    BLUE_PDF="${PREFIX}-rotated-blue.pdf"
+    convert-replace-foreground-color.sh -i "${ROTATED}" -f blue -o "${BLUE_PDF}"
+    OUTPUT="${BLUE_PDF}"
+fi
+
+echo "tempfile: ${PDF}"
 echo ""
 echo ""
 echo ""
