@@ -72,26 +72,26 @@
          output
          done-p)
     (unless box
-    (case selection
-      (:interactive
-       (if (mouse-available-p)
-           (push "-s" args)
-           (setf box (grab-box))))
-      (:fullscreen nil)
+      (case selection
+        (:interactive
+         (if (mouse-available-p)
+             (push "-s" args)
+             (setf box (grab-box))))
+        (:fullscreen nil)
         (:window (push "-u" args))))
     (setf output
           (with-output-to-string (out-fh)
-    (setf proc (SB-EXT:RUN-PROGRAM program
-                                   args
-                                   :search t
+            (setf proc (SB-EXT:RUN-PROGRAM program
+                                           args
+                                           :search t
                                            :output out-fh
                                            :error out-fh
-                                   :wait nil))
-    (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-          as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
-          as elapsed-secs = (- (get-universal-time) start-time-secs)
-          as timeout-p = (> elapsed-secs timeout-secs)
-          while (not (or done-p timeout-p)) do
+                                           :wait nil))
+            (loop with start-time-secs = (GET-UNIVERSAL-TIME)
+                  as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
+                  as elapsed-secs = (- (get-universal-time) start-time-secs)
+                  as timeout-p = (> elapsed-secs timeout-secs)
+                  while (not (or done-p timeout-p)) do
                     (sleep 1))))
 
     (cond
