@@ -22,7 +22,7 @@
       ("m" "music" "https://music.erjoalgo.com/by-lyrics?lucky=true&lyrics=~A")
       ("u" "youtube-music" "https://music.youtube.com/search?q=~A")
       ("m" "mvnrepository" "http://mvnrepository.com/search?q=~A")
-      ("W" "Who" "https://moma.corp.google.com/person/~A")
+      ;; ("W" "Who" "https://moma.corp.google.com/person/~A")
       ("Y" "Yaqs" "https://yaqs.googleplex.com/eng?query=~A")
       ("c" "codesearch" "https://cs.corp.google.com/?q=~A")
       ("t" "contacts" "http://localhost:1959/contacts")
