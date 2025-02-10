@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "hd" OPT; do
+while getopts "hdp:" OPT; do
     case ${OPT} in
     d)
         PRINTER=$(lpstat -p -d | grep -Po '(?<=system default destination: ).*')
+        ;;
+    p)
+        PRINTER=${OPTARG}
         ;;
     h)
         less "$0"
