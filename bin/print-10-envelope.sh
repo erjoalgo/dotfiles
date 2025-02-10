@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "ha:s:r:o:7" OPT; do
+while getopts "ha:s:r:o:7x" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
@@ -18,6 +18,9 @@ while getopts "ha:s:r:o:7" OPT; do
         ;;
     7)
         ENVELOPE_TYPE="7"
+        ;;
+    x)
+        X_WWW_BROWSER=true
         ;;
     h)
         less $0
@@ -102,5 +105,9 @@ echo "print using settings 'Paper Size: #${ENVELOPE_TYPE} envelope' size and 'Or
 echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
 
 # lpr ${ROTATED} -o media=COM10
-# x-www-browser-local-file.sh "${ROTATED}"
-evince ${ROTATED}
+
+if test "${X_WWW_BROWSER:-}" = true; then
+    x-www-browser-local-file.sh "${OUTPUT}"
+else
+    evince "${OUTPUT}"
+fi
