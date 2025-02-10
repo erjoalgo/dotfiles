@@ -116,6 +116,7 @@ echo "INSTRUCTIONS"
 echo "print using settings 'Paper Size: #${ENVELOPE_TYPE} envelope' size and 'Orientation: Portrait'. "
 echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
 
+# TODO...
 # lpr ${ROTATED} -o media=COM10
 
 if test "${X_WWW_BROWSER:-}" = true; then
