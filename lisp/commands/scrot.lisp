@@ -68,7 +68,9 @@
            (append
             (list out-png "-z")
             (when overwrite '("-o"))))
-         proc)
+         proc
+         output
+         done-p)
     (unless box
     (case selection
       (:interactive
@@ -77,24 +79,33 @@
            (setf box (grab-box))))
       (:fullscreen nil)
         (:window (push "-u" args))))
+    (setf output
+          (with-output-to-string (out-fh)
     (setf proc (SB-EXT:RUN-PROGRAM program
                                    args
                                    :search t
-                                   :output t
-                                   :error t
+                                           :output out-fh
+                                           :error out-fh
                                    :wait nil))
     (loop with start-time-secs = (GET-UNIVERSAL-TIME)
           as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
           as elapsed-secs = (- (get-universal-time) start-time-secs)
           as timeout-p = (> elapsed-secs timeout-secs)
           while (not (or done-p timeout-p)) do
-            (sleep 1)
-          finally
-             (if (not (and done-p
-                           (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))))
-                 (error "scrot command failed:~%~A"
-                        (if (not done-p) "timeout"
-                            "non-zero exit status"))))
+                    (sleep 1))))
+
+    (cond
+      ((zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))
+       ;; success
+       t)
+      ((not (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE)))
+       (error "scrot command non-zero exit: ~A~%~A"
+              (slot-value proc 'SB-IMPL::%EXIT-CODE)
+              output))
+
+      ((not (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS))
+            (error "scrot command timed out"))))
+
     (when box
       (destructuring-bind ((x . y) (_right . _bot) (width . height)) box
         (assert (equal x (min x _right)))
