@@ -69,15 +69,14 @@
             (list out-png "-z")
             (when overwrite '("-o"))))
          proc)
+    (unless box
     (case selection
       (:interactive
        (if (mouse-available-p)
            (push "-s" args)
            (setf box (grab-box))))
       (:fullscreen nil)
-      (:window (push "-u" args))
-      (t
-       (setf box selection)))
+        (:window (push "-u" args))))
     (setf proc (SB-EXT:RUN-PROGRAM program
                                    args
                                    :search t
