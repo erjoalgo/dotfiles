@@ -131,7 +131,12 @@ __git_complete gmb _git_diff
 alias gmmma='git commit -a -m "autocommit on $(date)"'
 alias gmmma-gpom='git add -A . && gmmma && gpom'
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
-alias ganw='git diff -U0 -w --no-color "$@" | git apply --cached --ignore-whitespace --unidiff-zero -'
+
+function ganw {
+    git diff -U0 -w --no-color "${@}" |  \
+        git apply --cached --ignore-whitespace --unidiff-zero -
+}
+
 alias gaow='git add -A; git diff --cached -w | git apply --cached -R'
 alias __git-commit-interactive-wrapper='VISUAL="vim" getchwrap eynqsh?da -p "([sS]tage|Discard|Edit again|Apply|Stash).+[?] " --'
 alias gcp='__git-commit-interactive-wrapper git commit -p'
