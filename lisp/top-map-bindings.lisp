@@ -485,7 +485,7 @@
       ("h" "HOME")
       ("q" "EXIT")
       ("x" "EXIT")
-      ("DEL" "EXIT")
+      ("DEL" "BACK")
 
       ("XF86AudioLowerVolume" "VOLDOWN")
       ("XF86AudioRaiseVolume" "VOLUP")
