@@ -50,7 +50,8 @@
 
 (defun screen-lock-program ()
   (or (which "xsecurelock.sh")
-      (which "xsecurelock")))
+      (which "xsecurelock")
+      (which "xsecurelock.bak")))
 
 (defun service-running-p (service-name)
   (let ((proc (sb-ext:run-program
