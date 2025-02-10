@@ -4,6 +4,7 @@ import argparse
 import glob
 import logging
 import os
+import re
 import requests
 import requests_unixsocket
 import select
@@ -73,6 +74,7 @@ def main():
   parser.add_argument("-i", "--stdin", action="store_true",
                       help = "read POST data from stdin")
   parser.add_argument("-H", "--headers", nargs="+", default=[],
+                      action="append",
                       help = "list of headers as KEY:VALUE pairs")
   parser.add_argument("-s", "--sockets", nargs="+", default=[],
                       help = "override the list of unix socket paths to use")
@@ -100,8 +102,12 @@ def main():
                   in os.environ.items()
                   if name.startswith("STUMPWM")))
 
-  for header in args.headers:
-      k, v = header.split(':')
+  for header_arg in args.headers:
+      if len(header_arg) == 2:
+          k, v = header_arg
+      else:
+          m = re.match("(.*?):(.*)", header_arg[0])
+          k, v = m.groups()
       headers[k] = v
 
   sockets = args.sockets or glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
