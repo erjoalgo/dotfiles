@@ -66,7 +66,9 @@ seconds ago")
                     (if (pathnamep arg)
                         (uiop:native-namestring arg)
                         arg))
-	    (let* ((log-file (merge-pathnames #P"/tmp/"
+	        (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
+                       (_ (ensure-directory-exists log-directory))
+                       (log-file (merge-pathnames log-directory
                                               (make-pathname
                                                :name (pathname-name command)
                                                :type "log")))
@@ -74,15 +76,16 @@ seconds ago")
                     ;; this creates an extra shell whose pid doesn't match window pid
                     ;; (run-shell-command command)
                     (with-open-file
-                        (out-fn log-file
+                             (out-fh log-file
                                 :direction :output
                                 :if-exists :append
                                 :if-does-not-exist :create)
+                           (format out-fh "running command: ~{~A~^ ~}~%" (cons command args))
                       (sb-ext:run-program
                        command args
                        :wait nil
                        :search t
-                       :output out-fn
+                            :output out-fh
                        :if-output-exists :append))))
               (when raise-window-in-original-group-secs
                 (push (cons (sb-ext:process-pid proc)
