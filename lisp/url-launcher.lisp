@@ -154,12 +154,14 @@
      ("%2f" "/"))
    :initial-value url))
 
-;;would still be nice to have an emacs-like
-;;(interactive (list ...))
-;;without having to defne custom, one-off types
-;(defcommand search-engine-search (engine terms)
-    ;((:string "enter search engine to use: ")
-     ;(:string "enter search terms: "))
+;; would still be nice to have an emacs-like
+;; (interactive (list ...))
+;; without having to defne custom, one-off types, e.g.
+;; (defcommand search-engine-search (engine terms)
+;;   ((:string "enter search engine to use: ")
+;;   (:string "enter search terms: ")))
+;; ...
+;; )
 
 (defun define-key-auto-from-commands-into-keymap ()
   ;;TODO
