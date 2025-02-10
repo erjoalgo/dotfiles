@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-FILENAME=${1} && shift
+FILENAME="$(realpath "${1}")" && shift
 # ENCODED=$(printf %s "${FILENAME}" | jq -sR @uri)
 ENCODED=$(sed 's/ /%20/g' <<< "${FILENAME}")
 URL="file://${ENCODED}"
