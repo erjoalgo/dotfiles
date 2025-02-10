@@ -40,11 +40,11 @@
   (search-engine-install-keymap))
 
 '(define-search-engines
-    ;; provided as an example
-    '(("g" "google" "https://www.google.com/search?num=20&q=~A")
-      ("y" "youtube" "https://www.youtube.com/results?search_query=~A")
-      ("m" "google-maps" "https://www.google.com/maps/search/~A")
-      ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")))
+  ;; provided as an example
+  '(("g" "google" "https://www.google.com/search?num=20&q=~A")
+    ("y" "youtube" "https://www.youtube.com/results?search_query=~A")
+    ("m" "google-maps" "https://www.google.com/maps/search/~A")
+    ("d" "ddg" "https://duckduckgo.com/lite/?q=~A")))
 
 (defstruct search-engine id key url-templates)
 
@@ -71,17 +71,17 @@
   Tab completion is available if engine is not provided."
   (declare (ignore no-clipboard))
   (let* ((engine-id
-          (or engine-id
-              (STUMPWM:completing-read (STUMPWM:current-screen) "Select search engine: "
-                               (mapcar #'search-engine-id *search-engines*)
-                               :require-match t)))
+           (or engine-id
+               (STUMPWM:completing-read (STUMPWM:current-screen) "Select search engine: "
+                                        (mapcar #'search-engine-id *search-engines*)
+                                        :require-match t)))
          (engine (or (search-engine-find-by-id engine-id)
                      (error "No engine found with id '~A': " engine-id)))
          (raw-query (STUMPWM:read-one-line
-                 (STUMPWM:current-screen)
-                 (format nil "~A query: ~%" engine-id)
-                 :initial-input
-                 ;; (unless no-clipboard (STUMPWM:get-x-selection))
+                     (STUMPWM:current-screen)
+                     (format nil "~A query: ~%" engine-id)
+                     :initial-input
+                     ;; (unless no-clipboard (STUMPWM:get-x-selection))
                      ""))
          (query (ppcre:regex-replace-all "/" raw-query "%2F")))
     (when query
@@ -91,8 +91,8 @@
   (if *search-engine-search-split-by-newline*
       (lparallel-future
        (loop for query in (or (ppcre:split #\Newline query) '(""))
-          do (search-engine-search-noninteractive-single query engine)
-          do (sleep .5)))
+             do (search-engine-search-noninteractive-single query engine)
+             do (sleep .5)))
       (search-engine-search-noninteractive-single query engine)))
 
 (defun search-engine-search-noninteractive-single (query &optional engine)
@@ -106,7 +106,7 @@
           do (STUMPWM:x-www-browser url))
     (when *search-history-filename*
       (STUMPWM:log-timestamped-entry (format nil "~A:~A" engine query)
-                             *search-history-filename*))))
+                                     *search-history-filename*))))
 
 (defun search-engine-find-by-id (engine-id)
   (find engine-id *search-engines*
@@ -119,10 +119,10 @@
                 (equal engine-key (search-engine-key engine)))))
 
 (defun search-engine-install-keymap ()
- "Install search engines into *search-engine-map*"
- (loop for engine in (reverse *search-engines*)
-    do (STUMPWM:define-key *search-engine-map* (sanitize-key (search-engine-key engine))
-	 (format nil "engsearch2 ~A" (search-engine-id engine)))))
+  "Install search engines into *search-engine-map*"
+  (loop for engine in (reverse *search-engines*)
+        do (STUMPWM:define-key *search-engine-map* (sanitize-key (search-engine-key engine))
+	     (format nil "engsearch2 ~A" (search-engine-id engine)))))
 
 ;; make command name shorter to make help-map (?) more useful
 (STUMPWM:defcommand-alias engsearch2 search-engine-search)
