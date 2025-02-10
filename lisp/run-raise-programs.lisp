@@ -17,16 +17,16 @@ seconds ago")
         (warn "unable to locate pid for window: ~A" new-win)
         (setf pid-original-group-alist
               (loop with now = (GET-UNIVERSAL-TIME)
-                 for entry in pid-original-group-alist
-                 as keep = (destructuring-bind (pid . (group . timestamp))
-                               entry
-                             (when (and raise-window-in-original-group-secs
-                                        (< (- now timestamp) raise-window-in-original-group-secs))
-                               (if (= new-win-pid pid)
-                                   (progn (move-window-to-group new-win group)
-                                          nil);; remove it from the list
-                                   (progn t))))
-                 if keep collect entry)))))
+                    for entry in pid-original-group-alist
+                    as keep = (destructuring-bind (pid . (group . timestamp))
+                                  entry
+                                (when (and raise-window-in-original-group-secs
+                                           (< (- now timestamp) raise-window-in-original-group-secs))
+                                  (if (= new-win-pid pid)
+                                      (progn (move-window-to-group new-win group)
+                                             nil);; remove it from the list
+                                      (progn t))))
+                    if keep collect entry)))))
 
 (add-hook stumpwm:*new-window-hook* 'raise-window-in-original-group)
 
@@ -37,7 +37,7 @@ seconds ago")
 	 (win-matches (lambda (win)
 			(when win
                           (member (string-downcase (window-class win))
-				win-classes :test #'equal))))
+				  win-classes :test #'equal))))
          (curr-screen-matches-p (funcall win-matches curr-win))
 	 (cands (remove-if-not win-matches win-list))
          (cands (sort cands #'< :key (lambda (win)
@@ -46,7 +46,7 @@ seconds ago")
 	 (cand-no-curr (car (remove curr-win cands)))
          cmd-list)
     (when (and (null cand-no-curr) cmd-line (not curr-screen-matches-p))
-       (setf raise-type :run))
+      (setf raise-type :run))
     (ecase raise-type
       (:raise (when cand-no-curr
                 (raise-window cand-no-curr)
@@ -55,43 +55,43 @@ seconds ago")
                (pull-window cand-no-curr)
                (focus-all cand-no-curr)))
       (:run (when cmd-line
-          (setf cmd-list
-                (when cmd-line
-                  (cond ((listp cmd-line) cmd-line)
-                        ((stringp cmd-line) (ppcre:split " +" cmd-line))
-                        ((functionp cmd-line) (funcall cmd-line)))))
-          (destructuring-bind (command . args)
-              (loop for arg in cmd-list
-                    collect
-                    (if (pathnamep arg)
-                        (uiop:native-namestring arg)
-                        arg))
+              (setf cmd-list
+                    (when cmd-line
+                      (cond ((listp cmd-line) cmd-line)
+                            ((stringp cmd-line) (ppcre:split " +" cmd-line))
+                            ((functionp cmd-line) (funcall cmd-line)))))
+              (destructuring-bind (command . args)
+                  (loop for arg in cmd-list
+                        collect
+                        (if (pathnamep arg)
+                            (uiop:native-namestring arg)
+                            arg))
 	        (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
                        (_ (ensure-directory-exists log-directory))
                        (log-file (merge-pathnames log-directory
-                                              (make-pathname
-                                               :name (pathname-name command)
-                                               :type "log")))
-                   (proc
-                    ;; this creates an extra shell whose pid doesn't match window pid
-                    ;; (run-shell-command command)
-                    (with-open-file
+                                                  (make-pathname
+                                                   :name (pathname-name command)
+                                                   :type "log")))
+                       (proc
+                         ;; this creates an extra shell whose pid doesn't match window pid
+                         ;; (run-shell-command command)
+                         (with-open-file
                              (out-fh log-file
-                                :direction :output
-                                :if-exists :append
-                                :if-does-not-exist :create)
+                                     :direction :output
+                                     :if-exists :append
+                                     :if-does-not-exist :create)
                            (format out-fh "running command: ~{~A~^ ~}~%" (cons command args))
-                      (sb-ext:run-program
-                       command args
-                       :wait nil
-                       :search t
+                           (sb-ext:run-program
+                            command args
+                            :wait nil
+                            :search t
                             :output out-fh
-                       :if-output-exists :append))))
-              (when raise-window-in-original-group-secs
-                (push (cons (sb-ext:process-pid proc)
-                            (cons (current-group) (GET-UNIVERSAL-TIME)))
-                      pid-original-group-alist))
-              log-file)))))))
+                            :if-output-exists :append))))
+                  (when raise-window-in-original-group-secs
+                    (push (cons (sb-ext:process-pid proc)
+                                (cons (current-group) (GET-UNIVERSAL-TIME)))
+                          pid-original-group-alist))
+                  log-file)))))))
 
 (defmacro define-run-or-pull-program (name
 				      &key
@@ -108,10 +108,10 @@ seconds ago")
 				       (:pull ,pull-key)
                                        (:run ,run-key))
 	     as cmd-name = (format nil "~A-~A"
-                                    (symbol-name raise-type)
-                                    (string-upcase name))
+                                   (symbol-name raise-type)
+                                   (string-upcase name))
 	     as doc = (format nil "~A '~A' (autogenerated)" raise-type cmd)
-	  collect
+	     collect
              `(defcommand ,(intern cmd-name) () ()
                 ,doc
 		(raise-pull-or-run-win
