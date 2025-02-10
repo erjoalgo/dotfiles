@@ -8,4 +8,4 @@ EXE=$(which ${HOME}/bin/OpenSCAD*AppImage  \
 
 command -v "${EXE}"
 
-QT_SCALE_FACTOR=3 "${EXE}" "$@"
+QT_SCALE_FACTOR=2 "${EXE}" "$@"
