@@ -162,7 +162,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip",
                         help="ip address of the broadlink IR remote",
-                        default="192.168.1.40")
+                        default="10.0.0.60")
     parser.add_argument("-b", "--buttons", help="button name",
                         nargs="+")
     parser.add_argument("-p", "--port", help="port on which to listen",
