@@ -2,16 +2,20 @@
 
 set -euo pipefail
 
-while getopts "s:p:ho:" OPT; do
+EXT=png
+while getopts "e:p:ho:s" OPT; do
     case ${OPT} in
-    s)
-        SSID=${OPTARG}
+    e)
+        ESSID=${OPTARG}
         ;;
     p)
         PASS=${OPTARG}
         ;;
     o)
         OUTPUT=${OPTARG}
+        ;;
+    s)
+        EXT=svg
         ;;
     h)
         less $0
@@ -27,16 +31,16 @@ function escape {
     sed 's/[:;,"\]/\\\0/g' <<< "${TEXT}"
 }
 
-test -n "${SSID}"
+test -n "${ESSID}"
 test -n "${PASS}"
 
 PASS=$(escape "${PASS}")
-SSID=$(escape "${SSID}")
-OUTPUT=${OUTPUT:-"wifi-${SSID}.png"}
+ESSID=$(escape "${ESSID}")
+OUTPUT=${OUTPUT:-"wifi-${ESSID}.${EXT}"}
 
 # reference
 # https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-network-config-android-ios-11
 
-qrencode -o "${OUTPUT}" "WIFI:T:WPA;S:${SSID};P:${PASS};H:false;"
+qrencode -t "${EXT}" -o "${OUTPUT}" "WIFI:T:WPA;S:${ESSID};P:${PASS};H:false;"
 
 echo "wrote to ${OUTPUT}"
