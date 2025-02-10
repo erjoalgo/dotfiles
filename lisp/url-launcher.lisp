@@ -18,21 +18,21 @@
        (:name "machine" :value "webdav.erjoalgo.com" )
        (:name "login" :value "erjoalgo")
        (:name "password"))
-    :no-prompt t))
+     :no-prompt t))
   (statusor:if-let-ok nil
-      (
-       (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
-       (machine (authinfo:alist-get-or-error :machine auth))
-       (scheme (or (authinfo:alist-get :scheme auth) "https"))
-       (port (authinfo:alist-get :port auth))
-       (url (format nil "~A://~A~A" scheme machine
-                    (if port (format nil ":~A" port) "")))
-       (user (authinfo:alist-get :login auth))
-       (password (authinfo:alist-get :password auth)))
-    (setf *webdav-server-info*
-          (cladaver:make-server-info :base-url url
-                                     :username user
-                                     :password password))))
+                      (
+                       (auth (statusor:nil-to-error (authinfo:get-by :app "webdav")))
+                       (machine (authinfo:alist-get-or-error :machine auth))
+                       (scheme (or (authinfo:alist-get :scheme auth) "https"))
+                       (port (authinfo:alist-get :port auth))
+                       (url (format nil "~A://~A~A" scheme machine
+                                    (if port (format nil ":~A" port) "")))
+                       (user (authinfo:alist-get :login auth))
+                       (password (authinfo:alist-get :password auth)))
+                      (setf *webdav-server-info*
+                            (cladaver:make-server-info :base-url url
+                                                       :username user
+                                                       :password password))))
 
 ;; note the trailing slash.
 ;; needed to allow merging additional pathname components
@@ -53,8 +53,8 @@
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
-     thereis (and (cl-ppcre:scan regexp url) opener)
-     finally (return #'x-www-browser)))
+          thereis (and (cl-ppcre:scan regexp url) opener)
+        finally (return #'x-www-browser)))
 
 (defvar *url-keys-cache* nil)
 
@@ -78,7 +78,7 @@
     (if val
         (prog1 val
           (stumpwm::lparallel-future
-            (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
+           (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
         (prog1
             (setf val (statusor:error-to-signal
                        (cladaver:cat *webdav-server-info* webdav-path)))
@@ -112,6 +112,7 @@
       ;;log to different file? or at least add tags
       (log-timestamped-entry url *search-history-filename*))))
 
+;; TODO rename key => alias, launcher-append-url => launcher-put
 (defcommand launcher-append-url (key &optional url)
     ((:string "enter new key: ")
      (:string nil ))
