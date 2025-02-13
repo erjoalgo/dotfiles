@@ -7,6 +7,7 @@ set -euo pipefail
 # echo $0 ${*}
 FIND_CMD=(find)
 while getopts "he:d:" OPT; do
+DIR_PROVIDED=false
     case ${OPT} in
     e)
         EXT="${OPTARG}"
@@ -15,6 +16,7 @@ while getopts "he:d:" OPT; do
         DIR=$(realpath "${OPTARG}")
         test -d "${DIR}"
         FIND_CMD+=("${DIR}")
+        DIR_PROVIDED=true
         ;;
     c)
         CMIN=${OPTARG}
@@ -29,6 +31,10 @@ while getopts "he:d:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+if test "${DIR_PROVIDED:-}" != true; then
+    echo "missing -d option" && exit ${LINENO}
+fi
 
 if test -n "${EXT:-}"; then
     FIND_CMD+=(-name "*.${EXT}")
