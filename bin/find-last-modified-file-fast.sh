@@ -6,8 +6,9 @@ set -euo pipefail
 
 # echo $0 ${*}
 FIND_CMD=(find)
-while getopts "he:d:" OPT; do
+CUT_CMD=(cut -f5- -d' ')
 DIR_PROVIDED=false
+while getopts "he:d:x" OPT; do
     case ${OPT} in
     e)
         EXT="${OPTARG}"
@@ -20,6 +21,10 @@ DIR_PROVIDED=false
         ;;
     c)
         CMIN=${OPTARG}
+        ;;
+    x)
+        # debug timestamps
+        CUT_CMD=(cat)
         ;;
     h)
         less "$0"
@@ -45,7 +50,4 @@ CMIN=${CMIN:-100}
 FIND_CMD+=(-cmin -${CMIN} -type f \
                  -exec stat --format '%Y :%y %n' "{}" \;)
 
-"${FIND_CMD[@]}" | \
-    sort -nr |  \
-    cut -d: -f2- |  \
-    cut -f4- -d' '
+"${FIND_CMD[@]}" | tac | "${CUT_CMD[@]}"
