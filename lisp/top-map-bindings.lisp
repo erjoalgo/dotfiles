@@ -71,11 +71,13 @@
   :classes '("Blender" "OpenSCAD"))
 
 (defun last-modified-file (dir ext)
-  (let ((cmd (format nil
-                     "find-last-modified-file-fast.sh -d \"~A\" -e ~A"
-                     (truename dir)
-                     ext)))
-    (trim-spaces (run-shell-command cmd t))))
+  (let* ((cmd (format nil
+                      "find-last-modified-file-fast.sh -d \"~A\" -e ~A"
+                      (truename dir)
+                      ext))
+         (output (run-shell-command cmd t))
+         (lines (cl-ppcre:split #\Newline output)))
+    (car lines)))
 
 (define-run-or-pull-program "creality"
   :raise-key "H-t H-c"
