@@ -50,4 +50,4 @@ CMIN=${CMIN:-100}
 FIND_CMD+=(-cmin -${CMIN} -type f \
                  -exec stat --format '%Y :%y %n' "{}" \;)
 
-"${FIND_CMD[@]}" | tac | "${CUT_CMD[@]}"
+"${FIND_CMD[@]}" | sort -nr | "${CUT_CMD[@]}"
