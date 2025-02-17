@@ -395,8 +395,9 @@
     selection))
 
 
-(defcommand press-ir-button (button-name) ((:string ))
+(defcommand press-ir-button (button-name) ((:string))
   (message "pressing button: ~A" button-name)
-  (run-shell-command
-   (format nil "curl http://localhost:2727/~A" button-name)))
+  (run-command-async-notify-on-error
+   "ir-remote.py"
+   (list "-b" button-name)))
 
