@@ -507,11 +507,6 @@
 
 (defparameter *press-ir-button-map* (make-sparse-keymap))
 
-(defmacro press-ir-buttons-cmd (buttons-list)
-  `(defcommand ,(intern (format nil "PRESS-IR-BUTTON-~{~A~^-~}" buttons-list))
-       () ()
-     (press-ir-button ,(format nil "~{~A~^,~}" buttons-list))))
-
 (define-key-bindings
     *press-ir-button-map*
     `(
