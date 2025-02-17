@@ -103,8 +103,8 @@
               (slot-value proc 'SB-IMPL::%EXIT-CODE)
               output))
 
-      ((not (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS))
-            (error "scrot command timed out"))))
+      ((not (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)))
+       (error "scrot command timed out")))
 
     (when box
       (destructuring-bind ((x . y) (_right . _bot) (width . height)) box
