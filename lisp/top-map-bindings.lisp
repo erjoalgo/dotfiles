@@ -522,7 +522,9 @@
       ("S" ,(run-keymap-repeatedly-command *ir-buttons-vizio-soundbar*))
 
       ("a" ,(define-tv-buttons "AC" *ir-buttons-ac*))
-      ("A" ,(run-keymap-repeatedly-command *ir-buttons-ac*))))
+      ("A" ,(run-keymap-repeatedly-command *ir-buttons-ac*))
+      ("Up" "press-ir-button VIZIO_PICTURE_UP,TCL_PICTURE_MODE_UP")
+      ("Down" "press-ir-button VIZIO_PICTURE_DOWN,TCL_PICTURE_MODE_DOWN")))
 
 
 (set-prefix-key (kbd "F19"))
