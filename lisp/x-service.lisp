@@ -163,4 +163,12 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (stumpwm:message-wrapped (format nil "ALIAS: ~A" ALIAS))
     (stumpwm::launcher-append-url alias url)))
 
+(define-regexp-route raise-window ("/raise-window")
+                     "raise the window matching the given regexp"
+  (let* ((regexp (read-header :REGEXP)))
+    (loop for win in (stumpwm::list-windows (stumpwm::current-screen))
+          as title = (stumpwm::window-title win)
+            thereis (when (ppcre:scan regexp title)
+                      (stumpwm::raise-window win)))))
+
 ;; (x-service:start 1959)
