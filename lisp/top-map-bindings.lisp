@@ -183,7 +183,8 @@
                 as kbd = (if (stringp key) (kbd key)
                              key)
                 do
-	           (define-key kmap kbd action))))
+	           (define-key kmap kbd action))
+        finally (return kmap)))
 
 
 (defmacro def-several-vars (value-form &rest vars)
@@ -515,16 +516,22 @@
 
       ("d" ,(define-tv-buttons "DYNEX" *ir-buttons-dynex-tv*))
 
-      ("t" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))
-      ("T" ,(run-keymap-repeatedly-command *ir-buttons-tcl-tv*))
+      ("l" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))
+      ("L" ,(run-keymap-repeatedly-command *ir-buttons-tcl-tv*))
 
       ("s" ,(define-tv-buttons "SOUNDBAR" *ir-buttons-vizio-soundbar*))
       ("S" ,(run-keymap-repeatedly-command *ir-buttons-vizio-soundbar*))
 
       ("a" ,(define-tv-buttons "AC" *ir-buttons-ac*))
       ("A" ,(run-keymap-repeatedly-command *ir-buttons-ac*))
-      ("Up" "press-ir-button VIZIO_PICTURE_UP,TCL_PICTURE_MODE_UP")
-      ("Down" "press-ir-button VIZIO_PICTURE_DOWN,TCL_PICTURE_MODE_DOWN")))
+
+      ("t" ,(define-key-bindings
+                (make-sparse-keymap)
+                `(
+                  ("Up" "press-ir-button VIZIO_PICTURE_UP,TCL_PICTURE_MODE_UP")
+                  ("Down" "press-ir-button VIZIO_PICTURE_DOWN,TCL_PICTURE_MODE_DOWN")
+                  ("p" "press-ir-button VIZIO_POWER,TCL_POWER"))))))
+
 
 
 (set-prefix-key (kbd "F19"))
