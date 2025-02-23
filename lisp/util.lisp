@@ -356,3 +356,9 @@
                 (owner (sb-thread:mutex-owner mutex)))
              (format t "terminating thread: ~A" owner)
              (sb-thread:terminate-thread owner))))
+
+(defun find-window-by-regexp (regexp)
+  (loop for win in (list-windows (current-screen))
+        as title = (window-title win)
+          thereis (when (ppcre:scan regexp title)
+                    win)))
