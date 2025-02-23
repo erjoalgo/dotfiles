@@ -3,8 +3,8 @@
 (defun file-string (path)
   (with-open-file (stream path)
     (let* ((n-estimate (file-length stream))
-	  (data (make-string n-estimate))
-	  (n (read-sequence data stream)))
+	   (data (make-string n-estimate))
+	   (n (read-sequence data stream)))
       (unless (= n n-estimate)
 	(setf data (subseq data 0 n)))
       data)))
@@ -60,10 +60,10 @@
 		      :if-exists :append
 		      :direction :output
 		      )
-		  (format fh "~A~A~A~%"
-			  entry
-			  (coerce '(#\Tab) 'string)
-			  (time-date-and-time))))
+    (format fh "~A~A~A~%"
+	    entry
+	    (coerce '(#\Tab) 'string)
+	    (time-date-and-time))))
 (export '(log-timestamped-entry) :STUMPWM)
 
 (defmacro define-stumpwm-type-for-completion
@@ -77,9 +77,9 @@
 
 (defun hide-message-windows ()
   (when (timer-p *message-window-timer*)
-            (cancel-timer *message-window-timer*)
-            (setf *message-window-timer* nil))
-    (progn (unmap-all-message-windows) (unmap-all-message-windows)))
+    (cancel-timer *message-window-timer*)
+    (setf *message-window-timer* nil))
+  (progn (unmap-all-message-windows) (unmap-all-message-windows)))
 
 (defun last-messages ()
   (reverse (screen-last-msg (current-screen))))
@@ -94,9 +94,9 @@
       (destructuring-bind (first second . rest) forms
 	(destructuring-bind (a . a-rest) (if (atom second)
 					     (cons second nil)
-					   second)
+					     second)
 	  `(-> ,(apply 'list a first a-rest) ,@rest)))
-    (car forms)))
+      (car forms)))
 
 (defmacro ->> (&rest forms)
   (if (second forms)
@@ -287,8 +287,8 @@
 
 (defun first-existing-file (&rest files)
   (loop for file in files thereis
-       (and (probe-file (parse-namestring file))
-	    file)))
+                          (and (probe-file (parse-namestring file))
+	                       file)))
 
 (defun first-existing-command (&rest commands)
   "assume command has no spaces or funny characters"
@@ -352,7 +352,7 @@
   (loop for thread in (sb-thread:list-all-threads)
         do (when-let*
                ((mutex
-                  (slot-value thread 'sb-thread::waiting-for))
+                 (slot-value thread 'sb-thread::waiting-for))
                 (owner (sb-thread:mutex-owner mutex)))
              (format t "terminating thread: ~A" owner)
              (sb-thread:terminate-thread owner))))
