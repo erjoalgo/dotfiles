@@ -167,7 +167,15 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                      "raise the window matching the given regexp"
   (let* ((regexp (read-header :REGEXP))
          (win (stumpwm::find-window-by-regexp regexp)))
-    (when win
-      (stumpwm::raise-window win))))
+    (if win
+        (stumpwm::raise-window win)
+        (let ((err-msg (format nil "no such window matching '~A'~%: ~{~A~^~%~}"
+                               regexp
+                               (loop for win in (stumpwm::list-windows (stumpwm::current-screen))
+                                     collect (stumpwm::window-title win)))))
+          (stumpwm::message "^1~A*" err-msg)
+          (setf (hunchentoot:return-code*)
+                hunchentoot:+HTTP-NOT-FOUND+)
+          err-msg))))
 
 ;; (x-service:start 1959)
