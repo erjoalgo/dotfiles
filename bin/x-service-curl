@@ -50,7 +50,10 @@ def x_service_curl(specs: list, path: str, headers: dict[str:str], data: bytes):
     logging.debug(f"{method} {url}" +
                   (f" <<< {peek_string(data, 100)}" if data else ""))
 
-    req = requests.Request(method, url, headers=headers, data=data)
+    req = requests.Request(method, url,
+                           headers=dict((k.encode(), v.encode())
+                                        for (k, v) in headers.items()),
+                           data=data)
     try:
         prepared = req.prepare()
         resp = session.send(prepared)
