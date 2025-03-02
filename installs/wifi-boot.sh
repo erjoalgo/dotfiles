@@ -61,11 +61,13 @@ fi
 
 if sudo grep "Possible missing firmware /lib/firmware/radeon" -R /var/log/syslog; then
     sudo apt-get install -y firmware-amd-graphics
+    INSTALLED+=" firmware-amd-graphics"
 fi
 
 if  sudo dmesg | grep 'Direct firmware load for .*failed with error'; then
     add-non-free-apt-source
     sudo apt-get install -y firmware-misc-nonfree
+    INSTALLED+=" firmware-misc-nonfree"
 fi
 
 if (sudo grep /var/log/syslog 'idVendor=0bda.*idProduct=b812' ||  \
@@ -83,6 +85,7 @@ if (sudo grep /var/log/syslog 'idVendor=0bda.*idProduct=b812' ||  \
     make
     sudo modprobe cfg80211
     sudo insmod 88x2bu.ko
+    INSTALLED+=" RTL88x2bu"
 fi
 
 if test -z "${INSTALLED}"; then
