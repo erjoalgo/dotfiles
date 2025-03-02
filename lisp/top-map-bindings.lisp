@@ -516,14 +516,17 @@
 
       ("d" ,(define-tv-buttons "DYNEX" *ir-buttons-dynex-tv*))
 
-      ("l" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))
-      ("L" ,(run-keymap-repeatedly-command *ir-buttons-tcl-tv*))
+      ("c" ,(define-tv-buttons "TCL" *ir-buttons-tcl-tv*))
+      ("C" ,(run-keymap-repeatedly-command *ir-buttons-tcl-tv*))
 
       ("s" ,(define-tv-buttons "SOUNDBAR" *ir-buttons-vizio-soundbar*))
       ("S" ,(run-keymap-repeatedly-command *ir-buttons-vizio-soundbar*))
 
       ("a" ,(define-tv-buttons "AC" *ir-buttons-ac*))
       ("A" ,(run-keymap-repeatedly-command *ir-buttons-ac*))
+
+      ("l" ,(define-tv-buttons "LG" *ir-buttons-lg-tv*))
+      ("L" ,(run-keymap-repeatedly-command *ir-buttons-lg-tv*))
 
       ("t" ,(define-key-bindings
                 (make-sparse-keymap)
