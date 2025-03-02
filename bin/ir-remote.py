@@ -236,11 +236,11 @@ def main():
             name = f"{tv_name}_{suffix}"
             skip = False
             while True:
-                resp = input(f"learn {name} (y/n)?")
+                resp = input(f"learn {name} (y/n)? [y]")
                 if resp == "n":
                     skip = True
                     break
-                elif resp == "y":
+                elif resp in ("y", ""):
                     skip = False
                     break
                 else:
