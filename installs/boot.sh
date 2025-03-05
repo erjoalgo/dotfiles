@@ -226,7 +226,7 @@ for SHADOWER in ~/.profile  \
 	insert-text-block '# 5a82826a-aad9-11e7-872b-4fada3489c57-source-my-profile'  \
 		          -b ${SHADOWER}<<EOF
 test -n "\${DEBUG_INIT:-}" && echo "loading \$BASH_SOURCE (JvtE)"
-source ${HOME}/.my-profile
+. ${HOME}/.my-profile
 EOF
     fi
 done
