@@ -530,10 +530,17 @@
 
       ("t" ,(define-key-bindings
                 (make-sparse-keymap)
-                `(
-                  ("Up" "press-ir-button VIZIO_PICTURE_UP,TCL_PICTURE_MODE_UP")
-                  ("Down" "press-ir-button VIZIO_PICTURE_DOWN,TCL_PICTURE_MODE_DOWN")
-                  ("p" "press-ir-button VIZIO_POWER,TCL_POWER"))))))
+                (loop with tvs = '(
+                                   ;; "VIZIO"
+                                   "TCL"
+                                   "LG")
+                      for (key button-fmt) in
+                      `(("Up" "~A_PICTURE_MODE_UP")
+                        ("Down" "~A_PICTURE_MODE_DOWN")
+                        ("p" "~A_POWER"))
+                      collect (list key
+                                    (format nil "press-ir-button ~{~A~^,~}"
+                                            (mapcar (lambda (tv) (format nil button-fmt tv)) tvs))))))))
 
 
 
