@@ -1,3 +1,6 @@
 [submodule "submodules/stumpwm-themes"]
 	path = submodules/stumpwm-themes
 	url = https://github.com/ilshad/stumpwm-themes
+[submodule "submodules/noche-diamante"]
+	path = submodules/noche-diamante
+	url = ssh://git@github.com/erjoalgo/noche-diamante
