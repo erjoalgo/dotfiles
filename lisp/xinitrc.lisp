@@ -116,4 +116,6 @@
     (message "startup shell scripts took ~,1fs" (/ ms 1000)))
 
   (with-elapsed-time ms (start-screensaver)
-    (message "screensaver load took ~,1fs" (/ ms 1000))))
+    (message "screensaver load took ~,1fs" (/ ms 1000)))
+
+  (run-shell-command "xsetroot -cursor_name left_ptr" t))
