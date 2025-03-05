@@ -27,6 +27,10 @@ sudo apt-get install -y libxcomposite-dev
 
 ./install-find-cursor.sh || echo "WARNING: failed to install find-cursor"
 
+if ! ./x-cursor.sh; then
+    echo "warning: failed to install custom x-cursor"
+fi
+
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=856351
 sudo insert-text-block '# 37561c4f-5b87-4252-9724-6eed90ee3943-fix-stretch-X-issue'  \
                   /etc/X11/Xwrapper.config<<EOF
