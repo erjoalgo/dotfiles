@@ -1,0 +1,3 @@
+[submodule "submodules/stumpwm-themes"]
+	path = submodules/stumpwm-themes
+	url = https://github.com/ilshad/stumpwm-themes
