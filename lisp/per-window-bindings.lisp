@@ -75,6 +75,10 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                       (when (current-window) (window-class (current-window)))
                       class-dest)
               msgs)
+        (when curr-bindings
+          (push (format nil "popping old bindings") msgs)
+          (pop-top-map)
+          (pop *current-top-bindings*))
         (when (or (and (null class-dest)
                        (current-window)
                        (or
@@ -86,10 +90,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                           :test 'equal))
           (message "changing from browser to nil?")
           (return-from update-window-bindings))
-        (when curr-bindings
-          (push (format nil "popping old bindings") msgs)
-          (pop-top-map)
-          (pop *current-top-bindings*))
         (when bindings-dest
           (push (format nil "pushing ~A" class-dest) msgs)
           (push-top-map bindings-dest)
