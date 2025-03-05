@@ -7,7 +7,10 @@ CURSOR_THEME=${CURSOR_THEME:-noche-diamante}
 DEST="/usr/share/icons/${CURSOR_THEME}"
 
 if ! test -d "${DEST}"; then
-    SRC=$(realpath ../data/cursors/${CURSOR_THEME})
+    git submodule init
+    git submodule update
+    git submodule sync
+    SRC=$(realpath ../submodules/${CURSOR_THEME})
     test -d "${SRC}"
     sudo cp -r "${SRC}" "${DEST}"
 fi
