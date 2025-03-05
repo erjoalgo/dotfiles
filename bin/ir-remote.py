@@ -147,7 +147,11 @@ class IRService(http.server.BaseHTTPRequestHandler):
                 self.respond(400, f"unknown route: {self.path}")
                 return
             press_button(self.device, buttons, self.delay, self.directory)
-            self.respond(200, "success!")
+            try:
+                self.respond(200, "success!")
+            except BrokenPipe as ex:
+                logging.error("broken pipe: %s", ex)
+                pass
         except Exception as ex:
             logging.error("error during request handling: %s", ex)
             traceback.print_exc()
