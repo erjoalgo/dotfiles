@@ -51,13 +51,13 @@ function docker-container-name-to-id {
     for LINE in ${LINES}; do
         NAME=$(tr -s ' ' <<< "${LINE}" | cut -f2 -d' ')
         if test "${CONTAINER_NAME}" = "${NAME}"; then
-            # echo "${LINE}" >2
+            # echo "${LINE}" >&2
             CONTAINER_ID=$(cut -f1 -d' ' <<< "${LINE}")
             echo "${CONTAINER_ID}"
             return
         fi
     done
-    echo "error: container not found: ${CONTAINER_NAME}" >2
+    echo "error: container not found: ${CONTAINER_NAME}" >&2
     return 1
 }
 
