@@ -2,24 +2,63 @@
 
 set -euo pipefail
 
-while getopts "h" OPT; do
-    case ${OPT} in
-    h)
-        less $0
-        exit 0
-        ;;
-    esac
-done
 shift $((OPTIND -1))
 COMMAND=docker-${1} && shift
 
+while getopts "r:n:h" OPT; do
+    case ${OPT} in
+        r)
+            REGEXP=${OPTARG}
+            ;;
+        n)
+            CONTAINER_NAME=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
+    esac
+done
+
+function __docker-container-lines {
+    docker compose ps | sed '1d'
+    docker ps | sed '1d'
+}
+
 function docker-select-container {
+    if test -n "${CONTAINER_NAME:-}"; then
+        docker-container-name-to-id "${CONTAINER_NAME:-}"
+        return
+    fi
     echo "select docker container: " 1>&2
-    IFS=$'\n'
-    select LINE in $(docker compose ps) $(docker ps); do
+    LINES=$(__docker-container-lines)
+    if test -n "${REGEXP:-}"; then
+        LINES=$(grep "${REGEXP}" <<< "${OPTIONS}")
+    fi
+    # IFS=$'\n'
+    OPTIONS=$(tr -s ' ' <<< "${LINES}" |  \
+                  cut -f2 -d' ')
+    select CONTAINER_NAME in $(sort -u  <<< ${OPTIONS}); do
+        docker-container-name-to-id "${CONTAINER_NAME}"
         break
     done
-    cut -f1 -d' ' <<< "${LINE}"
+}
+
+function docker-container-name-to-id {
+    CONTAINER_NAME=${1} && shift
+    IFS=$'\n'
+    LINES=$(__docker-container-lines)
+    for LINE in ${LINES}; do
+        NAME=$(tr -s ' ' <<< "${LINE}" | cut -f2 -d' ')
+        if test "${CONTAINER_NAME}" = "${NAME}"; then
+            # echo "${LINE}" >2
+            CONTAINER_ID=$(cut -f1 -d' ' <<< "${LINE}")
+            echo "${CONTAINER_ID}"
+            return
+        fi
+    done
+    echo "error: container not found: ${CONTAINER_NAME}" >2
+    return 1
 }
 
 function docker-bash {
