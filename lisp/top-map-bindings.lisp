@@ -359,7 +359,7 @@
     '(
       ("i" "invert-screen")
       ("M" "echo-pointer")
-      ("m" "toggle-magnifier")
+      ("m" "magnus")
       ("H-c" *correct-screen-map*)
       ("r" *screen-rotation-map*)
       ("c" *special-chars-map*)
