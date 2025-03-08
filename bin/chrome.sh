@@ -7,7 +7,8 @@ if ! EXE=$(which chromium-browser chrome google-chrome chromium | sort | head -1
 fi
 
 ENABLE_FEATURES="AsyncDns"
-if test "$(redshift -p | grep -Po '(?<=Period: ).*')" != Daytime; then
+CURRENT_PERIOD=$(redshift -p | grep -Po '(?<=Period: ).*')
+if test "${CURRENT_PERIOD}" != Daytime; then
     ENABLE_FEATURES+=,WebContentsForceDark
 fi
 
