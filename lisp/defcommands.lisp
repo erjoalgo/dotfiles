@@ -96,15 +96,8 @@
   "echo the mouse location"
   (echo (run-shell-command "xdotool getmouselocation" t)))
 
-(defvar magnifier-on nil)
-
-(defcommand toggle-magnifier () ()
-  "toogle magnifier on/off. requires the TODO program"
-  (setf magnifier-on (not magnifier-on))
-  (run-shell-command
-   (if (not magnifier-on)
-       "magnifier -vm -z 5"
-       "pkill magnifier")))
+(defcommand magnus () ()
+  (run-shell-command "magnus"))
 
 ;;based on 'echo-windows'
 (defcommand echo-windows-with-group () ()
