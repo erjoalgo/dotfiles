@@ -81,8 +81,8 @@ set -euxo pipefail
 REPO_PATH=${SRV_PREFIX}/${REPO_NAME}
 mkdir -p \$REPO_PATH
 git init --bare \$REPO_PATH
-chown -R git:git .
-chmod -R g=u .
+chown -R git:git \$REPO_PATH
+chmod -R g=u \$REPO_PATH
 EOF
     else
         mkdir -p "${REMOTE_URL}"
