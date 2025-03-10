@@ -34,3 +34,24 @@ fi
 
 sudo sed -i "s/^\(Inherits=\).*/\1${CURSOR_THEME}/" \
      /usr/share/icons/default/index.theme
+
+sed -i "s/^\(Xcursor.theme:\).*/\1${CURSOR_THEME}/" \
+    "${HOME}/.Xresources"
+
+sed -i \
+    "s/^\(gtk-cursor-theme-name=\).*/\1\"${CURSOR_THEME}\"/" \
+    ${HOME}/.gtkrc-*
+
+insert-text-block '# 9a3b6e8c-6e2f-4b3f-b6e8-e4de4d3733bd-gtk-cursor-theme-name'  \
+                  "${HOME}/.config/gtk-3.0/settings.ini"<<EOF
+[Settings]
+gtk-cursor-theme-name=${CURSOR_THEME}
+EOF
+
+for FILENAME in "${HOME}/.xinitrc" "${HOME}/.profile-env"; do
+    insert-text-block  \
+    '# 97995abf-83de-403d-b9d0-8da0347f3b5b-xinitrc-xcursor-name' \
+    "${FILENAME}" -b <<EOF
+export XCURSOR_THEME=${CURSOR_THEME}
+EOF
+done
