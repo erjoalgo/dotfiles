@@ -27,7 +27,8 @@ sudo apt-get install -y libxcomposite-dev
 
 ./install-find-cursor.sh || echo "WARNING: failed to install find-cursor"
 
-if ! ./x-cursor.sh; then
+
+if ! x-cursor-use.sh ../data/public/material_light_cursors; then
     echo "warning: failed to install custom x-cursor"
 fi
 
