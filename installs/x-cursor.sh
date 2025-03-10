@@ -53,5 +53,6 @@ for FILENAME in "${HOME}/.xinitrc" "${HOME}/.profile-env"; do
     '# 97995abf-83de-403d-b9d0-8da0347f3b5b-xinitrc-xcursor-name' \
     "${FILENAME}" -b <<EOF
 export XCURSOR_THEME=${CURSOR_THEME}
+export XCURSOR_PATH=${DEST}
 EOF
 done
