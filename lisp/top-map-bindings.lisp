@@ -530,6 +530,7 @@
 
       ("t" ,(define-key-bindings
                 (make-sparse-keymap)
+                (append
                 (loop with tvs = '(
                                    ;; "VIZIO"
                                    "TCL"
@@ -540,7 +541,10 @@
                         ("p" "~A_POWER"))
                       collect (list key
                                     (format nil "press-ir-button ~{~A~^,~}"
-                                            (mapcar (lambda (tv) (format nil button-fmt tv)) tvs))))))))
+                                             (mapcar (lambda (tv) (format nil button-fmt tv)) tvs))))
+                 `(
+                   ("w" "press-ir-button LG_POWER,TCL_ENTER"))
+                 )))))
 
 
 
