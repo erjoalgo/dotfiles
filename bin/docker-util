@@ -27,19 +27,20 @@ function __docker-container-lines {
 
 function docker-select-container {
     if test -n "${CONTAINER_NAME:-}"; then
-        docker-container-name-to-id "${CONTAINER_NAME:-}"
+        docker ps -q --filter name="${CONTAINER_NAME}"
         return
     fi
     echo "select docker container: " 1>&2
-    LINES=$(__docker-container-lines)
+    PS_OPTIONS=$(docker ps | sed '1d' |  \
+                tr -s ' ' | cut -f2 -d ' ')
+    COMPOSE_PS_OPTIONS+=$(docker compose ps | sed '1d' |  \
+                 tr -s ' ' | cut -f1 -d ' ')
+    OPTIONS=$(echo -e "${PS_OPTIONS}\n${COMPOSE_PS_OPTIONS}")
     if test -n "${REGEXP:-}"; then
-        LINES=$(grep "${REGEXP}" <<< "${OPTIONS}")
+        OPTIONS=$(grep "${REGEXP}" <<< "${OPTIONS}")
     fi
-    # IFS=$'\n'
-    OPTIONS=$(tr -s ' ' <<< "${LINES}" |  \
-                  cut -f2 -d' ')
-    select CONTAINER_NAME in $(sort -u  <<< ${OPTIONS}); do
-        docker-container-name-to-id "${CONTAINER_NAME}"
+    select CONTAINER_NAME in $(sort -u <<< ${OPTIONS}); do
+        docker ps -q --filter name="${CONTAINER_NAME}"
         break
     done
 }
@@ -47,9 +48,9 @@ function docker-select-container {
 function docker-container-name-to-id {
     CONTAINER_NAME=${1} && shift
     IFS=$'\n'
-    LINES=$(__docker-container-lines)
+    LINES=$(docker ps | sed '1d' | tr -s ' ')
     for LINE in ${LINES}; do
-        NAME=$(tr -s ' ' <<< "${LINE}" | cut -f2 -d' ')
+        NAME=$(cut -f2 -d' ' <<< "${LINE}")
         if test "${CONTAINER_NAME}" = "${NAME}"; then
             # echo "${LINE}" >&2
             CONTAINER_ID=$(cut -f1 -d' ' <<< "${LINE}")
