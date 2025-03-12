@@ -108,7 +108,7 @@
                   (format nil "which ~A" program)))))
 
 (defun xinitrc-init ()
-  (loop for i below 2 do
+  (loop for i below 3 do
     (with-elapsed-time ms (xmodmap-load)
       (message "xmodmap load took ~,1fs" (/ ms 1000))))
 
