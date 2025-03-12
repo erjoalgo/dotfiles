@@ -134,10 +134,11 @@ class IRService(http.server.BaseHTTPRequestHandler):
     REST API for a universal IR/RF remote.
     """
 
-    def __init__(self, device, delay, directory):
+    def __init__(self, device, delay, directory, local_directory):
         self.device = device
         self.delay = delay
         self.directory = directory
+        self.local_directory = local_directory
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
@@ -160,7 +161,7 @@ class IRService(http.server.BaseHTTPRequestHandler):
                 self.respond(400, f"unknown route: {self.path}")
                 return
             press_button(self.device, buttons, self.delay,
-                         (self.directory, ))
+                         (self.local_directory, self.directory))
             try:
                 self.respond(200, "success!")
             except BrokenPipe as ex:
@@ -258,7 +259,8 @@ def main():
         httpd = http.server.HTTPServer(
             server_address,
             IRService(device=device, delay=args.seconds,
-                      directory=args.directory))
+                      directory=args.directory,
+                      local_directory=args.cache_directory))
         logging.info("serving on %s", server_address)
         t = threading.Thread(
             target=cache_buttons_locally_loop,
