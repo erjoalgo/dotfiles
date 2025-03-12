@@ -213,13 +213,16 @@ def main():
     parser.add_argument("-L", "--learn", help="learn a new button",
                         action="store_true")
     parser.add_argument("-t", "--learn-tv",
-                        help="learn a typical set of buttons for a TV of the given name")
+                        help=
+                        "learn a typical set of buttons for a TV of"
+                        "the given name")
     parser.add_argument("-s", "--seconds",
                         help="delay in seconds between subsequent presses",
                         type=float, default=1)
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
-                        default=os.path.expanduser("/home/ealfonso/afs/public/ir-buttons/"))
+                        default=os.path.expanduser(
+                            "/home/ealfonso/afs/public/ir-buttons/"))
     parser.add_argument("-c", "--cache-directory",
                         help="local mirror of AFS buttons directory",
                         default=os.path.expanduser("/usr/share/ir-buttons/"))
