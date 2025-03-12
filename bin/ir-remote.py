@@ -8,7 +8,9 @@ import os
 import pdb
 import re
 import requests
+import subprocess
 import sys
+import threading
 import time
 import traceback
 
@@ -174,6 +176,28 @@ class IRService(http.server.BaseHTTPRequestHandler):
             self.wfile.write(contents)
             return
 
+def cache_buttons_locally(remote_directory, local_directory):
+    cmd = ["rsync", "-r", "--delete", remote_directory,
+           local_directory]
+    logging.info("attempting rsync via command: %s", " ".join(cmd))
+    p = subprocess.Popen(cmd,
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    print(stderr.decode())
+    print(stdout.decode())
+    if p.returncode:
+        raise Exception(f"rsync failed")
+    logging.info("rsync completed successfully")
+
+def cache_buttons_locally_loop(delay=60, **kwargs):
+    while True:
+        try:
+            cache_buttons_locally(**kwargs)
+        except Exception as ex:
+            logging.error("failed to cache buttons: ", exc_info=True)
+        time.sleep(60)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip",
@@ -194,7 +218,10 @@ def main():
                         type=float, default=1)
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
-                        default=os.path.expanduser("/home/ealfonso/afs/public/ir-buttons"))
+                        default=os.path.expanduser("/home/ealfonso/afs/public/ir-buttons/"))
+    parser.add_argument("-c", "--cache-directory",
+                        help="local mirror of AFS buttons directory",
+                        default=os.path.expanduser("/usr/share/ir-buttons/"))
     parser.add_argument("-i", "--interact", help="enter an interactive session",
                         action="store_true")
     args = parser.parse_args()
@@ -233,6 +260,13 @@ def main():
             IRService(device=device, delay=args.seconds,
                       directory=args.directory))
         logging.info("serving on %s", server_address)
+        t = threading.Thread(
+            target=cache_buttons_locally_loop,
+            kwargs=({
+                "remote_directory": args.directory,
+                "local_directory": args.cache_directory
+            }))
+        t.start()
         httpd.serve_forever()
     elif args.learn:
         while True:
