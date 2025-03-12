@@ -37,12 +37,12 @@ BUTTONS = {
     "VIZIO_POWER": b'&\x00P\x00\x00\x01#\x94\x11\x14\x0f\x14\x0f9\x0e\x15\x0f\x15\r\x15\x0f\x14\x10\x13\x108\x0f7\x10\x15\x0f8\r9\x109\x0f8\x0f8\x0f\x14\x10\x13\x0f\x14\x0f:\x0e\x14\x0f\x13\x11\x14\x0f\x14\x0f7\x108\x108\x0f\x14\x0f7\x118\r;\x0e8\x10\x00\x05:\x00\x01"K\x10\x00\r\x05'
 }
 
-def press_button(device, name_spec, delay, directory):
+def press_button(device, name_spec, delay, directories):
     sequence = name_spec.split(",")
     if len(sequence) > 1:
         logging.info("pressing sequence of %s buttons", len(sequence))
         for button in sequence:
-            press_button(device, button, delay, directory)
+            press_button(device, button, delay, directories)
             time.sleep(delay)
         return
     m = re.match("(.*)x([0-9]+)$", name_spec)
@@ -53,14 +53,25 @@ def press_button(device, name_spec, delay, directory):
         name = name_spec
         repeat = 1
     logging.info("pressing button %s %s times", name, repeat)
-    value = load_button(name, directory)
+    if isinstance(directories, str):
+        logging.warning("passing a single directory as the directories argument")
+        directories = [directories]
+    for directory in directories:
+        try:
+            value = load_button(name, directory)
+            break
+        except Exception as ex:
+            logging.error(
+                f"failed to load button from directory {directory}: ", ex)
+    else:
+        raise Exception(f"failed to load button {name} from all directories")
     assert value, f"no such button: {name}"
     if isinstance(value, list):
         buttons = value
-        press_button(device, ",".join(buttons), delay, directory)
+        press_button(device, ",".join(buttons), delay, directories)
     elif isinstance(value, str):
         buttons = value
-        press_button(device, buttons, delay, directory)
+        press_button(device, buttons, delay, directories)
     elif isinstance(value, bytes):
         packet = value
         for _ in range(repeat):
@@ -146,7 +157,8 @@ class IRService(http.server.BaseHTTPRequestHandler):
                 logging.warning("unknown request: %s", self.path)
                 self.respond(400, f"unknown route: {self.path}")
                 return
-            press_button(self.device, buttons, self.delay, self.directory)
+            press_button(self.device, buttons, self.delay,
+                         (self.directory, ))
             try:
                 self.respond(200, "success!")
             except BrokenPipe as ex:
