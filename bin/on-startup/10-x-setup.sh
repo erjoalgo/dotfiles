@@ -1,5 +1,8 @@
 #!/bin/bash
 
+xmodmap-load.sh
+xmodmap-load.sh
+
 CURRENT_BACKLIGHT=$(xbacklight -get)
 if test $? -eq 0 &&  expr ${CURRENT_BACKLIGHT} \> 70; then
     xbacklight -set 70
