@@ -65,7 +65,12 @@ function docker-container-name-to-id {
 
 function docker-bash {
     CONTAINER=$(docker-select-container)
-    docker exec -it --user root "${CONTAINER}" bash
+    set -x # log the exec command
+    CMD=(${@})
+    if test ${#CMD[@]} -eq 0; then
+        CMD=(bash)
+    fi
+    docker exec -it --user root "${CONTAINER}" ${CMD[@]}
 }
 
 function docker-working-dir {
