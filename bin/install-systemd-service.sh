@@ -32,13 +32,7 @@ ExecStart=/usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes" -o "ServerAliveInt
 WantedBy=multi-user.target
 EOF
 
-if test -z "${USER_SERVICE:-}"; then
-    sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
-         /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
-    sudo systemctl enable ${SERVICE_NAME}.service
-    sudo systemctl daemon-reload
-    sudo service ${SERVICE_NAME} start
-else
+if test -n "${USER_SERVICE:-}"; then
     CONF=${HOME}/.config/systemd/user/${SERVICE_NAME}.service
     mkdir -p $(dirname "${CONF}")
     insert-text-block \
@@ -47,4 +41,10 @@ else
     systemctl --user enable ${SERVICE_NAME}.service
     systemctl --user daemon-reload
     systemctl --user start ${SERVICE_NAME}.service
+else
+    sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
+         /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
+    sudo systemctl enable ${SERVICE_NAME}.service
+    sudo systemctl daemon-reload
+    sudo service ${SERVICE_NAME} start
 fi
