@@ -3,14 +3,17 @@
 set -euo pipefail
 
 COMMAND=docker-${1} && shift
-
-while getopts "r:n:h" OPT; do
+INTERACTION="-it"
+while getopts "r:n:ih" OPT; do
     case ${OPT} in
         r)
             REGEXP=${OPTARG}
             ;;
         n)
             CONTAINER_NAME=${OPTARG}
+            ;;
+        i)
+            INTERACTION="-i"
             ;;
         h)
             less $0
@@ -70,7 +73,7 @@ function docker-bash {
     if test ${#CMD[@]} -eq 0; then
         CMD=(bash)
     fi
-    docker exec -it --user root "${CONTAINER}" ${CMD[@]}
+    docker exec "${INTERACTION}" --user root "${CONTAINER}" ${CMD[@]}
 }
 
 function docker-working-dir {
