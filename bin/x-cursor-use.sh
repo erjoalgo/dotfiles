@@ -39,9 +39,12 @@ sudo sed -i "s/^\(Inherits=\).*/\1${CURSOR_THEME}/" \
 sed -i "s/^\(Xcursor.theme:\).*/\1 ${CURSOR_THEME}/" \
     "${HOME}/.Xresources"
 
-sed -i \
-    "s/^\(gtk-cursor-theme-name\)=.*/\1 = ${CURSOR_THEME}/" \
-    ${HOME}/.gtkrc-*
+if compgen -G "${HOME}/.gtkrc-*"; then
+    sed -i \
+        "s/^\(gtk-cursor-theme-name\)=.*/\1 = ${CURSOR_THEME}/" \
+        ${HOME}/.gtkrc-*
+fi
+
 
 for FILE in "${HOME}/.config/gtk-3.0/settings.ini" \
                 "${HOME}/.config/gtk-2.0/settings.ini"; do
