@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-shift $((OPTIND -1))
 COMMAND=docker-${1} && shift
 
 while getopts "r:n:h" OPT; do
@@ -19,6 +18,8 @@ while getopts "r:n:h" OPT; do
             ;;
     esac
 done
+shift $((OPTIND -1))
+
 
 function __docker-container-lines {
     docker compose ps | sed '1d'
