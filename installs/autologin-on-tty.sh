@@ -13,3 +13,9 @@ sudo insert-text-block \
      "${HOME}/.ssh/config" <<EOF
 XAuthLocation /opt/X11/bin/xauth
 EOF
+
+install-systemd-service.sh -o getty@tty1 <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin "${USER}" -o '-p -f ${USER}' %I $TERM
+EOF

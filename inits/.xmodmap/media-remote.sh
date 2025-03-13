@@ -48,6 +48,10 @@ xkb_symbols "${REMOTE_NAME}" {
 
     // the top key maps to "b", map it to "f" for full-screen
     key <AB05> { [ f ]  };
+
+    // volume up/down
+    key <MUTE> { [ XF86AudioRaiseVolume ]  };
+    key <TAB> { [ XF86AudioLowerVolume ]  };
 };
 EOF
 

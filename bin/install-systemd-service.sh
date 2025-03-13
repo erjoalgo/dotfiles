@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "hu" OPT; do
+while getopts "huo" OPT; do
     case ${OPT} in
     u)
         USER_SERVICE=true
+        ;;
+    o)
+        OVERRIDE=true
         ;;
     h)
         less $0
@@ -32,13 +35,7 @@ ExecStart=/usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes" -o "ServerAliveInt
 WantedBy=multi-user.target
 EOF
 
-if test -z "${USER_SERVICE:-}"; then
-    sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
-         /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
-    sudo systemctl enable ${SERVICE_NAME}.service
-    sudo systemctl daemon-reload
-    sudo service ${SERVICE_NAME} start
-else
+if test -n "${USER_SERVICE:-}"; then
     CONF=${HOME}/.config/systemd/user/${SERVICE_NAME}.service
     mkdir -p $(dirname "${CONF}")
     insert-text-block \
@@ -47,4 +44,15 @@ else
     systemctl --user enable ${SERVICE_NAME}.service
     systemctl --user daemon-reload
     systemctl --user start ${SERVICE_NAME}.service
+else
+    FILENAME=/etc/systemd/system/${SERVICE_NAME}.service
+    if test -n "${OVERRIDE:-}"; then
+        FILENAME=/etc/systemd/system/${SERVICE_NAME}.service.d/override.conf
+        sudo mkdir -p $(dirname "${FILENAME}")
+    fi
+    sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
+          "${FILENAME}" < /dev/stdin
+    sudo systemctl enable ${SERVICE_NAME}.service
+    sudo systemctl daemon-reload
+    sudo service ${SERVICE_NAME} start
 fi
