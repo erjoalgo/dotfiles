@@ -48,6 +48,9 @@ fi
 
 for FILE in "${HOME}/.config/gtk-3.0/settings.ini" \
                 "${HOME}/.config/gtk-2.0/settings.ini"; do
+    if ! test -d $(dirname "${FILE}"); then
+        continue
+    fi
     insert-text-block  \
         '# 9a3b6e8c-6e2f-4b3f-b6e8-e4de4d3733bd-gtk-cursor-theme-name'  \
         "${FILE}" <<EOF
