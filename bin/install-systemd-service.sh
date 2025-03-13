@@ -2,10 +2,13 @@
 
 set -euo pipefail
 
-while getopts "hu" OPT; do
+while getopts "huo" OPT; do
     case ${OPT} in
     u)
         USER_SERVICE=true
+        ;;
+    o)
+        OVERRIDE=true
         ;;
     h)
         less $0
@@ -42,8 +45,13 @@ if test -n "${USER_SERVICE:-}"; then
     systemctl --user daemon-reload
     systemctl --user start ${SERVICE_NAME}.service
 else
+    FILENAME=/etc/systemd/system/${SERVICE_NAME}.service
+    if test -n "${OVERRIDE:-}"; then
+        FILENAME=/etc/systemd/system/${SERVICE_NAME}.service.d/override.conf
+        sudo mkdir -p $(dirname "${FILENAME}")
+    fi
     sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
-         /etc/systemd/system/${SERVICE_NAME}.service < /dev/stdin
+          "${FILENAME}" < /dev/stdin
     sudo systemctl enable ${SERVICE_NAME}.service
     sudo systemctl daemon-reload
     sudo service ${SERVICE_NAME} start
