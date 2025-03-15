@@ -815,3 +815,17 @@ function docker-cd-volume {
     echo "DDEBUG xj4j .my-bash-fns VALUE OF \$DIR: $DIR"
     sudo su -c "cd ${DIR}; bash"
 }
+
+function ufw-delete-some-rules {
+    RULE_NUMBERS=${1} && shift
+    if test -z "${RULE_NUMBERS:-}"; then
+        ufw-ls
+        read -p "enter a space-separated list of rules to delete: " RULE_NUMBERS
+    fi
+    echo "deleting rules: "
+    for RULE_NUMBER in $(tr ' ' '\n'  <<< ${RULE_NUMBERS} | sort -nr); do
+        RULE_INFO=$(sudo ufw status numbered | grep -P "^[[] *${RULE_NUMBER}]")
+        echo "${RULE_INFO}"
+        sudo ufw --force delete ${RULE_NUMBER}
+    done
+}

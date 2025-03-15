@@ -476,18 +476,12 @@ function ufw-select-rule {
     grep -Po '(?<=[[]) *[0-9]+(?=])' <<< "${RULE}" | tr -d ' '
 }
 
-function ufw-delete {
-    RULE="$(ufw-select-rule)"
-    sudo ufw delete "${RULE}"
-}
-
 function ufw-allow-tcp {
     PORTS=${1} && shift
     sudo ufw allow ${PORTS}/tcp
 }
 
 alias ufw-ls='sudo ufw status numbered'
-alias ufw-delete='ufw-ls; sudo ufw delete'
 
 
 alias iptables-list='sudo iptables -vnL --line-numbers | less'
