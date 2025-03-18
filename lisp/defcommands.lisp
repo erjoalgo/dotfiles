@@ -394,3 +394,12 @@
    "ir-remote.py"
    (list "-b" button-name)))
 
+
+(defcommand stop-window () ()
+  (let ((pid (window-pid (current-window))))
+    (kill-process pid "SIGSTOP")))
+
+(defcommand cont-window () ()
+  (let ((pid (window-pid (current-window))))
+    (assert pid)
+    (kill-process pid "SIGCONT")))

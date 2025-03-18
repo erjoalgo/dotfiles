@@ -230,6 +230,8 @@
 
       ("H-k" "delete")
       ("H-K" "kill")
+      ("H-z" "stop-window")
+      ("H-Z" "cont-window")
       ("H-;" "colon")
       ("H-:" "eval")
       ("H-x" "exec")
