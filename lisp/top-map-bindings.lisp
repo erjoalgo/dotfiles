@@ -232,6 +232,7 @@
       ("H-K" "kill")
       ("H-z" "stop-window")
       ("H-Z" "cont-window")
+      ("M-H-c" "chrome-restart")
       ("H-;" "colon")
       ("H-:" "eval")
       ("H-x" "exec")

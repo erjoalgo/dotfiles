@@ -403,3 +403,9 @@
   (let ((pid (window-pid (current-window))))
     (assert pid)
     (kill-process pid "SIGCONT")))
+
+(defcommand chrome-restart () ()
+  (message "killing browser...")
+  (run-shell-command "pkill chromium" t)
+  (message "starting browser...")
+  (raise-browser))
