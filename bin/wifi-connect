@@ -268,7 +268,7 @@ def wifi_connect(iface=None, essid=None, prompt="if_needed",
                        essid=essid,
                        prompt=prompt)
     assert cell, "no cell was selected"
-    assert cell.essid, "cell has no ESSID"
+    assert cell.essid, f"cell has no ESSID: {cell}"
     essid_file = cell.write_config(password=password)
     try:
         cell.connect(essid_file)
