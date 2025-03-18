@@ -537,6 +537,8 @@
       ("l" ,(define-tv-buttons "LG" *ir-buttons-lg-tv*))
       ("L" ,(run-keymap-repeatedly-command *ir-buttons-lg-tv*))
 
+      ("g" "garage-door-toggle")
+
       ("t" ,(define-key-bindings
                 (make-sparse-keymap)
                 (append

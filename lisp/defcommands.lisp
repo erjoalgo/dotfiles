@@ -409,3 +409,9 @@
   (run-shell-command "pkill chromium" t)
   (message "starting browser...")
   (raise-browser))
+
+(defcommand garage-door-toggle () ()
+  (let* ((hostname "garage-door.arpa")
+         (cmd (format nil "shelly-relay.sh -n ~A -s on" hostname)))
+    (run-shell-command cmd)))
+
