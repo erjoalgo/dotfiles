@@ -8,6 +8,11 @@ fi
 
 ENABLE_FEATURES="AsyncDns"
 CURRENT_PERIOD=$(redshift -p | grep -Po '(?<=Period: ).*')
+HOUR=$(date +%H)
+if test ${HOUR} -gt 4 -a ${HOUR} -lt 18; then
+    CURRENT_PERIOD=Daytime
+fi
+
 if test "${CURRENT_PERIOD}" != Daytime; then
     ENABLE_FEATURES+=,WebContentsForceDark
 fi
