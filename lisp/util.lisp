@@ -333,12 +333,12 @@
 (defun visible-window-pids ()
   (mapcar #'window-pid (top-windows)))
 
-(defun x-www-browser (url &optional raise-browser-window-p)
+(defun x-www-browser (url &optional raise-browser-window)
   (prog1
       (SB-EXT:RUN-PROGRAM (car *browser-cmd*)
                           (append (cdr *browser-cmd*) (list url))
                           :search t :wait nil :output t :error t)
-    (when raise-browser-window-p
+    (when raise-browser-window
       (stumpwm::raise-browser))))
 
 (export '(x-www-browser) :STUMPWM)
