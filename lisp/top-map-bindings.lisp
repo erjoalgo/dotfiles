@@ -83,11 +83,12 @@
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
   :classes '("cura" "Creative3D" "Creality Print")
-  :cmd (list
+    :cmd (lambda ()
+           (list
         (namestring (or
                      (car (directory #P"~/bin/Creality*.AppImage"))
                      "cura"))
-        (last-modified-file "~/git/3d" "stl")))
+            (last-modified-file "~/git/3d" "stl"))))
 
 (define-run-or-pull-program "xournal"
   :raise-key "H-t H-x"
