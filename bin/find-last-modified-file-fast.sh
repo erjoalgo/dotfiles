@@ -14,6 +14,10 @@ while getopts "he:d:x" OPT; do
         EXT="${OPTARG}"
         ;;
     d)
+        if ! test -d "${OPTARG}"; then
+            echo "WARN: skipping non-existent directory ${OPTARG}" 1>&2
+            continue
+        fi
         DIR=$(realpath "${OPTARG}")
         test -d "${DIR}"
         FIND_CMD+=("${DIR}")
