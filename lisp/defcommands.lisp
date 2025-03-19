@@ -408,6 +408,7 @@
   (message "killing browser...")
   (run-shell-command "pkill chromium" t)
   (message "starting browser...")
+  (sleep 3)
   (raise-browser))
 
 (defcommand garage-door-toggle () ()
