@@ -70,6 +70,12 @@
   :pull-key "H-t H-B"
   :classes '("Blender" "OpenSCAD"))
 
+(define-run-or-pull-program "ffplay"
+  :cmd nil
+  :raise-key "H-t H-f"
+  :pull-key "H-t H-F"
+  :classes '("ffplay" "ffplay"))
+
 (defun last-modified-file (dir ext)
   (let* ((cmd (format nil
                       "find-last-modified-file-fast.sh -d \"~A\" -e ~A"
