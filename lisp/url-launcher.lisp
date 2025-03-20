@@ -49,7 +49,8 @@
     (".*[.](docx?|odt)$" "libreoffice")
     ("about:config" ,#'mozrepl:firefox-new-tab)
     ;; ("" ,#'mozrepl:firefox-new-tab)
-    ("^file://.*" "file-open.el")))
+    ("^file://.*" "file-open.el")
+    ("^rtsp://.*" "rtsp-play.sh")))
 
 (defun url-command (url)
   (loop for (regexp opener) in *url-command-rules*
