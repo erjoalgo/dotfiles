@@ -362,3 +362,34 @@
         as title = (window-title win)
           thereis (when (ppcre:scan regexp title)
                     win)))
+
+(defvar *log-directory* #P"/tmp/stumpwm-subprocess/")
+
+(defun start-porcess-with-logging
+    (command args
+     &key (log-directory *log-directory*))
+  (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
+         (_ (ensure-directory-exists log-directory))
+         (timestamp (get-universal-time))
+         (log-file (merge-pathnames log-directory
+                                    (make-pathname
+                                     :name (format nil "~A-~A"
+                                                   (pathname-name command)
+                                                   timestamp)
+                                     :type "log")))
+         (proc
+           ;; this creates an extra shell process whose pid doesn't match window pid
+           ;; (run-shell-command command)
+           (with-open-file
+               (out-fh log-file
+                       :direction :output
+                       :if-exists :append
+                       :if-does-not-exist :create)
+             (format out-fh "running command: ~{~A~^ ~}~%" (cons command args))
+             (sb-ext:run-program
+              command args
+              :wait nil
+              :search t
+              :output out-fh
+              :if-output-exists :append))))
+    proc))
