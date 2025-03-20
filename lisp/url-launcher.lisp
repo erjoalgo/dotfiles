@@ -107,8 +107,7 @@
            (opener (url-command url)))
       (if (functionp opener)
           (stumpwm::lparallel-future (funcall opener url))
-          (let ((command (format nil "~A \"~A\"" opener url)))
-            (run-shell-command command)))
+          (start-porcess-with-logging opener (list url)))
       ;;log to different file? or at least add tags
       (log-timestamped-entry url *search-history-filename*))))
 

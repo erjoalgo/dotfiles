@@ -30,6 +30,38 @@ seconds ago")
 
 (add-hook stumpwm:*new-window-hook* 'raise-window-in-original-group)
 
+(defvar *log-directory* #P"/tmp/stumpwm-subprocess/")
+
+
+(defun start-porcess-with-logging
+    (command args
+     &key (log-directory *log-directory*))
+  (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
+         (_ (ensure-directory-exists log-directory))
+         (timestamp (get-universal-time))
+         (log-file (merge-pathnames log-directory
+                                    (make-pathname
+                                     :name (format nil "~A-~A"
+                                                   (pathname-name command)
+                                                   timestamp)
+                                     :type "log")))
+         (proc
+           ;; this creates an extra shell process whose pid doesn't match window pid
+           ;; (run-shell-command command)
+           (with-open-file
+               (out-fh log-file
+                       :direction :output
+                       :if-exists :append
+                       :if-does-not-exist :create)
+             (format out-fh "running command: ~{~A~^ ~}~%" (cons command args))
+             (sb-ext:run-program
+              command args
+              :wait nil
+              :search t
+              :output out-fh
+              :if-output-exists :append))))
+    proc))
+
 (defun raise-pull-or-run-win (win-classes cmd-line raise-type &optional all-screens)
   (let* ((win-list (if all-screens (screen-windows (current-screen))
 		       (group-windows (current-group))))
@@ -66,32 +98,11 @@ seconds ago")
                         (if (pathnamep arg)
                             (uiop:native-namestring arg)
                             arg))
-	        (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
-                       (_ (ensure-directory-exists log-directory))
-                       (log-file (merge-pathnames log-directory
-                                                  (make-pathname
-                                                   :name (pathname-name command)
-                                                   :type "log")))
-                       (proc
-                         ;; this creates an extra shell whose pid doesn't match window pid
-                         ;; (run-shell-command command)
-                         (with-open-file
-                             (out-fh log-file
-                                     :direction :output
-                                     :if-exists :append
-                                     :if-does-not-exist :create)
-                           (format out-fh "running command: ~{~A~^ ~}~%" (cons command args))
-                           (sb-ext:run-program
-                            command args
-                            :wait nil
-                            :search t
-                            :output out-fh
-                            :if-output-exists :append))))
+                (let ((proc (start-porcess-with-logging command args)))
                   (when raise-window-in-original-group-secs
                     (push (cons (sb-ext:process-pid proc)
                                 (cons (current-group) (GET-UNIVERSAL-TIME)))
-                          pid-original-group-alist))
-                  log-file)))))))
+                          pid-original-group-alist)))))))))
 
 (defmacro define-run-or-pull-program (name
 				      &key
