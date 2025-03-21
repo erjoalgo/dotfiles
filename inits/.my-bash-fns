@@ -87,8 +87,8 @@ function pshow  {
     pass show -c ${*} || return
     xclip-tee
 }
-complete-alias _pass pshow pass show
-complete-alias _pass pgen pass generate
+complete_alias pshow
+complete_alias pgen
 
 
 function passgen-allow-special	{
@@ -754,7 +754,7 @@ function debian-readme-less {
     PACKAGE=${1} && shift
     dpkg -L "${PACKAGE}" | grep -i README | xargs -L1 zless
 }
-complete-alias _apt_get debian-readme-less apt-get install
+complete_alias debian-readme-less
 
 function git-add-commit-file {
     git add ${*}

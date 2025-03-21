@@ -4,3 +4,6 @@
 [submodule "submodules/noche-diamante"]
 	path = submodules/noche-diamante
 	url = ssh://git@github.com/erjoalgo/noche-diamante
+[submodule "submodules/complete-alias"]
+	path = submodules/complete-alias
+	url = ssh://git@github.com/erjoalgo/complete-alias

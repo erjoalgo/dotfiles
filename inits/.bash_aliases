@@ -1,52 +1,19 @@
+. ${HOME}/git/dotfiles/submodules/complete-alias/complete_alias
+
 function make-completion-wrapper ()  {
-    # from https://unix.stackexchange.com/questions/4219/
+    echo "WARN: calling deprecated function make-completion-wrapper"
+    return
+}
 
-    # example
-    # make-completion-wrapper _apt_get _apt_get_install apt-get install
-    # complete -F _apt_get_install apt-inst
-
-    # use "complete -p <command>" to look up the completion function
-    # https://superuser.com/questions/947065/how-do-i-view-the-tab-completion-function-for-a-command-in-bash
-
-    local comp_function_name="$1"
-    local function_name="$2"
-    local arg_count=$(($#-3))
-    shift 2
-    local function="
-    function $function_name {
-      ((COMP_CWORD+=$arg_count))
-      COMP_WORDS=( "$@" \${COMP_WORDS[@]:1} )
-      "$comp_function_name"
-      return 0
-    }"
-    eval "$function"
+function complete_alias {
+    ALIAS=${1} && shift
+    complete -F _complete_alias "${ALIAS}"
 }
 
 function complete-alias  {
-    # uses make-completion-wrapper: https://unix.stackexchange.com/a/4220/50978
-    # example usage
-    # complete-alias _pass pshow pass show
-    # complete-alias _pass pgen pass generate
-    #
-    # 1) To look up the bash completion function of a command: complete -p <command>
-
-    EXISTING_COMPLETION_FN=${1} && shift
-    ALIAS=${1} && shift
-    AUTOGEN_COMPLETION_FN="__autogen_completion_${ALIAS}"
-    make-completion-wrapper ${EXISTING_COMPLETION_FN} ${AUTOGEN_COMPLETION_FN} \
-                            ${*}
-    COMMAND=${1} # don't shift
-    LAZY_LOAD_COMPLETION_FN="__lazy_complete_$ALIAS"
-    local function="
-    function ${LAZY_LOAD_COMPLETION_FN} {
-      _completion_loader ${COMMAND}
-      complete -F ${AUTOGEN_COMPLETION_FN} ${ALIAS}
-      return 0
-    }"
-    eval "$function"
-    complete -F "${LAZY_LOAD_COMPLETION_FN}" "${ALIAS}"
+    echo "WARN: calling deprecated function complete-alias"
+    return
 }
-
 
 #shortcuts
 alias cdrealpath='pwd; cd $(realpath .); pwd'
@@ -203,7 +170,7 @@ if command -v apt-get > /dev/null; then
     alias afl='apt-file list'
     alias sagiy='sudo apt-get install -y'
     for ALIAS in sagiy acs acw dpkgl; do
-        complete-alias _apt_get ${ALIAS} apt-get install
+        complete_alias ${ALIAS} apt-get
     done
 
     alias sagu='sudo apt-get update'
@@ -358,6 +325,10 @@ alias nmap-list-ssl-ciphers='nmap --script ssl-enum-ciphers -p 443'
 
 alias sv=service
 
+alias sudo='sudo '
+
+complete_alias sudo
+
 for LETTER_COMMAND in "down stop" "r restart"  \
                                "s status" "l logs"  \
                                "up start"; do
@@ -378,8 +349,8 @@ for LETTER_COMMAND in "down stop" "r restart"  \
                 alias ${ALIAS}="systemctl --user ${COMMAND}"
             fi
         fi
+        complete_alias ${ALIAS}
     done
-    complete-alias _service ${ALIAS} service
 done
 
 function __svlogs-multi {
@@ -407,11 +378,11 @@ function svlogs-multi {
 
 # TODO support repeated completion of multiple service arguments
 
-complete-alias _service svlogs-multi service
+complete_alias svlogs-multi
 
 # complete -F _service service-disable-stop-remove stop
 alias service-delete='service-disable-stop-remove'
-complete-alias _service service-delete service
+complete_alias service-delete
 
 # https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process
 alias strace-attach-stdout='sudo strace -ff -e trace=write -e write=1,2 -s99999 -p'
