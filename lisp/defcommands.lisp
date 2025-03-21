@@ -404,11 +404,28 @@
     (assert pid)
     (kill-process pid "SIGCONT")))
 
+(defun pgrep (pattern)
+  (let ((lines
+          (->
+           (format nil "pgrep ~A" pattern)
+           (run-shell-command t)
+           trim-spaces)))
+    (->> (ppcre:split #\Newline lines)
+         (mapcar #'parse-integer))))
+
+(defun pkill (pattern)
+  (run-shell-command (format nil "pkill ~A" pattern) t))
+
 (defcommand chrome-restart () ()
-  (message "killing browser...")
-  (run-shell-command "pkill chromium" t)
+  (message "killing browser and waiting...")
+  (loop with browser = "chromium"
+        for i below 30
+        while (pgrep browser)
+        do (progn
+             (message "killing and waiting for chromium to die...")
+             (pkill browser)
+             (sleep 3)))
   (message "starting browser...")
-  (sleep 3)
   (raise-browser))
 
 (defcommand garage-door-toggle () ()
