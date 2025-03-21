@@ -116,6 +116,7 @@ function init-submodule {
     SUBMODULE_PATH=${1} && shift
     pushd .
     cd "${DOTFILES}/${SUBMODULE_PATH}"
+    git submodule sync
     git submodule init
     git submodule update
     popd
