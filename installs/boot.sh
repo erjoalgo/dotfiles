@@ -118,7 +118,7 @@ function init-submodule {
     cd "${DOTFILES}/${SUBMODULE_PATH}"
     git submodule init
     git submodule update
-    popd .
+    popd
 }
 
 sed -i 's/${RANDOM}/{RANDOM}/' ~/.ssh/config || true
