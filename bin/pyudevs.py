@@ -139,6 +139,9 @@ DeviceHandler.handlers.append(KeyboardHandler.matches)
 
 class MonitorHandler(DeviceHandler):
 
+    def __init__(self, device):
+        self.device = device
+
     @staticmethod
     def matches(device):
         if device.get("SUBSYSTEM") == "drm":
