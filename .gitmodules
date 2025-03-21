@@ -6,4 +6,4 @@
 	url = ssh://git@github.com/erjoalgo/noche-diamante
 [submodule "submodules/complete-alias"]
 	path = submodules/complete-alias
-	url = ssh://git@github.com/erjoalgo/complete-alias
+	url = https://github.com/erjoalgo/complete-alias
