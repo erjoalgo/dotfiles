@@ -24,8 +24,14 @@ while getopts "d:t:h" OPT; do
 done
 shift $((OPTIND -1))
 
-STLS="/afs/asus.erjoalgo.com/home/ealfonso/git/3d/"
-STLS=${STLS:-.}
+if test -z "${STLS:-}"; then
+    if test $# -gt 0; then
+        STLS=${1} && shift
+    else
+        STLS=$(pwd)
+    fi
+fi
+
 FILES=$(find "${STLS}" -iname '*stl')
 THUMBS=${THUMBS:-"${STLS}/.thumbs"}
 IFS=$'\n'
