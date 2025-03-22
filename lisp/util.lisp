@@ -345,8 +345,10 @@
 
 (defvar *lparallel-futures-log* nil)
 
-(defmacro lparallel-future (form)
-  `(push (cons ',form (lparallel:future ,form)) *lparallel-futures-log*))
+(defmacro lparallel-future (&body form)
+  `(push
+    (cons ',form (lparallel:future ,@form))
+    *lparallel-futures-log*))
 
 (defun fix-deadlock ()
   (loop for thread in (sb-thread:list-all-threads)
