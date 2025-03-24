@@ -3,11 +3,15 @@
 set -euo pipefail
 
 VERBOSE_OPT=-v
-while getopts "hq" OPT; do
+PROTOCOL=TCP
+while getopts "huq" OPT; do
     case ${OPT} in
         q)
             # quiet
             VERBOSE_OPT=
+            ;;
+        u)
+            PROTOCOL=UDP
             ;;
         h)
             less $0
@@ -21,5 +25,5 @@ LISTEN_PORT=${1} && shift
 REMOTE_ADDRESS=${1} && shift
 
 sudo socat ${VERBOSE_OPT} \
-     TCP-LISTEN:${LISTEN_PORT},fork,reuseaddr  \
-     TCP:${REMOTE_ADDRESS}
+     ${PROTOCOL}-LISTEN:${LISTEN_PORT},fork,reuseaddr  \
+     ${PROTOCOL}:${REMOTE_ADDRESS}
