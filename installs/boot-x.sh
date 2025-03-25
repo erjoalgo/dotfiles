@@ -17,7 +17,7 @@ if ! test "${EMACS_MAJOR_VERSION}" -le 28; then
 fi
 
 sudo apt-get install -y zathura konsole pass keynav at x2x
-sudo apt-get install -y eog scrot
+sudo apt-get install -y qimgv scrot
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
   macchanger expect iw net-tools
