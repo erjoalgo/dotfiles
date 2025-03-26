@@ -112,23 +112,13 @@ function fetch-repos  {
   popd
 }
 
-function init-submodule {
-    SUBMODULE_PATH=${1} && shift
-    pushd .
-    cd "${DOTFILES}/${SUBMODULE_PATH}"
-    git submodule sync
-    git submodule init
-    git submodule update
-    popd
-}
-
 sed -i 's/${RANDOM}/{RANDOM}/' ~/.ssh/config || true
 
 fetch-repos dotfiles
 
-init-submodule submodules/complete-alias
-
 cd ~/git/dotfiles/installs/
+
+git submodule update --init --recursive
 
 SCRIPTS_BIN="${HOME}/git/dotfiles/bin"
 test -d "${SCRIPTS_BIN}"
