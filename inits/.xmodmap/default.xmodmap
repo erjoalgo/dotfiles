@@ -17,8 +17,8 @@ clear mod4
 ! keycode 118 = ntilde udiaeresis
 ! keycode 119 = Delete emdash Delete
 
-keycode 37 = Shift_L
-keycode 66 = Control_L
+keycode 37 = Control_L
+keycode 66 = Shift_L
 keycode 105 = Hyper_L
 keycode 134 = Hyper_L
 keycode 107 = F1
