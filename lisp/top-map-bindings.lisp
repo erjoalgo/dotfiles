@@ -318,7 +318,6 @@
       ("H-F9" "vol-down")
       ("H-F10" "vol-up")
       ("H-S-F10" "audio-set-default-sink")
-      ("H-SPC" "speak-key")
 
       ("H-N" "gnext")
       ("H-P" "gprev")
