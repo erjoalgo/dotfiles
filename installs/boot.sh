@@ -107,7 +107,12 @@ function fetch-repos  {
     cd ${REPO}
     git config user.name "${GIT_NAME}"
     git config user.email "${GIT_EMAIL}"
-    git pull --ff-only
+    for TRIES in $(seq 5); do
+        if ! git pull --ff-only; then
+            echo "git pull failed, possible network issue. retrying..."
+            sleep 1
+        fi
+    done
   done
   popd
 }
