@@ -387,13 +387,24 @@ function git-remote-add-from-ssh-host {
     git branch --set-upstream-to=${REMOTE_NAME}/master
 }
 
-function ps-tree	{
+function ps-tree	(
+    set -euo pipefail
+    set -x
     CURR=${1:-$$}
+    if ! grep -P '^[0-9]+$' <<< "${CURR}"; then
+        # treat as a regexp
+        CURR=$(pgrep -f "${CURR}" |  \
+                   cut -f1 -d' ' |  \
+                   sort -n |  \
+                   tail -1)
+    fi
+    test -n "${CURR:-}"
+    set +x
     while test ${CURR} != 1; do
 	ps -fp ${CURR}
 	CURR=$(ps -o ppid= -p ${CURR})
     done
-}
+)
 
 function gg    {
     git rev-list --all | xargs git grep ${*}
