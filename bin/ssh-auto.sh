@@ -50,6 +50,9 @@ ExecStart=/home/ealfonso/.stumpwmrc.d/bin/ssh-auto.sh -t "${SSH_HOST_SPEC}" -r "
 [Install]
 WantedBy=default.target
 EOF
+
+    sudo loginctl enable-linger
+    sudo loginctl enable-linger ${USER}
     exit 0
 fi
 
