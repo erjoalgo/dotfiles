@@ -41,8 +41,8 @@ if test -n "${INSTALL_SERVICE:-}"; then
     install-systemd-service.sh -u "${SERVICE_NAME}" <<EOF
 [Unit]
 Description=Auto SSH to "${SSH_HOST_SPEC}"
-Requires=systemd-networkd-wait-online.service
-After=systemd-networkd-wait-online.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=/home/ealfonso/.stumpwmrc.d/bin/ssh-auto.sh -t "${SSH_HOST_SPEC}" -r "${REMOTE_SSH_LISTEN_PORT}" -l "${LOCAL_SSH_PORT}"
