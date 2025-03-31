@@ -436,7 +436,9 @@ sagiy pgformatter
 
 pushd .
 cd ~/git/githost
-python3 setup.py install || true
+if ! pip install .; then
+    echo "WARN: failed to install githost"
+fi
 popd
 
 sagiy figlet
