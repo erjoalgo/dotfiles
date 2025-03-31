@@ -125,7 +125,8 @@ def main():
   return status_code
 
 if __name__ == "__main__":
-  exit(main())
+  code = main()
+  exit(code)
 
 # Local Variables:
 # mode: python
