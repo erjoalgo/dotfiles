@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "t:l:r:m:hs:" OPT; do
+while getopts "t:l:r:m:hs" OPT; do
     case ${OPT} in
         t)
             # example: example.com -p 1234
