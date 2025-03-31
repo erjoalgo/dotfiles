@@ -48,7 +48,7 @@ Wants=network-online.target
 ExecStart=/home/ealfonso/.stumpwmrc.d/bin/ssh-auto.sh -t "${SSH_HOST_SPEC}" -r "${REMOTE_SSH_LISTEN_PORT}" -l "${LOCAL_SSH_PORT}"
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 EOF
     exit 0
 fi
