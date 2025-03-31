@@ -35,8 +35,7 @@ function docker-select-container {
         return
     fi
     echo "select docker container: " 1>&2
-    PS_OPTIONS=$(docker ps | sed '1d' |  \
-                tr -s ' ' | cut -f2 -d ' ')
+    PS_OPTIONS=$(docker ps | sed '1d' | rev | cut -f1 -d' ' | rev)
     COMPOSE_PS_OPTIONS+=$(docker compose ps | sed '1d' |  \
                  tr -s ' ' | cut -f1 -d ' ')
     OPTIONS=$(echo -e "${PS_OPTIONS}\n${COMPOSE_PS_OPTIONS}")
