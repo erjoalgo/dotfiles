@@ -106,6 +106,14 @@ function docker-kill {
     docker kill $(docker-select-container)
 }
 
+function docker-disable-restart {
+    docker update --restart=no $(docker-select-container)
+}
+
+function docker-inspect {
+    docker inspect $(docker-select-container)
+}
+
 ${COMMAND} ${*}
 
 # Local Variables:
