@@ -152,8 +152,17 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
 
 (define-regexp-route lock-handler ("/lock")
                      "Lock the display"
-  (stumpwm::screen-lock)
-  "ok")
+  (let ((caller (read-header :CALLER)))
+    (if caller
+        (progn
+          (stumpwm::screen-lock (format nil "x-service: ~A" caller))
+          "ok")
+        (progn
+          (let ((err-msg (format nil "x-service refuses to lock screen: missing the CALLER header")))
+            (setf (hunchentoot:return-code*)
+                  hunchentoot:+HTTP-BAD-REQUEST+)
+            (stumpwm:message-wrapped "~A" err-msg)
+            err-msg)))))
 
 (define-regexp-route url-launcher-put ("/url-launcher-put")
                      "add an entry to url-launcher"
