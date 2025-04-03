@@ -32,7 +32,7 @@ if test -z "${STLS:-}"; then
     fi
 fi
 
-FILES=$(find "${STLS}" -iname '*stl')
+FILES=$(find "${STLS}" -iname '*stl' -type f)
 THUMBS=${THUMBS:-"${STLS}/.thumbs"}
 IFS=$'\n'
 CNT=0
