@@ -82,6 +82,7 @@ insert-text-block '# ea5c84ba-cd6c-4e0e-9bd5-da72a6bd845e-android-studio-bin-dir
 export PATH=\$PATH:${BIN_D}
 # may not exist until after running studio.sh
 export ANDROID_HOME=${HOME}/Android/Sdk/
+export CAPACITOR_ANDROID_STUDIO_PATH=${BIN_D}/studio.sh
 EOF
 
 echo "in a new terminal, run studio.sh"
