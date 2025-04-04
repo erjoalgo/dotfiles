@@ -46,7 +46,7 @@ if test "${DIR_PROVIDED:-}" != true; then
 fi
 
 if test -n "${EXT:-}"; then
-    FIND_CMD+=(-name "*.${EXT}")
+    FIND_CMD+=(-iname "*.${EXT}")
 fi
 
 CMIN=${CMIN:-100}
