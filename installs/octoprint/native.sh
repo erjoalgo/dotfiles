@@ -12,6 +12,13 @@ sudo chmod 777 "${PORT_80}"
 sudo usermod -a -G dialout $(whoami)
 
 sudo apt-get install -y libffi-dev
+
+# try to prevent error: AttributeError: cython_sources [duplicate]
+pip install "cython<3.0.0" wheel
+pip install "pyyaml==5.4.1" --no-build-isolation
+pip install -U setuptools
+pip install legacy-cgi
+
 pip install octoprint
 
 install-systemd-service.sh -u octoprint <<EOF
