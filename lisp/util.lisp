@@ -368,7 +368,7 @@
 (defvar *log-directory* #P"/tmp/stumpwm-subprocess/")
 
 (defun start-porcess-with-logging
-    (command args
+    (command &optional args
      &key (log-directory *log-directory*))
   (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
          (_ (ensure-directory-exists log-directory))
