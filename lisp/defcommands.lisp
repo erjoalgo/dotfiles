@@ -421,6 +421,6 @@
   (start-porcess-with-logging "chrome-restart.sh"))
 
 (defcommand garage-door-toggle () ()
-  (let* ((hostname "garage-door.arpa")
-         (cmd (format nil "shelly-relay.sh -n ~A -s on" hostname)))
-    (run-shell-command cmd)))
+  (let* ((hostname "garage-door.arpa"))
+    (start-porcess-with-logging "shelly-relay.sh"
+                                (list "-n" hostname "-s" "on"))))
