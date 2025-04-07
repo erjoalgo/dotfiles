@@ -418,16 +418,7 @@
   (run-shell-command (format nil "pkill ~A" pattern) t))
 
 (defcommand chrome-restart () ()
-  (message "killing browser and waiting...")
-  (loop with browser = "chromium"
-        for i below 30
-        while (pgrep browser)
-        do (progn
-             (message "killing and waiting for chromium to die...")
-             (pkill browser)
-             (sleep 3)))
-  (message "starting browser...")
-  (raise-browser))
+  (start-porcess-with-logging "chrome-restart.sh"))
 
 (defcommand garage-door-toggle () ()
   (let* ((hostname "garage-door.arpa")
