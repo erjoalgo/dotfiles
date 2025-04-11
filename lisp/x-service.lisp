@@ -154,7 +154,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                      "Lock the display"
   (let ((addr (hunchentoot:real-remote-addr)))
     (stumpwm:message-wrapped
-      "x-service received /lock request from ~A" addr))
+     "x-service received /lock request from ~A" addr))
   (let ((caller (read-header :CALLER)))
     (if caller
         (progn
