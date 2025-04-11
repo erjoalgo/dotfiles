@@ -196,7 +196,7 @@ function source-personal-bash-files {
   for SRC in $(find -L ~/.bash-fns/ -type f)  \
                  ~/.profile-env \
                  ~/.bash_aliases \
-                 ~/.my-bashrc
+                 ~/.my-bashrc \
              ; do
     echo sourcing $SRC
     . $SRC
