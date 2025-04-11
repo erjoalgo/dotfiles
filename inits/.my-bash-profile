@@ -21,12 +21,6 @@ function notify_lagging_repos {
 # executed once per session
 . ${HOME}/git/dotfiles/inits/.my-bashrc
 
-if command -v hass-cli; then
-    source <(_HASS_CLI_COMPLETE=bash_source hass-cli)
-    export HASS_SERVER=http://ha.local
-    export HASS_TOKEN=$(grep 'app ha' ~/.authinfo | grep -Po '(?<=password ).*')
-fi
-
 
 # Local Variables:
 # mode: sh
