@@ -97,6 +97,8 @@ __git_complete gmb _git_diff
 #bash completion will do the rest below
 alias gmmma='git commit -a -m "autocommit on $(date)"'
 alias gmmma-gpom='git add -A . && gmmma && gpom'
+alias git-stash-unstaged='git stash push --keep-index'
+
 # http://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes
 
 function ganw {
