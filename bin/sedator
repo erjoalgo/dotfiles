@@ -45,7 +45,7 @@ if test ${MINS} -lt 10; then
 elif pgrep X; then
     echo "attempting to lock the display"
     CALLER="sedator-$(hostname)-$$"
-    if ! x-service-curl /lock "-HCALLER:${CALLER}"; then
+    if ! x-service-curl -l /lock "-HCALLER:${CALLER}"; then
         export DISPLAY=:0
         export XAUTHORITY=${XAUTHORITY:-${HOME:-}/.Xauthority} || true
         xhost +SI:localuser:root || true

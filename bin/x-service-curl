@@ -85,6 +85,8 @@ def main():
                       help = "list of headers as KEY:VALUE pairs")
   parser.add_argument("-s", "--sockets", nargs="+", default=[],
                       help = "override the list of unix socket paths to use")
+  parser.add_argument("-l", "--local-only", action="store_true",
+                      help = "don't forward the request to a remote X-service")
   parser.add_argument("-v", "--verbose", action="store_true",
                       help = "verbose logging")
 
@@ -117,7 +119,9 @@ def main():
           k, v = m.groups()
       headers[k] = v
 
-  sockets = args.sockets or glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
+  sockets = args.sockets
+  if not sockets and not args.local_only:
+      sockets = glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
 
   status_code = x_service_curl(sockets, args.path, headers, data)
   if status_code//100 == 2:
