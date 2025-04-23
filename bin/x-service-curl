@@ -11,10 +11,11 @@ import select
 import socket
 import subprocess
 import sys
+import urllib
 
-def socket_open_tcp(port: int):
+def socket_open_tcp(host, port: int):
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  result = sock.connect_ex(("localhost",port))
+  result = sock.connect_ex((host,port))
   sock.close()
   return result == 0
 
@@ -30,17 +31,28 @@ def peek_string(s: str, peek: int):
         return s
     return f"{s[:peek]}..."
 
-def x_service_curl(specs: list, path: str, headers: dict[str:str], data: bytes):
+def x_service_curl(service_urls: list, path: str, headers: dict[str:str], data: bytes):
   return_code = None
-  for spec in specs:
-    if isinstance(spec, int):
-        port = spec
-        if not socket_open_tcp(port):
+  for url in service_urls:
+    """
+>>> parts = urllib.parse.urlparse("http://127.0.0.1:1234/caca")
+>>> parts
+ParseResult(scheme='http', netloc='127.0.0.1:1234', path='/caca', params='', query='', fragment='')
+    """
+
+    parts = urllib.parse.urlparse(url)
+    if parts.scheme in ("http", "https"):
+        if ":" in parts.netloc:
+            host, port = parts.netloc.split(":")
+            port = int(port)
+        else:
+            host, port = parts.netloc, 80
+        if not socket_open_tcp(host, port):
             continue
         url = f"http://127.0.0.1:{port}{path}"
         session = requests.Session()
-    else:
-        socket_addr = spec
+    elif parts.scheme in ("unix", "http+unix") or url.endswith(".sock"):
+        socket_addr = url
         if not socket_open_unix(socket_addr):
             continue
         host_encoded = socket_addr.replace("/", "%2F")
@@ -121,7 +133,8 @@ def main():
 
   sockets = args.sockets
   if not sockets and not args.local_only:
-      sockets = glob.glob("/tmp/.x-service-*.sock") + [1958, 1959]
+      sockets = glob.glob("/tmp/.x-service-*.sock") + [
+          "http://localhost:1958", "http://localhost:1959"]
 
   status_code = x_service_curl(sockets, args.path, headers, data)
   if status_code//100 == 2:
