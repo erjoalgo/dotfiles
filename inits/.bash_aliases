@@ -1,3 +1,7 @@
+if test -n "${DEBUG_INIT:-}"; then
+     echo "loading $BASH_SOURCE (aliases)"
+fi
+
 . ${HOME}/git/dotfiles/submodules/complete-alias/complete_alias
 
 function make-completion-wrapper ()  {

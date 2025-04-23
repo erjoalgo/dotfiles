@@ -1,6 +1,9 @@
 #!/bin/bash
 
-test -n "${DEBUG_INIT:-}" && echo "loading $BASH_SOURCE (SEl6)"
+if test -n "${DEBUG_INIT:-}"; then
+     echo "loading $BASH_SOURCE (SEl6)"
+     set -x
+fi
 
 #emacs editor
 export VISUAL='emacsclient'

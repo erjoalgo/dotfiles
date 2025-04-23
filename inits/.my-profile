@@ -1,4 +1,8 @@
-test -n "${DEBUG_INIT:-}" && echo "loading $BASH_SOURCE (PBQ3)"
+if test -n "${DEBUG_INIT:-}"; then
+    set -x
+    echo "loading $BASH_SOURCE (.my-profile)"
+fi
+
 
 SCRIPTS="${HOME}/git/dotfiles/bin"
 
