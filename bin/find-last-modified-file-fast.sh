@@ -8,7 +8,7 @@ set -euo pipefail
 FIND_CMD=(find)
 CUT_CMD=(cut -f5- -d' ')
 DIR_PROVIDED=false
-while getopts "he:d:x" OPT; do
+while getopts "he:d:xc:" OPT; do
     case ${OPT} in
     e)
         EXT="${OPTARG}"
