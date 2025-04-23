@@ -507,7 +507,10 @@
 
       ("XF86AudioLowerVolume" "VOLDOWN")
       ("XF86AudioRaiseVolume" "VOLUP")
-      ("XF86AudioMute" "MUTE"))
+      ("XF86AudioMute" "MUTE")
+
+      ("S-Up" "PICTURE_MODE_UP")
+      ("S-Down" "PICTURE_MODE_DOWN"))
     as command = (format nil "press-ir-button ~A_~A" brand-name action)
     collect `(list ,l ,command) into buttons
     finally
