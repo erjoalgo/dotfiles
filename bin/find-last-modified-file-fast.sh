@@ -28,6 +28,7 @@ while getopts "he:d:xc:" OPT; do
         CMIN=${OPTARG}
         ;;
     x)
+        set -x
         # debug timestamps
         CUT_CMD=(cat)
         ;;
