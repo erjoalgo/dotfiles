@@ -80,7 +80,7 @@ ParseResult(scheme='http', netloc='127.0.0.1:1234', path='/caca', params='', que
     break
 
   if return_code is None:
-      raise Exception(f"no ports or sockets found: {specs}")
+      raise Exception(f"no ports or sockets found: {service_urls}")
   else:
       return return_code
 
