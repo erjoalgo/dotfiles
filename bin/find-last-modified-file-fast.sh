@@ -24,6 +24,7 @@ while getopts "he:d:xc:" OPT; do
         DIR_PROVIDED=true
         ;;
     c)
+        # if -1, omits CMIN
         CMIN=${OPTARG}
         ;;
     x)
@@ -49,9 +50,10 @@ if test -n "${EXT:-}"; then
     FIND_CMD+=(-iname "*.${EXT}")
 fi
 
-CMIN=${CMIN:-100}
+if test "${CMIN:-}" != -1; then
+    FIND_CMD+=(-cmin -${CMIN:-100})
+fi
 
-FIND_CMD+=(-cmin -${CMIN} -type f \
-                 -exec stat --format '%Y :%y %n' "{}" \;)
+FIND_CMD+=(-type f -exec stat --format '%Y :%y %n' "{}" \;)
 
 "${FIND_CMD[@]}" | sort -nr | "${CUT_CMD[@]}"
