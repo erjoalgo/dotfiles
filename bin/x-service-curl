@@ -49,7 +49,7 @@ ParseResult(scheme='http', netloc='127.0.0.1:1234', path='/caca', params='', que
             host, port = parts.netloc, 80
         if not socket_open_tcp(host, port):
             continue
-        url = f"http://127.0.0.1:{port}{path}"
+        url = f"http://{parts.netloc}{path}"
         session = requests.Session()
     elif parts.scheme in ("unix", "http+unix") or url.endswith(".sock"):
         socket_addr = url
