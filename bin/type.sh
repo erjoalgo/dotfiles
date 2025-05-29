@@ -103,6 +103,8 @@ ord() {
 }
 
 function move-to-char {
+    local CHAR
+    local LAST_CHAR
     CHAR=${1} && shift
     LAST_CHAR=${1} && shift
     DIFF=$(expr $(ord "${CHAR}") - $(ord "${LAST_CHAR}")) || true
