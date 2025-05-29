@@ -165,7 +165,10 @@ function select-menu {
             both
             right "${INDEX}" # scan to the password
             both
+            PASS=$(last-event-text)
             right # view page 2/2 of the password
+            PASS+=$(last-event-text)
+            export PASS
             ;;
         qwerty)
             # assume we are at "new password -> keyboard selection"
@@ -335,6 +338,16 @@ function ledger-menu {
 }
 
 
+function last-event-text {
+    curl -s "http://127.0.0.1:5000/events" |  \
+        jq --raw-output ".events | last .text"
+}
+
+function clipboard {
+    TEXT=${1} && shift
+    x-service-curl /clipboard -d "${TEXT}"
+}
+
 function main {
     validate-args
     ledger-menu build-all
@@ -347,9 +360,11 @@ function main {
     select-menu charset-lowercase
     type-string "${PASS_ID}"
     select-menu checkmark
-    ledger-menu browse
     select-menu show-pass
+    test -n "${PASS:-}"
+    clipboard "${PASS}"
     log-pass-id
+    ledger-menu browse
 }
 
 
