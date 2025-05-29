@@ -33,10 +33,6 @@ shift $((OPTIND -1))
 
 function validate-args {
     test -n "${PASS_ID:-}"
-    if grep -o "[^a-z]" <<< "${PASS_ID}"; then
-        echo "unsupported chars in PASS_ID"
-        return ${LINENO}
-    fi
     test -e "${SEED_FILE:-}"
     EXT="${SEED_FILE##*.}"
     grep -i gpg <<< "${EXT}"
@@ -120,16 +116,32 @@ function type-string {
     echo "typing ${PASS_ID}"
     LAST_CHAR='a'
     for CHAR in $(grep -o . <<< "${PASS_ID}"); do
-        if ! grep '[a-z]' <<< "${CHAR}"; then
-            echo "unsupported non-lowercase character: ${CHAR}"
-            exit ${LINENO}
+        if  grep '[a-z]' <<< "${CHAR}"; then
+            move-to-char "${CHAR}" "${LAST_CHAR}"
+            both
+            LAST_CHAR=${CHAR}
+        else
+            STRING=$(cat <<'EOF'
+0123456789 '"`&/?!:;.,~*$=+-[](){}<>\_#@|%
+EOF
+)
+            if ! OFFSET=$(grep -boF "${CHAR}" <<< "${STRING}" | cut -f1 -d:); then
+                echo "unsupported character: ${CHAR}"
+                exit ${LINENO}
+            fi
+            move-to-char "a" "${LAST_CHAR}"
+            select-menu charset-select
+            select-menu charset-numbers
+            right ${OFFSET}
+            both
+            left ${OFFSET}
+            select-menu charset-select
+            select-menu charset-numbers-undo
+            select-menu charset-lowercase
+            LAST_CHAR='a'
         fi
-        move-to-char "${CHAR}" "${LAST_CHAR}"
-        both
-        LAST_CHAR=${CHAR}
     done
     move-to-char "a" "${LAST_CHAR}"
-    LAST_CHAR="a"
 }
 
 function select-menu {
@@ -161,8 +173,21 @@ function select-menu {
             right
             both
             ;;
-        lowercase)
+        charset-lowercase)
             # assume we are at "new password -> keyboard selection -> charset selection"
+            both
+            ;;
+        charset-numbers)
+            # assume we are at "new password -> keyboard selection -> charset selection"
+            right 2
+            both
+            ;;
+        charset-numbers-undo)
+            # assume we are at "new password -> keyboard selection -> charset selection"
+            left 2
+            ;;
+        charset-select)
+            left
             both
             ;;
         checkmark)
@@ -319,7 +344,7 @@ function main {
     select-menu skip-disclaimer
     select-menu qwerty
     select-menu new-pass
-    select-menu lowercase
+    select-menu charset-lowercase
     type-string "${PASS_ID}"
     select-menu checkmark
     ledger-menu browse
