@@ -364,6 +364,7 @@ function main {
     clipboard "${PASS}"
     log-pass-id
     ledger-menu browse
+    echo "${PASS}"
 }
 
 
