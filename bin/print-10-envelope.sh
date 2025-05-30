@@ -102,7 +102,7 @@ pdftk "${PDF}" cat 1-endright output "${ROTATED}"
 
 OUTPUT="${ROTATED}"
 
-if test -n "${INK_COLOR:-}" true; then
+if test -n "${INK_COLOR:-}"; then
     COLORED_PDF="${PREFIX}-rotated-colored.pdf"
     convert-replace-foreground-color.sh -i "${ROTATED}" -f "${INK_COLOR}" -o "${COLORED_PDF}"
     OUTPUT="${COLORED_PDF}"
