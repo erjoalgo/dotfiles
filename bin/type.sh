@@ -326,8 +326,7 @@ function ledger-menu {
             ;;
 
         browse)
-            # x-www-browser localhost:5000 &
-            firefox localhost:5000 &
+            x-www-browser http://localhost:5000 &
             ;;
 
         *)
