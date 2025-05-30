@@ -367,7 +367,8 @@
       ("H-a" "correct-screen-all-connected-displays")
       ("H-n" "correct-screen-newly-connected-displays")
       ("H-1" "correct-screen-only-current-display")
-      ("H-m" "correct-screen-select-mode")))
+      ("H-m" "correct-screen-select-mode")
+      ("H-r" "correct-screen-refresh-displays")))
 
 (define-key-bindings
     *utils-map*

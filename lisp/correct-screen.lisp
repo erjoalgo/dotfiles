@@ -318,3 +318,8 @@
 (defcommand invert-screen () ()
   "invert screen"
   (run-shell-command "xcalib -a -i"))
+
+(defcommand correct-screen-refresh-displays () ()
+  "wake up an HDMI display"
+  (correct-screen-only-current-display)
+  (correct-screen-all-connected-displays))
