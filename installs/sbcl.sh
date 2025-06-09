@@ -3,17 +3,18 @@
 set -euo pipefail
 
 if ! which sbcl | grep local || test -n "${FORCE:-}"; then
-    URL=http://prdownloads.sourceforge.net/sbcl/sbcl-2.2.0-source.tar.bz2
+    # URL=http://prdownloads.sourceforge.net/sbcl/sbcl-2.2.0-source.tar.bz2
+    URL=https://github.com/sbcl/sbcl/archive/refs/tags/sbcl-2.5.5.tar.gz
 
     BASE=$(basename "${URL}")
-    DIR_PREFIX=$(grep -o "sbcl-[0-9.]*"  <<< "${BASE}")
+    DIR_PREFIX=$(grep -o "sbcl-[0-9.]*[0-9]"  <<< "${BASE}")
 
     TOP=${HOME}/src
     mkdir -p ${TOP}
     cd ${TOP}
 
     function find-dir  {
-        find . -name "${DIR_PREFIX}*" -type d |  \
+        find . -name "*${DIR_PREFIX}*" -type d |  \
             tr -d '\n'
     }
 
