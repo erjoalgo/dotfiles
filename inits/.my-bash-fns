@@ -778,6 +778,8 @@ alias ganewfile='git-add-commit-file'
 __git_complete ganewfile _git_add
 __git_complete git-add-new-file _git_add
 
+alias git-stash-unstaged='git stash push --keep-index'
+
 function tmux-find-pid  {
     PID=${1} && shift
     tmux list-panes -a -F  \
