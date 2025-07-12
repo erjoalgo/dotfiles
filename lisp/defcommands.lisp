@@ -164,6 +164,9 @@
   (echo-string-list (current-screen)
                     (ppcre:split #\: (sb-posix:getenv "PATH"))))
 
+(defcommand screen-lock-interactive () ()
+  (screen-lock "interactive"))
+
 (defcommand screen-lock (caller-name) ()
   (message-wrapped "screen-lock called by ~A" caller-name)
   (run-shell-command (screen-lock-program)))
