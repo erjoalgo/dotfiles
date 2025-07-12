@@ -461,8 +461,8 @@ function main {
     if test "${BROWSE:-}" = true; then
         ledger-menu browse
     fi
-    echo "${PASS}"
     ledger-menu kill
+    echo "${PASS}"
 }
 
 
