@@ -5,7 +5,7 @@ set -euo pipefail
 PORT=5000
 . ${HOME}/afs/home/${USER}/.profile || true
 
-MODE=curl
+MODE=automation
 while getopts "p:s:d:xcah" OPT; do
     case ${OPT} in
     s)
