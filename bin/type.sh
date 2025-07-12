@@ -13,14 +13,14 @@ while getopts "p:s:d:xcah" OPT; do
         ;;
     # optional
     d)
-        DELAY_MS=${OPTARG}
+        DELAY_SECS=$(bc <<< "scale=2; ${OPTARG} / 1000")
         ;;
     i)
 	INTERACTIVE=true;
 	;;
     x)
         MODE=xdotool
-        DELAY_MS=${DELAY_MS:-50}
+        DELAY_SECS=${DELAY_SECS:-0.05}
         ;;
     c)
         MODE=curl
@@ -60,7 +60,6 @@ function press {
     KEY=${1} && shift
     TIMES=${1:-1}
     echo "moving ${KEY} ${TIMES} times" >&2
-    DELAY_SECS=$(bc <<< "scale=2; ${DELAY_MS} / 1000")
     case "${KEY}" in
         Left)
             BUTTON="left"
