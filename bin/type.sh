@@ -27,6 +27,8 @@ while getopts "p:s:d:xcah" OPT; do
         ;;
     a)
         MODE=automation
+        SPECULOS_DISPLAY_OPT="--display=headless"
+        BROWSE=false
         ;;
     h)
         less "$0"
@@ -363,7 +365,7 @@ function ledger-menu {
             test -e "${APP_ELF}"
             set +x
             env SMLL="$(gpg --decrypt --no-symkey-cache --batch ${SEED_FILE})" \
-                speculos  "${APP_ELF}" &
+                speculos "${APP_ELF}" "${SPECULOS_DISPLAY_OPT:-}" &
             set -x
             while ! test-port localhost ${PORT}; do
                 sleep 1
