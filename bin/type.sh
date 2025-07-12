@@ -6,8 +6,6 @@ PORT=5000
 . ${HOME}/afs/home/${USER}/.profile || true
 
 MODE=curl
-DELAY_MS=${DELAY_MS:-50}
-
 while getopts "p:s:d:xcah" OPT; do
     case ${OPT} in
     s)
@@ -22,6 +20,7 @@ while getopts "p:s:d:xcah" OPT; do
 	;;
     x)
         MODE=xdotool
+        DELAY_MS=${DELAY_MS:-50}
         ;;
     c)
         MODE=curl
