@@ -463,6 +463,7 @@ function main {
         ledger-menu browse
     fi
     echo "${PASS}"
+    ledger-menu kill
 }
 
 
