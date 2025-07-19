@@ -76,6 +76,12 @@
   :pull-key "H-t H-F"
   :classes '("ffplay" "ffplay"))
 
+(define-run-or-pull-program "gimp"
+  :cmd nil
+  :raise-key "H-t H-g"
+  :pull-key "H-t H-g"
+  :classes '("Gimp"))
+
 (defun last-modified-file (dir ext)
   (let* ((cmd (format nil
                       "find-last-modified-file-fast.sh -d \"~A\" -e ~A"
