@@ -61,12 +61,12 @@
   (loop for text in (ppcre:split #\Newline text)
         with chunks
         do
-           (loop with len = (length text)
-                 with idx = 0
-                 while (< idx len)
-                 as new-idx = (+ idx max-chars-per-line)
-                 do (push (subseq text idx (min len new-idx)) chunks)
-                 do (setf idx new-idx))
+        (loop with len = (length text)
+              with idx = 0
+              while (< idx len)
+              as new-idx = (+ idx max-chars-per-line)
+              do (push (subseq text idx (min len new-idx)) chunks)
+              do (setf idx new-idx))
         finally (return (nreverse chunks))))
 
 ;; apply font size options
@@ -81,16 +81,16 @@
 
 (defun source-shell-vars (filename)
   (ppcre:do-register-groups (key val)
-      ("(?m)^([A-Z_]+)=(.*)$"
-       (with-output-to-string (string)
-         (sb-ext:run-program
-          "bash"
-          `("-ac" ,(format nil "source ~A; env" filename))
-          :search t
-          :wait t
-          :output string
-          :error string)
-         string))
+    ("(?m)^([A-Z_]+)=(.*)$"
+     (with-output-to-string (string)
+       (sb-ext:run-program
+        "bash"
+        `("-ac" ,(format nil "source ~A; env" filename))
+        :search t
+        :wait t
+        :output string
+        :error string)
+       string))
     (format t "setting ~A to ~A~%" key val)
     (sb-posix:setenv key val 1)))
 
@@ -107,10 +107,10 @@
         (progn
           (message "attempting to start swank at port ~A" port)
           (safe-sexp
-            (progn
-              (funcall (find-symbol "CREATE-SERVER" "SWANK")
-                       :port port :dont-close t)
-              (message "swank started at port ~A" port)))))))
+           (progn
+             (funcall (find-symbol "CREATE-SERVER" "SWANK")
+                      :port port :dont-close t)
+             (message "swank started at port ~A" port)))))))
 
 (safe-sexp (progn (ql:quickload :swank)
                   (start-swank)))
@@ -119,15 +119,15 @@
 
 (defun load-stumpwmrc-file (relative-path)
   (let ((source-directory
-          (or *load-truename*
-              "~/.stumpwmrc.d/lisp/")))
+         (or *load-truename*
+             "~/.stumpwmrc.d/lisp/")))
     (load (merge-pathnames relative-path source-directory))))
 
 (safe-sexp
-  (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd"))
+ (load-stumpwmrc-file "erjoalgo-stumpwmrc.asd"))
 
 (asdf:clear-source-registry)
 
 (safe-sexp
-  (ql:quickload :erjoalgo-stumpwmrc)
-  (funcall (find-symbol "INIT" "STUMPWM")))
+ (ql:quickload :erjoalgo-stumpwmrc)
+ (funcall (find-symbol "INIT" "STUMPWM")))
