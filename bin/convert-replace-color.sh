@@ -13,13 +13,13 @@ while getopts "i:o:c:w:z:h" OPT; do
     o)
         OUTPUT=${OPTARG}
         ;;
-    c)
-        # new color
-        COLOR=${OPTARG}
-        ;;
     w)
         # old color
         ORIGINAL_COLOR=white
+        ;;
+    c)
+        # new color
+        COLOR=${OPTARG}
         ;;
     z)
         FUZZ_PERCENT=${OPTARG}
