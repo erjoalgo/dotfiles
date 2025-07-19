@@ -38,10 +38,20 @@ shift $((OPTIND -1))
 
 test -e "${INPUT}"
 
-convert "${INPUT}" -fuzz "${FUZZ_PERCENT}%"  \
-        -fill "${COLOR}" \
-        -opaque "${ORIGINAL_COLOR}" \
-        -flatten \
-        "${OUTPUT}"
+if test "${COLOR}" = alpha; then
+    MASK=$(mktemp /tmp/XXXXXXXX.png)
+    convert "${INPUT}" -colorspace HSB -separate -negate "${MASK}"
+    MASK_2="${MASK%.*}-2.png"
+    test -e "${MASK_2}"
+    convert "${INPUT}" -alpha Off "${MASK_2}" -compose CopyOpacity -composite "PNG32:${OUTPUT}"
+    qimgv "${OUTPUT}"
+else
+    convert "${INPUT}" -fuzz "${FUZZ_PERCENT}%"  \
+            -fill "${COLOR}" \
+            -opaque "${ORIGINAL_COLOR}" \
+            -flatten \
+            "${OUTPUT}"
+fi
+
 
 qimgv "${OUTPUT}"
