@@ -7,20 +7,21 @@ function usage  {
 }
 
 
-FORWARD_SPEC=""
-
-REMOTE_HOST=${REMOTE_HOST:-localhost}
+COMMAND=(ssh -N)
+R_OPTS=()
 
 while getopts "r:R:t:h" OPT; do
     case ${OPT} in
         r)
             R_OPT=${OPTARG}
+            R_OPTS+=(${R_OPT})
             ;;
         R)
             REMOTE_HOST=${OPTARG}
             ;;
         t)
             SSH_HOST_SPEC=${OPTARG}
+            COMMAND+=(${OPTARG})
             ;;
         h)
             less $0
@@ -30,24 +31,22 @@ while getopts "r:R:t:h" OPT; do
 done
 shift $((OPTIND -1))
 
-if test -z "${R_OPT:-}"; then
-    echo "missing -r option" && exit ${LINENO}
-fi
-
-REMOTE_SERVICE_PORT=$(cut -d: -f1  <<< "${R_OPT}")
-LOCAL_LISTEN_PORT=$(cut -d: -f2  <<< "${R_OPT}")
-
-LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
-FORWARD_SPEC+="-L ${LOCAL_LISTEN_PORT}:${REMOTE_HOST}:${REMOTE_SERVICE_PORT} "
-
-if test -z "${SSH_HOST_SPEC:-}" -o -z "${REMOTE_SERVICE_PORT:-}"; then
+if test -z "${SSH_HOST_SPEC:-}" -o ${#R_OPTS[@]} == 0; then
     usage
     exit ${LINENO}
 fi
 
-LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
+REMOTE_HOST=${REMOTE_HOST:-localhost}
 
-env > /tmp/env
+for R_OPT in ${R_OPTS[@]}; do
+    REMOTE_SERVICE_PORT=$(cut -d: -f1 <<< "${R_OPT}")
+    LOCAL_LISTEN_PORT=$(cut -d: -f2 <<< "${R_OPT}")
+    LOCAL_LISTEN_PORT=${LOCAL_LISTEN_PORT:-${REMOTE_SERVICE_PORT}}
+
+    FORWARD_SPEC="${LOCAL_LISTEN_PORT}:${REMOTE_HOST}:${REMOTE_SERVICE_PORT} "
+    COMMAND+=(-L "${FORWARD_SPEC}")
+done
+
 
 # SOCK=$(echo /tmp/ssh-*/*)
 # if test -z "${SSH_AUTH_SOCK:-}" -a -e ${SOCK}; then
@@ -55,7 +54,7 @@ env > /tmp/env
 # fi
 # exit
 
-ssh ${SSH_HOST_SPEC} -N ${FORWARD_SPEC}
+${COMMAND[@]}
 
 
 # Local Variables:
