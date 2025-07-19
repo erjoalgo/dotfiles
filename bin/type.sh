@@ -468,6 +468,7 @@ function main {
         ledger-menu browse
     fi
     ledger-menu kill
+    echo "${PASS_ID}"
     echo "${PASS}"
 }
 
