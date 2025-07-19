@@ -22,15 +22,12 @@ while getopts "p:s:d:xcah" OPT; do
 	;;
     x)
         MODE=xdotool
-        DELAY_SECS=${DELAY_SECS:-0.05}
         ;;
     c)
         MODE=curl
         ;;
     a)
         MODE=automation
-        SPECULOS_DISPLAY_OPT=("--display=headless")
-        BROWSE=false
         ;;
     h)
         less "$0"
@@ -44,6 +41,13 @@ done
 shift $((OPTIND -1))
 
 PASS_ID=${1:-} && shift || true
+
+if test "${MODE}" = automation; then
+    SPECULOS_DISPLAY_OPT=("--display=headless")
+    BROWSE=false
+elif test "${MODE}" = xdotool; then
+    DELAY_SECS=${DELAY_SECS:-0.05}
+fi
 
 function validate-args {
     if test -z "${PASS_ID:-}"; then
