@@ -370,13 +370,28 @@
 (defun symlinkp (pathname)
   (sb-posix:s-islnk (sb-posix:stat-mode (sb-posix:lstat pathname))))
 
-(defun n64-select-rom (&key directory (last-rom-symlink #P"~/.n64-last-rom"))
-  (let ((last-rom-truepath (when (probe-file last-rom-symlink) (truename last-rom-symlink)))
-        (candidates (directory (merge-pathnames #P"public/n64/roms/*.*" (openafs-this-cell-root))))
+(defvar last-rom-symlink #P"~/.n64-last-rom")
+
+(defun n64-list-roms ()
+  (let* ((dirnames
+           (list
+            (merge-pathnames #P"public/n64/roms/*.*" (openafs-this-cell-root))
+            #P"~/Downloads/n64/*.*"))
+         (roms (loop for dirname in dirnames
+                     nconc (directory dirname))))
+    roms))
+
+(defun n64-select-rom ()
+  (let* ((candidates (n64-list-roms))
+         (last-rom-truepath
+           (when (probe-file last-rom-symlink)
+             (truename last-rom-symlink)))
         initial-candidate
         selection)
     (when last-rom-truepath
-      (setf candidates (cons last-rom-truepath (delete last-rom-truepath candidates :test #'equal)))
+      (setf candidates
+            (cons last-rom-truepath
+                  (delete last-rom-truepath candidates :test #'equal)))
       (setf initial-candidate 0))
     (setf selection
           (selcand:select
@@ -385,8 +400,9 @@
            :display-candidates t
            :stringify-fn #'pathname-name
            ;; :initial-candidate-index initial-candidate
-           :on-empty-error "no adb devices found!"))
-    (when (probe-file last-rom-symlink)
+           :on-empty-error (format nil "no n64 roms found ")))
+    (when (or (probe-file last-rom-symlink)
+              (SYMLINKP last-rom-symlink))
       (sb-posix:unlink last-rom-symlink))
     (sb-posix:symlink selection last-rom-symlink)
     selection))
