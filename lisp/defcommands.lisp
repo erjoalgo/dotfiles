@@ -386,8 +386,8 @@
          (last-rom-truepath
            (when (probe-file last-rom-symlink)
              (truename last-rom-symlink)))
-        initial-candidate
-        selection)
+         initial-candidate
+         selection)
     (when last-rom-truepath
       (setf candidates
             (cons last-rom-truepath
