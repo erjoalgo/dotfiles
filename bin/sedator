@@ -56,7 +56,7 @@ elif pgrep X; then
         else
             echo "no lock command found" && exit ${LINENO}
         fi
-        ${LOCK_COMMAND[@]}
+        ${LOCK_COMMAND[@]} &
     fi
 else
     echo "no X server"
