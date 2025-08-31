@@ -5,3 +5,4 @@ lisp/defs-secret.lisp
 inits/konsole/bookmarks.xml
 inits/konsole/bookmarks.xml.tbcache
 bin/file-open.el
+lisp/private.lisp
