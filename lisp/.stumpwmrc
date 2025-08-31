@@ -131,3 +131,6 @@
 (safe-sexp
   (ql:quickload :erjoalgo-stumpwmrc)
   (funcall (find-symbol "INIT" "STUMPWM")))
+
+(safe-sexp
+  (load-stumpwmrc-file "private.lisp"))
