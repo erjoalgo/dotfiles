@@ -17,3 +17,5 @@
   hooksPath = .githooks/
 [url "git@salsa.debian.org:installer-team/"]
 	pushInsteadOf = https://salsa.debian.org/installer-team/
+[safe]
+	directory = /afs/asus.erjoalgo.com/home/ealfonso/git/3d
