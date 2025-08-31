@@ -13,7 +13,7 @@ while getopts "c:g:h" OPT; do
         AFS_CACHE_GB=${OPTARG}
         ;;
     h)
-        less "$0"
+        less $(basename "$0")
         exit 0
         ;;
     *)
