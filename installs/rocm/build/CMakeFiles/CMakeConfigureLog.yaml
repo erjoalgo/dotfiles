@@ -1,0 +1,75 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Linux - 6.1.0-21-amd64 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1250 (message)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineHIPCompiler.cmake:95 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the HIP compiler is NVIDIA using "" did not match "nvcc: NVIDIA \\(R\\) Cuda compiler driver":
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:1250 (message)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineHIPCompiler.cmake:95 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the HIP compiler is Clang using "" did not match "(clang version)":
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineHIPCompiler.cmake:136 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the HIP compiler identification source file "CMakeHIPCompilerId.hip" failed.
+      Compiler: CMAKE_HIP_COMPILER-NOTFOUND 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineHIPCompiler.cmake:136 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the HIP compiler identification source file "CMakeHIPCompilerId.hip" failed.
+      Compiler: CMAKE_HIP_COMPILER-NOTFOUND 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/ealfonso/.venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineHIPCompiler.cmake:188 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed HIP implicit link information from compiler id output:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+...
