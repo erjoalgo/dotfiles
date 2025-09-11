@@ -17,7 +17,7 @@ shift $((OPTIND -1))
 function select-luks-partition {
     sudo lsblk -o PATH,NAME,MODEL,SIZE,FSTYPE,MOUNTPOINT |  \
         grep --color=always -E '.*/crypto_LUKS|$' 1>&2
-    echo "select LUKS partition" > &2
+    echo "select LUKS partition" 1>&2
     select LUKS_PARTITION in $(sudo lsblk -o PATH,FSTYPE | grep -F crypto_LUKS | cut -f1 -d' '); do
         echo "${LUKS_PARTITION}"
         break
