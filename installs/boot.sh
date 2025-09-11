@@ -380,7 +380,7 @@ EOF
 
 sudo ${APT_GET} install -y resolvconf net-tools dnsutils
 
-if ! command -v glinux-updater; then
+if false && ! command -v glinux-updater; then
   sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
     /etc/resolvconf/resolv.conf.d/head <<EOF
 nameserver 77.88.8.8
