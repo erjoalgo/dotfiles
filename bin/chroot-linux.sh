@@ -26,6 +26,12 @@ shift $((OPTIND -1))
 test -n "${CHROOT}"
 CHROOT=$(sed 's|/$||' <<< "${CHROOT}")
 
+if ! command -v sudo; then
+    function sudo {
+        ${*}
+    }
+fi
+
 if test "${UMOUNT:-}" = true; then
     for DIR in ${CHROOT}/{sys,proc,boot,dev/pts,dev}; do
         for _ in $(seq 3); do
