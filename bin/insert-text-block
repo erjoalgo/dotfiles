@@ -87,6 +87,7 @@ def main():
         original_text, args.block_id, block_contents,
         prepend = args.prepend,
         line_index = args.line_index,
+        after_regexp = args.after_regexp,
         delete = args.delete,
         skip_closing_newline = args.skip_closing_newline)
 
@@ -130,7 +131,8 @@ def insert_text_block(original_text,
                       block_id,
                       block_contents,
                       prepend=False,
-                      line_index=0,
+                      line_index=None,
+                      after_regexp=None,
                       delete=False,
                       skip_closing_newline=False):
     old_before, middle, old_after = partition_text_by_block_id(original_text, block_id)
@@ -147,7 +149,13 @@ def insert_text_block(original_text,
     if prepend:
         assert not line_index
         line_index = 0
-
+    if after_regexp:
+        old = "\n".join((old_before, old_after))
+        m = re.search(f"(?m){after_regexp}", old)
+        assert m, f"after_regexp: '{after_regexp}' not found in file!\n{old}"
+        start = m.start(0)
+        lines_before = sum(c == '\n' for c in old[:start])
+        line_index = lines_before + 1
     if delete:
         new_before, new_after = old_before, old_after
     if line_index is not None:
