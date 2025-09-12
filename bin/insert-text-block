@@ -158,7 +158,8 @@ def insert_text_block(original_text,
         lines_before = sum(c == '\n' for c in old[:start])
         line_index = lines_before + 1
     if delete:
-        new_before, new_after = old_before, old_after
+        assert line_index is None
+
     if line_index is not None:
         new_before, new_after = split_text_at_line_index(old_before, old_after, line_index)
     else:
