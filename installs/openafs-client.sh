@@ -87,6 +87,25 @@ ${IP_ADDR} #${THIS_CELL}
 EOF
 fi
 
+
+REALM_BLOCK=$(cat<<EOF
+	${THIS_CELL^^} = {
+		kdc = ${THIS_CELL}
+		admin_server = ${THIS_CELL}
+	}
+EOF
+)
+REALM_INDICATOR_LINE=$(head -1  <<< "${REALM_BLOCK}")
+
+KRB5_CONF=/etc/krb5.conf
+
+if ! grep -F "${REALM_INDICATOR_LINE}" "${KRB5_CONF}" || true; then
+    echo "installing realm block..."
+    sudo insert-text-block '# EUZHu5M9rmPekPHNsRDCV7H3mL0s95iB-add-openafs-realm' \
+         "${KRB5_CONF}" -r "^.realms." <<< "${REALM_BLOCK}"
+    grep -F "${REALM_INDICATOR_LINE}" "${KRB5_CONF}"
+fi
+
 ln -fs "/afs/${THIS_CELL}/" ${HOME}/afs
 
 ping -c3 "${THIS_CELL}"
