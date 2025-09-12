@@ -73,12 +73,17 @@ sudo chmod 0400 "${KEY_FILE}"
 
 
 # sda3_crypt UUID=025c66a2-c683-42c5-b17c-322c2188fe3f /dev/disk/by-uuid/9e7a7336-3b81-4bbe-9f1a-d43415df1ccb:/keyfile luks,keyscript=/lib/cryptsetup/scripts/passdev
-LINE=$(grep -Po "(?<=# )sda3_crypt UUID=[^ ]+" /etc/crypttab | head -1)
+
+LINE=$(grep UUID /etc/crypttab | sed 's/^# //g'| head -1)
+TAB1=$(cut -f1 -d' ' <<< "${LINE}")
+TAB2=$(cut -f2 -d' ' <<< "${LINE}")
+TAB4=$(cut -f4 -d' ' <<< "${LINE}")
+
 sudo sed -i 's/^[^#]/# \0/g' /etc/crypttab
 sudo insert-text-block \
      '# 3a00b570-d55a-4c81-aaf5-8cfc9fe1c6df-auto-decrypt-luks'  \
      /etc/crypttab<<EOF
-${LINE} ${BOOT_PARTITION_PATH}:/$(basename ${KEY_FILE}) luks,keyscript=/lib/cryptsetup/scripts/passdev
+${TAB1} ${TAB2} ${BOOT_PARTITION_PATH}:/$(basename ${KEY_FILE}) ${TAB4},keyscript=/lib/cryptsetup/scripts/passdev
 EOF
 
 sudo cryptsetup -v luksAddKey "${LUKS_PARTITION}" "${KEY_FILE}"
