@@ -89,7 +89,8 @@ def main():
         line_index = args.line_index,
         after_regexp = args.after_regexp,
         delete = args.delete,
-        skip_closing_newline = args.skip_closing_newline)
+        skip_closing_newline = args.skip_closing_newline,
+    )
 
     with open(output_filename, "w") as fh:
         fh.write(new_text)
