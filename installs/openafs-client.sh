@@ -4,10 +4,13 @@ set -euo pipefail
 
 cd "$(realpath $(dirname "${BASH_SOURCE[0]}"))"
 
-while getopts "c:g:h" OPT; do
+while getopts "c:i:g:h" OPT; do
     case ${OPT} in
     c)
         THIS_CELL=${OPTARG}
+        ;;
+    i)
+        THIS_CELL_IP=${OPTARG}
         ;;
     g)
         AFS_CACHE_GB=${OPTARG}
@@ -32,6 +35,17 @@ fi
 AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
 
 sudo apt-get install -y linux-headers-$(uname -r)
+
+test -n "${THIS_CELL:-}"
+sudo tee /etc/openafs/ThisCell <<< "${THIS_CELL}"
+
+if test -n "${THIS_CELL_IP:-}"; then
+    insert-text-block \
+        '# 126de658-b186-4abe-a579-60f78f0365dc-openafs-host-ip'  \
+        /etc/hosts<<EOF
+${THIS_CELL_IP}	${THIS_CELL}
+EOF
+fi
 
 sudo debconf-set-selections <<EOF
 # Size of AFS cache in kB:
