@@ -52,7 +52,7 @@ elif pgrep X; then
         if command -v light-locker-command; then
             LOCK_COMMAND=(light-locker-command -l)
         elif command -v xsecurelock; then
-            LOCK_COMMAND=(xsecurelock)
+            LOCK_COMMAND=(env XSECURELOCK_BLANK_TIMEOUT=-1 xsecurelock)
         else
             echo "no lock command found" && exit ${LINENO}
         fi
