@@ -59,7 +59,9 @@ fi
 
 while true; do
     echo connecting
-    ssh ${SSH_HOST_SPEC} -R ${REMOTE_SSH_LISTEN_PORT}:localhost:${LOCAL_SSH_PORT} -N &
+    REMOTE_PORT=${REMOTE_SSH_LISTEN_PORT}
+    REMOTE_PORT=$(shuf -i 2000-65000 -n 1)
+    ssh ${SSH_HOST_SPEC} -R ${REMOTE_PORT}:localhost:${LOCAL_SSH_PORT} -N &
     PID=$?
     echo sleeping for ${SLEEP_INTERVAL_MINUTES}m
     sleep $((60 * ${SLEEP_INTERVAL_MINUTES}))
