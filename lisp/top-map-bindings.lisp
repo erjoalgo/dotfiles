@@ -357,7 +357,7 @@
     (gmove group)))
 
 (loop
-      for group-name in '("Default" "F2" "F3" "F4" "F5")
+      for group-name in '("Default" "F2" "F3" "F4" "F5" "F6")
       for i from 0
       do (gnewbg group-name)
       do
