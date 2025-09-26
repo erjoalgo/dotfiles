@@ -429,6 +429,10 @@ function path-append {
   export PATH=${PATH}:${1}
 }
 
+function path-prepend {
+  export PATH=${1}:${PATH}
+}
+
 function path-ls {
   tr ':' '\n' <<< "${PATH}" | less
 }
