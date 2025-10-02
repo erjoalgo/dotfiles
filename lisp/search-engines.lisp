@@ -31,7 +31,8 @@
            ("https://www.amazon.com/s?k=~A"
             "https://www.temu.com/search_result.html?search_key=~A"
             "https://www.walmart.com/search?q=~A"
-            "https://www.aliexpress.com/wholesale?SearchText=~A"))
+            "https://www.aliexpress.com/wholesale?SearchText=~A"
+            "https://www.facebook.com/marketplace/orlando/search/?query=~A"))
       ("f" "whole-foods" "https://www.amazon.com/s?i=wholefoods&k=~A")
       ("h" "home-depot" "https://www.homedepot.com/s/~A")
       ("H" "lowes" "https://www.lowes.com/search?searchTerm=~A")
