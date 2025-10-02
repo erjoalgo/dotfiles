@@ -1,0 +1,42 @@
+!#/usr/bin/xmodmap
+
+keycode 22 = BackSpace dead_acute
+keycode 49 = grave asciitilde
+keycode 65 = space underscore
+
+clear lock
+clear control
+clear mod1
+clear mod3
+clear mod4
+
+! keycode 112 = Control_L questiondown
+! keycode 117 = ediaeresis exclamdown
+! keycode 166 = NoSymbol
+! keycode 167 = NoSymbol
+! keycode 120 = Prior NoSymbol Prior
+! keycode 132 = Next NoSymbol Next
+! keycode 118 = ntilde udiaeresis
+! keycode 119 = Delete emdash Delete
+
+keycode 37 = Control_L
+keycode 66 = Control_L
+keycode 105 = Hyper_L
+keycode 134 = Hyper_L
+keycode 107 = F1
+keycode 108 = Super_L
+
+clear lock
+clear control
+clear mod1
+clear mod3
+clear mod4
+
+add control = Control_L
+add mod1 = Alt_L
+add mod3 = Hyper_L
+add mod4 = Super_L
+
+! Local Variables:
+! comment-start: "!"
+! End:
