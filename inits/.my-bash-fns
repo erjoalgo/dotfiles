@@ -848,3 +848,7 @@ function ufw-delete-some-rules {
         sudo ufw --force delete ${RULE_NUMBER}
     done
 }
+
+function git-staged-size {
+    git ls-files | xargs du -h | sort -h
+}
