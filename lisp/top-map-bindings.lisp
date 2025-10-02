@@ -103,8 +103,8 @@
             (last-modified-file "~/git/3d" "stl"))))
 
 (define-run-or-pull-program "xournal"
-    :raise-key "H-x"
-    :pull-key "H-x"
+    :raise-key "H-t H-x"
+    :pull-key "H-t H-x"
     :classes '("Xournal" "xournalpp")
     :cmd nil)
 
@@ -254,7 +254,7 @@
       ("M-H-f" "chrome-restart")
       ("H-;" "colon")
       ("H-:" "eval")
-      ;; ("H-x" "exec")
+      ("H-x" "exec")
       ("H-X" *commands-map*)
       ("C-;" "run-shell-command pgrep keynav || keynav-restart")
       ;; ("H-z" *commands-map*)
