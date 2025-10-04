@@ -15,8 +15,11 @@
 
 [core]
   hooksPath = .githooks/
+	filemode = false
+
 [url "git@salsa.debian.org:installer-team/"]
 	pushInsteadOf = https://salsa.debian.org/installer-team/
 [safe]
 	directory = /afs/asus.erjoalgo.com/home/ealfonso/git/3d
 	directory = /opt/git/server-configs
+	directory = /home/ealfonso/mnts/backup/docs
