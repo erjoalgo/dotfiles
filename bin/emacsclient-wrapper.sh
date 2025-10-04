@@ -40,6 +40,10 @@ for EMACS_SOCKET_NAME in  \
     if ! test -e "${EMACS_SOCKET_NAME}"; then
         continue;
     fi
+    if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
+            ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
+        continue;
+    fi
     SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
     SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
