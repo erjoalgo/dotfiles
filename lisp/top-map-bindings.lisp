@@ -353,8 +353,15 @@
 
 (defcommand gmove-nth (i) ((:number "enter group number: "))
   (assert (< i (length (sort-groups (current-screen)))))
-  (let ((group (nth i (sort-groups (current-screen)))))
-    (gmove group)))
+  (let* ((group (nth i (sort-groups (current-screen))))
+         (win (current-window))
+         (is-emacs (equal (window-class (current-window)) "Emacs"))
+         (win-pid (window-pid win))
+         (sigusr1 10))
+    (gmove group)
+    (when is-emacs
+      (sleep 1)
+      (kill-process win-pid sigusr1))))
 
 (loop
       for group-name in '("Default" "F2" "F3" "F4" "F5" "F6")
