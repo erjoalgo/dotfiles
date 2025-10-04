@@ -190,4 +190,25 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
                 hunchentoot:+HTTP-NOT-FOUND+)
           err-msg))))
 
+(define-regexp-route desktop-group-number-for-window ("/desktop-group-number")
+                     "return the current desktop's group number"
+  (let* ((pid-str (read-header :STUMPWM-WIN-PID)))
+    (assert (ppcre:scan "^[0-9]+$" pid-str) nil "missing window pid: ~A" pid-str)
+    (or
+     (loop
+       with pid = (parse-number:parse-number pid-str)
+       for g in (stumpwm::sort-groups (stumpwm:current-screen))
+       for group-index from 1
+         thereis
+         (loop for win in (stumpwm:group-windows g)
+                 thereis (when (= pid (stumpwm:window-pid win))
+                           (setf (hunchentoot:return-code*)
+                                 hunchentoot:+HTTP-OK+)
+                           (format nil "~A" group-index))))
+
+     (let ((err-msg "no window found with pid ~A" pid))
+       (stumpwm::message "^1~A*" err-msg)
+       (setf (hunchentoot:return-code*)
+             hunchentoot:+HTTP-NOT-FOUND+)))))
+
 ;; (x-service:start 1959)
