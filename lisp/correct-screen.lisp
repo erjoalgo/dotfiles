@@ -317,7 +317,7 @@
 
 (defcommand invert-screen () ()
   "invert screen"
-  (run-shell-command "xcalib -a -i"))
+  (run-shell-command "invert-colors-toggle.sh"))
 
 (defcommand correct-screen-refresh-displays () ()
   "wake up an HDMI display"
