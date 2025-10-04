@@ -143,7 +143,15 @@
 (defun window-pid (win)
   (car (xlib:get-property (WINDOW-XWIN win) :_NET_WM_PID)))
 
+(defun find-window-by-pid (pid)
+  (loop for group in (stumpwm::sort-groups (stumpwm:current-screen))
+          thereis
+          (loop for win in (group-windows group)
+                  thereis (when (= pid (window-pid win))
+                            win))))
+
 (export '(window-pid) :STUMPWM)
+(export '(find-window-by-pid) :STUMPWM)
 
 (defmacro eval-async (&body form)
   `(sb-thread:make-thread
