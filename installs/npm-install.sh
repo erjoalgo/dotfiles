@@ -24,6 +24,7 @@ nvmload()  {
        ${HOME}/.profile-env <<EOFF
 export PATH=\\\$PATH:\${NODE_DIR}
 EOFF
+    npm config set prefix '~/.local/'
 }
 EOF
 
