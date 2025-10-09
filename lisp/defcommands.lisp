@@ -344,7 +344,7 @@
 
 (defcommand type-sh () ()
   (let* ((password-id (ledger-read-password-id)))
-    (run-shell-command (format nil "type.sh -p ~A" password-id))))
+    (run-shell-command "type.sh" (list password-id))))
 
 
 (defun adb-select-device () ()
