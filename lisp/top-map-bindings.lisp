@@ -413,7 +413,6 @@
       ("H-B" "byzanz-record-auto-stop")
       ("H-s" "toggle-screen-key")
       ("b" *brightness-map*)
-      ("H-p" "ledger-password-backup-restore")
       ("H-p" "type-sh")
       ("p" "center-pointer")
       ("d" "dict-lookup-command")
