@@ -358,14 +358,23 @@
     (cons ',form (lparallel:future ,@form))
     *lparallel-futures-log*))
 
-(defun fix-deadlock ()
-  (loop for thread in (sb-thread:list-all-threads)
-        do (when-let*
-               ((mutex
-                 (slot-value thread 'sb-thread::waiting-for))
-                (owner (sb-thread:mutex-owner mutex)))
-             (format t "terminating thread: ~A" owner)
-             (sb-thread:terminate-thread owner))))
+
+(defun blocking-threads (&key action)
+  (loop with owners = nil
+        for thread in (sb-thread:list-all-threads)
+        as mutex = (slot-value thread 'sb-thread::waiting-for)
+        as owner = (when mutex
+                     (sb-thread:mutex-owner mutex))
+        when owner do (pushnew (cons mutex owner) owners :test #'equal)
+          when owner
+            do (case action
+                 (:release
+                  (sb-thread:release-mutex mutex))
+                 (:return
+                   (sb-thread:return-from-thread owner))
+                 (:destroy
+                  (sb-thread:destroy-thread owner)))
+        finally (return owners)))
 
 (defun find-window-by-regexp (regexp)
   (loop for win in (list-windows (current-screen))
