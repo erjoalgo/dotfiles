@@ -342,9 +342,7 @@
   (let* ((password-id (ledger-read-password-id)))
     (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
 
-(defcommand ledger-password-type
-    ;; (password-id) ((:string ))
-    () ()
+(defcommand type-sh () ()
   (let* ((password-id (ledger-read-password-id)))
     (run-shell-command (format nil "type.sh -p ~A" password-id))))
 
