@@ -344,8 +344,8 @@
 
 (defcommand type-sh () ()
   (let* ((password-id (ledger-read-password-id)))
-    (run-command-async-notify "type.sh" (list password-id)))))
-
+    (when password-id
+      (run-command-async-notify "type.sh" (list password-id)))))
 
 (defun adb-select-device () ()
   (let* ((device-line
