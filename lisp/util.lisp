@@ -372,8 +372,8 @@
                   (sb-thread:release-mutex mutex))
                  (:return
                    (sb-thread:return-from-thread owner))
-                 (:destroy
-                  (sb-thread:destroy-thread owner)))
+                 (:terminate
+                  (sb-thread:terminate-thread owner)))
         finally (return owners)))
 
 (defun find-window-by-regexp (regexp)
