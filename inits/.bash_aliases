@@ -479,6 +479,7 @@ function ssh-universal-copy-id {
 
 alias docker-pull='docker-util pull'
 alias docker-push='docker-util push'
+alias docker-bash='docker-util bash'
 
 alias udevadm-monitor='sudo udevadm monitor'
 function device-monitor {
