@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "ha:s:r:o:7c:x" OPT; do
+while getopts "ha:s:r:o:71c:x" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
