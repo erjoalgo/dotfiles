@@ -2,9 +2,12 @@
 
 set -euo pipefail
 
+if ! command -v picom; then
+    sudo apt-get install -y picom
+fi
 
-if pgrep compton; then
-    pkill -9 compton
+if pgrep picom; then
+    pkill -9 picom
 else
     ARG=""
     for CLASS in  \
@@ -19,5 +22,5 @@ else
         fi
         ARG+="class_g=\"${CLASS}\""
     done
-    compton --invert-color-include "${ARG}"
+    picom --invert-color-include "${ARG}"
 fi
