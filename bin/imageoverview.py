@@ -16,7 +16,6 @@ import logging
 import math
 import mimetypes
 import os
-import queue
 import re
 import shutil
 import socket
@@ -25,37 +24,86 @@ import threading
 import traceback
 import urllib.parse
 
+import watchdog.events
+import watchdog.observers
+
+# import queue
+
 try:
     from .version import __version__
 except Exception as ex:
     __version__ = "unknown"
 
-class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
+
+class FsObserver():
+    def __init__(self, directory, on_change):
+        self.directory = directory
+        self.observer = watchdog.observers.Observer()
+        self.on_change = on_change
+
+    @staticmethod
+    def __handler__(on_change):
+        class Handler(watchdog.events.FileSystemEventHandler):
+            def __init__(self, on_change):
+                self.on_change = on_change
+
+            def on_created(self, event):
+                print(f'File created: {event.src_path}')
+                self.on_change("created", event.src_path, event)
+
+            def on_modified(self, event):
+                print(f'File modified: {event.src_path}')
+                self.on_change("modified", event.src_path, event)
+
+            def on_moved(self, event):
+                print(f'File moved: {event.src_path} => {event.dest_path}')
+                self.on_change("moved", event.src_path, event)
+
+        return Handler(on_change)
+
+    def start(self):
+        event_handler = self.__handler__(self.on_change)
+        self.observer.schedule(event_handler, self.directory, recursive=True)
+        self.observer.start()
+
+
+class ImageCrawler(object):
+    def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
+        self.images = []
+        self.directory = directory
+        self.image_regexp = image_regexp
+        self.skip_image_regexp = skip_image_regexp
+        self.reverse = reverse
+
+    def maybe_add_image(self, filename, verbose = False):
+        if re.search(self.image_regexp, filename) and not (
+                self.skip_image_regexp and
+                re.search(self.skip_image_regexp, filename)):
+            self.images.append(filename)
+        elif verbose:
+            logging.info("skipping filename %s")
+
+    def start(self):
+        for (root, dirs, files) in os.walk(self.directory):
+            del dirs
+            for base_filename in sorted(files, reverse=self.reverse):
+                filename = os.path.join(root, base_filename)
+                self.maybe_add_image(filename)
+
+class HttpHandler(http.server.BaseHTTPRequestHandler):
     """
     Display all images recursively contained in a directory on a web browser.
     """
 
-    def __init__(self, directory, dimensions, image_size, image_regexp, skip_image_regexp,
-                 reverse):
-        self.images = []
-        self.directory = directory
+    def __init__(self, images, dimensions, image_size):
+        self.images = images
         self.dimensions = dimensions
         self.image_size = image_size
-        self.reverse = reverse
-        threading.Thread(target=self.crawl_images, args=(
-            image_regexp, skip_image_regexp, reverse)).start()
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
-        super(ImageOverviewHandler, self).__init__(*args, **kwargs)
+        super(HttpHandler, self).__init__(*args, **kwargs)
 
-
-    def crawl_images(self, image_regexp, skip_image_regexp, reverse):
-        for (root, dirs, files) in os.walk(self.directory):
-            for filename in sorted(files, reverse=reverse):
-                if re.search(image_regexp, filename) and not (
-                        skip_image_regexp and re.search(skip_image_regexp, filename)):
-                    self.images.append(os.path.join(root, filename))
 
     def respond(self, status, body):
         """Sends an http response."""
@@ -65,7 +113,6 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
     FILE_PREFIX = "/file"
-
 
     def do_GET(self):
         """Handle GET requests."""
@@ -88,7 +135,7 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
 
     @staticmethod
     def generate_pdf(files, output, quality=15):
-        cmd = ["convert"] + files + [output]
+        cmd = ["convert"] + files + [f"-quality {quality}", output]
         logging.warning("generating pdf: %s", cmd)
         subprocess.check_output(cmd, stderr=subprocess.PIPE)
 
@@ -185,7 +232,8 @@ class ImageOverviewHandler(http.server.BaseHTTPRequestHandler):
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
 }}, true);"""
-        title = f"Page {page_number}/{total_pages} of {self.directory}"
+        title = f"Page {page_number}/{total_pages}"
+                # TODO " of {self.directory}"
 
         javascript += """
 function fillInFilenames() {
@@ -256,6 +304,59 @@ function deselectAll() {
         """Reduce verbose logging."""
         pass
 
+class ImageOverview(object):
+    """ImageOverview provides a web server to display all images in a directory."""
+
+    def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
+        self.crawler = ImageCrawler(directory, image_regexp, skip_image_regexp, reverse)
+
+        def on_change(change_type, filename, event, crawler=self.crawler):
+            print("DDEBUG imageoverview.py uxpm: value of change_type: {}".format(change_type))
+            print("DDEBUG imageoverview.py qohz: value of filename: {}".format(filename))
+            print("DDEBUG imageoverview.py e7sx: value of event: {}".format(event))
+            to_add = None
+            if change_type == "created":
+                to_add = filename
+            elif change_type == "moved":
+                to_add = event.dest_path
+            else:
+                return
+            if os.path.isfile(to_add):
+                crawler.maybe_add_image(to_add)
+
+        self.observer = FsObserver(directory, on_change)
+
+        self.crawl_thread = None
+        self.http_thread = None
+
+    def start_observer(self):
+        self.observer.start()
+
+    def start_crawl(self):
+        # TODO maybe stop existing
+        self.crawl_thread = threading.Thread(target=self.crawler.start, args=())
+        self.crawl_thread.start()
+        return self.crawl_thread
+
+    def start_http(self, port, dimensions, image_size, listen = ""):
+        server_address = (listen, port)
+        httpd = http.server.HTTPServer(server_address,
+                                       HttpHandler(images = self.crawler.images,
+                                                   dimensions=dimensions,
+                                                   image_size=image_size))
+        logging.info("starting http server on %s", server_address)
+
+        # TODO maybe stop
+        self.http_thread = threading.Thread(target=httpd.serve_forever, args=())
+        self.http_thread.start()
+
+        hostname = socket.gethostname()
+        url = f"http://{hostname}.local:{port}"
+        return url
+
+def x_www_browse(url):
+    subprocess.Popen(["x-www-browser", url])
+
 def main():
     def parse_dimensions_spec(spec):
         m = re.match("([0-9]+)x([0-9]+)", spec)
@@ -266,7 +367,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--port", help="port number", default=6969, type=int)
-    parser.add_argument("-d", "--images_directory",
+    parser.add_argument("-d", "--directory",
                         help="directory with images", default=os.getcwd())
     parser.add_argument("-D", "--dimensions",
                         help="image grid dimensions, in ROWSxCOLS format, e.g. 10x10",
@@ -287,23 +388,19 @@ def main():
     logging.getLogger(__name__).setLevel(logging.DEBUG if args.verbose
                                          else logging.INFO)
 
-    server_address = ('', args.port)
-    httpd = http.server.HTTPServer(server_address,
-                                   ImageOverviewHandler(directory=args.images_directory,
-                                                        dimensions=args.dimensions,
-                                                        image_size=args.image_size,
-                                                        image_regexp=args.image_regexp,
-                                                        skip_image_regexp=args.skip_image_regexp,
-                                                        reverse=args.reverse))
-    logging.info("starting http server on %s", server_address)
-    hostname = socket.gethostname()
-    subprocess.Popen(["x-www-browser", f"http://{hostname}.local:{args.port}"])
-    httpd.serve_forever()
-
+    io = ImageOverview(directory=args.directory,
+                       image_regexp=args.image_regexp,
+                       skip_image_regexp=args.skip_image_regexp,
+                       reverse=args.reverse)
+    io.start_observer()
+    io.start_crawl()
+    url = io.start_http(args.port, args.dimensions, args.image_size)
+    x_www_browse(url)
+    io.http_thread.join()
 
 if __name__ == "__main__":
     main()
 
 # Local Variables:
-# compile-command: "./imageoverview.py -d ~/Downloads/android/"
+# compile-command: "./imageoverview.py -d ~/Downloads/ -v"
 # End:
