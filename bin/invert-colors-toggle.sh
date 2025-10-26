@@ -22,5 +22,6 @@ else
         fi
         ARG+="class_g=\"${CLASS}\""
     done
+    # 'class_g="Chromium" || class_g="Zathura" || class_g="matplotlib"'
     picom --invert-color-include "${ARG}"
 fi
