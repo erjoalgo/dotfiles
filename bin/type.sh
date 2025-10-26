@@ -443,8 +443,9 @@ function main {
     validate-args
     ledger-menu build-all
 
-    ledger-menu kill
-    ledger-menu start "${SEED_FILE}"
+    if ! pgrep speculos; then
+        ledger-menu start "${SEED_FILE}"
+    fi
 
     if test "${MODE}" = xdotool; then
         ledger-menu focus
@@ -467,7 +468,6 @@ function main {
     if test "${BROWSE:-}" = true; then
         ledger-menu browse
     fi
-    ledger-menu kill
     echo "${PASS_ID}"
     echo "${PASS}"
 }
