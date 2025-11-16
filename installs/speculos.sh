@@ -12,6 +12,8 @@ URL=https://github.com/LedgerHQ/speculos/
 REPO=${HOME}/git/$(basename "${URL}")
 test -d "${REPO}" || git clone "${URL}" "${REPO}"
 cd "${REPO}"
+git pull --ff-only
+
 
 cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S .
 
