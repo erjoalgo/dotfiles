@@ -130,7 +130,7 @@
     (when show
       (x-www-browser (pathname-to-url out-png) t))
 
-    (set-x-selection out-png :clipboard)
+    ;; (future (set-x-selection out-png :clipboard))
 
     (when verbose
       (message "copied to cliboard: ~A" out-png))
