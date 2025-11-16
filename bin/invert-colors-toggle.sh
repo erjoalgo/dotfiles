@@ -16,6 +16,8 @@ else
             OpenSCAD  \
             Zathura \
             Xournal \
+            TelegramDesktop \
+            qimgv \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
