@@ -10,7 +10,8 @@ ENABLE_FEATURES="AsyncDns"
 CURRENT_PERIOD=$(redshift-period.sh)
 
 if test "${CURRENT_PERIOD}" != Daytime; then
-    ENABLE_FEATURES+=,WebContentsForceDark
+    # ENABLE_FEATURES+=,WebContentsForceDark
+    true
 fi
 
 ARGS=( \
