@@ -23,18 +23,18 @@
       (setf seq (make-sequence 'string *nc-default-buff-size*))
       (usocket:wait-for-input socket :timeout 1 :ready-only t)
       (loop
-	 with start-time-millis = (get-internal-real-time)
-	 with timeout = (if (numberp wait) wait *nc-timeout-millis*)
-	 with i = 0
-         with eof = nil
-	 as char = (handler-case
-                       (read-char-no-hang stream)
-                     (error () (setf eof t)))
-	 as time-elapsed = (- (get-internal-real-time) start-time-millis)
-	 as time-left = (- timeout time-elapsed)
-	 while (and (not eof) (or char (> time-left 0))) do
-	   (when char (setf (aref seq i) char) (incf i))
-	 finally (setf seq (subseq seq 0 i)))
+	with start-time-millis = (get-internal-real-time)
+	with timeout = (if (numberp wait) wait *nc-timeout-millis*)
+	with i = 0
+        with eof = nil
+	as char = (handler-case
+                      (read-char-no-hang stream)
+                    (error () (setf eof t)))
+	as time-elapsed = (- (get-internal-real-time) start-time-millis)
+	as time-left = (- timeout time-elapsed)
+	while (and (not eof) (or char (> time-left 0))) do
+	  (when char (setf (aref seq i) char) (incf i))
+	finally (setf seq (subseq seq 0 i)))
       (usocket:socket-close socket))
     (unless wait
       (sb-thread:make-thread
@@ -50,7 +50,7 @@
   ;;for now starting a new process for each cmd. better to keep a single pipe open
   ;;but risk corrupting state of the repl with malformed input
   (let* ((out
-	  (nc *localhost* *mozrepl-port* cmd :wait wait)))
+	   (nc *localhost* *mozrepl-port* cmd :wait wait)))
     (or
      (not wait)
      (ppcre::register-groups-bind
@@ -68,7 +68,7 @@
 (defun send-commands-delay (cmds &key (delay .1))
   (loop for cmd in cmds
 	do (sleep delay)
-     do (send-command cmd)))
+        do (send-command cmd)))
 
 (defparameter *chrome-url-port* 19615)
 
