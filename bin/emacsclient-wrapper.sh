@@ -36,27 +36,36 @@ RET=0
 for EMACS_SOCKET_NAME in  \
     $(echo /tmp/emacs*/*)  \
         $(echo /run/user/*/emacs/*); do
-    echo "attempting to connect to ${EMACS_SOCKET_NAME}"
     if ! test -e "${EMACS_SOCKET_NAME}"; then
+        echo "skipping ${EMACS_SOCKET_NAME}: missing socket file"
         continue;
     fi
+        echo "skipping ${EMACS_SOCKET_NAME}"
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
             ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
+        echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match"
         continue;
     fi
     SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
     SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
-    if ! sudo -u "${SERVER_USER}" bash -c "test -w $(dirname '${1}')"; then
-        TRAMP_PREFIX="/sudo:root@$(hostname):"
-    fi
+    SUCC=false
+    # SUDO_OPT=(sudo -u "${SERVER_USER}")
+    SUDO_OPT=()
+    for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
+        if ! ${SUDO_OPT[@]} env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
+             "${REAL_EMACSCLIENT}" \
+             ${EXTRA_ARGS[@]} \
+             "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
+            RET=$?
+        else
+            SUCC=true
+            break
+        fi
+    done
 
-    if ! sudo -u "${SERVER_USER}" env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
-         "${REAL_EMACSCLIENT}" \
-         ${EXTRA_ARGS[@]} \
-         "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
+    if ${SUCC} = true; then
         echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
-        RET=$?
         FAIL_COUNT+=1
     else
         SUCCESS_COUNT+=1
