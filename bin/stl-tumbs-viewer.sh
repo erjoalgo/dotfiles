@@ -37,6 +37,12 @@ THUMBS=${THUMBS:-"${STLS}/.thumbs"}
 IFS=$'\n'
 CNT=0
 mkdir -p "${THUMBS}"
+
+if command -v imageoverview.py; then
+    imageoverview.py -d "${THUMBS}" &
+    WAIT_PID=$!
+fi
+
 for FILE in ${FILES}; do
     PNG="${THUMBS}/$(basename ${FILE}).png"
     if test -e "${PNG}" -a "${PNG}" -nt "${FILE}"; then
@@ -50,6 +56,6 @@ done
 
 echo "wrote ${CNT} thumbs to ${THUMBS}"
 
-if command -v imageoverview.py; then
-    imageoverview.py -d "${THUMBS}"
+if test -n "${WAIT_PID:-}"; then
+    wait ${WAIT_PID}
 fi
