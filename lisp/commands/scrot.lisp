@@ -70,6 +70,7 @@
             (when overwrite '("-o"))))
          proc
          output
+         err
          done-p)
     (unless box
       (case selection
@@ -81,19 +82,20 @@
         (:window (push "-u" args))))
     (setf output
           (with-output-to-string (out-fh)
+            (setf err
+                  (with-output-to-string (err-fh)
             (setf proc (SB-EXT:RUN-PROGRAM program
                                            args
                                            :search t
                                            :output out-fh
-                                           :error out-fh
+                                                   :error err-fh
                                            :wait nil))
             (loop with start-time-secs = (GET-UNIVERSAL-TIME)
                   as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
                   as elapsed-secs = (- (get-universal-time) start-time-secs)
                   as timeout-p = (> elapsed-secs timeout-secs)
                   while (not (or done-p timeout-p)) do
-                    (sleep 1))))
-
+                            (sleep 1))))))
     (cond
       ((zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))
        ;; success
