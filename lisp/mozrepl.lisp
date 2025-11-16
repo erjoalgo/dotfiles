@@ -80,7 +80,14 @@ Accept: */*
 
 
 ")
-         (resp (nc *localhost* *chrome-url-port* get-payload :wait t))
+         (resp
+           (handler-case
+               (nc *localhost* *chrome-url-port* get-payload :wait t)
+             (error (err)
+               (error
+                (format nil
+                        "error getting current url from chromeurl extension: ~A:~A"
+                        *localhost* *chrome-url-port*)))))
          (lines (cl-ppcre:split #\Newline resp)))
     (car (last lines))))
 
