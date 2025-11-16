@@ -91,7 +91,8 @@
                                                    :error err-fh
                                            :wait nil))
             (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-                  as done-p = (eq :EXITED (slot-value proc 'SB-IMPL::%STATUS)) ;; TODO
+                          as status = (slot-value proc 'SB-IMPL::%STATUS)
+                          as done-p = (not (eq :RUNNING status)) ;; TODO
                   as elapsed-secs = (- (get-universal-time) start-time-secs)
                   as timeout-p = (> elapsed-secs timeout-secs)
                   while (not (or done-p timeout-p)) do
