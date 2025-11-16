@@ -14,6 +14,7 @@ test -d "${REPO}" || git clone "${URL}" "${REPO}"
 cd "${REPO}"
 git pull --ff-only
 
+pip install cmake
 
 cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S .
 
