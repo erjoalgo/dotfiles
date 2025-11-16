@@ -95,8 +95,13 @@
                           as done-p = (not (eq :RUNNING status)) ;; TODO
                   as elapsed-secs = (- (get-universal-time) start-time-secs)
                   as timeout-p = (> elapsed-secs timeout-secs)
+                          do (format t "DDEBUG scrot.lisp zlik: value of status: ~A~%" status)
+                          do (format t "DDEBUG scrot.lisp xjox: value of elapsed-secs: ~A~%" elapsed-secs)
+                          do (format t "DDEBUG scrot.lisp gnww: value of timeout-secs: ~A~%" timeout-secs)
                   while (not (or done-p timeout-p)) do
                             (sleep 1))))))
+    (format t "DDEBUG scrot.lisp wtcm: value of output: ~A~%" output)
+    (format t "DDEBUG scrot.lisp p0gu: value of error: ~A~%" err)
     (cond
       ((zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))
        ;; success
