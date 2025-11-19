@@ -37,7 +37,6 @@ AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
 sudo apt-get install -y linux-headers-$(uname -r)
 
 test -n "${THIS_CELL:-}"
-sudo tee /etc/openafs/ThisCell <<< "${THIS_CELL}"
 
 if test -n "${THIS_CELL_IP:-}"; then
     insert-text-block \
