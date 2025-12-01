@@ -155,6 +155,15 @@ function docker-psql {
     docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
 }
 
+function docker-logs {
+    TMPFILE=$(mktemp /var/tmp/XXXXXXX.log)
+    # CONTAINER=$(docker-select-container)
+    # docker compose logs ${CONTAINER} --tail 10000 > "${TMPFILE}"
+    docker compose logs --tail 10000 > "${TMPFILE}"
+    echo "wrote logs to ${TMPFILE}"
+    emacsclient-wrapper.sh -n "${TMPFILE}"
+}
+
 function main {
     ${COMMAND} ${*}
 }
