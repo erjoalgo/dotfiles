@@ -40,12 +40,12 @@ for EMACS_SOCKET_NAME in  \
         echo "skipping ${EMACS_SOCKET_NAME}: missing socket file"
         continue;
     fi
-        echo "skipping ${EMACS_SOCKET_NAME}"
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
             ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
         echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match"
         continue;
     fi
+    echo "using ${EMACS_SOCKET_NAME}"
     SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
     SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
