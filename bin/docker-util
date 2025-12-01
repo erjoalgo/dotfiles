@@ -118,7 +118,11 @@ function docker-inspect {
     docker inspect $(docker-select-container)
 }
 
-${COMMAND} ${*}
+function main {
+    ${COMMAND} ${*}
+}
+
+main ${*}
 
 # Local Variables:
 # mode: sh-mode
