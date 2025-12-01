@@ -23,7 +23,6 @@ while getopts "r:n:ih" OPT; do
 done
 shift $((OPTIND -1))
 
-
 function __docker-container-lines {
     docker compose ps | sed '1d'
     docker ps | sed '1d'
