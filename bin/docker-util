@@ -71,7 +71,11 @@ function docker-bash {
     if test ${#CMD[@]} -eq 0; then
         CMD=(bash)
     fi
-    docker exec "${INTERACTION}" --user root "${CONTAINER}" ${CMD[@]}
+    INTERACTION_OPT=()
+    if test -n "${INTERACTION:-}"; then
+        INTERACTION_OPT+=("${INTERACTION}")
+    fi
+    docker exec ${INTERACTION[@]} --user root "${CONTAINER}" ${CMD[@]}
 }
 
 function docker-working-dir {
