@@ -23,15 +23,19 @@ while getopts "hf:g:" OPT; do
     esac
 done
 
-test 0 = ${UID}
-
 test ! -e ${SWAP}
 
-CNT=$(expr 1024 \* ${GB})
-BS=1024k
+function mkswap {
+    SWAP=${1} && shift
+    GB=${1} && shift
+    CNT=$(expr 1024 \* ${GB})
+    BS=1024k
 
-dd if=/dev/zero of=${SWAP} bs=${BS} count=${CNT}
-chmod 0600 ${SWAP}
-mkswap -f ${SWAP}
-echo "${SWAP} none swap sw 0 0 " >> /etc/fstab
-swapon ${SWAP}
+    dd if=/dev/zero of=${SWAP} bs=${BS} count=${CNT}
+    chmod 0600 ${SWAP}
+    mkswap -f ${SWAP}
+    echo "${SWAP} none swap sw 0 0 " >> /etc/fstab
+    swapon ${SWAP}
+}
+
+mkswap "${SWAP}" "${GB}"
