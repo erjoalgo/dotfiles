@@ -23,6 +23,13 @@ while getopts "hf:g:" OPT; do
     esac
 done
 
+shift $((OPTIND -1))
+if test $# -gt 0; then
+    less $0
+    echo "unexpected positional args"
+    exit ${LINENO}
+fi
+
 test ! -e ${SWAP}
 
 function mkswap {
