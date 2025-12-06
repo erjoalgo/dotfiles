@@ -342,7 +342,7 @@
       ("SunPageUp" "pull-hidden-previous")
       ("SunPageDown" "pull-hidden-next")
   ;;not efficient nor necessary but only run at initialization
-  )
+      ))
 
 
 
@@ -540,6 +540,9 @@
 
 
 (defparameter *press-ir-button-map* (make-sparse-keymap))
+
+(define-key *ir-buttons-ac* (kbd "r")
+  (format nil "press-ir-button AC_RESTART"))
 
 (define-key-bindings
     *press-ir-button-map*
