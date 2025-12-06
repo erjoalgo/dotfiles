@@ -338,7 +338,9 @@
       ("H-r" "redshift-shift-red")
       ("H-R" "redshift-shift-blue")
       ("H-`" "unmap-all-message-windows-command")
-      ("H-s" *press-ir-button-map*))
+      ("H-s" *press-ir-button-map*)
+      ("SunPageUp" "pull-hidden-previous")
+      ("SunPageDown" "pull-hidden-next")
   ;;not efficient nor necessary but only run at initialization
   )
 
