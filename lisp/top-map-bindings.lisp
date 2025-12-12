@@ -341,6 +341,7 @@
       ("H-s" *press-ir-button-map*)
       ("SunPageUp" "pull-hidden-previous")
       ("SunPageDown" "pull-hidden-next")
+      ("S-SunPageUp" "delete")
       ;;not efficient nor necessary but only run at initialization
       ))
 
