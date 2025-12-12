@@ -33,7 +33,7 @@ fi
 
 test ! -e ${SWAP}
 
-function mkswap {
+function mkswap-fn {
     SWAP=${1} && shift
     GB=${1} && shift
     CNT=$(expr 1024 \* ${GB})
@@ -46,4 +46,4 @@ function mkswap {
     swapon ${SWAP}
 }
 
-mkswap "${SWAP}" "${GB}"
+mkswap-fn "${SWAP}" "${GB}"
