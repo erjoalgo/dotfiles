@@ -7,6 +7,7 @@ SWAP=${SWAP:-/swap.file}
 FREEMEM_KB=$(grep -Po '(?<=MemTotal:) *[0-9]+(?= kB)' /proc/meminfo | tr -d ' ')
 FREEMEM_GB=$(bc <<< "scale=2; ${FREEMEM_KB} / 1024^2")
 GB=${GB:-$(printf "%.0f" $(bc <<< "scale=0;(${FREEMEM_GB} + 2)"))}
+GB=$((GB>10 ? 10 : GB))
 
 while getopts "hf:g:" OPT; do
     case ${OPT} in
