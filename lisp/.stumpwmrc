@@ -7,6 +7,19 @@
 
 (defvar *stumpwm-log-stream* nil)
 
+;; without message wrapping, we won't be able to read long messages
+(defun wrap-text (text &optional max-chars-per-line)
+  (loop for text in (ppcre:split #\Newline text)
+        with chunks
+        do
+           (loop with len = (length text)
+                 with idx = 0
+                 while (< idx len)
+                 as new-idx = (+ idx max-chars-per-line)
+                 do (push (subseq text idx (min len new-idx)) chunks)
+                 do (setf idx new-idx))
+        finally (return (nreverse chunks))))
+
 (defun message-wrapped (fmt &rest args)
   (let* ((text (apply #'format nil fmt args))
          (screen (current-screen))
@@ -55,19 +68,6 @@
              (format t "error logging to ~A: ~A" *stumpwm-log-filename* err)
              (push err *init-errors*)))
          err))))
-
-;; without message wrapping, we won't be able to read long messages
-(defun wrap-text (text &optional max-chars-per-line)
-  (loop for text in (ppcre:split #\Newline text)
-        with chunks
-        do
-           (loop with len = (length text)
-                 with idx = 0
-                 while (< idx len)
-                 as new-idx = (+ idx max-chars-per-line)
-                 do (push (subseq text idx (min len new-idx)) chunks)
-                 do (setf idx new-idx))
-        finally (return (nreverse chunks))))
 
 ;; apply font size options
 (defun style-options-init (&key debugging (font-size 40))
