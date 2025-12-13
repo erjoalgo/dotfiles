@@ -19,4 +19,4 @@ echo "this is the pre-push hook"
 
 EOF
 
-chmod +x "$(pwd)/${PRE_PUSH}"
+chmod +x "${PRE_PUSH}"
