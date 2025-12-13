@@ -2,8 +2,8 @@
 
 (defmacro case-string (keyform &body cases)
   `(cond ,@(loop for (case-key . case-body) in cases
-     collect `((string= ,keyform ,case-key)
-	       ,@case-body))))
+                 collect `((string= ,keyform ,case-key)
+	                   ,@case-body))))
 
 
 (defparameter process-state-codes-alist
