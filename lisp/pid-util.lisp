@@ -1,3 +1,5 @@
+(in-package :STUMPWM)
+
 (defmacro case-string (keyform &body cases)
   `(cond ,@(loop for (case-key . case-body) in cases
      collect `((string= ,keyform ,case-key)
