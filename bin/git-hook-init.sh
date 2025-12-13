@@ -4,7 +4,7 @@ set -euo pipefail
 
 cd $(git rev-parse --show-toplevel)
 pwd
-PRE_PUSH=.githooks/pre-push
+PRE_PUSH=$(pwd)/.githooks/pre-push
 mkdir -p $(dirname "${PRE_PUSH}")
 cat <<EOF > "${PRE_PUSH}"
 #!/bin/bash -x
