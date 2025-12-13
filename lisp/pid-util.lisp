@@ -32,3 +32,5 @@
   (let ((cmd (format nil "kill -~A ~D" signal pid)))
     (message cmd)
     (run-shell-command cmd)))
+
+(format t "loaded pid-util.lisp")
