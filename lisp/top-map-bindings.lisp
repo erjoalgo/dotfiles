@@ -542,8 +542,6 @@
 
 (defparameter *press-ir-button-map* (make-sparse-keymap))
 
-(define-key *ir-buttons-ac* (kbd "r")
-  (format nil "press-ir-button AC_RESTART"))
 
 (define-key-bindings
     *press-ir-button-map*
@@ -586,6 +584,8 @@
                  )))))
 
 
+(define-key *ir-buttons-ac* (kbd "r")
+  (format nil "press-ir-button AC_RESTART"))
 
 (set-prefix-key (kbd "F19"))
 (pop-top-map)
