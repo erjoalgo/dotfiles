@@ -6,81 +6,81 @@
 (setf *real-top-map* *top-map*)
 
 (define-run-or-pull-program "BROWSER"
-  :cmd (format nil "~{~A~^ ~}" *browser-cmd*)
-  :raise-key "H-f"
-  :pull-key "H-F"
-  :classes *browser-classes*)
+    :cmd (format nil "~{~A~^ ~}" *browser-cmd*)
+    :raise-key "H-f"
+    :pull-key "H-F"
+    :classes *browser-classes*)
 
 (define-run-or-pull-program "X-TERMINAL-EMULATOR"
-  :raise-key "H-c"
-  :cmd (trim-spaces
-        (run-shell-command
-         "which konsole roxterm gnome-terminal xterm | head -1" t))
-  :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
-		 "xterm" "XTerm" "Gnome-terminal"))
+    :raise-key "H-c"
+    :cmd (trim-spaces
+          (run-shell-command
+           "which konsole roxterm gnome-terminal xterm | head -1" t))
+    :classes (list "Konsole" "X-terminal-emulator" "Roxterm" "roxterm"
+		   "xterm" "XTerm" "Gnome-terminal"))
 
 (define-run-or-pull-program "emacs"
-  :pull-key "H-E"
-  :classes emacs-classes)
+    :pull-key "H-E"
+    :classes emacs-classes)
 
 (let ((eclipse-cmd
-        (first-existing-command
-         "eclipse"
-         "android-studio"
-         "STS"
-         "studio.sh")))
+       (first-existing-command
+        "eclipse"
+        "android-studio"
+        "STS"
+        "studio.sh")))
   (when eclipse-cmd
     (define-run-or-pull-program "android-studio"
-      :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
-      :cmd (list "sudo" "-u" "ealfonso" eclipse-cmd)
-      :raise-key "H-t H-r"
-      :pull-key "H-t H-R")))
+        :classes '("jetbrains-studio" "Spring Tool Suite" "Eclipse")
+        :cmd (list "sudo" "-u" "ealfonso" eclipse-cmd)
+        :raise-key "H-t H-r"
+        :pull-key "H-t H-R")))
 
 (define-run-or-pull-program "zathura"
-  :classes '("Zathura")
-  :cmd "zathura"
-  :raise-key "H-t H-z"
-  :pull-key "H-t H-z")
+    :classes '("Zathura")
+    :cmd "zathura"
+    :raise-key "H-t H-z"
+    :pull-key "H-t H-z")
 
 (define-run-or-pull-program "virtualbox"
-  :classes '("VirtualBox Machine" "VirtualBox Manager" "Virt-manager")
-  :cmd "virt-manager"
-  :raise-key "H-t H-v"
-  :pull-key "H-t H-V")
+    :classes '("VirtualBox Machine" "VirtualBox Manager" "Virt-manager")
+    :cmd "virt-manager"
+    :raise-key "H-t H-v"
+    :pull-key "H-t H-V")
 
 (define-run-or-pull-program "pavucontrol"
-  :classes '("Pavucontrol" )
-  :cmd "pavucontrol"
-  :pull-key "H-O"
-  :raise-key "H-o")
+    :classes '("Pavucontrol" )
+    :cmd "pavucontrol"
+    :pull-key "H-O"
+    :raise-key "H-o")
 
 (define-run-or-pull-program "emulator-run.sh"
-  :raise-key "H-t H-e"
-  :pull-key "H-t H-E"
-  :cmd "emulator-run.sh"
-  :classes '("eboard" "Eboard"))
+    :raise-key "H-t H-e"
+    :pull-key "H-t H-E"
+    :cmd "emulator-run.sh"
+    :classes '("eboard" "Eboard"))
 
 (define-run-or-pull-program "signal-desktop"
-  :raise-key "H-t H-s"
-  :pull-key "H-t H-S"
-  :classes '("signal" "Signal"))
+    :raise-key "H-t H-s"
+    :pull-key "H-t H-S"
+    :classes '("signal" "Signal"))
 
 (define-run-or-pull-program "blender"
-  :raise-key "H-t H-b"
-  :pull-key "H-t H-B"
-  :classes '("Blender" "OpenSCAD"))
+    :raise-key "H-t H-b"
+    :pull-key "H-t H-B"
+    :classes '("Blender" "OpenSCAD"))
 
 (define-run-or-pull-program "ffplay"
-  :cmd nil
-  :raise-key "H-t H-f"
-  :pull-key "H-t H-F"
-  :classes '("ffplay" "ffplay"))
+    :cmd nil
+    :raise-key "H-t H-f"
+    :pull-key "H-t H-F"
+    :classes '("ffplay" "ffplay"))
 
 (define-run-or-pull-program "gimp"
-  :cmd nil
-  :raise-key "H-t H-g"
-  :pull-key "H-t H-g"
-  :classes '("Gimp"))
+    :cmd nil
+    :raise-key "H-t H-g"
+    :pull-key "H-t H-g"
+    :classes '("Gimp"))
 
 (defun last-modified-file (dir ext)
   (let* ((cmd (format nil
@@ -92,102 +92,102 @@
     (car lines)))
 
 (define-run-or-pull-program "creality"
-  :raise-key "H-t H-c"
-  :pull-key "H-t H-C"
-  :classes '("cura" "Creative3D" "Creality Print" "UltiMaker-Cura")
-  :cmd (lambda ()
-         (list
-          (namestring (or
-                       (car (directory #P"~/bin/Creality*.AppImage"))
-                       "cura"))
-          (last-modified-file "~/git/3d" "stl"))))
+    :raise-key "H-t H-c"
+    :pull-key "H-t H-C"
+    :classes '("cura" "Creative3D" "Creality Print" "UltiMaker-Cura")
+    :cmd (lambda ()
+           (list
+            (namestring (or
+                         (car (directory #P"~/bin/Creality*.AppImage"))
+                         "cura"))
+            (last-modified-file "~/git/3d" "stl"))))
 
 (define-run-or-pull-program "xournal"
-  :raise-key "H-t H-x"
-  :pull-key "H-t H-x"
-  :classes '("Xournal" "xournalpp")
-  :cmd nil)
+    :raise-key "H-t H-x"
+    :pull-key "H-t H-x"
+    :classes '("Xournal" "xournalpp")
+    :cmd nil)
 
 (define-run-or-pull-program "vnc"
-  :raise-key "H-t H-t"
-  :pull-key "H-t H-t"
-  :classes '("Vncviewer")
-  :cmd nil)
+    :raise-key "H-t H-t"
+    :pull-key "H-t H-t"
+    :classes '("Vncviewer")
+    :cmd nil)
 
 (define-run-or-pull-program "n64"
-  :raise-key "H-t H-n"
-  :pull-key "H-t H-n"
-  :classes '("project64.exe" "mupen64plus")
-  :cmd
-  (cond
-    ((which "mupen64plus")
-     (list "mupen64plus" (n64-select-rom)))
-    ((which "wine")
-     (list "wine"
-           (uiop:native-namestring
-            #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
+    :raise-key "H-t H-n"
+    :pull-key "H-t H-n"
+    :classes '("project64.exe" "mupen64plus")
+    :cmd
+    (cond
+      ((which "mupen64plus")
+       (list "mupen64plus" (n64-select-rom)))
+      ((which "wine")
+       (list "wine"
+             (uiop:native-namestring
+              #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
 
 (define-run-or-pull-program "ledger-live"
-  :raise-key "H-t H-l"
-  :pull-key "H-t H-l"
-  :classes '("Ledger Live")
-  :cmd
-  (cond
-    ((which "ledger-live")
-     "ledger-live")
-    (t
-     (error "ledger live not found"))))
+    :raise-key "H-t H-l"
+    :pull-key "H-t H-l"
+    :classes '("Ledger Live")
+    :cmd
+    (cond
+      ((which "ledger-live")
+       "ledger-live")
+      (t
+       (error "ledger live not found"))))
 
 (define-run-or-pull-program "linphone"
-  :raise-key "H-t H-p"
-  :pull-key "H-t H-p"
-  :classes '("linphone")
-  :cmd "linphone")
+    :raise-key "H-t H-p"
+    :pull-key "H-t H-p"
+    :classes '("linphone")
+    :cmd "linphone")
 
 (define-run-or-pull-program "audacity"
-  :raise-key "H-t H-y"
-  :pull-key "H-t H-y"
-  :classes '("Audacity")
-  :cmd "audacity")
+    :raise-key "H-t H-y"
+    :pull-key "H-t H-y"
+    :classes '("Audacity")
+    :cmd "audacity")
 
 (define-run-or-pull-program "scrcpy"
-  :raise-key "H-t H-a"
-  :pull-key "H-t H-A"
-  :run-key "H-t C-H-a"
-  :classes '("scrcpy")
-  :cmd (lambda ()
-         (let ((device-id (adb-select-device)))
-           (list "scrcpy" "-s" device-id "--shortcut-mod=lalt" "-S"))))
+    :raise-key "H-t H-a"
+    :pull-key "H-t H-A"
+    :run-key "H-t C-H-a"
+    :classes '("scrcpy")
+    :cmd (lambda ()
+           (let ((device-id (adb-select-device)))
+             (list "scrcpy" "-s" device-id "--shortcut-mod=lalt" "-S"))))
 
 (define-run-or-pull-program "wireshark"
-  :raise-key "H-t H-w"
-  :pull-key "H-t H-w"
-  :classes '("Wireshark")
-  :cmd "wireshark")
+    :raise-key "H-t H-w"
+    :pull-key "H-t H-w"
+    :classes '("Wireshark")
+    :cmd "wireshark")
 
 (define-run-or-pull-program "tor-browser"
-  :cmd '(#P"~/src/tor-browser/Browser/start-tor-browser")
-  :raise-key "H-t H-t"
-  :pull-key "H-t H-T"
-  :classes '("Tor Browser"))
+    :cmd '(#P"~/src/tor-browser/Browser/start-tor-browser")
+    :raise-key "H-t H-t"
+    :pull-key "H-t H-T"
+    :classes '("Tor Browser"))
 
 (define-run-or-pull-program "gqrx"
-  :cmd '("gqrx")
-  :raise-key "H-t H-q"
-  :pull-key "H-t H-Q"
-  :classes '("gqrx"))
+    :cmd '("gqrx")
+    :raise-key "H-t H-q"
+    :pull-key "H-t H-Q"
+    :classes '("gqrx"))
 
 (define-run-or-pull-program "magnus"
-  :cmd '("magnus")
-  :raise-key "H-t H-m"
-  :pull-key "H-t H-M"
-  :classes '("Magnus"))
+    :cmd '("magnus")
+    :raise-key "H-t H-m"
+    :pull-key "H-t H-M"
+    :classes '("Magnus"))
 
 (define-run-or-pull-program "vmpk"
-  :cmd '("vmpk")
-  :raise-key "H-t H-k"
-  :pull-key "H-t H-K"
-  :classes '("VMPK"))
+    :cmd '("vmpk")
+    :raise-key "H-t H-k"
+    :pull-key "H-t H-K"
+    :classes '("VMPK"))
 
 (per-window-bindings-reload-from-fn)
 
@@ -198,11 +198,11 @@
 			     kmap-or-kmap-list
 			     (list kmap-or-kmap-list))
         for kmap in kmap-list do
-          (loop for (key action) in bindings
-                as kbd = (if (stringp key) (kbd key)
-                             key)
-                do
-	           (define-key kmap kbd action))
+        (loop for (key action) in bindings
+              as kbd = (if (stringp key) (kbd key)
+                           key)
+              do
+	      (define-key kmap kbd action))
         finally (return kmap)))
 
 
@@ -211,7 +211,7 @@
 
 (def-several-vars
     (make-sparse-keymap)
-  *screen-rotation-map*
+    *screen-rotation-map*
   *utils-map*
   *special-chars-map*
   ;; *search-engine-map*
@@ -367,14 +367,14 @@
       (kill-process win-pid sigusr1))))
 
 (loop
-  for group-name in '("Default" "F2" "F3" "F4" "F5" "F6")
-  for i from 0
-  do (gnewbg group-name)
-  do
-     (define-key-bindings (all-top-maps)
-         `(
-           (,(format nil "H-F~D" (1+ i)) ,(format nil "gselect-nth ~D" i))
-           (,(format nil "S-H-F~D" (1+ i)) ,(format nil "gmove-nth ~D" i)))))
+      for group-name in '("Default" "F2" "F3" "F4" "F5" "F6")
+      for i from 0
+      do (gnewbg group-name)
+      do
+      (define-key-bindings (all-top-maps)
+          `(
+            (,(format nil "H-F~D" (1+ i)) ,(format nil "gselect-nth ~D" i))
+            (,(format nil "S-H-F~D" (1+ i)) ,(format nil "gmove-nth ~D" i)))))
 
 (define-key-bindings
     *correct-screen-map*
@@ -472,24 +472,24 @@
 
 (defun run-keymap-repeatedly (keymap-name keymap &key (quit-key (kbd "ESC")))
   (loop
-    as (cmd . seq) = (multiple-value-bind (cmd seq)
-                         (with-focus (screen-key-window (current-screen))
-                           (message "reading key from ~A~%" keymap-name)
-                           (read-from-keymap (list keymap)))
-                       (cons cmd seq))
-    while
-    (cond
-      ((and (null (cdr seq))
-            (key-equal (car seq) quit-key))
-       (message "quit key pressed. quitting...")
-       nil)
-      ((null cmd) (message "no comannd bound. quitting...")
-       nil)
-      (t
-       (message "calling ~A~%" cmd)
-       (eval-command cmd)
-       (sleep .5)
-       t))))
+        as (cmd . seq) = (multiple-value-bind (cmd seq)
+                             (with-focus (screen-key-window (current-screen))
+                               (message "reading key from ~A~%" keymap-name)
+                               (read-from-keymap (list keymap)))
+                           (cons cmd seq))
+        while
+        (cond
+          ((and (null (cdr seq))
+                (key-equal (car seq) quit-key))
+           (message "quit key pressed. quitting...")
+           nil)
+          ((null cmd) (message "no comannd bound. quitting...")
+           nil)
+          (t
+           (message "calling ~A~%" cmd)
+           (eval-command cmd)
+           (sleep .5)
+           t))))
 
 (defmacro run-keymap-repeatedly-command (keymap)
   (let ((cmd-name (format nil "CALL-REPEATEDLY-~A" keymap)))
@@ -501,42 +501,42 @@
 
 (defmacro define-tv-buttons (brand-name brand-keymap &optional extra)
   (loop
-    for (l action) in
-    `(("p" "POWER")
-      ("P" "POWER_OFF")
+        for (l action) in
+        `(("p" "POWER")
+          ("P" "POWER_OFF")
 
-      ("Up" "UP")
-      ("Down" "DOWN")
-      ("Left" "LEFT")
-      ("Right" "RIGHT")
+          ("Up" "UP")
+          ("Down" "DOWN")
+          ("Left" "LEFT")
+          ("Right" "RIGHT")
 
-      ("Return" "ENTER")
-      ("SPC" "ENTER")
+          ("Return" "ENTER")
+          ("SPC" "ENTER")
 
-      ("i" "INPUT")
-      ("c" "PICTURE")
-      ("m" "MENU")
-      ("h" "HOME")
-      ("q" "EXIT")
-      ("x" "EXIT")
-      ("DEL" "BACK")
+          ("i" "INPUT")
+          ("c" "PICTURE")
+          ("m" "MENU")
+          ("h" "HOME")
+          ("q" "EXIT")
+          ("x" "EXIT")
+          ("DEL" "BACK")
 
-      ("XF86AudioLowerVolume" "VOLDOWN")
-      ("XF86AudioRaiseVolume" "VOLUP")
-      ("XF86AudioMute" "MUTE")
+          ("XF86AudioLowerVolume" "VOLDOWN")
+          ("XF86AudioRaiseVolume" "VOLUP")
+          ("XF86AudioMute" "MUTE")
 
-      ("S-Up" "PICTURE_MODE_UP")
-      ("S-Down" "PICTURE_MODE_DOWN"))
-    as command = (format nil "press-ir-button ~A_~A" brand-name action)
-    collect `(list ,l ,command) into buttons
-    finally
-       (return
-         `(progn
-            (defparameter ,brand-keymap (make-sparse-keymap))
-            (define-key-bindings
-                ,brand-keymap
-                (list ,@buttons ,@extra))
-            ,brand-keymap))))
+          ("S-Up" "PICTURE_MODE_UP")
+          ("S-Down" "PICTURE_MODE_DOWN"))
+        as command = (format nil "press-ir-button ~A_~A" brand-name action)
+        collect `(list ,l ,command) into buttons
+        finally
+        (return
+          `(progn
+             (defparameter ,brand-keymap (make-sparse-keymap))
+             (define-key-bindings
+                 ,brand-keymap
+                 (list ,@buttons ,@extra))
+             ,brand-keymap))))
 
 
 
