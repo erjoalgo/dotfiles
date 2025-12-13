@@ -16,7 +16,7 @@ cat <<EOF > "${PRE_PUSH}"
 set -euo pipefail
 
 echo "this is the pre-push hook"
-exit 0
+
 EOF
 
 chmod +x "$(pwd)/${PRE_PUSH}"
