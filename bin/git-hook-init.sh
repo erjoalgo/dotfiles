@@ -20,3 +20,5 @@ echo "this is the pre-push hook"
 EOF
 
 chmod +x "${PRE_PUSH}"
+
+emacsclient-wrapper.sh "${PRE_PUSH}"
