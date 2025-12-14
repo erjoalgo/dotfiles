@@ -118,7 +118,7 @@ function exec-automation {
   "rules": [
     {
     "conditions": [[ "seen", false ]],
-      "actions": [
+    "actions": [
         [ "setbool", "seen", true ],
         $(IFS=','; echo "${ACTIONS[*]}")
       ]
