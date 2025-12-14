@@ -374,6 +374,19 @@ function ledger-menu {
                 pkill speculos
                 sleep 1
             done
+            while true; do
+                BREAK=true
+                for CONTAINER_NAME in  \
+                    $(docker ps| grep 'speculos.* Up ' | rev | cut -f1 -d' ' | rev); do
+                    docker stop "${CONTAINER_NAME}"
+                    BREAK=false
+                done
+                if test ${BREAK} = true; then
+                    break
+                fi
+                sleep 1
+            done
+
             while test-port localhost ${PORT}; do
                 sleep 1
             done
