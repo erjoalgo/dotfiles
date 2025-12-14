@@ -112,8 +112,7 @@ function press {
 }
 
 function exec-automation {
-    # "text": "Disclaimer",
-    ACTION_DATA=$(cat <<EOF | tee /tmp/automation.json
+    ACTION_DATA=$(cat <<EOF
 {
   "version": 1,
   "rules": [
