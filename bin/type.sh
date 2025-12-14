@@ -197,7 +197,6 @@ EOF
             both
             left ${OFFSET}
             select-menu charset-select
-            select-menu charset-numbers-undo
             select-menu charset-lowercase
             LAST_CHAR='a'
         fi
