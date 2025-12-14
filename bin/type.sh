@@ -127,7 +127,8 @@ function exec-automation {
 }
 EOF
 )
-    curl -i  "http://127.0.0.1:5000/automation" -d "${ACTION_DATA}"
+    ledger-menu kill
+    ledger-menu start "${SEED_FILE}" --automation file:<(echo "${ACTION_DATA}")
 }
 
 function left {
@@ -370,7 +371,7 @@ function ledger-menu {
             test -e "${APP_ELF}"
             set +x
             env SMLL="$(gpg --decrypt --no-symkey-cache --batch ${SEED_FILE})" \
-                speculos "${APP_ELF}" "${SPECULOS_DISPLAY_OPT[@]}" &
+                speculos "${APP_ELF}" "${SPECULOS_DISPLAY_OPT[@]}" ${*} &
             set -x
             while ! test-port localhost ${PORT}; do
                 sleep 1
@@ -443,8 +444,11 @@ function main {
     validate-args
     ledger-menu build-all
 
-    if ! pgrep speculos; then
-        ledger-menu start "${SEED_FILE}"
+    if test "${MODE}" != automation; then
+        ledger-menu kill
+        if ! pgrep speculos; then
+            ledger-menu start "${SEED_FILE}"
+        fi
     fi
 
     if test "${MODE}" = xdotool; then
