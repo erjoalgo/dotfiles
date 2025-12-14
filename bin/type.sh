@@ -208,12 +208,11 @@ function select-menu {
     SELECTION=${1} && shift
     case "${SELECTION}" in
         new-pass)
-            # assume we are at "type password"
+            # assume we are at "manage passwords for your device"
             section "entering the 'new password' screen"
-            right 2
+            right 2 # new password
             both
-            right 5
-            both 2
+            both # charset lowercase
             ;;
         show-pass)
             # assumes we are at "type password",
@@ -239,12 +238,6 @@ function select-menu {
             export PASS
             echo "${PASS}"
             ;;
-        qwerty)
-            # assume we are at "new password -> keyboard selection"
-            section "selecting qwerty"
-            right
-            both
-            ;;
         charset-lowercase)
             # assume we are at "new password -> keyboard selection -> charset selection"
             both
@@ -254,10 +247,6 @@ function select-menu {
             right 2
             both
             ;;
-        charset-numbers-undo)
-            # assume we are at "new password -> keyboard selection -> charset selection"
-            left 2
-            ;;
         charset-select)
             left
             both
@@ -265,11 +254,20 @@ function select-menu {
         checkmark)
             # asssues we are at "a", finish at "type password"
             left 2
-            both
+            both # checkmark
+            both # "new password created"
             ;;
-        skip-disclaimer)
-            # skip the new disclaimer
-            right 9
+        init-to-which-action-menu)
+            # skip the disclaimer
+            right 4 # "I understand"
+            both
+
+            # querty
+            both
+
+            # manage password
+            right 1 # tap to manage
+            both
             ;;
         *)
             echo "unknown select-menu option" >&2
@@ -453,10 +451,8 @@ function main {
     if test "${MODE}" = xdotool; then
         ledger-menu focus
     fi
-    select-menu skip-disclaimer
-    select-menu qwerty
+    select-menu init-to-which-action-menu
     select-menu new-pass
-    select-menu charset-lowercase
     type-string "${PASS_ID}"
     select-menu checkmark
     select-menu show-pass
