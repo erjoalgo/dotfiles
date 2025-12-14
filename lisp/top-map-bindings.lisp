@@ -367,7 +367,7 @@
       (kill-process win-pid sigusr1))))
 
 (loop
-      for group-name in '("Default" "F2" "F3" "F4" "F5" "F6")
+      for group-name in '("Default" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10")
       for i from 0
       do (gnewbg group-name)
       do
