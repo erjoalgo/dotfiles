@@ -304,7 +304,10 @@ function build-speculos-app {
     cd "${APP_DIR}"
     ELF=$(realpath -s --relative-to=. "${APP_ELF}")
     rm -f "${ELF}"
-    docker run --rm -ti --user "$(id -u):$(id -g)" -v "$(realpath .):/app" \
+
+    docker run --rm -ti  \
+           --user "$(id -u):$(id -g)" \
+           -v "$(realpath .):/app" \
            ghcr.io/ledgerhq/ledger-app-builder/ledger-app-dev-tools:latest \
            make DEBUG=1
     test -e "${ELF}"
