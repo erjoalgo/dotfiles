@@ -226,15 +226,7 @@ function select-menu {
             both
             ;;
         capture-pass)
-            ORIG_MODE=$MODE
-            export MODE=curl
-            right
-            left
-            PASS=$(last-event-text)
-            right # view page 2/2 of the password
-            PASS+=$(last-event-text)
-            PASS=$(tail -1 <<< "${PASS}")
-            export MODE=$ORIG_MODE
+            PASS=$(MODE=curl last-event-text)
             export PASS
             echo "${PASS}"
             ;;
@@ -409,7 +401,9 @@ function ledger-menu {
 
 function last-event-text {
     curl -s "http://127.0.0.1:5000/events" |  \
-        jq --raw-output ".events | last .text"
+        jq --raw-output ".events | map(.text) | .[]"  |  \
+        tail -2 |  \
+        tr -d '\n'
 }
 
 function clipboard {
