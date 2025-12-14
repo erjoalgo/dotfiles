@@ -17,9 +17,6 @@ while getopts "p:s:d:xcah" OPT; do
     d)
         DELAY_SECS=$(bc <<< "scale=2; ${OPTARG} / 1000")
         ;;
-    i)
-	INTERACTIVE=true;
-	;;
     x)
         MODE=xdotool
         ;;
