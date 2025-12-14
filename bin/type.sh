@@ -220,7 +220,7 @@ function select-menu {
             # press "both" to return to "type password"
             INDEX=${1:-0}
             section "entering the 'show password' screen"
-            right
+            right 1
             both
             right "${INDEX}" # scan to the password
             both
