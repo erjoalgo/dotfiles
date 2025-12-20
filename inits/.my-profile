@@ -20,6 +20,12 @@ fi
 PROFILE_ENV=${HOME}/.profile-env
 test -e "${PROFILE_ENV}" && . "${PROFILE_ENV}"
 
+
+for BINDIR in ${HOME}/.nodenv/versions/*/bin/; do
+    export PATH=${PATH}:${BINDIR}
+done
+
+
 # Local Variables:
 # mode: shell-script
 # End:
