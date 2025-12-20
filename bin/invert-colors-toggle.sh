@@ -18,6 +18,7 @@ else
             Xournal \
             TelegramDesktop \
             qimgv \
+            Gsmartcontrol \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
