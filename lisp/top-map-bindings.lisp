@@ -416,7 +416,7 @@
       ("H-B" "byzanz-record-auto-stop")
       ("H-s" "toggle-screen-key")
       ("b" *brightness-map*)
-      ("H-p" "type-sh")
+      ("H-p" "type-sh-command")
       ("p" "center-pointer")
       ("d" "dict-lookup-command")
       ("D" "cat-message-command ~/vocab")

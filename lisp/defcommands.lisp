@@ -342,10 +342,52 @@
   (let* ((password-id (ledger-read-password-id)))
     (run-shell-command (format nil "ledger-password-backup-restore.js ~A" password-id))))
 
-(defcommand type-sh () ()
-  (let* ((password-id (ledger-read-password-id)))
-    (when password-id
-      (run-command-async-notify "type.sh" (list password-id)))))
+(defun type-sh (&key password-id  no-retry)
+  (let* ((password-id (or password-id (ledger-read-password-id)))
+         (on-error-callback
+           (unless no-retry
+             `(lambda () (type-sh ,password-id :no-retry t)))))
+    (assert password-id)
+    (run-command-async-notify
+     "type.sh"
+     (list password-id)
+     nil
+     on-error-callback)))
+
+(defcommand type-sh-command () ()
+  (type-sh))
+
+(defcommand kinit () ()
+  "kinit admin && aklog -d"
+  (let ((pass (read-one-line (current-screen) "enter kinit password: " :password t))
+        proc
+        output)
+    (with-input-from-string (in-fh pass)
+      (setf output
+            (with-output-to-string (out-fh)
+              (setf proc
+                    (sb-ext:run-program "kinit" '("admin")
+                                        :input in-fh
+                                        :output out-fh
+                                        :error out-fh
+                                        :search t
+                                        :wait t)))))
+    (unless (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))
+      (error "kinit failed: ~A" output))
+
+    (let (proc
+          output)
+      (setf output
+            (with-output-to-string (out-fh)
+              (setf proc
+                    (sb-ext:run-program "aklog" '("-d")
+                                        :output out-fh
+                                        :error out-fh
+                                        :search t
+                                        :wait t))))
+      (unless (zerop (slot-value proc 'SB-IMPL::%EXIT-CODE))
+        (error "aklog failed: ~A" output)))
+    (message "^2kinit && aklog -d succeeded")))
 
 (defun adb-select-device () ()
   (let* ((device-line
