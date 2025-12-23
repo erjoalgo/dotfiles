@@ -47,15 +47,26 @@ elif test "${MODE}" = xdotool; then
 fi
 
 function validate-args {
+    if test -z "${SEED_FILE:-}"; then
+        echo "no seed file defined" && exit ${LINENO}
+    fi
+
     if test -z "${PASS_ID:-}"; then
         URL=$(current-url)
         PASS_ID=$(url-to-pass-id "${URL}")
         echo "${PASS_ID}" >&2
     fi
-    test -n "${PASS_ID:-}"
-    test -e "${SEED_FILE:-}"
+    if test -z "${PASS_ID:-}"; then
+        echo "missing pass id" && exit ${LINENO}
+    fi
+    if ! test -e "${SEED_FILE:-}"; then
+        echo "seed file doesn't exist" && exit ${LINENO}
+    fi
+
     EXT="${SEED_FILE##*.}"
-    grep -i gpg <<< "${EXT}"
+    if ! grep -i gpg <<< "${EXT}"; then
+        echo "seed file missing gpg extension" && exit ${LINENO}
+    fi
 }
 
 
