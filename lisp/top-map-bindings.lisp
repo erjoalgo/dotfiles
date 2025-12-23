@@ -573,8 +573,8 @@
                                     "TCL"
                                     "LG")
                        for (key button-fmt) in
-                       `(("Up" "~A_PICTURE_MODE_UP")
-                         ("Down" "~A_PICTURE_MODE_DOWN")
+                       `(("S-Up" "~A_PICTURE_MODE_UP")
+                         ("S-Down" "~A_PICTURE_MODE_DOWN")
                          ("p" "~A_POWER"))
                        collect (list key
                                      (format nil "press-ir-button ~{~A~^,~}"
