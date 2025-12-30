@@ -63,7 +63,8 @@
   "set the default sink"
   (let ((sink (audio-select-sink)))
     (setf *audio-default-sink* sink)
-    (run-command-async-notify "pactl" (list "set-default-sink" (audio-sink-index sink)))))
+    (run-command-async "pactl" (list "set-default-sink" (audio-sink-index sink))
+                       t)))
 
 (defun vol (action
             &key

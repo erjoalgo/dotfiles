@@ -292,7 +292,7 @@
          (mode-string (with-slots (width height active) mode
                         (format nil "~Dx~D"
                                 width height))))
-    (run-command-async-notify
+    (run-command-async
      "xrandr"
      (list "--output"
            (XRANDR-DISPLAY-ID display)

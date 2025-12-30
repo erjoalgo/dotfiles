@@ -177,55 +177,32 @@
         (message-wrapped "error: ~A ~A failed with ~A: ~A"
                          command args (zerop retcode) output))))
 
-;; TODO optional
-(defmacro run-command-async (command
-                             &optional
-                               args
-                               retcode-output-vars
-                               on-success on-error)
-  (destructuring-bind (retcode-sym output-sym) (or retcode-output-vars '(nil nil))
-    (setf retcode-sym (or retcode-sym (gensym "retcode-"))
-          output-sym (or output-sym (gensym "output-")))
-    `(eval-async
-       (multiple-value-bind (,retcode-sym ,output-sym)
-           (run-command-retcode-output ,command ,args)
-         (if (zerop ,retcode-sym)
-             ,(or on-success
-                  `(message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
-                                    ;; TODO eval command only once
-                                    ,command ,args))
-             ,(or on-error
-                  `(message-wrapped
-                    "^1non-zero exit: ~A of '~A ~{~A~^ ~}': ~A^*"
-                    ,retcode-sym
-                    ,command ,args
-                    ,output-sym)))))))
-
-(defun run-command-async-notify (command
-                                 &optional args
-                                   on-success-callback
-                                   on-error-callback)
-  (run-command-async
-   command
-   (mapcar 'princ-to-string args)
-   (ret out)
-   (progn
-     (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
-                      command args)
-     (when on-success-callback (funcall on-success-callback)))
-   (progn
-     (message-wrapped
-      "^1non-zero exit: ~A of '~A ~{~A~^ ~}':~%~%~A^*"
-      ret command args out)
-     (when on-error-callback (funcall on-error-callback)))))
+(defun run-command-async (command &optional args on-success on-error)
+  (lparallel:future
+    (multiple-value-bind (retcode output)
+        (run-command-retcode-output command
+                                    ;; coerce all args to string
+                                    (mapcar 'princ-to-string args))
+      (if (zerop retcode)
+          (if on-success
+              (unless (eq on-success t)
+                (funcall on-success retcode output))
+              (progn
+                (format t "DDEBUG TRACE: util.lisp 0orj~%")
+                (message-wrapped "^2success of '~A ~{~A~^ ~}'^*"
+                                 command args)))
+          (if on-error
+              (unless (eq on-error t)
+                (format t "DDEBUG TRACE: util.lisp ehht~%")
+                (funcall on-error retcode output))
+              (message-wrapped
+               "^1non-zero exit: ~A of '~A ~{~A~^ ~}': ~A^*"
+               retcode
+               command args
+               output))))))
 
 (defun run-command-async-notify-on-error (command &optional args)
-  (run-command-async
-   command
-   (mapcar 'princ-to-string args)
-   (ret out)
-   t
-   nil))
+  (run-command-async command args t nil))
 
 (defun wrap-text (text &optional max-chars-per-line)
   (loop for text in (ppcre:split #\Newline text)

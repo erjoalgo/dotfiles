@@ -232,10 +232,10 @@ perform ocr on it, place ocr'd text into clipboard"
     (message "starting byzanz recording in 1s...")
     (sleep 1)
     (unmap-all-message-windows)
-    (run-command-async-notify
+    (run-command-async
      "byzanz-record"
      `(,@duration-args ,@box-args ,recording-pathname)
-     (lambda () (x-www-browser (pathname-to-url recording-pathname) t)))))
+     (eval `(lambda () (x-www-browser (pathname-to-url ,recording-pathname) t))))))
 
 (defcommand byzanz-record-auto () ()
   (handler-case (byzanz-record-auto-stop)

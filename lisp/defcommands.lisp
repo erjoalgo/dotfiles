@@ -109,7 +109,7 @@
   "connect to the internet via the wifi-connect program"
   (echo "connecting to the internet...")
   ;; never prompt
-  (run-command-async-notify "wifi-connect" '("connect" "-Pnever")))
+  (run-command-async "wifi-connect" '("connect" "-Pnever")))
 
 (defcommand connect-to-internet-maybe () ()
   "connect to the internet via the wifi-connect program"
@@ -142,13 +142,13 @@
 
 (defcommand emacs-killusr2 () ()
   "invoke this command to debug an emacs hang/freeze"
-  (run-command-async-notify
+  (run-command-async
    "pkill"
    (list "-SIGUSR2" "emacs")))
 
 (defcommand emacs-killusr2-tmux () ()
   "send the keybinding for tmux to invoke the emacs kill command"
-  (run-command-async-notify
+  (run-command-async
    "xdotool" (list
               "keyup" "Hyper_R"
               "keyup" "Shift_R"
@@ -211,7 +211,7 @@
     ((:number "duration in hours: "))
   "Temporarily do nothing if laptop lid is closed."
   (let ((timespec (format nil "now + ~D hours" hours)))
-    (run-command-async-notify
+    (run-command-async
      "ignore-lid-close-temporarily.sh"
      (list timespec))))
 
@@ -346,9 +346,13 @@
   (let* ((password-id (or password-id (ledger-read-password-id)))
          (on-error-callback
            (unless no-retry
-             `(lambda () (type-sh ,password-id :no-retry t)))))
+             (eval
+              `(lambda (retcode output)
+                 (declare (ignore retcode output))
+                 (kinit)
+                 (type-sh :password-id ,password-id :no-retry t))))))
     (assert password-id)
-    (run-command-async-notify
+    (run-command-async
      "type.sh"
      (list password-id)
      nil
@@ -450,7 +454,7 @@
 
 (defcommand press-ir-button (button-name) ((:string))
   (message "pressing button: ~A" button-name)
-  (run-command-async-notify-on-error
+  (run-command-async
    "ir-remote.py"
    (list "-b" button-name)))
 
