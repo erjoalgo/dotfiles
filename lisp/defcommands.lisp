@@ -445,7 +445,7 @@
            :prompt "select n64 rom to play: "
            :display-candidates t
            :stringify-fn #'pathname-name
-           ;; :initial-candidate-index initial-candidate
+           :initial-candidate-index initial-candidate
            :on-empty-error (format nil "no n64 roms found ")))
     (when (or (probe-file last-rom-symlink)
               (SYMLINKP last-rom-symlink))
