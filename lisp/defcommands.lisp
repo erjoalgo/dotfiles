@@ -483,7 +483,7 @@
   (run-shell-command (format nil "pkill ~A" pattern) t))
 
 (defcommand chrome-restart () ()
-  (start-porcess-with-logging "chrome-restart.sh"))
+  (start-porcess-with-logging "chrome-restart.sh" nil))
 
 (defcommand garage-door-toggle () ()
   (let* ((hostname "garage-door.arpa"))
