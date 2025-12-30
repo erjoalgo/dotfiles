@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-PORT=5000
 . ${HOME}/afs/home/${USER}/.profile || true
 
 MODE=automation
@@ -26,6 +25,9 @@ while getopts "p:s:d:xcah" OPT; do
     a)
         MODE=automation
         ;;
+    p)
+        PORT=${OPTARG}
+        ;;
     h)
         less "$0"
         exit 0
@@ -36,6 +38,37 @@ while getopts "p:s:d:xcah" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+function test-port () {
+    PROTOCOL=${PROTOCOL:-tcp};
+    if test $# = 1; then
+        HOST=127.0.0.1;
+    else
+        HOST="${1}" && shift;
+    fi;
+    PORT=${1} && shift;
+    if test ${PROTOCOL} = udp; then
+        nc -vz -u ${HOST} ${PORT};
+    else
+        exec 6<> /dev/${PROTOCOL}/${HOST}/${PORT};
+    fi
+}
+
+function get-random-valid-port {
+    while true; do
+        PORT=$(shuf -i 2000-65000 -n 1)
+        if ! exec 6<> /dev/tcp/localhost/${PORT} > /dev/null 2>&1; then
+            # found unsued port
+            echo "${PORT}"
+            break;
+        fi
+    done
+}
+
+if test -z "${PORT:-}"; then
+    PORT=$(get-random-valid-port)
+fi
+
 
 PASS_ID=${1:-} && shift || true
 
@@ -99,7 +132,7 @@ function press {
             sleep "${DELAY_SECS}"
         elif test "${MODE:-}" = curl; then
             curl -d '{"action":"press-and-release"}'  \
-                 "http://127.0.0.1:5000/button/${BUTTON}"
+                 "http://127.0.0.1:${PORT}/button/${BUTTON}"
         elif test "${MODE:-}" = automation; then
             FIRST=true
             for PRESS in true false; do
@@ -327,21 +360,6 @@ function build-app-passwords {
     test -e "${APP_ELF}"
 }
 
-function test-port () {
-    PROTOCOL=${PROTOCOL:-tcp};
-    if test $# = 1; then
-        HOST=127.0.0.1;
-    else
-        HOST="${1}" && shift;
-    fi;
-    PORT=${1} && shift;
-    if test ${PROTOCOL} = udp; then
-        nc -vz -u ${HOST} ${PORT};
-    else
-        exec 6<> /dev/${PROTOCOL}/${HOST}/${PORT};
-    fi
-}
-
 function log-pass-id {
     PASS_FILE="${SEED_FILE}.passwords"
     section "logging pass id ${PASS_ID} into ${PASS_FILE}"
@@ -371,7 +389,8 @@ function ledger-menu {
             test -e "${APP_ELF}"
             set +x
             env SMLL="$(gpg --decrypt --no-symkey-cache --batch ${SEED_FILE})" \
-                speculos "${APP_ELF}" "${SPECULOS_DISPLAY_OPT[@]}" ${*} &
+                speculos "${APP_ELF}" "${SPECULOS_DISPLAY_OPT[@]}" \
+                "--api-port=${PORT}" ${*} &
             set -x
             while ! test-port localhost ${PORT}; do
                 sleep 1
@@ -412,7 +431,7 @@ function ledger-menu {
             ;;
 
         browse)
-            x-www-browser http://localhost:5000 &
+            x-www-browser http://localhost:${PORT} &
             ;;
 
         *)
@@ -424,7 +443,7 @@ function ledger-menu {
 
 
 function last-event-text {
-    curl -s "http://127.0.0.1:5000/events" |  \
+    curl -s "http://127.0.0.1:${PORT}/events" |  \
         jq --raw-output ".events | map(.text) | .[]"  |  \
         tail -2 |  \
         tr -d '\n'
