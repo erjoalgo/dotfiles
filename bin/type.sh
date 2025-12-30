@@ -505,6 +505,9 @@ function main {
     fi
     echo "${PASS_ID}"
     echo "${PASS}"
+
+    pkill speculos &
+    disown
 }
 
 
