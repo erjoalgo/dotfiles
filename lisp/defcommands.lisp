@@ -324,6 +324,8 @@
 (defun password-id-from-url (url)
   (let* ((host (multiple-value-bind (scheme user host)
                    (quri:parse-uri url)
+                 (declare (ignore scheme))
+                 (declare (ignore user))
                  host))
          (components (ppcre:split "[.]" host))
          (password-id (second (reverse components))))
