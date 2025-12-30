@@ -364,7 +364,7 @@
 (defun start-porcess-with-logging
     (command args
      &key (log-directory *log-directory*))
-  (let* ((log-directory #P"/tmp/stumpwm-subprocess/")
+  (let* (
          (_ (ensure-directory-exists log-directory))
          (timestamp (get-universal-time))
          (log-file (merge-pathnames log-directory
