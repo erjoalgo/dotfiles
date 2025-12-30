@@ -364,8 +364,8 @@
 (defun start-porcess-with-logging
     (command args
      &key (log-directory *log-directory*))
+  (ensure-directory-exists log-directory)
   (let* ((timestamp (get-universal-time))
-         (_ (ensure-directory-exists log-directory))
          (log-file (merge-pathnames log-directory
                                     (make-pathname
                                      :name (format nil "~A-~A"
