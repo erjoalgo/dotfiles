@@ -45,14 +45,14 @@
 
 (defparameter char-sample-word
   (loop
-     with alist = nil
-     for word in spell-words
-     as c = (aref word 0)
-     as key = (CHAR-DOWNCASE c)
-     as val = (assoc key alist)
-     unless (or val (not (ALPHA-CHAR-P c)))
-     do (push (cons key word) alist)
-     finally (return alist)))
+    with alist = nil
+    for word in spell-words
+    as c = (aref word 0)
+    as key = (CHAR-DOWNCASE c)
+    as val = (assoc key alist)
+    unless (or val (not (ALPHA-CHAR-P c)))
+      do (push (cons key word) alist)
+    finally (return alist)))
 
 (defun spell-char-line (c)
   (cond
@@ -60,14 +60,14 @@
      (let* ((c-lower (char-downcase c))
             (word (cdr (assoc c-lower char-sample-word)))
             (is-capital (not (eq c-lower c))))
-           (format nil "~A ~A as in ~A"
-                   (if is-capital "capital" "")
-                   (cond ((eq c-lower #\a) "'A'")
-                         (t (format nil "'~C'" (char-upcase c))))
-                   (or word
-                       (progn
-                         (warn "missing sample word for char ~C" c-lower)
-                         (format nil "~C" c-lower))))))
+       (format nil "~A ~A as in ~A"
+               (if is-capital "capital" "")
+               (cond ((eq c-lower #\a) "'A'")
+                     (t (format nil "'~C'" (char-upcase c))))
+               (or word
+                   (progn
+                     (warn "missing sample word for char ~C" c-lower)
+                     (format nil "~C" c-lower))))))
     ((DIGIT-CHAR-P c)
      (format nil "~C" c))
     ((eq c #\Space) "Space")
@@ -75,7 +75,7 @@
 
 (defun spell-word (word)
   (let* ((spelling-lines
-          (loop for c across word collect (spell-char-line c))))
+           (loop for c across word collect (spell-char-line c))))
     (sleep 1)
     (speak-string (format nil "~{~A~^, ~}" spelling-lines) :word-gap-ms 30)
     spelling-lines))

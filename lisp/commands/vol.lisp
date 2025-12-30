@@ -39,8 +39,8 @@
 ]+)" output)
       (push (make-audio-sink :index index :description description
                              :muted (cond ((equal muted "yes") t)
-                                         ((equal muted "no") nil)
-                                         (t (error "unknown mute value: ~A" muted)))
+                                          ((equal muted "no") nil)
+                                          (t (error "unknown mute value: ~A" muted)))
                              :ports ports) sinks))
     sinks))
 
@@ -131,14 +131,14 @@
     (t (error "unknown backend ~A" backend))))
 
 (defcommand vol-up ()() "volume up"
-            (vol :up)
-            (message-wrapped "volup"))
+  (vol :up)
+  (message-wrapped "volup"))
 
 (defcommand vol-down ()() "volume down"
-            (vol :down)
-            (message-wrapped "voldown"))
+  (vol :down)
+  (message-wrapped "voldown"))
 
 (defcommand vol-mute-toggle ()() "volume mute"
-            (let ((muted (vol :mute-toggle)))
-              (message-wrapped "vol ~Amute"
-                       (if muted "" "un"))))
+  (let ((muted (vol :mute-toggle)))
+    (message-wrapped "vol ~Amute"
+                     (if muted "" "un"))))
