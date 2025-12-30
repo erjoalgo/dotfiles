@@ -171,7 +171,6 @@ function exec-automation {
 }
 EOF
 )
-    ledger-menu kill
     ledger-menu start "${SEED_FILE}" --automation file:<(echo "${ACTION_DATA}")
 }
 
