@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+function _parse_args {
 COMMAND=docker-${1} && shift
 INTERACTION="-it"
 while getopts "r:n:ih" OPT; do
@@ -22,6 +23,7 @@ while getopts "r:n:ih" OPT; do
     esac
 done
 shift $((OPTIND -1))
+}
 
 function __docker-container-lines {
     docker compose ps | sed '1d'
@@ -165,7 +167,14 @@ function docker-logs {
 }
 
 function main {
+    if test $# = 0; then
+        for SUBCOMMAND in $(declare -F | grep -Po '(?<=docker-).*'); do
+            echo $(basename $0) ${SUBCOMMAND}
+        done
+    else
+        _parse_args ${*}
     ${COMMAND} ${*}
+    fi
 }
 
 main ${*}
