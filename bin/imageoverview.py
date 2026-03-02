@@ -7,8 +7,6 @@ Display all images recursively contained in a directory on a web browser.
 
 from __future__ import absolute_import
 
-from six.moves.urllib import parse
-
 import argparse
 import base64
 import http.server
