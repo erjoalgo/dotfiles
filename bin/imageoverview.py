@@ -22,10 +22,12 @@ import threading
 import traceback
 import urllib.parse
 
-import watchdog.events
-import watchdog.observers
-
-# import queue
+try:
+    import watchdog.events
+    import watchdog.observers
+except Exception as ex:
+    logging.warning("failed to import watchdog: %s", ex)
+    watchdog = None
 
 try:
     from .version import __version__
@@ -322,13 +324,17 @@ class ImageOverview(object):
             if os.path.isfile(to_add):
                 crawler.maybe_add_image(to_add)
 
-        self.observer = FsObserver(directory, on_change)
+        if watchdog:
+            self.observer = FsObserver(directory, on_change)
+        else:
+            self.observer = None
 
         self.crawl_thread = None
         self.http_thread = None
 
     def start_observer(self):
-        self.observer.start()
+        if self.observer:
+            self.observer.start()
 
     def start_crawl(self):
         # TODO maybe stop existing
