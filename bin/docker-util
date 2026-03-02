@@ -154,7 +154,11 @@ function docker-psql {
     PG_USER="${PG_USER:-${NAME}}"
 
     INTERACTION="-i"
+    if test -e "${SQLFILE}"; then
     docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
+    else
+        docker-bash psql "-U${PG_USER}" "${PG_DB}"
+    fi
 }
 
 function docker-logs {
