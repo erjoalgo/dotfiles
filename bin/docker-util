@@ -3,26 +3,26 @@
 set -euo pipefail
 
 function _parse_args {
-COMMAND=docker-${1} && shift
-INTERACTION="-it"
-while getopts "r:n:ih" OPT; do
-    case ${OPT} in
-        r)
-            REGEXP=${OPTARG}
-            ;;
-        n)
-            CONTAINER_NAME=${OPTARG}
-            ;;
-        i)
-            INTERACTION="-i"
-            ;;
-        h)
-            less $0
-            exit 0
-            ;;
-    esac
-done
-shift $((OPTIND -1))
+    COMMAND=docker-${1} && shift
+    INTERACTION="-it"
+    while getopts "r:n:ih" OPT; do
+        case ${OPT} in
+            r)
+                REGEXP=${OPTARG}
+                ;;
+            n)
+                CONTAINER_NAME=${OPTARG}
+                ;;
+            i)
+                INTERACTION="-i"
+                ;;
+            h)
+                less $0
+                exit 0
+                ;;
+        esac
+    done
+    shift $((OPTIND -1))
 }
 
 function __docker-container-lines {
@@ -155,7 +155,7 @@ function docker-psql {
 
     INTERACTION="-i"
     if test -e "${SQLFILE}"; then
-    docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
+        docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
     else
         docker-bash psql "-U${PG_USER}" "${PG_DB}"
     fi
@@ -177,7 +177,7 @@ function main {
         done
     else
         _parse_args ${*}
-    ${COMMAND} ${*}
+        ${COMMAND} ${*}
     fi
 }
 
