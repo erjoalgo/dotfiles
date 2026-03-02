@@ -177,6 +177,24 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             # ignore errors from typical browser clients
             pass
 
+    @staticmethod
+    def media_tag_html(href, width, height):
+        if re.match("(?i).*(mpe?g|mp4)", href):
+            return f"""
+<video controls width="{width}" height="{height}">
+    <!-- Include the MPG as a fallback (compatibility may vary) -->
+    <source src="{href}" type="video/mpeg">
+
+    <!-- Fallback text for browsers that don't support the video tag -->
+    Your browser does not support the video tag.
+    Here is a <a href="{href}">link to the video</a> instead.
+</video>
+            """
+        else:
+            return f"""
+            <img src="{href}" width="{width}" height="{height}">
+            """
+
     def serve_page(self, page_number):
         rows, cols = self.dimensions
         images_per_page = rows * cols
@@ -190,10 +208,11 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
                 table += "<tr>"
             filename_href = f"{self.FILE_PREFIX}{filename}"
             checkbox_id = base64.b64encode(filename.encode()).decode()
+            media_tag = self.media_tag_html(filename_href, self.image_size, self.image_size)
             table += (
                 f"""<td>
                 <a href="{filename_href}">
-                <img src="{filename_href}" width="{self.image_size}" height="{self.image_size}">
+                {media_tag}
                 </a>
                 <input type="checkbox" id="{checkbox_id}">
                 </td>\n"""
@@ -380,7 +399,7 @@ def main():
     parser.add_argument("-s", "--image_size", help="html image size", default=40)
     parser.add_argument("-x", "--image_regexp",
                         help="regexp used to filter image files",
-                        default="(?i)[.](jpe?g|png|mp4)$")
+                        default="(?i)[.](jpe?g|png|mp4|mpe?g)$")
     parser.add_argument("-X", "--skip_image_regexp",
                         help="negative regexp used to filter out image files")
     parser.add_argument("-r", "--reverse",
