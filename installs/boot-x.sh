@@ -21,7 +21,7 @@ sudo apt-get install -y qimgv scrot
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
   macchanger expect iw net-tools
-sudo apt-get install -y libxcomposite-dev
+sudo apt-get install -y libxcomposite-dev libzstd-dev
 
 ./install-xsecurelock.sh
 
@@ -104,6 +104,7 @@ done
 sudo apt-get install -y python3-pip
 
 # for the logitech wireless keyboard
+sudo apt-get install -y libgirepository-2.0-dev
 python3 -m pip install solaar
 
 ./pyudevs.sh
