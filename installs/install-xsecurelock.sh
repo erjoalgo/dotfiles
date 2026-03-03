@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-sudo apt-get install -y libxmu-dev libpam-dev xautolock libtool pkg-config
+sudo apt-get install -y libxmu-dev libpam-dev libtool pkg-config
 
 if command -v xsecurelock; then
     exit 0
