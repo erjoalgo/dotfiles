@@ -6,7 +6,3 @@ export XCURSOR_PATH=/usr/share/icons/
 xrdb -merge ~/.Xresources
 
 exec $(which stumpwm)
-
-# 0e37c6bc-90c4-4613-9956-8112f4f5da45-xrdb-xresources
-xrdb -merge /home/ealfonso/.Xresources
-# 0e37c6bc-90c4-4613-9956-8112f4f5da45-xrdb-xresources

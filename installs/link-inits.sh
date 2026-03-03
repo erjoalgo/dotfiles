@@ -34,7 +34,7 @@ for LINK in \
     .my-bashrc \
     .my-bash-profile \
     .xmodmap \
-    .xinitrc \
+    .xinitrc.profile \
     .my-profile \
     .my-startups.sh \
     .my-bash-completions \
