@@ -433,6 +433,11 @@ if ! pip install .; then
 fi
 popd
 
+sagiy openntpd
+
+sudo timeout 30s ntpd -s -d
+
+
 sagiy figlet
 
 figlet $(hostname) | sudo tee /etc/motd
