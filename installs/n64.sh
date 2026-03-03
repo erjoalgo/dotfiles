@@ -3,6 +3,10 @@
 set -euo pipefail
 
 
+if ! command -v mupen64plus; then
+    sudo apt-get install -y mupen64plus-ui-console;
+fi
+
 INI=/usr/share/games/mupen64plus/InputAutoCfg.ini
 ORIG="${INI}.orig"
 if ! test -e "${ORIG}"; then
