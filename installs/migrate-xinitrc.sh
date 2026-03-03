@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-XINITRC=${HOME}/.xinirc
+XINITRC=${HOME}/.xinitrc
 XINITRC_PROFILE=${HOME}/git/dotfiles/inits/.xinitrc.profile
 
 if test -L "${XINITRC}"; then
