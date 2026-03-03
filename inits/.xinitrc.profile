@@ -6,3 +6,7 @@ export XCURSOR_PATH=/usr/share/icons/
 xrdb -merge ~/.Xresources
 
 exec $(which stumpwm)
+
+# Local Variables:
+# mode: sh
+# End:
