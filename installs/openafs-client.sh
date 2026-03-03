@@ -93,7 +93,7 @@ sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure openafs-client
 CELLSERVDB=/etc/openafs/CellServDB
 
 if ! grep -F ">{THIS_CELL}" "${CELLSERVDB}" || true; then
-    IP_ADDR=$(dig +short ${THIS_CELL})
+    IP_ADDR=$(getent hosts "${THIS_CELL}" | cut -f1 -d' ')
     sudo tee -a "${CELLSERVDB}" <<EOF
 >${THIS_CELL}
 ${IP_ADDR} #${THIS_CELL}
