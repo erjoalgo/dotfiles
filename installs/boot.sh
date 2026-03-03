@@ -380,14 +380,6 @@ EOF
 
 sudo ${APT_GET} install -y resolvconf net-tools dnsutils
 
-if false && ! command -v glinux-updater; then
-  sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
-    /etc/resolvconf/resolv.conf.d/head <<EOF
-nameserver 77.88.8.8
-nameserver 77.88.8.1
-EOF
-fi
-
 X_WWW_BROWSER=$(which x-www-browsers) || X_WWW_BROWSER="/usr/bin/x-www-browser"
 
 if which "${X_BROWSER}" && which update-alternatives; then
@@ -444,5 +436,15 @@ popd
 sagiy figlet
 
 figlet $(hostname) | sudo tee /etc/motd
+
+if false && ! command -v glinux-updater; then
+  sudo insert-text-block '# ACcJNLRzsCtNjcCpo74lotyQAEgD122R-dns-server'  \
+    /etc/resolvconf/resolv.conf.d/head <<EOF
+nameserver 77.88.8.8
+nameserver 77.88.8.1
+EOF
+fi
+
+ping -c3 google.com || true
 
 echo "success"
