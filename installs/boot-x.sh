@@ -115,8 +115,9 @@ sbcl --eval '(ql:quickload :erjoalgo-stumpwmrc)' --quit
 
 sudo apt-get install -y redshift xcalib xbacklight xinput
 
-sudo apt-get install -y linphone linphone-cli redshift
+# sudo apt-get install -y linphone linphone-cli
 
+sudo apt-get install -y redshift
 
 if ! which google-chrome chromium chrome; then
   sudo apt-get install -y chromium || sudo snap install chromium;
