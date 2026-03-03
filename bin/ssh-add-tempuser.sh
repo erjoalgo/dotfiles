@@ -48,10 +48,8 @@ schedule-clean-up
 
 TOMORROW=$(date '+%Y-%m-%d' -d '+1days')
 sudo useradd "${USERNAME}" --expiredate "${TOMORROW}"
-sudo chpasswd <<EOF
-${USERNAME}:${PASS}
-EOF
 
+sudo usermod -p "$(echo "${PASS}" | openssl passwd -stdin -6)" "${USERNAME}"
 
 sudo insert-text-block "${LINE_ID}" "${SSHD_CONFIG}" <<EOF
 Match User "${USERNAME}"
