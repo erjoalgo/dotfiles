@@ -117,14 +117,6 @@ sudo apt-get install -y redshift xcalib xbacklight xinput
 
 sudo apt-get install -y linphone linphone-cli redshift
 
-clone-git-repo https://github.com/erjoalgo/ledger-passwords-cli
-
-insert-text-block '# 0d475bf3-8e6c-4ce3-a676-c07485f4fc5c-add-ledger-passwords-cli-path'  \
-                  ${HOME}/.profile-env<<EOF
-export PATH+=:${HOME}/git/ledger-passwords-cli/
-EOF
-
-${HOME}/git/ledger-passwords-cli/install.sh || true
 
 if ! which google-chrome chromium chrome; then
   sudo apt-get install -y chromium || sudo snap install chromium;
