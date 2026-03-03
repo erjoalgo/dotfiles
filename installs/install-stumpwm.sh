@@ -86,6 +86,11 @@ Name=stumpwm-lightdm
 Type=Application
 EOF
 
+insert-text-block '# 5feebe85-d76b-4127-a941-775cb4278ec6-xinit-exec-stumpwm'  \
+                  "${HOME}/.xinitrc"<<EOF
+exec $(which stumpwm)
+EOF
+
 if test -e ~/.dmrc; then
     sed -i 's/^Session=.*/Session=stumpwm/' ~/.dmrc
 fi
