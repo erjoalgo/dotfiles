@@ -15,7 +15,7 @@ sudo apt list '?obsolete'
 sudo apt purge '?obsolete'
 
 sudo apt list '?config-files'
-sudo apt purge '?config-files'
+# sudo apt purge '?config-files'
 
 sudo apt autoremove -y
 sudo apt clean
