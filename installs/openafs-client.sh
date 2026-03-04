@@ -119,6 +119,6 @@ if ! grep -F "${REALM_INDICATOR_LINE}" "${KRB5_CONF}" || true; then
     grep -F "${REALM_INDICATOR_LINE}" "${KRB5_CONF}"
 fi
 
-ln -fs "/afs/${THIS_CELL}/" ${HOME}/afs
+ln -fsn "/afs/${THIS_CELL}/" ${HOME}/afs
 
 ping -c3 "${THIS_CELL}"
