@@ -13,3 +13,8 @@ exec mupen64plus /afs/asus.erjoalgo.com/public/n64/roms/current-rom.z64
 EOF
 
 ./autologin-on-tty.sh
+
+if systemctl list-units --full -all | grep lightdm.service; then
+    sudo systemctl disable lightdm.service
+    sudo systemctl stop lightdm.service
+fi
