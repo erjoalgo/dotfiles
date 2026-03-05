@@ -729,7 +729,7 @@ function nmdown {
     nmcli c down "${CONN}"
 }
 
-function git-rebase-fxps {
+function git-rebase-interactive {
     N=${1:-} && shift
     if test -z "${N}"; then
         REGEXP="Your branch is ahead of .*by [0-9]+ commits|different commits each, respectively"
