@@ -16,19 +16,19 @@ done
 shift $((OPTIND -1))
 
 command -v at
-MINS=${MINS:-2}
+MINS=${MINS:-5}
 test "${MINS}" -le 60
 
 function genpasswd {
-    LEN=${1:-16}
-    tr -dc A-Za-z0-9_ < /dev/urandom  \
+    LEN=${1:-8}
+    tr -dc a-z0-9 < /dev/urandom  \
         | head -c ${LEN} \
         | tr -d ' '  \
         || true # prevent SIGPIPE from causing 141 exit code
 }
 
 USERNAME=$(genpasswd 8)
-PASS=$(genpasswd 12)
+PASS=$(genpasswd 8)
 
 LINE_ID="# 56921664-b73c-4409-8219-e63c61b8f589-allow-tempuser-${USERNAME}"
 SSHD_CONFIG=/etc/ssh/sshd_config
