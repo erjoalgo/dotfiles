@@ -397,7 +397,7 @@ EOF
 
 sagiy network-manager ufw
 
-sudo ufw enable
+sudo ufw enable --force
 sudo ufw allow 22/tcp
 
 sudo insert-text-block \
