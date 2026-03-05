@@ -26,13 +26,16 @@ while getopts "c:i:g:h" OPT; do
 done
 shift $((OPTIND -1))
 
-AFS_CACHE_GB=${AFS_CACHE_GB:-20}
-
 if ! command -v bc; then
     sudo apt-get install -y bc
 fi
 
-AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
+if test -n "${AFS_CACHE_GB:-}"; then
+    AFS_CACHE_KB=$(bc <<< "scale=2; ${AFS_CACHE_GB} * 1024 ^ 2")
+else
+    PART_SIZE=$(lsblk -bo MOUNTPOINTS,SIZE | tr -s ' ' | grep -oP '(?<=^/ )[0-9]+')
+    AFS_CACHE_KB=$((${PART_SIZE} / 1000 / 100 * 5))
+fi
 
 sudo apt-get install -y linux-headers-$(uname -r)
 
