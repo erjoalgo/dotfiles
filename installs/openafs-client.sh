@@ -49,7 +49,7 @@ ${THIS_CELL_IP}	${THIS_CELL}
 EOF
 fi
 
-sudo debconf-set-selections <<EOF
+SELECTIONS=$(cat <<EOF
 # Size of AFS cache in kB:
 openafs-client  openafs-client/cachesize        string  ${AFS_CACHE_KB}
 # AFS cell this workstation belongs to:
@@ -84,6 +84,12 @@ krb5-config     krb5-config/default_realm       string  ${THIS_CELL^^}
 # For internal use only
 krb5-config     krb5-config/read_conf   boolean true
 EOF
+)
+
+echo "writing the following selections: "
+echo "${SELECTIONS}"
+
+sudo debconf-set-selections <<< "${SELECTIONS}"
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y openafs-{modules-dkms,client,krb5}  \
      krb5-{config,user} libpam-krb5
