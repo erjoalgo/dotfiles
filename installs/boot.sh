@@ -435,8 +435,7 @@ popd
 
 sagiy openntpd
 
-sudo timeout 30s ntpd -s -d
-
+sudo timeout 30s ntpd -s -d || true
 
 sagiy figlet
 
