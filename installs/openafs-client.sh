@@ -39,7 +39,7 @@ sudo apt-get install -y linux-headers-$(uname -r)
 test -n "${THIS_CELL:-}"
 
 if test -n "${THIS_CELL_IP:-}"; then
-    insert-text-block \
+    sudo insert-text-block \
         '# 126de658-b186-4abe-a579-60f78f0365dc-openafs-host-ip'  \
         /etc/hosts<<EOF
 ${THIS_CELL_IP}	${THIS_CELL}
