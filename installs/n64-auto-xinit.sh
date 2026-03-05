@@ -4,6 +4,8 @@ set -euo pipefail
 
 cd $(dirname "${BASH_SOURCE[0]}")
 
+touch ~/.xinitrc
+
 sed -i 's/^exec/ exec/g' ~/.xinitrc
 
 insert-text-block '# b1a3634c-5085-4ace-b25a-472248bd3d54-n64-xinitrc'  \
