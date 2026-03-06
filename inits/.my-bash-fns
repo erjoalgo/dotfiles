@@ -764,7 +764,7 @@ function apt-get-source {
     if ! command -v build-dep; then
         sudo apt-get install -y devscripts
     fi
-    dpkg-buildpackage -b
+    dpkg-buildpackage -b -uc -us
 }
 
 function debian-readme-less {
