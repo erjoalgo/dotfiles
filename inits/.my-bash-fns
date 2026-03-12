@@ -764,7 +764,8 @@ function apt-get-source {
     if ! command -v build-dep; then
         sudo apt-get install -y devscripts
     fi
-    dpkg-buildpackage -b -uc -us
+    export DEB_BUILD_OPTIONS="nostrip noopt debug"
+    DEB_BUILD_OPTIONS="nostrip noopt debug" debuild
 }
 
 function debian-readme-less {
