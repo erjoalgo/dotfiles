@@ -57,7 +57,7 @@ class FsObserver():
 
             def on_moved(self, event):
                 print(f'File moved: {event.src_path} => {event.dest_path}')
-                self.on_change("moved", event.src_path, event)
+                self.on_change("moved", event.dest_path, event)
 
         return Handler(on_change)
 
