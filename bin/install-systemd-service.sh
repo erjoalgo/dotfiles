@@ -2,13 +2,18 @@
 
 set -euo pipefail
 
-while getopts "huo" OPT; do
+SERVICE_NAME=${1} && shift || true
+
+while getopts "huod:" OPT; do
     case ${OPT} in
     u)
         USER_SERVICE=true
         ;;
     o)
         OVERRIDE=true
+        ;;
+    d)
+        SERVICE_DEF=${OPTARG}
         ;;
     h)
         less $0
@@ -18,7 +23,11 @@ while getopts "huo" OPT; do
 done
 shift $((OPTIND -1))
 
-SERVICE_NAME=${1} && shift
+if test -z "${SERVICE_DEF:-}"; then
+    SERVICE_DEF=$(cat /dev/stdin)
+fi
+
+test -n "${SERVICE_NAME:-}"
 
 # example service
 cat <<EOF > /dev/null
@@ -40,7 +49,7 @@ if test -n "${USER_SERVICE:-}"; then
     mkdir -p $(dirname "${CONF}")
     insert-text-block \
         "# 7119bd41-07d2-429a-ae51-cc16f0878169-${SERVICE_NAME}"  \
-        "${CONF}" < /dev/stdin
+        "${CONF}" <<< "${SERVICE_DEF}"
     systemctl --user enable ${SERVICE_NAME}.service
     systemctl --user daemon-reload
     systemctl --user start ${SERVICE_NAME}.service
@@ -51,7 +60,7 @@ else
         sudo mkdir -p $(dirname "${FILENAME}")
     fi
     sudo insert-text-block "# YBhmitLFbimkywNqu0jXW996vavpPrtP-${SERVICE_NAME}"  \
-          "${FILENAME}" < /dev/stdin
+          "${FILENAME}" <<< "${SERVICE_DEF}"
     sudo systemctl enable ${SERVICE_NAME}.service
     sudo systemctl daemon-reload
     sudo service ${SERVICE_NAME} start
