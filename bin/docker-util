@@ -2,28 +2,6 @@
 
 set -euo pipefail
 
-function _parse_args {
-    COMMAND=docker-${1} && shift
-    INTERACTION="-it"
-    while getopts "r:n:ih" OPT; do
-        case ${OPT} in
-            r)
-                REGEXP=${OPTARG}
-                ;;
-            n)
-                CONTAINER_NAME=${OPTARG}
-                ;;
-            i)
-                INTERACTION="-i"
-                ;;
-            h)
-                less $0
-                exit 0
-                ;;
-        esac
-    done
-    shift $((OPTIND -1))
-}
 
 function __docker-container-lines {
     docker compose ps | sed '1d'
@@ -176,7 +154,26 @@ function main {
             echo $(basename $0) ${SUBCOMMAND}
         done
     else
-        _parse_args ${*}
+        COMMAND=docker-${1} && eval shift
+        INTERACTION="-it"
+        while getopts "r:n:ih" OPT; do
+            case ${OPT} in
+                r)
+                    REGEXP=${OPTARG}
+                    ;;
+                n)
+                    CONTAINER_NAME=${OPTARG}
+                    ;;
+                i)
+                    INTERACTION="-i"
+                    ;;
+                h)
+                    less $0
+                    exit 0
+                    ;;
+            esac
+        done
+        eval shift $((OPTIND -1))
         ${COMMAND} ${*}
     fi
 }
