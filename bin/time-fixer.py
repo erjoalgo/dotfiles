@@ -90,6 +90,7 @@ class TimestampFixer(object):
                 "modified time stamp for %s file '%s' is %ss in the future. fixing...",
                 change_type, filename, abs(secs_ago))
             os.utime(filename, None)
+        os.utime(filename, None)
 
 def install(dirs):
     import subprocess
