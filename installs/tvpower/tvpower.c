@@ -10,7 +10,7 @@ MODULE_LICENSE("GPL");
 
 
 #define MOD_PREFIX "[TV Power] "
-#define TVPOWER_KEY_STRING "P"
+#define TVPOWER_KEY_STRING "x"
 #define TVPOWER_KEY (TVPOWER_KEY_STRING[0])
 #define TVPOWER_HELP "power on TVs(" TVPOWER_KEY_STRING ")"
 
