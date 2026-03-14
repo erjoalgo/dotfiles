@@ -34,7 +34,8 @@ sudo $(which install-systemd-service.sh) dmesg-listener <<EOF
 Description=dmesg listener
 
 [Service]
-ExecStart=su ealfonso -c $(pwd)/dmesg-listener.sh
+User=ealfonso
+ExecStart=$(pwd)/dmesg-listener.sh
 Restart=always
 RestartSec=60
 
