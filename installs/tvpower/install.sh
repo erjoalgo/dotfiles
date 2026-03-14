@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd "$(realpath $(dirname "${BASH_SOURCE[0]}"))"
+
 CONF=/etc/sysctl.d/99-sysrq.conf
 LINE=kernel.sysrq=1
 if ! grep -F "${LINE}" "${CONF}"; then
