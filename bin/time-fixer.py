@@ -121,7 +121,11 @@ def main():
     parser.add_argument("-d", "--dirs",
                         help="directory to observe",
                         nargs="+",
-                        default=[os.path.expanduser("~/Downloads")])
+                        default=map(os.path.expanduser,
+                                    ["~/Downloads",
+                                     "~/pictures/auto-scrots",
+                                     "~/git/3d/",
+                                     "~/uploads/"]))
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("-i", "--install", help="install", action="store_true")
     args = parser.parse_args()
