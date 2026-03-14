@@ -36,6 +36,8 @@ Description=Auto Reverse SSH
 
 [Service]
 ExecStart=/usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes" -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR \${REMOTE_SSH_PORT}:127.0.0.1:\${LOCAL_SSH_PORT} \${SSH_USER_HOST} -i /home/ealfonso/.ssh/id_rsa -p4410
+Restart=always
+RestartSec=60
 
 [Install]
 WantedBy=multi-user.target
