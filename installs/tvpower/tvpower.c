@@ -17,35 +17,6 @@ MODULE_LICENSE("GPL");
 static int is_sysrq_registered = 0;
 
 
-// static void press_power(void) {
-//     // char *argv[] = {
-//     //     "/home/ealfonso/git/dotfiles/bin/ir-remote.py",
-//     //     "-b",
-//     //     "LG_POWER,TCL_ENTER", NULL };
-
-//     // char *argv[] = {
-//     //     "/usr/bin/touch",
-//     //     "/tmp/caca",
-//     //     NULL
-//     // };
-
-
-//     char *argv[] = {
-//         "/usr/bin/curl",
-//         "http://localhost:2727/TCL_POWER",
-//         NULL
-//     };
-
-//     static char *envp[] = {
-//         "HOME=/home/ealfonso",
-//         "TERM=linux",
-//         "PATH=/sbin:/bin:/usr/sbin:/usr/bin",
-//         NULL
-//     };
-
-//     call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);
-// }
-
 static void sysrq_handle_power_on_tvs(int key)
 {
     // Don't use pr_emerg unless it's an emergency. In our case, drinking
@@ -53,35 +24,7 @@ static void sysrq_handle_power_on_tvs(int key)
     pr_emerg(MOD_PREFIX "The kernel suggests you drink some coffee\n");
     pr_emerg(MOD_PREFIX "P.S.: Don't drink tea, it's caca\n");
     pr_emerg(MOD_PREFIX "now running tv power...");
-    // press_power();
     pr_emerg(MOD_PREFIX "done running tv power...");
-    pr_emerg(MOD_PREFIX "done!");
-    // pr_flush();
-
-    // pid_t pid = fork();
-    // if (pid == -1) {
-    //     // Error handling for fork failure
-    //     perror("fork failed");
-    //     exit(EXIT_FAILURE);
-    // } else if (pid == 0) {
-    //     // Child process: replace with the new program
-    //     printk("Child process (PID %d) is running 'ls -l'.\n", getpid());
-    //     // Use execlp to search for the program in PATH and take arguments as a list
-    //     }
-    //     execlp(, (char *) NULL);
-    //     // If exec fails, the code below will run
-    //     perror("execlp failed");
-    //     exit(EXIT_FAILURE);
-    // } else {
-    //     // Parent process: wait for the child to finish
-    //     int status;
-    //     printk("Parent process (PID %d) spawned child (PID %d).\n", getpid(), pid);
-
-    //     // waitpid(pid, &status, 0); // Wait for the specific child
-    //     // if (WIFEXITED(status)) {
-    //     //     printf("Parent: Child process exited with status %d.\n", WEXITSTATUS(status));
-    //     // }
-    // }
 }
 
 
