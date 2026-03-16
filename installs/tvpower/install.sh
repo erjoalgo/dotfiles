@@ -44,3 +44,9 @@ WantedBy=multi-user.target
 EOF
 
 sudo tee -a /proc/sysrq-trigger <<< 'x'
+
+sudo cp tvpower.ko /lib/modules/$(uname -r)/kernel/drivers/
+
+sudo tee -a /etc/modules-load.d/tvpower.conf <<< tvpower
+
+sudo depmod -a
