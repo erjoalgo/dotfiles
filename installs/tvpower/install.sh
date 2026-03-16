@@ -43,4 +43,4 @@ RestartSec=60
 WantedBy=multi-user.target
 EOF
 
-sudo tee -a /proc/sysrq-trigger <<< 'P'
+sudo tee -a /proc/sysrq-trigger <<< 'x'
