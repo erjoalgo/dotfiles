@@ -19,6 +19,7 @@ else
             TelegramDesktop \
             qimgv \
             Gsmartcontrol \
+            firefox-esr \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
