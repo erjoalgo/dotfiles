@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import broadlink
 import http.server
 import logging
 import os
@@ -13,6 +12,11 @@ import sys
 import threading
 import time
 import traceback
+try:
+    import broadlink
+except Exception:
+    logging.warning(
+        "failed to import broadlink, falling back to HTTP client mode")
 
 BUTTONS = {
     "SAMSUNG_TV_POWER":
