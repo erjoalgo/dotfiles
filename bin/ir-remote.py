@@ -65,6 +65,8 @@ def press_button(device, name_spec, delay, directories):
     for directory in directories:
         try:
             value = load_button(name, directory)
+            logging.info("loaded button of length %s %s from directory %s",
+                         len(value), name, directory)
             break
         except Exception as ex:
             logging.error(
@@ -74,12 +76,15 @@ def press_button(device, name_spec, delay, directories):
     assert value, f"no such button: {name}"
     if isinstance(value, list):
         buttons = value
+        logging.info("button is of type list: %s", value)
         press_button(device, ",".join(buttons), delay, directories)
     elif isinstance(value, str):
         buttons = value
+        logging.info("button is of type list (from string): %s", value)
         press_button(device, buttons, delay, directories)
     elif isinstance(value, bytes):
         packet = value
+        logging.info("button is of type bytes")
         for _ in range(repeat):
             logging.info("pressing %s", name)
             device.auth()
