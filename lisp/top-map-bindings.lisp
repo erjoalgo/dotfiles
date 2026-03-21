@@ -525,8 +525,8 @@
       ("XF86AudioRaiseVolume" "VOLUP")
       ("XF86AudioMute" "MUTE")
 
-      ("S-Up" "PICTURE_MODE_UP")
-      ("S-Down" "PICTURE_MODE_DOWN"))
+      ("S-Up" "BRIGHTNESS_UP")
+      ("S-Down" "BRIGHTNESS_DOWN"))
     as command = (format nil "press-ir-button ~A_~A" brand-name action)
     collect `(list ,l ,command) into buttons
     finally
@@ -573,8 +573,8 @@
                                     "TCL"
                                     "LG")
                        for (key button-fmt) in
-                       `(("S-Up" "~A_PICTURE_MODE_UP")
-                         ("S-Down" "~A_PICTURE_MODE_DOWN")
+                       `(("S-Up" "~A_BRIGHTNESS_UP")
+                         ("S-Down" "~A_BRIGHTNESS_DOWN")
                          ("p" "~A_POWER"))
                        collect (list key
                                      (format nil "press-ir-button ~{~A~^,~}"
