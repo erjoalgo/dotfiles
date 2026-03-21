@@ -70,7 +70,7 @@ def press_button(device, name_spec, delay, directories):
             break
         except Exception as ex:
             logging.error(
-                f"failed to load button from directory {directory}: ", ex)
+                f"failed to load button from directory {directory}: %s", ex)
     else:
         raise Exception(f"failed to load button {name} from all directories")
     assert value, f"no such button: {name}"
