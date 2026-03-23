@@ -4,7 +4,7 @@ set -euo pipefail
 
 WS_URL=${WS_URL:-ws://k1c.arpa:9999}
 
-while getopts "c:bBsSmMh" OPT; do
+while getopts "c:bBsSmMhlL" OPT; do
     case ${OPT} in
     c) # as in --connect from wscat
         WS_URL=${OPTARG}
@@ -26,6 +26,12 @@ while getopts "c:bBsSmMh" OPT; do
         ;;
     M)
         REQUEST='{"method":"set","params":{"fan":0}}' # model fan off
+        ;;
+    l)
+        REQUEST='{"method":"set","params":{"lightSw":1}}' # LED on
+        ;;
+    L)
+        REQUEST='{"method":"set","params":{"lightSw":0}}' # LED off
         ;;
     # g)
     #     GCODE=${OPTARG}
