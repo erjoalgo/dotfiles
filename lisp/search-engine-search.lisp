@@ -89,7 +89,7 @@
 
 (defun search-engine-search-noninteractive (query &optional engine)
   (if *search-engine-search-split-by-newline*
-      (lparallel-future
+      (future
        (loop for query in (or (ppcre:split #\Newline query) '(""))
              do (search-engine-search-noninteractive-single query engine)
              do (sleep .5)))

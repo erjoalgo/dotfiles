@@ -29,7 +29,7 @@
 (defun linphonecsh (args)
   "Execute a linphonec command via linphonecsh."
   ;; TODO check if "linphonecsh init" needs to be called
-  (stumpwm::lparallel-future (linphonecsh-sync args)))
+  (future (linphonecsh-sync args)))
 
 (defvar *linphone-inhibit-command-echo* nil)
 

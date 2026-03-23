@@ -115,7 +115,7 @@
   (with-elapsed-time ms (run-startup-scripts)
     (message "startup shell scripts took ~,1fs" (/ ms 1000)))
 
-  (lparallel-future
+  (future
    ;; allow the sedation service some time to start
    ;; before defaulting to xautolock
    (sleep 60)

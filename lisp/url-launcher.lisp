@@ -65,7 +65,7 @@
   (if (and (not skip-cache) *url-keys-cache*)
       (prog1
           *url-keys-cache*
-        (stumpwm::lparallel-future
+        (future
          (url-launcher-list-url-keys :skip-cache t)))
       (setf *url-keys-cache*
             (statusor:error-to-signal
@@ -78,7 +78,7 @@
                 (assoc webdav-path *url-values-cache* :test #'equal)))))
     (if val
         (prog1 val
-          (stumpwm::lparallel-future
+          (future
            (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
         (prog1
             (setf val (statusor:error-to-signal
@@ -107,7 +107,7 @@
     (let* ((url (expand-user (cdr key-url)))
            (opener (url-command url)))
       (if (functionp opener)
-          (stumpwm::lparallel-future (funcall opener url))
+          (future (funcall opener url))
           (start-porcess-with-logging opener (list url)))
       ;;log to different file? or at least add tags
       (log-timestamped-entry url *search-history-filename*))))

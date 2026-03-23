@@ -19,7 +19,7 @@
   (with-message-queuing t
     (safe-sexp (swank-start))
     (setf lparallel:*kernel* (lparallel:make-kernel 10))
-    (lparallel-future (with-message-queuing t (xinitrc-init)))
+    (future (with-message-queuing t (xinitrc-init)))
     ;; TODO remove side-effects. add "init" method
     (load-stumpwmrc-file "top-map-bindings.lisp")
     ;; url-launcher may fail if not connected to the internet, .authinfo doesn't exist, etc

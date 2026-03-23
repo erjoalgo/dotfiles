@@ -178,7 +178,7 @@
                          command args (zerop retcode) output))))
 
 (defun run-command-async (command &optional args on-success on-error)
-  (lparallel:future
+  (future
     (multiple-value-bind (retcode output)
         (run-command-retcode-output command
                                     ;; coerce all args to string
@@ -328,13 +328,10 @@
 
 (export '(x-www-browser) :STUMPWM)
 
-(defvar *lparallel-futures-log* nil)
-
-(defmacro lparallel-future (&body form)
-  `(push
-    (cons ',form (lparallel:future ,@form))
-    *lparallel-futures-log*))
-
+(defmacro future (&rest expr)
+  `(bt:make-thread
+    (lambda () (progn ,@expr))
+    :name (prin1-to-string ',expr)))
 
 (defun blocking-threads (&key action)
   (loop with owners = nil
