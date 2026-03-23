@@ -29,14 +29,14 @@
     (x-service:start 1959)
     ;; TODO remove these
     (def-thread-start *battery-notification-thread*
-        (safe-sexp (battery-info-check-notify-loop)))
+      (safe-sexp (battery-info-check-notify-loop)))
     '(def-thread-start *sms-fanout-reconnect-thread*
-        (safe-sexp (sms-fanout-client:reconnect-loop)))
+      (safe-sexp (sms-fanout-client:reconnect-loop)))
     (setf *startup-message* nil)
     (focus-group-hook-update-env (current-group)) ;; should run before the terminal emulator
     (startup-apps-run)
     (mapc #'ensure-directory-exists
-      (list *data-private* *data-private-one-way*))
+          (list *data-private* *data-private-one-way*))
     ;; (safe-sexp (contacts:contacts-load)) ;; contacts file may not exist
     (message "done loading .stumpwmrc. ~D errors:~%~{~A~^~%~}"
              (length *init-errors*)

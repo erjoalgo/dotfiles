@@ -41,29 +41,29 @@
   (statusor:if-let-ok
    ;; (err (statusor:make-error (format nil "request failed: ~A ~A: ~A" method path err)))
    nil
-                      ((auth (statusor:nil-to-error
-                              (authinfo:get-by :app app-name)))
-                       (machine (authinfo:alist-get-or-error :machine auth))
-                       (scheme (or (authinfo:alist-get :scheme auth) "https"))
-                       (api-key (authinfo:alist-get-or-error :apikey auth))
-                       (url (format nil "~A~A"
-                                    (or *debug-url* (format nil "~A://~A" scheme machine))
-                                    path))
-                       (content (when json (json:encode-json-to-string json)))
-                       (content-type (or content-type (if content "application/hal+json")))
-                       (method (or method (if content :post :get)))
-                       (resp-raw
-                        (drakma-http-request-or-error
-                         url :method method
-                         :basic-authorization (list "apikey" api-key)
-                         :content content
-                         :content-type content-type
-                         :DECODE-CONTENT t
-                         :url-encoder url-encoder))
-                       (resp-string (babel:octets-to-string resp-raw)))
-                      (let ((json:*json-identifier-name-to-lisp* 'json:camel-case-to-lisp))
-                        (declare (special json:*json-identifier-name-to-lisp*))
-                        (json:decode-json-from-string resp-string))))
+   ((auth (statusor:nil-to-error
+           (authinfo:get-by :app app-name)))
+    (machine (authinfo:alist-get-or-error :machine auth))
+    (scheme (or (authinfo:alist-get :scheme auth) "https"))
+    (api-key (authinfo:alist-get-or-error :apikey auth))
+    (url (format nil "~A~A"
+                 (or *debug-url* (format nil "~A://~A" scheme machine))
+                 path))
+    (content (when json (json:encode-json-to-string json)))
+    (content-type (or content-type (if content "application/hal+json")))
+    (method (or method (if content :post :get)))
+    (resp-raw
+     (drakma-http-request-or-error
+      url :method method
+      :basic-authorization (list "apikey" api-key)
+      :content content
+      :content-type content-type
+      :DECODE-CONTENT t
+      :url-encoder url-encoder))
+    (resp-string (babel:octets-to-string resp-raw)))
+   (let ((json:*json-identifier-name-to-lisp* 'json:camel-case-to-lisp))
+     (declare (special json:*json-identifier-name-to-lisp*))
+     (json:decode-json-from-string resp-string))))
 
 
 
@@ -110,9 +110,9 @@
 (defun form-remove-null-links (form-json)
   (let* ((form-copy (copy-list form-json))
          (non-null-links
-          (remove-if-not (lambda (link)
-                           (access:accesses (cdr link) :href))
-                         (access:accesses form-copy :--LINKS))))
+           (remove-if-not (lambda (link)
+                            (access:accesses (cdr link) :href))
+                          (access:accesses form-copy :--LINKS))))
     (setf (access:accesses form-copy :--LINKS) non-null-links)
     form-copy))
 

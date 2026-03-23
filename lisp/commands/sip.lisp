@@ -65,9 +65,9 @@
   (let*
       (
        (number-clean
-        (ppcre:regex-replace-all "[^0-9a-zA-Z]|^[+]1" text ""))
+         (ppcre:regex-replace-all "[^0-9a-zA-Z]|^[+]1" text ""))
        (no-alpha
-        (sip-alpha-text-to-phone-number number-clean)))
+         (sip-alpha-text-to-phone-number number-clean)))
     no-alpha))
 
 (defun phone-number-to-address (number &key sip-host)
@@ -219,34 +219,34 @@
                                 (= 1 (length ,char-sym))))
                    (char ,char-sym 0)))
          ,@(loop
-              for (chars . digit) in
-                `(("abc" . 2) ("def" . 3)
-                  ("gih" . 4) ("jkl" . 5) ("mno" . 6)
-                  ("pqrs" . 7) ("tuv" . 8) ("xyz" . 9))
-              append (loop for c across
-                          (concatenate 'string
-                                       chars (string-upcase chars))
-                        collect `(,c ,digit)))
+             for (chars . digit) in
+             `(("abc" . 2) ("def" . 3)
+               ("gih" . 4) ("jkl" . 5) ("mno" . 6)
+               ("pqrs" . 7) ("tuv" . 8) ("xyz" . 9))
+             append (loop for c across
+                                (concatenate 'string
+                                             chars (string-upcase chars))
+                          collect `(,c ,digit)))
          (t (error "No dial-pad digit for char ~A"
                    ,char-sym))))))
 
 (defun sip-alpha-text-to-phone-number (text)
   (loop
-     with as-number = (make-string
-                       (length text)
-                       :initial-element #\Space)
-     for c across text
-     for i from 0
-     as cc = (cond
-               ((alpha-char-p c)
-                (code-char
-                 (+ (char-code #\0)
-                    (sip-alpha-to-digit c))))
-               ((digit-char-p c) c)
-               (t nil))
-     when cc
-     do (setf (aref as-number i) cc)
-     finally (return as-number)))
+    with as-number = (make-string
+                      (length text)
+                      :initial-element #\Space)
+    for c across text
+    for i from 0
+    as cc = (cond
+              ((alpha-char-p c)
+               (code-char
+                (+ (char-code #\0)
+                   (sip-alpha-to-digit c))))
+              ((digit-char-p c) c)
+              (t nil))
+    when cc
+      do (setf (aref as-number i) cc)
+    finally (return as-number)))
 
 (in-package :stumpwm)
 
@@ -340,28 +340,28 @@
 
 (defcommand sip-main () ()
   (let* ((clipboard-choice
-          (format nil "clipboard: ~A"
-                  (let ((clipboard (get-x-selection nil :clipboard)))
-                    (subseq clipboard 0 (min 15 (length clipboard))))))
+           (format nil "clipboard: ~A"
+                   (let ((clipboard (get-x-selection nil :clipboard)))
+                     (subseq clipboard 0 (min 15 (length clipboard))))))
          (choice
-          (selcand:select
-           :hints-candidates `(("l" . ,clipboard-choice)
-                               ("n" . :enter-number)
-                               ("c" . :contact-selection)
-                               ("e" . :echo-test)
-                               ("d" . :dtmf)
-                               ("s" . :espeak)
-                               ("S" . :espeak-spell)
-                               ("t" . :call-terminate)
-                               ("a" . :call-answer)
-                               ("p" . :display-active-calls)
-                               ("i" . :caller-id-select)
-                               ("r" . :linphonec-restart)
-                               ("m" . :sip-call-mute)
-                               ("M" . :sip-call-unmute)
-                               ("g" . :call-logs))
-           :read-char-if-possible t
-           :display-candidates :include-values)))
+           (selcand:select
+            :hints-candidates `(("l" . ,clipboard-choice)
+                                ("n" . :enter-number)
+                                ("c" . :contact-selection)
+                                ("e" . :echo-test)
+                                ("d" . :dtmf)
+                                ("s" . :espeak)
+                                ("S" . :espeak-spell)
+                                ("t" . :call-terminate)
+                                ("a" . :call-answer)
+                                ("p" . :display-active-calls)
+                                ("i" . :caller-id-select)
+                                ("r" . :linphonec-restart)
+                                ("m" . :sip-call-mute)
+                                ("M" . :sip-call-unmute)
+                                ("g" . :call-logs))
+            :read-char-if-possible t
+            :display-candidates :include-values)))
     (case choice
       (:enter-number (call-interactively "sip-contact-number"))
       (:contact-selection (call-interactively "sip-contact-contact"))
@@ -375,8 +375,8 @@
                           "result: ~A"
                           (voipms::change-current-caller-id (voipms::voipms-get-auth))))
       (:call-logs (message-wrapped
-                          "result: ~A"
-                          (sip::linphonecsh-sync `("generic" "call-logs"))))
+                   "result: ~A"
+                   (sip::linphonecsh-sync `("generic" "call-logs"))))
       (:linphonec-restart
        (sip:linphonec-restart))
       (:display-active-calls

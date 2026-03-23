@@ -92,9 +92,9 @@
                        (error "No engine found with id '~A': " engine-id)))))
   (if *search-engine-search-split-by-newline*
       (future
-       (loop for query in (or (ppcre:split #\Newline query) '(""))
-             do (search-engine-search-noninteractive-single query engine)
-             do (sleep .5)))
+        (loop for query in (or (ppcre:split #\Newline query) '(""))
+              do (search-engine-search-noninteractive-single query engine)
+              do (sleep .5)))
       (search-engine-search-noninteractive-single query engine)))
 
 (defun search-engine-search-noninteractive-single (query &optional engine)

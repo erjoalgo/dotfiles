@@ -66,7 +66,7 @@
       (prog1
           *url-keys-cache*
         (future
-         (url-launcher-list-url-keys :skip-cache t)))
+          (url-launcher-list-url-keys :skip-cache t)))
       (setf *url-keys-cache*
             (statusor:error-to-signal
              (cladaver:ls *webdav-server-info* webdav-urls-prefix)))))
@@ -79,7 +79,7 @@
     (if val
         (prog1 val
           (future
-           (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
+            (url-launcher-cat-webdav-path webdav-path :skip-cache t)))
         (prog1
             (setf val (statusor:error-to-signal
                        (cladaver:cat *webdav-server-info* webdav-path)))

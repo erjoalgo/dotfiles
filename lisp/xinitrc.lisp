@@ -116,9 +116,9 @@
     (message "startup shell scripts took ~,1fs" (/ ms 1000)))
 
   (future
-   ;; allow the sedation service some time to start
-   ;; before defaulting to xautolock
-   (sleep 60)
-   (start-screensaver))
+    ;; allow the sedation service some time to start
+    ;; before defaulting to xautolock
+    (sleep 60)
+    (start-screensaver))
 
   (run-shell-command "xsetroot -cursor_name left_ptr" t))
