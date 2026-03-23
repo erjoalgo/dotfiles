@@ -75,8 +75,6 @@
                (STUMPWM:completing-read (STUMPWM:current-screen) "Select search engine: "
                                         (mapcar #'search-engine-id *search-engines*)
                                         :require-match t)))
-         (engine (or (search-engine-find-by-id engine-id)
-                     (error "No engine found with id '~A': " engine-id)))
          (raw-query (STUMPWM:read-one-line
                      (STUMPWM:current-screen)
                      (format nil "~A query: ~%" engine-id)
@@ -85,9 +83,13 @@
                      ""))
          (query (ppcre:regex-replace-all "/" raw-query "%2F")))
     (when query
-      (search-engine-search-noninteractive query engine))))
+      (search-engine-search-noninteractive query engine-id))))
 
 (defun search-engine-search-noninteractive (query &optional engine)
+  (when (stringp engine)
+    (let ((engine-id engine))
+      (setf engine (or (search-engine-find-by-id engine-id)
+                       (error "No engine found with id '~A': " engine-id)))))
   (if *search-engine-search-split-by-newline*
       (future
        (loop for query in (or (ppcre:split #\Newline query) '(""))
