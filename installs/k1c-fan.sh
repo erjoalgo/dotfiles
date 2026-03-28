@@ -44,8 +44,6 @@ EOF
 fi
 
 while true; do
-    which k1c-gcode.sh
-    which wscat
     k1c-gcode.sh -b
     sleep ${SECS};
 done
