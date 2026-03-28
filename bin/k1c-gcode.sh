@@ -65,11 +65,6 @@ Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
 EOF
 
 test -n "${REQUEST:-}"
-which wscat
-# wscat -c "${WS_URL}"  -x "${REQUEST}" -n
-# echo "${REQUEST}" | websocat "${WS_URL}"
-# curl --no-progress-meter -T <(echo "${REQUEST}") -N "${WS_URL}" <<< "${REQUEST}"
-# curl --no-progress-meter -T /dev/stdin -N "${WS_URL}" <<< "${REQUEST}"
 
 python <<EOF
 import asyncio
