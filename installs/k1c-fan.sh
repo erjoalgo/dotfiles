@@ -35,7 +35,6 @@ ExecStart=nohup $(realpath $0) -r
 Restart=always
 RestartSec=${SECS}
 Environment=PATH=${PATH}
-Environment=WS_URL=ws://k1c.arpa:9999
 
 [Install]
 WantedBy=default.target
