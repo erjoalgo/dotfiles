@@ -51,7 +51,7 @@ if test -n "${USER_SERVICE:-}"; then
         "${CONF}" <<< "${SERVICE_DEF}"
     systemctl --user enable ${SERVICE_NAME}.service
     systemctl --user daemon-reload
-    systemctl --user start ${SERVICE_NAME}.service
+    systemctl --user restart ${SERVICE_NAME}.service
 else
     FILENAME=/etc/systemd/system/${SERVICE_NAME}.service
     if test -n "${OVERRIDE:-}"; then
