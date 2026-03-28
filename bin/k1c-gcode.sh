@@ -65,17 +65,45 @@ Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
 EOF
 
 test -n "${REQUEST:-}"
-wscat -c "${WS_URL}"  -x "${REQUEST}"
-exit 0
+which wscat
+# wscat -c "${WS_URL}"  -x "${REQUEST}" -n
+# echo "${REQUEST}" | websocat "${WS_URL}"
+# curl --no-progress-meter -T <(echo "${REQUEST}") -N "${WS_URL}" <<< "${REQUEST}"
+# curl --no-progress-meter -T /dev/stdin -N "${WS_URL}" <<< "${REQUEST}"
 
-# Send a message and wait for a response
-echo "${REQUEST}" | \
-    wscat -c "${WS_URL}" | \
-    while read LINE; do
-        echo "Received: $LINE"
-        # Exit after receiving a specific response or based on time
-        if [[ "$line" == *"expected-response"* ]]; then
-            pkill -P $$ wscat
-            break
-        fi
-    done
+python <<EOF
+import asyncio
+import websockets
+
+async def send_message_and_exit(websocket_uri, message):
+    try:
+        # The 'async with' statement automatically handles opening and closing the connection
+        async with websockets.connect(websocket_uri) as websocket:
+            print(f"Sending message: '{message}'")
+            await websocket.send(message)
+            print("Message sent. Closing connection.")
+            # The connection closes automatically upon exiting the 'async with' block
+
+            # Optional: You can receive a response if the server sends one before closing
+            # try:
+            #     response = await asyncio.wait_for(websocket.recv(), timeout=1.0)
+            #     print(f"Received response: {response}")
+            # except asyncio.TimeoutError:
+            #     print("No response received within timeout.")
+
+    except ConnectionRefusedError:
+        print(f"Connection refused. Is the server running at {websocket_uri}?")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Configuration
+WS_URL = "${WS_URL}" # Replace with your WebSocket server URL
+MESSAGE_TO_SEND = '${REQUEST}'
+
+# Run the asynchronous function
+if __name__ == "__main__":
+    asyncio.run(send_message_and_exit(WS_URL, MESSAGE_TO_SEND))
+
+EOF
+
+
