@@ -88,7 +88,7 @@ EOF
 
 insert-text-block '# 5feebe85-d76b-4127-a941-775cb4278ec6-xinit-exec-stumpwm'  \
                   "${HOME}/.xinitrc"<<EOF
-exec $(which stumpwm) > ~/.stumpwm.log 2>&1
+exec systemd-run --user --scope --wait --collect -u stumpwm $(which stumpwm)
 EOF
 
 if test -e ~/.dmrc; then
