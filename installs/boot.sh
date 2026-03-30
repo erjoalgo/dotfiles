@@ -172,7 +172,7 @@ source ~/.venv/bin/activate
 
 pip3 install getchwrap -U || true
 pip install requests
-pip install git+https://gitlab.com/thelabnyc/requests-unixsocket2
+pip install git+https://gitlab.com/thelabnyc/requests-unixsocket2 --break-system-packages
 
 ./link-inits.sh
 
