@@ -100,6 +100,7 @@
          (list
           (namestring (or
                        (car (directory #P"~/bin/Creality*.AppImage"))
+                       (car (directory #P"~/Downloads/Creality*.AppImage"))
                        "cura"))
           (last-modified-file "~/git/3d" "stl"))))
 
