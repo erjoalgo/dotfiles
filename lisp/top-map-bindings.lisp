@@ -94,7 +94,8 @@
 (define-run-or-pull-program "creality"
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
-  :classes '("cura" "Creative3D" "Creality Print" "UltiMaker-Cura")
+  :classes '("cura" "Creative3D" "Creality Print" "UltiMaker-Cura"
+             "Creality")
   :cmd (lambda ()
          (list
           (namestring (or
