@@ -74,7 +74,8 @@ if command -v gsettings; then
 fi
 
 for FILE in "${HOME}/.xprofile" "${HOME}/.xinitrc"; do
-    insert-text-block '# 0e37c6bc-90c4-4613-9956-8112f4f5da45-xrdb-xresources'  \
+    insert-text-block -b  \
+                      '# 0e37c6bc-90c4-4613-9956-8112f4f5da45-xrdb-xresources'  \
                       "${FILE}" <<EOF
 xrdb -merge ${HOME}/.Xresources
 EOF
