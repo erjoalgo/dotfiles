@@ -133,6 +133,8 @@ sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.
 
 ./chrome-disable-xdg-open-prompt.sh
 
+./ir.sh
+
 clone-git-repo "https://github.com/erjoalgo/chromeurl"
 pushd .
 cd ~/git/chromeurl/native
