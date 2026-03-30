@@ -20,6 +20,7 @@ else
             qimgv \
             Gsmartcontrol \
             firefox-esr \
+            Pavucontrol \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
