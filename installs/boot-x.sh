@@ -18,6 +18,7 @@ if ! test "${EMACS_MAJOR_VERSION}" -le 28; then
   fi
 fi
 
+sudo apt-get update
 sudo apt-get install -y zathura konsole pass keynav at x2x
 sudo apt-get install -y qimgv scrot
 
