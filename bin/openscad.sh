@@ -2,10 +2,16 @@
 
 set -euo pipefail
 
-EXE=$(which ${HOME}/bin/OpenSCAD*AppImage  \
-            ${HOME}/Downloads/OpenSCAD*AppImage \
-            openscad | sed "1!d") || true
+for CAND in ${HOME}/bin/OpenSCAD*AppImage  \
+                   ${HOME}/Downloads/OpenSCAD*AppImage \
+                   $(which openscad); do
+    if test -e "${CAND}"; then
+        EXE="${CAND}"
+        break
+    fi
+done
 
-command -v "${EXE}"
+test -x "${EXE}"
+
 
 QT_SCALE_FACTOR=2 "${EXE}" "$@"
