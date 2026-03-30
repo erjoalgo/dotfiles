@@ -104,3 +104,18 @@ fi
 sudo update-alternatives --install /usr/bin/x-window-manager \
   x-window-manager $(which stumpwm) 200
 sudo update-alternatives --set x-window-manager $(which stumpwm)
+
+install-systemd-service.sh -u stumpwm <<EOF
+[Unit]
+Description=service to tail stumpwm logs
+After=default.target
+
+[Service]
+ExecStart=tail -f ${HOME}/.stumpwm.log
+SyslogIdentifier=stumpwm
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=default.target
+EOF
