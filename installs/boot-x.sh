@@ -149,7 +149,7 @@ done
 popd
 
 sudo apt-get purge -y pipewire-pulse
-sudo apt-get install -y pipewire-jack pavucontrol
+sudo apt-get install -y pipewire-jack pulseaudio-utils pavucontrol
 
 sudo apt-get purge -y xdg-desktop-portal-gtk
 
