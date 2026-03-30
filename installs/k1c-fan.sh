@@ -22,7 +22,7 @@ while getopts "irh" OPT; do
 done
 shift $((OPTIND -1))
 
-SECS=30
+SECS=60
 
 if test "${INSTALL:-}" = true; then
     pip install websockets
