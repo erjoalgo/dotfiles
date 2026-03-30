@@ -1,5 +1,10 @@
 (in-package :STUMPWM)
 
+(defmacro future (&rest expr)
+  `(bt:make-thread
+    (lambda () (progn ,@expr))
+    :name (prin1-to-string ',expr)))
+
 (defun file-string (path)
   (with-open-file (stream path)
     (let* ((n-estimate (file-length stream))
@@ -327,11 +332,6 @@
       (stumpwm::raise-browser))))
 
 (export '(x-www-browser) :STUMPWM)
-
-(defmacro future (&rest expr)
-  `(bt:make-thread
-    (lambda () (progn ,@expr))
-    :name (prin1-to-string ',expr)))
 
 (defun blocking-threads (&key action)
   (loop with owners = nil
