@@ -38,7 +38,7 @@ if ! which sbcl | grep local || test -n "${FORCE:-}"; then
     sudo sh ./install.sh
 fi
 
-sudo apt-get install -y make rlwrap
+sudo apt-get install -y make rlwrap libzstd-dev
 
 QL_SETUP="${HOME}/quicklisp/setup.lisp"
 if ! test -f "${QL_SETUP}"; then
