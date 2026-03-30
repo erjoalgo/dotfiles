@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-SERVICE_NAME=${1} && shift || true
-
 while getopts "huod:" OPT; do
     case ${OPT} in
     u)
@@ -22,6 +20,9 @@ while getopts "huod:" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+SERVICE_NAME=${1} && shift
+
 
 if test -z "${SERVICE_DEF:-}"; then
     SERVICE_DEF=$(cat /dev/stdin)
