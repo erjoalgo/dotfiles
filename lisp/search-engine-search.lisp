@@ -86,10 +86,6 @@
       (search-engine-search-noninteractive query engine-id))))
 
 (defun search-engine-search-noninteractive (query &optional engine)
-  (when (stringp engine)
-    (let ((engine-id engine))
-      (setf engine (or (search-engine-find-by-id engine-id)
-                       (error "No engine found with id '~A': " engine-id)))))
   (if *search-engine-search-split-by-newline*
       (future
         (loop for query in (or (ppcre:split #\Newline query) '(""))
@@ -99,7 +95,11 @@
 
 (defun search-engine-search-noninteractive-single (query &optional engine)
   (assert query)
-  (unless engine (setf engine *default-engine*))
+  (cond ((null engine) (setf engine *default-engine*))
+        ((stringp engine)
+         (let ((engine-id engine))
+           (setf engine (or (search-engine-find-by-id engine-id)
+                            (error "No engine found with id '~A': " engine-id))))))
   (let* ((query-sanitized (ppcre:regex-replace-all "\\n" (STUMPWM:trim-spaces query) " "))
 	 (query-encoded (uri-encode query-sanitized)))
     (loop with tmpls = (search-engine-url-templates engine)
