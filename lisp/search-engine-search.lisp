@@ -86,7 +86,8 @@
       (search-engine-search-noninteractive query engine-id))))
 
 (defun search-engine-search-noninteractive (query &optional engine)
-  (if *search-engine-search-split-by-newline*
+  (if (and *search-engine-search-split-by-newline*
+           (ppcre:scan #\Newline query))
       (future
         (loop for query in (or (ppcre:split #\Newline query) '(""))
               do (search-engine-search-noninteractive-single query engine)
