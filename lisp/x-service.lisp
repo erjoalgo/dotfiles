@@ -195,16 +195,8 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
   (let* ((pid-str (read-header :STUMPWM-WIN-PID)))
     (assert (ppcre:scan "^[0-9]+$" pid-str) nil "missing window pid: ~A" pid-str)
     (or
-     (loop
-       with pid = (parse-number:parse-number pid-str)
-       for g in (stumpwm::sort-groups (stumpwm:current-screen))
-       for group-index from 1
-         thereis
-         (loop for win in (stumpwm:group-windows g)
-                 thereis (when (= pid (stumpwm:window-pid win))
-                           (setf (hunchentoot:return-code*)
-                                 hunchentoot:+HTTP-OK+)
-                           (format nil "~A" group-index))))
+     (stumpwm::desktop-group-number-for-pid (parse-number:parse-number pid-str))
+
      (let ((err-msg (format nil "no window found with pid ~A" pid-str)))
        (stumpwm::message "^1~A*" err-msg)
        (setf (hunchentoot:return-code*)

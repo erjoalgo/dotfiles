@@ -409,3 +409,19 @@
                 do (return (parse-integer (string-trim " " (subseq line 5))))))))
   #-linux
   (error "This function is only supported on Linux"))
+
+(defun desktop-group-number-for-pid (pid)
+  (loop
+    do (format t "considering pid: ~A~%" pid)
+    while (not (= pid 1))
+      thereis
+      (loop
+        for g in (stumpwm::sort-groups (stumpwm:current-screen))
+        for group-index from 1
+          thereis
+          (loop for win in (stumpwm:group-windows g)
+                  thereis (when (= pid (stumpwm:window-pid win))
+                            (setf (hunchentoot:return-code*)
+                                  hunchentoot:+HTTP-OK+)
+                            (format nil "~A" group-index))))
+    do (setf pid (STUMPWM::ppid pid))))
