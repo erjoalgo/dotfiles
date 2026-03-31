@@ -198,7 +198,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (stumpwm::desktop-group-number-for-pid (parse-number:parse-number pid-str))
 
      (let ((err-msg (format nil "no window found with pid ~A" pid-str)))
-       (stumpwm::message "^1~A*" err-msg)
+       (stumpwm::message "^1~A^*" err-msg)
        (setf (hunchentoot:return-code*)
              hunchentoot:+HTTP-NOT-FOUND+)))))
 
