@@ -420,7 +420,7 @@
         for group-index from 1
           thereis
           (loop for win in (stumpwm:group-windows g)
-                  thereis (when (= pid (stumpwm:window-pid win))
+                  thereis (when (= pid (stumpwm::window-pid win))
                             (setf (hunchentoot:return-code*)
                                   hunchentoot:+HTTP-OK+)
                             (format nil "~A" group-index))))
