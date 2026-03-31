@@ -368,6 +368,7 @@
   (let ((pass (read-one-line (current-screen) "enter kinit password: " :password t))
         proc
         output)
+    (assert pass)
     (with-input-from-string (in-fh pass)
       (setf output
             (with-output-to-string (out-fh)
