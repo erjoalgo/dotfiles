@@ -152,6 +152,7 @@ sudo apt-get purge -y pipewire-pulse
 sudo apt-get install -y pipewire-jack pulseaudio-utils pavucontrol
 
 sudo apt-get purge -y xdg-desktop-portal-gtk
+sudo apt-mark hold xdg-desktop-portal-gtk
 sudo apt-get install -y picom
 
 insert-text-block \
