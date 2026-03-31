@@ -17,7 +17,7 @@ MODULE_LICENSE("GPL");
 static int is_sysrq_registered = 0;
 
 
-static void sysrq_handle_power_on_tvs(int key)
+static void sysrq_handle_power_on_tvs(unsigned char key)
 {
     // Don't use pr_emerg unless it's an emergency. In our case, drinking
     // coffee is an emergency.
