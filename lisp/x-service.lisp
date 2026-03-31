@@ -200,6 +200,7 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
      (let ((err-msg (format nil "no window found with pid ~A" pid-str)))
        (stumpwm::message "^1~A^*" err-msg)
        (setf (hunchentoot:return-code*)
-             hunchentoot:+HTTP-NOT-FOUND+)))))
+             hunchentoot:+HTTP-NOT-FOUND+)
+       err-msg))))
 
 ;; (x-service:start 1959)
