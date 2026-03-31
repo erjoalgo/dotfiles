@@ -152,5 +152,13 @@ sudo apt-get purge -y pipewire-pulse
 sudo apt-get install -y pipewire-jack pulseaudio-utils pavucontrol
 
 sudo apt-get purge -y xdg-desktop-portal-gtk
+sudo apt-get install -y picom
+
+insert-text-block \
+    '# 31bbffac-8c44-41d3-b589-7f68c730ad5a-picom-backend'  \
+                  ${HOME}/.config/picom.conf <<EOF
+backend = "glx";
+EOF
+
 
 echo success
