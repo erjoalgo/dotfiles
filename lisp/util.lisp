@@ -389,3 +389,23 @@
               :output out-fh
               :if-output-exists :append))))
     proc))
+
+(defun string-starts-with-p (prefix s)
+  (when (and prefix s)
+    (let ((a (length prefix))
+          (b (length prefix)))
+      (and (<= a b) (equal prefix (subseq s 0 a))))))
+
+(defun ppid (pid)
+  "Retrieves the PPID of a given PID by reading /proc/<pid>/status."
+  ;; Google AI March 2026: "common lisp get ppid of a pid"
+  #+linux
+  (let ((file-path (format nil "/proc/~a/status" pid)))
+    (when (probe-file file-path)
+      (with-open-file (stream file-path)
+        (loop for line = (read-line stream nil nil)
+              while line
+              when (string-starts-with-p "PPid:" line)
+                do (return (parse-integer (string-trim " " (subseq line 5))))))))
+  #-linux
+  (error "This function is only supported on Linux"))
