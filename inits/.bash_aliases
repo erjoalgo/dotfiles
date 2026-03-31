@@ -183,6 +183,8 @@ if command -v apt-get > /dev/null; then
     alias acw='apt-cache show'
     alias acs='apt-cache search'
     alias dpkgl='dpkg -L'
+    alias apt-why='aptitude why'
+
 else
     alias sagiy='sudo yum install -y'
     alias aff='yum provides'
