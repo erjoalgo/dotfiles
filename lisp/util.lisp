@@ -350,6 +350,10 @@
                   (sb-thread:terminate-thread owner)))
         finally (return owners)))
 
+(defun kill-blocking-threads ()
+  (loop for (mutex . thread) in (blocking-threads)
+        collect (sb-thread:terminate-thread thread)))
+
 (defun find-window-by-regexp (regexp)
   (loop for win in (list-windows (current-screen))
         as title = (window-title win)
