@@ -320,6 +320,7 @@ function build-speculos {
          qemu-user-static libvncserver-dev
     URL=/afs/asus.erjoalgo.com/home/ealfonso/git-bare/speculos
     REPO=${HOME}/git/$(basename "${URL}")
+    git config --global --add safe.directory "${URL}"
     test -d "${REPO}" || git clone "${URL}" "${REPO}"
     cd "${REPO}"
     cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S .
