@@ -28,6 +28,12 @@ while getopts "p:s:d:xcah" OPT; do
     p)
         PORT=${OPTARG}
         ;;
+    D)
+        # debug
+        # mode=curl
+        MODE=xdotool
+        DELAY_SECS=.5
+        ;;
     h)
         less "$0"
         exit 0
