@@ -509,6 +509,7 @@ alias mvhere='mv -t.'
 alias .idf='deactivate; . $HOME/git/esp-idf/export.sh'
 alias idf-build="source $HOME/git/esp-idf/export.sh && idf.py build flash monitor"
 
+alias avahi-browse-local='avahi-browse -alr'
 # Local Variables:
 # mode: sh
 # End:
