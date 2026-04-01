@@ -117,6 +117,8 @@ sudo systemctl unmask sleep.target suspend.target hibernate.target hybrid-sleep.
 
 ./chrome-disable-xdg-open-prompt.sh
 
+./chrome-disable-bookmarks-bar.sh
+
 ./ir.sh
 
 clone-git-repo "https://github.com/erjoalgo/chromeurl"
