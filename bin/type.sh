@@ -337,7 +337,7 @@ function build-speculos {
     git config --global --add safe.directory "${URL}"
     test -d "${REPO}" || git clone "${URL}" "${REPO}"
     cd "${REPO}"
-    cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S .
+    cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S . -Wno-dev
     pip3 install .
     which speculos
 }
