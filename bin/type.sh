@@ -396,6 +396,8 @@ function ledger-menu {
     case "${SELECTION}" in
         build-all)
             command -v speculos || build-speculos
+            command -v jq || sudo apt-get install -y jq
+            command -v wmctrl || sudo apt-get install -y wmctrl
             test -e "${APP_ELF:-}" || build-app-passwords
             ;;
 
@@ -440,6 +442,7 @@ function ledger-menu {
 
         focus)
             section "focusing ledger"
+            command -v wmctrl
             until wmctrl -a "Ledger Nano S"; do
                 echo "waiting for ledger window" >&2
                 sleep 1
