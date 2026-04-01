@@ -269,7 +269,7 @@ function select-menu {
             section "entering the 'new password' screen"
             right 2 # new password
             both
-            both # charset lowercase
+            # both # charset lowercase
             ;;
         show-pass)
             # assumes we are at "type password",
