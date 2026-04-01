@@ -47,23 +47,7 @@ sudo $(which update-config-file-key-value) \
   -f /etc/systemd/logind.conf  \
   -k HandlePowerKey -v ignore
 
-KONSOLERC=${HOME}/.config/konsolerc
-if test -e "$KONSOLERC"; then
-    sed -i '/^DefaultProfile=/d' ${KONSOLERC}
-fi
-
-insert-text-block '# eab944d5-9973-4f44-b2e0-1b168f164397-konsolerc-defaults'  \
-                  ${KONSOLERC} -b << EOF
-# konsolerc file tends to be managed by konsole in a site-specific way.
-[Desktop Entry]
-DefaultProfile=erjoalgo.profile
-
-[Favorite Profiles]
-Favorites=
-
-[KonsoleWindow]
-ShowMenuBarByDefault=false
-EOF
+./konsole.sh
 
 function clone-git-repo {
     URL=${1} && shift
