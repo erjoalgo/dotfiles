@@ -514,6 +514,7 @@ function main {
     select-menu show-pass
     if test "${MODE}" = automation; then
         exec-automation
+        sleep 2
     fi
     # PASS=$(select-menu capture-pass)
     select-menu capture-pass
