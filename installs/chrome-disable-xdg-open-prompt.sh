@@ -11,10 +11,10 @@ EOF
 
 chrome-add-policy.sh -b allow_tel_protocol.json <<EOF
 {
-  "URLWhitelist": [
+  "URLAllowlist": [
     "tel:*"
   ],
-  "URLAllowlist": [
+  "URLWhitelist": [
     "tel:*"
   ]
 }
