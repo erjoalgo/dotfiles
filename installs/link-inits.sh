@@ -72,3 +72,5 @@ if ! test -d "${HOME}/.stumpwmrc.d"; then
 fi
 
 safe_ln "${STUMPWM_TOP}/data/public/.face" "${HOME}/"
+
+safe_ln /afs/asus.erjoalgo.com/public/git/defs/defs.el "${HOME}/git/dotemacs/lisp/core/"
