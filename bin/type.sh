@@ -338,6 +338,8 @@ function build-speculos {
     test -d "${REPO}" || git clone "${URL}" "${REPO}"
     cd "${REPO}"
     cmake -B build/ -DCMAKE_BUILD_TYPE=Debug -DWITH_VNC=1 -S . -Wno-dev
+    pip install --upgrade setuptools wheel
+    pip install vcs-versioning
     pip3 install .
     which speculos
 }
