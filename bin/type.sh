@@ -5,9 +5,9 @@ set -euo pipefail
 . ${HOME}/afs/home/${USER}/.profile || true
 
 MODE=automation
-SPECULOS_DISPLAY_OPT=()
+SPECULOS_NO_DISPLAY_HEADLESS=""
 
-while getopts "p:s:d:xcah" OPT; do
+while getopts "p:s:d:xcaDnh" OPT; do
     case ${OPT} in
     s)
         SEED_FILE=${OPTARG}
@@ -33,6 +33,10 @@ while getopts "p:s:d:xcah" OPT; do
         # mode=curl
         MODE=xdotool
         DELAY_SECS=.5
+        SPECULOS_NO_DISPLAY_HEADLESS=true
+        ;;
+    n)
+        SPECULOS_NO_DISPLAY_HEADLESS=true
         ;;
     h)
         less "$0"
@@ -78,8 +82,12 @@ fi
 
 PASS_ID=${1:-} && shift || true
 
+SPECULOS_DISPLAY_OPT=()
+
 if test "${MODE}" = automation; then
-    SPECULOS_DISPLAY_OPT=("--display=headless")
+    if test "${SPECULOS_NO_DISPLAY_HEADLESS:-}" != true; then
+        SPECULOS_DISPLAY_OPT=("--display=headless")
+    fi
     BROWSE=false
 elif test "${MODE}" = xdotool; then
     DELAY_SECS=${DELAY_SECS:-0.05}
