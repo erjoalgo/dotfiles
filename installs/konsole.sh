@@ -22,3 +22,8 @@ Favorites=erjoalgo.profile
 [KonsoleWindow]
 ShowMenuBarByDefault=false
 EOF
+
+
+xmlstarlet ed -d \
+           '//gui/ToolBar'  \
+           "${HOME}.local/share/kxmlgui5/konsole/sessionui.rc"
