@@ -26,5 +26,3 @@ insert-text-block \
        ${HOME}/.profile-env <<EOF
 export PATH=${NODE_DIR}:\$PATH
 EOF
-
-npm config set prefix '~/.local/'
