@@ -108,7 +108,7 @@ class Client {
     }
 
     async sendMessage (packet) {
-        console.log(`sending message: ${packet}`);
+        console.debug(`sending message: ${packet}`);
         await this.socket.send(packet + `\r\n`);
     }
 
