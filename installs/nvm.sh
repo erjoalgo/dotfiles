@@ -8,7 +8,7 @@ if ! test -d "${REPO}"; then
 fi
 
 NVM_SH="${HOME}/.nvm/nvm.sh"
-if ! test -d "${NVM_SH}"; then
+if ! test -e "${NVM_SH}"; then
     "${REPO}/install.sh"
 fi
 
