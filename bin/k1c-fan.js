@@ -136,6 +136,7 @@ class Client {
             await this.turnBackFanOn();
             return;
         }
+        console.log(`nozzle temp: ${this.lastTemp.temp}`);
         await this.turnBackFanOff();
     }
 }
