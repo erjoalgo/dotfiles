@@ -21,6 +21,7 @@ else
             Gsmartcontrol \
             firefox-esr \
             Pavucontrol \
+            Creality \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
