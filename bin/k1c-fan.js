@@ -3,13 +3,16 @@
 const WS_URL = 'ws://k1c.arpa:9999';
 
 class Client {
-    constructor(wsUrl, maxTemp, maxLastTempTimeSecs) {
+    constructor(wsUrl, maxTemp, maxLastTempTimeSecs, minRuntime) {
         this.wsUrl = wsUrl;
         this.socket = null;
 
         this.lastTemp = null;
         this.maxTemp = maxTemp || 50;
         this.maxLastTempTimeSecs = maxLastTempTimeSecs || 60;
+
+        this.lastHotNozzle = null;
+        this.minRuntime = minRuntime || 60*5;
     }
 
     readTemp (packet) {
@@ -110,14 +113,26 @@ class Client {
     }
 
     async switchFan () {
-        if (!this.lastTemp ||
-            this.lastTemp.temp > this.maxTemp) {
+        if (!this.lastTemp) {
+            console.warn(`no last known temp, turning fan on by default...`);
             await this.turnBackFanOn();
             return;
+        }
+        if (this.lastTemp.temp > this.maxTemp) {
+            console.info(`nozzle is hot!`);
+            this.lastHotNozzle = Client.nowSecs();
+            await this.turnBackFanOn();
+            return
         }
         const elapsed = (Client.nowSecs() - this.lastTemp.stamp);
         if (elapsed > this.maxLastTempTimeSecs) {
             console.warn(`too much time has elapsed since the last known nozzle temp`);
+            await this.turnBackFanOn();
+            return;
+        }
+        const runtime = Client.nowSecs() - this.lastHotNozzle;
+        if (runtime < this.minRuntime) {
+            console.log(`have not met min runtime: ${runtime/60}m < ${this.minRuntime/60}m`);
             await this.turnBackFanOn();
             return;
         }
