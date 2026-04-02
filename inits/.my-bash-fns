@@ -853,3 +853,10 @@ function ufw-delete-some-rules {
 function git-staged-size {
     git ls-files | xargs du -h | sort -h
 }
+
+function nvm-persist {
+    insert-text-block '# 79bb5c0a-23d1-45b0-8728-540d7289bbbd-nvm-persist'  \
+                      ${HOME}/.profile-env<<EOF
+PATH=$(dirname $(which node)):\$PATH
+EOF
+}
