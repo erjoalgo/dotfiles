@@ -2,15 +2,8 @@
 
 set -euo pipefail
 
-INSTALL=true
-while getopts "irh" OPT; do
+while getopts "h" OPT; do
     case ${OPT} in
-    i)
-        INSTALL=true
-        ;;
-    r)
-        INSTALL=false
-        ;;
     h)
         less "$0"
         exit 0
@@ -22,28 +15,27 @@ while getopts "irh" OPT; do
 done
 shift $((OPTIND -1))
 
-SECS=60
+which node
+MAJOR=$(node -v | grep -Po '(?<=v)[0-9]+')
+if test "${MAJOR}" -lt 22; then
+    echo "need node 22 or higher for the built-in Websocket client"
+    exit ${LINENO}
+fi
 
-if test "${INSTALL:-}" = true; then
-    pip install websockets
-    install-systemd-service.sh k1c-fan -u <<EOF
+NODE_DIR=$(dirname $(which node))
+
+install-systemd-service.sh k1c-fan <<EOF
 [Unit]
 Description=Keep the K1C exhaust fan on
 
 [Service]
-ExecStart=nohup $(realpath $0) -r
+ExecStart=${HOME}/git/dotfiles/bin/k1c-fan.js
 Restart=always
-RestartSec=${SECS}
-Environment=PATH=${PATH}
+RestartSec=60
+Environment=PATH=${NODE_DIR}:${PATH}
+Environment=VERBOSE=false
 
 [Install]
 WantedBy=default.target
 
 EOF
-    exit 0
-fi
-
-while true; do
-    k1c-gcode.sh -b
-    sleep ${SECS};
-done
