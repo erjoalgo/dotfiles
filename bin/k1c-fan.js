@@ -12,7 +12,7 @@ class Client {
         this.maxLastTempTimeSecs = maxLastTempTimeSecs || 60;
 
         this.lastHotNozzle = null;
-        this.minRuntime = minRuntime || 60*5;
+        this.minRuntime = minRuntime || 60*60;
     }
 
     settings () {
