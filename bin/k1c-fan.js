@@ -66,15 +66,16 @@ class Client {
             const delayMs = 1000 * this.maxLastTempTimeSecs;
             console.log(`starting switch loop, running every ${delayMs/1000} secs...`);
 
-            setInterval((async (reject) =>  {
+            const fn = (async (reject) =>  {
                 try {
                     await this.switchFan();
                 } catch(err) {
                     console.error(`error in switch loop: ${err}`);
                     reject(err);
                 }
-            }).bind(this, reject),
-                        delayMs);
+            }).bind(this, reject);
+            fn();
+            setInterval(fn, delayMs);
 
         }).bind(this));
     }
