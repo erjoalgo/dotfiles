@@ -15,6 +15,16 @@ class Client {
         this.minRuntime = minRuntime || 60*5;
     }
 
+    settings () {
+        const settings = {};
+        for (const keyVal of Object.entries(this)) {
+            const key = keyVal[0];
+            const val = keyVal[1];
+            settings[key] = val;
+        }
+        return settings;
+    }
+
     readTemp (packet) {
         const temp = packet.nozzleTemp;
         if (temp) {
@@ -144,6 +154,8 @@ class Client {
 async function main () {
     const ws_url = process.env[`WS_URL`] || WS_URL;
     const ws = new Client(ws_url);
+    console.log(`settings: ` +
+                JSON.stringify(ws.settings(), null, 4));
     if (process.env[`VERBOSE`] == `false`) {
         console.log(`ignoring console.debug logs...`);
         console.debug = () => {};
