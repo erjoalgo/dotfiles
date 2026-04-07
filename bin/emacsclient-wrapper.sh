@@ -4,10 +4,13 @@ set -euo pipefail
 
 EXTRA_ARGS=()
 
-while getopts "hn" OPT; do
+while getopts "hne:" OPT; do
     case ${OPT} in
     n)
         EXTRA_ARGS+=(-n)
+        ;;
+    e)
+        EXTRA_ARGS+=(--eval "${OPTARG}")
         ;;
     h)
         less $0
