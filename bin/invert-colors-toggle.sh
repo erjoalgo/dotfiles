@@ -22,6 +22,7 @@ else
             firefox-esr \
             Pavucontrol \
             Creality \
+            Wireshark \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
