@@ -22,7 +22,7 @@
     "Tor Browser" "Google-chrome" "Firefox-esr"))
 
 (defparameter *browser-cmd*
-  `("chrome.sh"))
+  `("chrome.sh" "--new-window"))
 
 (defparameter emacs-classes
   (list "emacs" "GoogleEmacs"))
