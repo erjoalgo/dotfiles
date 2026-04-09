@@ -119,7 +119,7 @@ WantedBy=default.target
 """
 
     subprocess.call(["/home/ealfonso/git/dotfiles/bin/install-systemd-service.sh",
-                     "time-fixer", "-d", service_def])
+                     "-d", service_def, "-u", "time-fixer"])
 
 def main():
     parser = argparse.ArgumentParser()
