@@ -71,7 +71,9 @@ class TimestampFixer(object):
 
     @staticmethod
     def onchange(change_type, filename, event):
-        if change_type not  in ("created", "moved"):
+        if change_type not in ("created", "moved"):
+            logger.info("skipping change type %s for file %s",
+                        change_type, filename)
             return
         # wait for the file's mtime to become stable
         time.sleep(2)
@@ -83,7 +85,7 @@ class TimestampFixer(object):
 
         print("DDEBUG time-fixer.py mkqs: value of stat: {}".format(stat))
         secs_ago = round(time.time() - stat.st_mtime)
-        logger.debug("%s file %s was modified %s seconds ago", change_type, filename, secs_ago)
+        logger.info("%s file %s was modified %s seconds ago", change_type, filename, secs_ago)
 
         if secs_ago < 0:
             logger.info(
