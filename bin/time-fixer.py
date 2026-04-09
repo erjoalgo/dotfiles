@@ -104,12 +104,15 @@ def install(dirs):
         cmd.append("-d")
         cmd.append(dirname)
 
+    environment = "Environment=PYTHONUNBUFFERED=1"
+
     service_def = f"""
 [Unit]
 Description=Timestamp Fixer Service
 
 [Service]
 ExecStart={" ".join(cmd)}
+{environment}
 
 [Install]
 WantedBy=multi-user.target
