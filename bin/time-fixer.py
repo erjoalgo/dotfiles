@@ -115,7 +115,7 @@ ExecStart={" ".join(cmd)}
 {environment}
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 """
 
     subprocess.call(["/home/ealfonso/git/dotfiles/bin/install-systemd-service.sh",
