@@ -35,15 +35,15 @@ class FsObserver():
                 self.on_change = on_change
 
             def on_created(self, event):
-                # logger.debug(f'File created: {event.src_path}')
+                logger.debug(f'File created: {event.src_path}')
                 self.on_change("created", event.src_path, event)
 
             def on_modified(self, event):
-                # logger.debug(f'File modified: {event.src_path}')
+                logger.debug(f'File modified: {event.src_path}')
                 self.on_change("modified", event.src_path, event)
 
             def on_moved(self, event):
-                # logger.debug(f'File moved: {event.src_path} => {event.dest_path}')
+                logger.debug(f'File moved: {event.src_path} => {event.dest_path}')
                 self.on_change("moved", event.dest_path, event)
 
         return Handler(on_change)
@@ -66,6 +66,7 @@ class TimestampFixer(object):
 
     def start(self):
         for obs in self.observers:
+            logging.info(f"starting observer for directory {obs.directory}")
             obs.start()
         for obs in self.observers:
             obs.join()
@@ -139,6 +140,7 @@ def main():
     level = logging.INFO if args.quiet else logging.DEBUG
     logging.basicConfig(level=level)
 
+    print(f"starting time-fixer with log-level {logging.getLevelName(level)}...")
     if args.install:
         install(args.dirs)
         return
