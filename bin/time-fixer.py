@@ -101,10 +101,7 @@ def install(dirs):
     # subprocess.call(["pip", "install", "watchdog"])
     subprocess.call(["sudo", "apt-get", "install", "-y", "python3-watchdog"])
 
-    cmd = [__file__]
-    for dirname in dirs:
-        cmd.append("-d")
-        cmd.append(dirname)
+    cmd = [__file__, "-d"] + dirs
 
     environment = "Environment=PYTHONUNBUFFERED=1"
 
