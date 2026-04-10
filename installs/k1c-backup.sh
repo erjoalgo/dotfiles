@@ -56,3 +56,7 @@ for FILE in *main_output*; do
     echo mv -n "${FILE}" "${NEW_NAME}"
 done
 
+
+# Local Variables:
+# compile-command: "./k1c-backup.sh -i"
+# End:
