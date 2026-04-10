@@ -121,13 +121,14 @@
   :pull-key "H-t H-n"
   :classes '("project64.exe" "mupen64plus" "Ares")
   :cmd
-  (cond
-    ((which "mupen64plus")
-     (list "mupen64plus" (n64-select-rom)))
-    ((which "wine")
-     (list "wine"
-           (uiop:native-namestring
-            #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe")))))
+  (lambda ()
+    (cond
+      ((which "mupen64plus")
+       (list "mupen64plus" (n64-select-rom)))
+      ((which "wine")
+       (list "wine"
+             (uiop:native-namestring
+              #P"~/.wine/drive_c/Program Files (x86)/Project64 3.0/Project64.exe"))))))
 
 (define-run-or-pull-program "ledger-live"
   :raise-key "H-t H-l"
