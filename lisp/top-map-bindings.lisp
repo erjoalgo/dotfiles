@@ -119,7 +119,7 @@
 (define-run-or-pull-program "n64"
   :raise-key "H-t H-n"
   :pull-key "H-t H-n"
-  :classes '("project64.exe" "mupen64plus")
+  :classes '("project64.exe" "mupen64plus" "Ares")
   :cmd
   (cond
     ((which "mupen64plus")
