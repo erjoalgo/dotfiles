@@ -151,5 +151,6 @@ if __name__ == "__main__":
     main()
 
 # Local Variables:
-# compile-command: "./future-timestamp-fixer.py -d ~/Downloads/ -v"
+# compile-command: "systemctl --user restart time-fixer"
+# compile-command: "./time-fixer.py -i"
 # End:
