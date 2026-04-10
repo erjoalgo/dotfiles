@@ -9,8 +9,9 @@ import argparse
 import logging
 import os
 import time
+import sys
 
-logger = logging.getLogger(__name__)
+logger = logging
 
 try:
     import watchdog.events
@@ -136,11 +137,7 @@ def main():
     args = parser.parse_args()
 
     level = logging.INFO if args.quiet else logging.DEBUG
-    logger.setLevel(level)
-
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(level)
-    logger.addHandler(console_handler)
+    logging.basicConfig(level=level)
 
     if args.install:
         install(args.dirs)
