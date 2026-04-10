@@ -69,3 +69,8 @@
               "sleep" "1" ;; "add" to dictionary
               "key" "a" ;; "add" to dictionary
               )))
+
+(def-kbd-macro chrome-save-file () () ""
+  (unmap-all-message-windows)
+  (run-shell-command
+   "xdotool key ctrl+s sleep 3 key alt+s sleep 1 key ctrl+w" nil))
