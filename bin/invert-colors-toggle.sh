@@ -23,6 +23,7 @@ else
             Pavucontrol \
             Creality \
             Wireshark \
+            'Tor Browser' \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
