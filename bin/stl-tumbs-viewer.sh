@@ -56,6 +56,17 @@ done
 
 echo "wrote ${CNT} thumbs to ${THUMBS}"
 
+cleanup() {
+    if test -n "${WAIT_PID:-}"; then
+
+        echo "Killing imageoverview before exiting..."
+        kill ${WAIT_PID}
+    fi
+    exit
+}
+
+trap cleanup SIGINT
+
 if test -n "${WAIT_PID:-}"; then
     wait ${WAIT_PID}
 fi
