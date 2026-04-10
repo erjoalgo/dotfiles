@@ -6,13 +6,6 @@
 (defvar *kbd-macros* nil
   "A list of available kbd macros.")
 
-(defcommand run-last-kbd-macro () ()
-  (if (null *last-kbd-macro*)
-      (progn
-        (message "no known last kbd macro")
-        (run-kbd-macro))
-      (call-interactively (symbol-name *last-kbd-macro*))))
-
 (defcommand run-kbd-macro (&optional kbd-macro-name) ()
   (unless kbd-macro-name
     (setf kbd-macro-name
@@ -22,6 +15,13 @@
            :display-candidates t)))
   (setf *last-kbd-macro* kbd-macro-name)
   (call-interactively kbd-macro-name))
+
+(defcommand run-last-kbd-macro () ()
+  (if (null *last-kbd-macro*)
+      (progn
+        (message "no known last kbd macro")
+        (run-kbd-macro))
+      (call-interactively (symbol-name *last-kbd-macro*))))
 
 ;; (defmacro def-kbd-macro (name args interactive docstring
 ;;                          &body body)
