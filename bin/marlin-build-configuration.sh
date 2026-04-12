@@ -83,7 +83,7 @@ cd "${MARLIN_DIR}"
 git fetch
 git reset --hard "${BASE_BRANCH}"
 
-cp -t ${MARLIN_DIR}/Marlin  \
+cp -t "${MARLIN_DIR}/Marlin"  \
    "${CONFIG_PATH}"/{Configuration.h,Configuration_adv.h,_Bootscreen.h,_Statusscreen.h}
 
 CONFIGURATIONS=$(echo "${MARLIN_DIR}"/Marlin/Configuration{,_adv}.h)
