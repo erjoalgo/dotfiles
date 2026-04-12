@@ -5,7 +5,6 @@ set -euo pipefail
 INTERACTIVE=false
 INTERACTIVE_BRANCH_SELECTION=false
 BASE_BRANCH=${BASE_BRANCH:-origin/bugfix-2.1.x}
-CONFIG_BASE_BRANCH=${CONFIG_BASE_BRANCH:-origin/bugfix-2.1.x}
 CUSTOM_NAME_PREFIX="Ernesto's "
 
 while getopts "d:m:ib:Bn:qh" OPT; do
@@ -56,28 +55,17 @@ if ! test -d "${CONFIG_DIR}"; then
 fi
 
 if test "${INTERACTIVE_BRANCH_SELECTION:-}" = true; then
-    for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
-        cd "${DIR}"
-        echo "select $(basename $(pwd)) branch: " 1>&2
-        BRANCHES=$(git for-each-ref --format='%(refname:short)' refs)
-        select BRANCH in ${BRANCHES}; do
-            if test "${DIR}" = "${CONFIG_DIR}"; then
-                CONFIG_BASE_BRANCH="${BRANCH}"
-                break
-            elif test "${DIR}" = "${MARLIN_DIR}"; then
-                BASE_BRANCH="${BRANCH}"
-                break
-            else
-                echo "unknown repo"
-                exit ${LINENO};
-            fi
-        done
+    cd "${MARLIN_DIR}"
+    echo "select $(basename $(pwd)) branch: " 1>&2
+    BRANCHES=$(git for-each-ref --format='%(refname:short)' refs)
+    select BASE_BRANCH in ${BRANCHES}; do
+        break
     done
 fi
 
 cd "${CONFIG_DIR}"
 git fetch
-git reset --hard "${CONFIG_BASE_BRANCH}"
+git reset --hard "${BASE_BRANCH}"
 
 cd "${MARLIN_DIR}"
 git fetch
