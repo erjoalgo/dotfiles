@@ -162,7 +162,7 @@ if test "${INTERACTIVE:-}" = true; then
     grep '#define' ${CONFIGURATIONS} --color=always | less || true
 fi
 
-if ! command -v platformio; then
+if ! command -v platformio || ! platformio --version; then
     pip install platformio
 fi
 
