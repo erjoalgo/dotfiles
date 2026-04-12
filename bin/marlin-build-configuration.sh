@@ -8,7 +8,7 @@ BASE_BRANCH=${BASE_BRANCH:-origin/bugfix-2.1.x}
 CONFIG_BASE_BRANCH=${CONFIG_BASE_BRANCH:-origin/bugfix-2.1.x}
 CUSTOM_NAME_PREFIX="Ernesto's "
 
-while getopts "d:m:ibn:qh" OPT; do
+while getopts "d:m:ib:Bn:qh" OPT; do
     case ${OPT} in
     d)
         CONFIG_DIR=${OPTARG}
@@ -20,11 +20,10 @@ while getopts "d:m:ibn:qh" OPT; do
         INTERACTIVE=true
         ;;
     b)
-        INTERACTIVE_BRANCH_SELECTION=true
-        ;;
-
-    B)
         BASE_BRANCH=${OPTARG}
+        ;;
+    B)
+        INTERACTIVE_BRANCH_SELECTION=true
         ;;
     n)
         CUSTOM_NAME_PREFIX=${OPTARG}
