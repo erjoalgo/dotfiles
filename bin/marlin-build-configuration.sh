@@ -37,14 +37,23 @@ done
 shift $((OPTIND -1))
 
 
-CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations/}
+CONFIG_DIR=${CONFIG_DIR:-${HOME}/git/Configurations}
 MARLIN_DIR=${MARLIN_DIR:-${HOME}/git/Marlin}
+
 # may not exist until after switching branches
+
 CONFIG_PATH=${CONFIG_DIR}/config/examples/Creality/Ender-3\ Pro/CrealityV422
 CUSTOM_NAME_PREFIX=${CUSTOM_NAME_PREFIX:-$(date "+%Y-%m-%d %H:%M%p")}
 
-test -d "${CONFIG_DIR}"
-test -d "${MARLIN_DIR}"
+if ! test -d "${MARLIN_DIR}"; then
+    URL="https://github.com/marlinfirmware/marlin"
+    git clone "${URL}" "${MARLIN_DIR}"
+fi
+
+if ! test -d "${CONFIG_DIR}"; then
+    URL="https://github.com/marlinfirmware/configurations"
+    git clone "${URL}" "${CONFIG_DIR}"
+fi
 
 if test "${INTERACTIVE_BRANCH_SELECTION:-}" = true; then
     for DIR in "${CONFIG_DIR}" "${MARLIN_DIR}"; do
