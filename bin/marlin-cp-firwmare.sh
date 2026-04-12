@@ -3,6 +3,8 @@
 set -euo pipefail
 
 MOUNT_PARTITION_CMD=(mount-partition.sh -o rw,umask=000)
+DISK_UUID=${DISK_UUID:-52CC-A374}
+
 while getopts "d:k:ha:" OPT; do
     case ${OPT} in
     d)
@@ -21,6 +23,9 @@ while getopts "d:k:ha:" OPT; do
 done
 shift $((OPTIND -1))
 
+if test -n "${DISK_UUID:-}" -a -e /dev/disk/by-uuid/${DISK_UUID}; then
+    MOUNT_PARTITION_CMD+=("-k" "${DISK_UUID}")
+fi
 
 function get-partition-by-attr {
     KEY_SPEC=${1} && shift
