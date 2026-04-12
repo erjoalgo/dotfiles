@@ -7,13 +7,12 @@ DISK_UUID=${DISK_UUID:-52CC-A374}
 
 while getopts "d:k:ha:" OPT; do
     case ${OPT} in
+    k)
+        DISK_UUID=${OPTARG}
+        ;;
     d)
         DEVICE=${OPTARG}
         MOUNT_PARTITION_CMD+=("-b" "${DEVICE}")
-        ;;
-    k)
-        DISK_UUID=${OPTARG}
-        MOUNT_PARTITION_CMD+=("-k" "${DISK_UUID}")
         ;;
     h)
         less $0
