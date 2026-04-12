@@ -75,7 +75,7 @@ PREFIX="${TEX%.*}"
 cat <<EOF > ${TEX}
 
 \documentclass{letter}
-\usepackage[left=.8in,top=.8in,papersize={${SIZE}},landscape,twoside=false]{geometry}
+\usepackage[left=.8in,top=.8in,right=0in,papersize={${SIZE}},landscape,twoside=false]{geometry}
 \setlength\parskip{0pt}
 \pagestyle{empty}
 
