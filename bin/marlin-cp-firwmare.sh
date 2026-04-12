@@ -63,6 +63,6 @@ sudo rm -f ${MOUNTP}/*bin
 BASENAME="GD-Ender-3 ProHW4.2.2SW2.0.8.2CRTouchFilamentEuropeMulti"
 BASENAME="${RANDOM}-${BASENAME}"
 cp "${FIRMWARE}" "${MOUNTP}/${BASENAME}.bin"
-sudo ls "${MOUNTP}"
+sudo ls -l "${MOUNTP}"
 
 umount-poweroff.sh -q "${MOUNTP}"
