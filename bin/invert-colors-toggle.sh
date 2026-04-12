@@ -21,6 +21,7 @@ else
             Gsmartcontrol \
             firefox-esr \
             Pavucontrol \
+            pavucontrol \
             Creality \
             Wireshark \
             'Tor Browser' \
