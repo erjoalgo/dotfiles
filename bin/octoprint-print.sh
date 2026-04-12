@@ -4,13 +4,13 @@ set -euo pipefail
 
 while getopts "hg:" OPT; do
     case ${OPT} in
-    g)
-        GCODE=${OPTARG}
-        ;;
-    h)
-        less $0
-        exit 0
-        ;;
+        g)
+            GCODE=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
