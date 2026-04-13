@@ -52,6 +52,7 @@ for MOUNT_POINT in \
     $(sudo mount | grep -Po "${BLOCK_DEVICE}[^ ]* on [^ ]+" |  \
           cut -d' ' -f3 | tr '\n' ' '); do
     sudo umount ${MOUNT_POINT}
+    sudo rmdir ${MOUNT_POINT}
 done
 
 if ! command -v udisksctl; then
