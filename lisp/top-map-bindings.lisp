@@ -95,7 +95,7 @@
   :raise-key "H-t H-c"
   :pull-key "H-t H-C"
   :classes '("cura" "Creative3D" "Creality Print" "UltiMaker-Cura"
-             "Creality")
+               "Creality" "PrusaSlicer")
   :cmd (lambda ()
          (list
           (namestring (or
