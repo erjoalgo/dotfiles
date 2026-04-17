@@ -7,9 +7,6 @@ while getopts "s:g:h" OPT; do
         s)
             SERVER_ADDRESS=${OPTARG}
             ;;
-        g)
-            GCODE=${OPTARG}
-            ;;
         h)
             less $0
             exit 0
@@ -17,6 +14,8 @@ while getopts "s:g:h" OPT; do
     esac
 done
 shift $((OPTIND -1))
+
+GCODE=${1} && shift
 
 if ! command -v octoprint-cli; then
     pip install octoprint-cli
