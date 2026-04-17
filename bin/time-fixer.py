@@ -72,29 +72,26 @@ class TimestampFixer(object):
             obs.join()
 
     @staticmethod
-    def onchange(change_type, filename, event):
-        if change_type not in ("created", "moved"):
-            logger.info("skipping change type %s for file %s",
-                        change_type, filename)
-            return
-        # wait for the file's mtime to become stable
-        time.sleep(2)
-        try:
-            stat = os.stat(filename)
-        except Exception as ex:
-            logger.warning("stat failed on %s %s: %s", change_type, filename, ex)
-            return
+    def maybe_fix_time(filename):
+        stat = os.stat(filename)
 
-        print("DDEBUG time-fixer.py mkqs: value of stat: {}".format(stat))
         secs_ago = round(time.time() - stat.st_mtime)
-        logger.info("%s file %s was modified %s seconds ago", change_type, filename, secs_ago)
+        logger.info("%s was modified %s seconds ago", filename, secs_ago)
 
-        if secs_ago < 0:
-            logger.info(
-                "modified time stamp for %s file '%s' is %ss in the future. fixing...",
-                change_type, filename, abs(secs_ago))
-            os.utime(filename, None)
+        if secs_ago >= 0:
+            return
+
+        logger.info(
+            "modified time stamp for %s file '%s' is %ss in the future. fixing...",
+            change_type, filename, abs(secs_ago))
         os.utime(filename, None)
+
+    @staticmethod
+    def onchange(change_type, filename, event):
+        time.sleep(2)
+        TimestampFixer.maybe_fix_time(filename)
+        if change_type == "moved":
+            TimestampFixer.maybe_fix_time(event.dest_path)
 
 def install(dirs):
     import subprocess
