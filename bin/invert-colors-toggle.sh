@@ -25,6 +25,10 @@ else
             Creality \
             Wireshark \
             'Tor Browser' \
+            Evince \
+            PrusaSlicer \
+            Cura \
+            cura \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
