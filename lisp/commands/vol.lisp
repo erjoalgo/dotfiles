@@ -34,7 +34,8 @@
   index
   description
   muted
-  ports)
+  ports
+  priority)
 
 (defun audio-parse-sinks ()
   (let ((output (run-shell-command "pactl list sinks" t))
@@ -45,11 +46,15 @@
 ]+).*?Ports:[
  	]+([^
 ]+)" output)
-      (push (make-audio-sink :index index :description description
-                             :muted (cond ((equal muted "yes") t)
-                                          ((equal muted "no") nil)
-                                          (t (error "unknown mute value: ~A" muted)))
-                             :ports ports) sinks))
+      (ppcre:register-groups-bind (priority) ("priority: ([0-9]+)" ports)
+        (push (make-audio-sink :index index :description description
+                               :muted (cond ((equal muted "yes") t)
+                                            ((equal muted "no") nil)
+                                            (t (error "unknown mute value: ~A" muted)))
+                               :ports ports
+                               :priority (parse-integer priority))
+              sinks)))
+    (setf sinks (sort sinks #'> :key #'audio-sink-priority))
     sinks))
 
 
