@@ -1,5 +1,7 @@
 (in-package :stumpwm)
 
+(defparameter *vol-backend* (vol-find-backend))
+
 (defun audio-debug-info ()
   (format nil "backend: ~A~%default sink:~%~A"
           (or *vol-backend* (vol-find-backend))
@@ -15,8 +17,6 @@
     ((which "pactl") :pactl)
     ((which "amixer") :amixer)
     (t (warn "no volume cli found"))))
-
-(defparameter *vol-backend* (vol-find-backend))
 
 (defun pulseaudio-sink-indices ()
   (or
