@@ -86,6 +86,7 @@
                           ,expr)))))))
 
 (defun audio-get-default-sink-cached (&key force)
+  (declare (ignore force))
   (with-cache (car (audio-parse-sinks))
     *audio-default-sink-cache-secs*))
 
