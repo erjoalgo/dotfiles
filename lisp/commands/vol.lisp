@@ -1,5 +1,11 @@
 (in-package :stumpwm)
 
+(defun vol-find-backend ()
+  (cond
+    ((which "pactl") :pactl)
+    ((which "amixer") :amixer)
+    (t (warn "no volume cli found"))))
+
 (defparameter *vol-backend* (vol-find-backend))
 
 (defun audio-debug-info ()
@@ -11,12 +17,6 @@
   (message "audio info:~%~A" (audio-debug-info)))
 
 (defvar *vol-muted* nil)
-
-(defun vol-find-backend ()
-  (cond
-    ((which "pactl") :pactl)
-    ((which "amixer") :amixer)
-    (t (warn "no volume cli found"))))
 
 (defun pulseaudio-sink-indices ()
   (or
