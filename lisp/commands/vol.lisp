@@ -45,13 +45,16 @@
 ]+).*?Ports:[
  	]+([^
 ]+)" output)
-      (ppcre:register-groups-bind (priority) ("priority: ([0-9]+)" ports)
+      (let ((priority
+              (when ports
+                (ppcre:register-groups-bind (priority) ("priority: ([0-9]+)" ports)
+                  priority))))
         (push (make-audio-sink :index index :description description
                                :muted (cond ((equal muted "yes") t)
                                             ((equal muted "no") nil)
                                             (t (error "unknown mute value: ~A" muted)))
                                :ports ports
-                               :priority (parse-integer priority))
+                               :priority priority)
               sinks)))
     (setf sinks (sort sinks #'> :key #'audio-sink-priority))
     sinks))
