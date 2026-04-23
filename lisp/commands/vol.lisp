@@ -56,8 +56,7 @@
                                :ports ports
                                :priority priority)
               sinks)))
-    (setf sinks (sort sinks #'> :key #'audio-sink-priority))
-    sinks))
+    (sort sinks #'> :key #'audio-sink-priority)))
 
 
 (defun audio-select-sink ()
