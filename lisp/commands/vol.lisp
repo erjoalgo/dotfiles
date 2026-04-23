@@ -73,18 +73,17 @@
   (> (- (get-universal-time) last-time max-secs) 0))
 
 (defmacro with-cache (expr max-secs)
-  (let ((sym (gensym "expr-val"))
-        (last-time (gensym "expr-time")))
-    (set sym nil)
-    (set last-time nil)
-    `(let ((now (get-universal-time)))
-       (if (and ,sym
-                (<= (- now ,last-time) ,max-secs))
-           ,sym
-           (progn (format t "refreshing cached value...")
-                  (setf ,last-time now
-                        ,sym
-                        ,expr))))))
+  (let ((sym (gensym "expr-val-"))
+        (last-time (gensym "expr-time-")))
+    `(progn
+       (let ((now (get-universal-time)))
+         (if (and (symbol-value ',sym)
+                  (<= (- now (symbol-value ',last-time)) ,max-secs))
+             (symbol-value ',sym)
+             (progn (format t "refreshing cached value...")
+                    (setf (symbol-value ',last-time) now
+                          (symbol-value ',sym)
+                          ,expr)))))))
 
 (defun audio-get-default-sink-cached (&key force)
   (with-cache (car (audio-parse-sinks))
