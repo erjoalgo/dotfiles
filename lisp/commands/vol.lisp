@@ -17,7 +17,6 @@
     (t (warn "no volume cli found"))))
 
 (defparameter *vol-backend* (vol-find-backend))
-(defparameter *audio-default-sink* nil)
 
 (defun pulseaudio-sink-indices ()
   (or
@@ -66,11 +65,30 @@
                   :display-candidates t
                   :autoselect-if-single nil))
 
-(defun audio-get-default-sink (&key force)
-  (setf *audio-default-sink*
-        (or (unless force *audio-default-sink*)
-            (car (audio-parse-sinks))
-            (error "no pulseaudio sinks found"))))
+
+(defparameter *audio-default-sink* nil)
+(defparameter *audio-default-sink-cache-secs* 5)
+
+(defun elapsed-secs-exceeded? (last-time max-secs)
+  (> (- (get-universal-time) last-time max-secs) 0))
+
+(defmacro with-cache (expr max-secs)
+  (let ((sym (gensym "expr-val"))
+        (last-time (gensym "expr-time")))
+    (set sym nil)
+    (set last-time nil)
+    `(let ((now (get-universal-time)))
+       (if (and ,sym
+                (<= (- now ,last-time) ,max-secs))
+           ,sym
+           (progn (format t "refreshing cached value...")
+                  (setf ,last-time now
+                        ,sym
+                        ,expr))))))
+
+(defun audio-get-default-sink-cached (&key force)
+  (with-cache (car (audio-parse-sinks))
+    *audio-default-sink-cache-secs*))
 
 (defcommand audio-set-default-sink () ()
   "set the default sink"
@@ -121,7 +139,7 @@
         (sb-ext:run-program
          "pactl"
          (list "set-sink-volume"
-               (format nil "~D" (audio-sink-index (audio-get-default-sink)))
+               (format nil "~D" (audio-sink-index (audio-get-default-sink-cached)))
                (format nil "~A~D%"
                        (case action
                          (:set "")
@@ -132,7 +150,7 @@
          :search t))
        (:get (error "not implemented"))
        (:mute-toggle
-        (let ((sink (audio-get-default-sink)))
+        (let ((sink (audio-get-default-sink-cached)))
           (sb-ext:run-program
            "pactl"
            (list "set-sink-mute"
@@ -140,7 +158,7 @@
                  "toggle")
            :wait nil
            :search t)
-          (audio-sink-muted (audio-get-default-sink :force t))))))
+          (audio-sink-muted (audio-get-default-sink-cached :force t))))))
     (t (error "unknown backend ~A" backend))))
 
 (defcommand vol-up ()() "volume up"
