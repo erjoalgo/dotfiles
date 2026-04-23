@@ -1,5 +1,13 @@
 (in-package :stumpwm)
 
+(defun audio-debug-info ()
+  (format nil "backend: ~A~%default sink:~%~A"
+          (or *vol-backend* (vol-find-backend))
+          (audio-get-default-sink-cached)))
+
+(defun audio-show-debug-info ()
+  (message "audio info:~%~A" (audio-debug-info)))
+
 (defvar *vol-muted* nil)
 
 (defun vol-find-backend ()
