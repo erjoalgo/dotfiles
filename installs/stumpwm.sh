@@ -115,6 +115,8 @@ ExecStart=tail -f ${HOME}/.stumpwm.log
 SyslogIdentifier=stumpwm
 Restart=always
 Type=simple
+RestartSec=30
+StartLimitIntervalSec=0
 
 [Install]
 WantedBy=default.target
