@@ -6,6 +6,7 @@ set -euo pipefail
 
 MODE=automation
 SPECULOS_NO_DISPLAY_HEADLESS=""
+PAUSE=false
 
 while getopts "p:s:d:xcaDnh" OPT; do
     case ${OPT} in
@@ -34,6 +35,7 @@ while getopts "p:s:d:xcaDnh" OPT; do
         MODE=xdotool
         DELAY_SECS=.5
         SPECULOS_NO_DISPLAY_HEADLESS=true
+        PAUSE=true
         ;;
     n)
         SPECULOS_NO_DISPLAY_HEADLESS=true
@@ -493,6 +495,16 @@ EOF
     echo "${HOST}"
 }
 
+function maybe-pause {
+    if test "${PAUSE:-}" = true; then
+        PAUSE_ID=${1} && shift
+        MSG="${PAUSE_ID}: press any key to continue..."
+        # read -p"${MSG}"
+        echo "${MSG}"
+        sleep 5
+    fi
+}
+
 function main {
     validate-args
     ledger-menu build-all
@@ -507,16 +519,22 @@ function main {
     if test "${MODE}" = xdotool; then
         ledger-menu focus
     fi
+    maybe-pause "action-menu: "
     select-menu init-to-which-action-menu
+    maybe-pause "new pass: "
     select-menu new-pass
+    maybe-pause "type string: "
     type-string "${PASS_ID}"
+    maybe-pause "type checkmark: "
     select-menu checkmark
+    maybe-pause "type show-pass: "
     select-menu show-pass
     if test "${MODE}" = automation; then
         exec-automation
         sleep 2
     fi
     # PASS=$(select-menu capture-pass)
+    maybe-pause "type capture-pass: "
     select-menu capture-pass
     test -n "${PASS:-}"
     clipboard "${PASS}"
