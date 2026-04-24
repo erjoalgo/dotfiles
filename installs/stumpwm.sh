@@ -47,7 +47,7 @@ fi
 popd
 
 if command -v yum; then
-   sudo yum groupinstall -y "X Window System";
+    sudo yum groupinstall -y "X Window System";
 fi
 
 
@@ -56,7 +56,7 @@ which nc || sudo ${APT_GET} install -y net-tools
 
 GDM_CONFIG_FILENAME=/var/lib/AccountsService/users/${USER}
 if sudo test -e "${GDM_CONFIG_FILENAME}"; then
-  sudo sed -i 's/Session=.*/Session=stumpwm/g' "${GDM_CONFIG_FILENAME}"
+    sudo sed -i 's/Session=.*/Session=stumpwm/g' "${GDM_CONFIG_FILENAME}"
 fi
 
 sudo mkdir -p $(dirname "${GDM_CONFIG_FILENAME}")
@@ -102,7 +102,7 @@ fi
 
 
 sudo update-alternatives --install /usr/bin/x-window-manager \
-  x-window-manager $(which stumpwm) 200
+     x-window-manager $(which stumpwm) 200
 sudo update-alternatives --set x-window-manager $(which stumpwm)
 
 install-systemd-service.sh -u stumpwm <<EOF
