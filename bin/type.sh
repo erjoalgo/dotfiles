@@ -381,7 +381,9 @@ function build-app-passwords {
 function log-pass-id {
     PASS_FILE="${SEED_FILE}.passwords"
     section "logging pass id ${PASS_ID} into ${PASS_FILE}"
-    echo "${PASS_ID}" >> "${PASS_FILE}"
+    if test -e "${PASS_FILE}"; then
+        echo "${PASS_ID}" >> "${PASS_FILE}"
+    fi
 }
 
 function modify-speculos {
