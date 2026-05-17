@@ -29,6 +29,7 @@ else
             PrusaSlicer \
             Cura \
             cura \
+            Com.github.xournalpp.xournalpp \
         ; do
         if test -n "${ARG:-}"; then
             ARG+=" || "
