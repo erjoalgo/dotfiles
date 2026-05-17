@@ -78,7 +78,7 @@ if test -n "${FULL_BAKCUP:-}"; then
         echo "missing {sms,calls}.xml" && exit ${LINENO}
     fi
 elif test "${PULL_IMAGES_PATH:-}"; then
-    android-find-pull-rm.sh -p "${PULL_IMAGES_PATH}" -e jpg,jpeg,mp4 ${TEST_RUN_OPT:-}
+    android-find-pull-rm.sh -p "${PULL_IMAGES_PATH}" -e jpg,jpeg,mp4 ${TEST_RUN_OPT:-} -d.
 else
     echo "no valid command interpreted" && exit ${LINENO}
 fi

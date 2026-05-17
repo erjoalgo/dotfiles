@@ -4,35 +4,28 @@ set -euo pipefail
 
 ADB_CMD=(adb)
 FIND_CMD=(find)
-ADB_DEVICE=
+
+PULL_IMAGES_PATH=sdcard/DCIM/Camera
+EXTS=jpg,jpeg,mp4
+SAVE_HOME=${ANDROID_MEDIA_HOME:-}
 
 while getopts "s:p:e:nh" OPT; do
     case ${OPT} in
         p)
-            # find path
-            FIND_CMD+=(${OPTARG})
-            _FIND_PATH_SET=true
+            PULL_IMAGES_PATH=${OPTARG}
             ;;
         s)
-            # device
-            export ADB_DEVICE=${OPTARG}
-            ADB_CMD+=("-s" "${OPTARG}")
+            DEVICE_ID=${OPTARG}
             ;;
         e)
-            IS_FIRST=true
-            for EXT in $(sed 's/,/ /g' <<< ${OPTARG}); do
-                if test ${IS_FIRST} != true; then
-                    FIND_CMD+=("-o")
-                else
-                    IS_FIRST=false
-                fi
-                FIND_CMD+=("-iname")
-                FIND_CMD+=("*.${EXT}")
-            done
+            EXTS=${OPTARG}
             ;;
         n)
             # test mode
             NO_PULL=true
+            ;;
+        d)
+            SAVE_HOME=${OPTARG}
             ;;
         h)
             # example to pull videos and images:
@@ -44,7 +37,25 @@ while getopts "s:p:e:nh" OPT; do
 done
 shift $((OPTIND -1))
 
-test "${_FIND_PATH_SET:-}" = true
+
+FIND_CMD+=(${PULL_IMAGES_PATH})
+
+for EXT in $(sed 's/,/ /g' <<< ${EXTS}); do
+    FIND_CMD+=("-iname")
+    FIND_CMD+=("*.${EXT}")
+    FIND_CMD+=("-o")
+done
+unset FIND_CMD[-1] # remove the last -o
+
+if test -z "${DEVICE_ID:-}"; then
+    DEVICE_ID=$(adb shell getprop ro.serialno)
+fi
+ADB_CMD+=("-s" "${DEVICE_ID}")
+
+test -d "${SAVE_HOME}"
+SAVE_DIR="${SAVE_HOME}/${DEVICE_ID}"
+mkdir -p "${SAVE_DIR}"
+cd "${SAVE_DIR}"
 
 "${ADB_CMD[@]}" shell command -v find
 
