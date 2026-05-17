@@ -37,7 +37,7 @@
         :pull-key "H-t H-R")))
 
 (define-run-or-pull-program "zathura"
-    :classes '("Zathura")
+    :classes '("Zathura" "Evince")
     :cmd "zathura"
     :raise-key "H-t H-z"
     :pull-key "H-t H-z")
