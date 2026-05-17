@@ -6,7 +6,7 @@ if ! command -v picom; then
     sudo apt-get install -y picom
 fi
 
-if pgrep picom; then
+if pgrep -af picom | grep -v defunct; then
     pkill -9 picom
 else
     ARG=""
