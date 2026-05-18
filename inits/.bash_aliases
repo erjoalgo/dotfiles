@@ -1,5 +1,5 @@
 if test -n "${DEBUG_INIT:-}"; then
-     echo "loading $BASH_SOURCE (aliases)"
+    echo "loading $BASH_SOURCE (aliases)"
 fi
 
 . ${HOME}/git/dotfiles/submodules/complete-alias/complete_alias
@@ -67,11 +67,11 @@ alias lynx-accept-all-cookies='lynx -accept_all_cookies'
 # http://stackoverflow.com/questions/342969/
 GIT_COMPLETIONS=/usr/share/bash-completion/completions/git
 if test -f ${GIT_COMPLETIONS}; then
-  . ${GIT_COMPLETIONS}
+    . ${GIT_COMPLETIONS}
 else
-  function __git_complete {
-      true
-  }
+    function __git_complete {
+        true
+    }
 fi
 unset GIT_COMPLETIONS
 
@@ -199,14 +199,14 @@ alias spsi='sudo python setup.py install'
 
 
 function source-personal-bash-files {
-  for SRC in $(find -L ~/.bash-fns/ -type f)  \
-                 ~/.profile-env \
-                 ~/.bash_aliases \
-                 ~/.my-bashrc \
-             ; do
-    echo sourcing $SRC
-    . $SRC
-  done
+    for SRC in $(find -L ~/.bash-fns/ -type f)  \
+                   ~/.profile-env \
+                   ~/.bash_aliases \
+                   ~/.my-bashrc \
+               ; do
+        echo sourcing $SRC
+        . $SRC
+    done
 }
 
 alias .a=source-personal-bash-files
@@ -342,8 +342,8 @@ alias sudo='sudo '
 complete_alias sudo
 
 for LETTER_COMMAND in "down stop" "r restart"  \
-                               "s status" "l logs"  \
-                               "up start"; do
+                                  "s status" "l logs"  \
+                                  "up start"; do
     COMMAND=$(cut -f2  -d' '  <<< "${LETTER_COMMAND}")
     LETTER=$(cut -f1  -d' '  <<< "${LETTER_COMMAND}")
     for USR_OPT in "" "u"; do
