@@ -509,6 +509,14 @@ alias .idf='deactivate; . $HOME/git/esp-idf/export.sh'
 alias idf-build="source $HOME/git/esp-idf/export.sh && idf.py build flash monitor"
 
 alias avahi-browse-local='avahi-browse -alr'
+
+alias boot-list='journalctl --list-boots'
+
+alias boot-log='journalctl -b 0'
+
+alias boot-log-last='journalctl -b -1'
+
+
 # Local Variables:
 # mode: sh
 # End:
