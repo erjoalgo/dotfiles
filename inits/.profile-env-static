@@ -5,5 +5,5 @@ export PATH="${PATH}:${HOME}/Android/Sdk/platform-tools/"
 source ${HOME}/mnts/backup/profile.sh
 
 # Local Variables:
-# mode: sh-mode
+# mode: sh
 # End:
