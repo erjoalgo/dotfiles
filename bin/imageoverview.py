@@ -162,38 +162,44 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         logging.warning("generating pdf: %s", cmd)
         subprocess.check_output(cmd, stderr=subprocess.PIPE)
 
+    def post_generate_pdf(self):
+        """Handle the POST request for generating a pdf from selected image files."""
+
+        ctype = self.headers["Content-Type"]
+        if ctype == 'multipart/form-data':
+            raise NotImplementedError("unimplemented")
+        if ctype == 'application/x-www-form-urlencoded':
+            length = int(self.headers["Content-Length"])
+            data = self.rfile.read(length)
+            postvars = urllib.parse.parse_qs(data, keep_blank_values=1)
+        else:
+            postvars = {}
+        files = postvars[b"files"][0].decode().split(",")
+        if not files:
+            self.send_response(400)
+            self.end_headers()
+            self.wfile.write("no files selected")
+            return
+        with tempfile.NamedTemporaryFile(delete=True, suffix = ".pdf") as tmp:
+            output = tmp.name
+            try:
+                self.generate_pdf(files, output)
+            except subprocess.CalledProcessError as exc:
+                traceback.print_exc()
+                self.send_response(500)
+                contents = str(exc).encode()
+                contents += "\n\noutput: ".encode() + exc.output
+                contents += "\n\nerror: ".encode() + (exc.stderr or b"")
+                self.end_headers()
+                self.wfile.write(contents)
+                return
+            self.serve_file(output)
+
     def do_POST(self):
         """Handle POST requests."""
         try:
             if self.path.startswith("/generate-pdf"):
-                ctype = self.headers["Content-Type"]
-                if ctype == 'multipart/form-data':
-                    raise NotImplementedError("unimplemented")
-                elif ctype == 'application/x-www-form-urlencoded':
-                    length = int(self.headers["Content-Length"])
-                    data = self.rfile.read(length)
-                    postvars = parse.parse_qs(data, keep_blank_values=1)
-                else:
-                    postvars = {}
-                files = postvars[b"files"][0].decode().split(",")
-                output = "/tmp/generated.pdf" # TODO
-                if not files:
-                    self.send_response(400)
-                    self.end_headers()
-                    self.wfile.write("no files selected")
-                    return
-                try:
-                    self.generate_pdf(files, output)
-                except subprocess.CalledProcessError as exc:
-                    traceback.print_exc()
-                    self.send_response(500)
-                    contents = str(exc).encode()
-                    contents += "\n\noutput: ".encode() + exc.output
-                    contents += "\n\nerror: ".encode() + (exc.stderr or b"")
-                    self.end_headers()
-                    self.wfile.write(contents)
-                    return
-                self.serve_file(output)
+                self.post_generate_pdf()
             else:
                 self.respond(400, f"unknown route: {self.path}")
         except ConnectionResetError:
