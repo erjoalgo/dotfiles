@@ -220,10 +220,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
     Here is a <a href="{href}">link to the video</a> instead.
 </video>
             """
-        else:
-            return f"""
-            <img src="{href}" width="{width}" height="{height}">
-            """
+        return f"""<img src="{href}" width="{width}" height="{height}">"""
 
     def serve_page(self, page_number):
         """Serve a page full of images."""
@@ -299,8 +296,6 @@ function deselectAll() {
    for (var box of boxes) box.checked = false;
 }
 """
-
-
         doc = f"""<!DOCTYPE html>
 <html>
   <head>
