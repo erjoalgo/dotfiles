@@ -229,7 +229,35 @@ class ButtonsCacher:
             target=self.cache_buttons_locally_loop)
         t.start()
 
+
+def read_valid_response(prompt, choices, allow_empty):
+    """Prompt the user until a valid response is obtained."""
     while True:
+        resp = input(prompt)
+        if resp in choices:
+            return resp
+        if not resp and allow_empty:
+            return resp
+        logging.warning("invalid response, try again..")
+        continue
+
+def learn_one_button(device, name, directory):
+    """Repeatedly prompt the user to listen and save a new IR button."""
+    device.auth()
+    while True:
+        device.enter_learning()
+        input(f"emit IR code for {name}, then press Return to continue...")
+        packet = device.check_data()
+        print(packet)
+        resp = read_valid_response("persist button (y=yes, n=no, r=retry) [y]?", "yrn",
+                                   allow_empty = True)
+        if resp in ("y", ""):
+            persist_button(name, packet, directory)
+        if resp == "n":
+            return
+        if resp == "r":
+            continue
+        assert False
 
 def start_server(device, port, delay,
                  directory, local_directory):
@@ -303,14 +331,8 @@ def main():
         press_button(device, ",".join(args.buttons), args.seconds, args.directory)
     elif args.learn:
         while True:
-            device.auth()
-            device.enter_learning()
-            input("emit IR code, then press Return to continue...")
-            packet = device.check_data()
-            print(packet)
-            # print(packet.hex())
-            name = input("enter last button name: ")
-            persist_button(name, packet, args.directory)
+            name = input("Enter name of button to learn: ")
+            learn_one_button(device, name, args.directory)
     elif args.learn_tv:
         tv_name = args.learn_tv
         # pylint: disable=invalid-name
