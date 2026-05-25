@@ -20,7 +20,7 @@ It makes it possible to programmatically press an IR remote button,
 but also listen for and learn new buttons, and save button-press contents under memorable names.
 """
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "GPL-3.0-or-later"
 keywords = ["ir", "broadlink", "RM4C", "infrared", "http", "api", "tv", "brightness"]
 classifiers = [
   "Development Status :: 4 - Beta",
