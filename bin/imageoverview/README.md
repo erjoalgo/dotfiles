@@ -14,6 +14,8 @@ To install:
 
 `$ pip install imageoverview`
 
+To run:
+
 `$ imageoverview -d ~/Pictures`
 
 See images in a 10x15 grid for wider monitors:
