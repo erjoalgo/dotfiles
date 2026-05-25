@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imageoverview"
+version = "2026.05.25.1"
+dependencies = [
+  "watchdog",
+]
+requires-python = ">=3.7"
+authors = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+maintainers = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+description = "A script to quickly browse through all the images under a given directory, and generate PDFs of selected images."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["imageoverview", "images", "browse", "recursive"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Homepage = "https://github.com/erjoalgo/dotfiles/tree/master/bin/imageoverview"
+Documentation = "https://github.com/erjoalgo/dotfiles/tree/master/bin/imageoverview/README.md"
+Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/imageoverview"
+"Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
+
+[project.scripts]
+imageoverview = "imageoverview.imageoverview:main"
+
+[project.entry-points."imageoverview.imageoverview"]
+imageoverview = "imageoverview.imageoverview:main"
+
