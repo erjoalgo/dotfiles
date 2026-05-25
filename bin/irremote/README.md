@@ -1,4 +1,8 @@
 This service exposes an API to contorl a broadlink IR remote device reachable over the network.
+
+I specifically use a Broadlink RM4C Universal IR remote, although other models may
+also work if they are supported by the broadlink python library bindings.
+
 It makes it possible to programmatically press an IR remote button,
 but also listen for and learn new buttons, and save button-press contents under memorable names.
 
