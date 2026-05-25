@@ -241,7 +241,7 @@ def main():
     parser.add_argument("-d", "--directory",
                         help="root directory for persistent buttons",
                         default=os.path.expanduser(
-                            "/home/ealfonso/afs/public/ir-buttons/"))
+                            "~/.config/ir-buttons/"))
     parser.add_argument("-c", "--cache-directory",
                         help="local mirror of AFS buttons directory",
                         default=os.path.expanduser("/usr/share/ir-buttons/"))
