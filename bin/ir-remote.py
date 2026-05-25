@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 
+"""An HTTP service that provides an API to programmatically press/learn buttons on an IR remote."""
+
+
 import argparse
 import http.server
 import logging
 import os
 import pdb
 import re
-import requests
 import subprocess
 import sys
 import threading
 import time
 import traceback
+
+import requests
+
 try:
     import broadlink
-except Exception:
+except ImportError:
     logging.warning(
         "failed to import broadlink, falling back to HTTP client mode")
 
@@ -44,6 +49,7 @@ BUTTONS = {
 }
 
 def press_button(device, name_spec, delay, directories):
+    """Press the given button spec found in directories, using the given broadlink device object."""
     sequence = name_spec.split(",")
     if len(sequence) > 1:
         logging.info("pressing sequence of %s buttons", len(sequence))
@@ -95,10 +101,12 @@ def press_button(device, name_spec, delay, directories):
 
 
 def button_text_is_valid(button_text):
+    """Check that non-binary button spec is valid."""
     return re.match("(([A-Z0-9_]+(x[0-9]+)?),?)+$", button_text)
 
 def persist_button(name, packet_bytes, directory,
                    prompt_overwrites = False):
+    """Persist the button definition into the given directory."""
     filename = os.path.join(directory, name)
     logging.info("persisting button %s with %s bytes to %s",
                  name, len(packet_bytes), filename)
@@ -117,11 +125,13 @@ def persist_button(name, packet_bytes, directory,
 
 
 def list_buttons(directory):
+    """List the buttons available under directory."""
     logging.info("listing directory: %s", directory)
     for filename in os.listdir(directory):
         yield (filename, os.path.join(directory, filename))
 
 def load_button(name, directory=None):
+    """Load the contents of the button given its name and directory."""
     if name in BUTTONS:
         return BUTTONS[name]
     buttons_map = dict(item for item in list_buttons(directory))
@@ -144,6 +154,7 @@ class IRService(http.server.BaseHTTPRequestHandler):
     """
 
     def __init__(self, device, delay, directory, local_directory):
+        # pylint: disable=super-init-not-called
         self.device = device
         self.delay = delay
         self.directory = directory
@@ -151,6 +162,7 @@ class IRService(http.server.BaseHTTPRequestHandler):
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
+        # pylint: disable=super-with-arguments
         super(IRService, self).__init__(*args, **kwargs)
 
 
@@ -173,8 +185,9 @@ class IRService(http.server.BaseHTTPRequestHandler):
                          (self.local_directory, self.directory))
             try:
                 self.respond(200, "success!")
-            except BrokenPipe as ex:
+            except BrokenPipeError as ex:
                 logging.error("broken pipe: %s", ex)
+                # pylint: disable=unnecessary-pass
                 pass
         except Exception as ex:
             logging.error("error during request handling: %s", ex)
@@ -187,6 +200,7 @@ class IRService(http.server.BaseHTTPRequestHandler):
             return
 
 def cache_buttons_locally(remote_directory, local_directory):
+    """Cache buttons from a source-of-truth remote into a local directory."""
     cmd = ["rsync", "-r", "--delete", remote_directory,
            local_directory]
     logging.info("attempting rsync via command: %s", " ".join(cmd))
@@ -204,11 +218,12 @@ def cache_buttons_locally_loop(delay=60, **kwargs):
     while True:
         try:
             cache_buttons_locally(**kwargs)
-        except Exception as ex:
+        except Exception:
             logging.error("failed to cache buttons: ", exc_info=True)
-        time.sleep(60)
+        time.sleep(delay)
 
 def main():
+    """Main function."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip",
                         help="ip address of the broadlink IR remote",
@@ -246,15 +261,14 @@ def main():
         names.extend(list(BUTTONS.keys()))
         print("\n".join(sorted(names)))
         return
-    elif args.buttons:
+    if args.buttons:
         for button in args.buttons:
             url = f"http://localhost:2727/{button}"
             resp = requests.get(url)
             if resp.status_code != 200:
-                logging.warn("failed to request button as a client: %s", resp)
+                logging.warning("failed to request button as a client: %s", resp)
                 break
-            else:
-                logging.info("response: %s", resp.text)
+            logging.info("response: %s", resp.text)
         else:
             return
 
@@ -294,6 +308,7 @@ def main():
             persist_button(name, packet, args.directory)
     elif args.learn_tv:
         tv_name = args.learn_tv
+        # pylint: disable=invalid-name
         TV_BUTTONS = ["POWER", "MENU", "INPUT", "UP", "DOWN", "LEFT", "RIGHT", "VOLUP",
                       "VOLDOWN", "ENTER", "BACK", "EXIT", "MUTE", "HOME", "PICTURE"]
         for suffix in TV_BUTTONS:
@@ -304,11 +319,10 @@ def main():
                 if resp == "n":
                     skip = True
                     break
-                elif resp in ("y", ""):
+                if resp in ("y", ""):
                     skip = False
                     break
-                else:
-                    print("unrecognized response")
+                print("unrecognized response")
             if skip:
                 continue
             device.auth()
@@ -318,6 +332,7 @@ def main():
             print(packet)
             persist_button(name, packet, args.directory)
     elif args.interact:
+        # pylint: disable=forgotten-debug-statement
         pdb.set_trace()
     else:
         parser.print_help(sys.stderr)
