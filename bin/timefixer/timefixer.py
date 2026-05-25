@@ -160,7 +160,7 @@ def main():
                         default=list(os.path.realpath(os.path.expanduser(dirname))
                                      for dirname in default_dirs))
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
-    parser.add_argument("-i", "--install", help="install", action="store_true")
+    parser.add_argument("-i", "--install-systemd", help="install", action="store_true")
     args = parser.parse_args()
 
     level = logging.INFO if args.quiet else logging.DEBUG
