@@ -17,7 +17,7 @@ maintainers = [
 ]
 description = "A script to quickly browse through all the images under a given directory, and generate PDFs of selected images."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "GPL-3.0-or-later"
 keywords = ["imageoverview", "images", "browse", "recursive"]
 classifiers = [
   "Development Status :: 4 - Beta",
