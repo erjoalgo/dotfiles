@@ -10,7 +10,6 @@ import os
 import pdb
 import re
 import subprocess
-import sys
 import threading
 import time
 import traceback
