@@ -71,7 +71,7 @@ class FsObserver():
         self.observer.start()
 
 
-class ImageCrawler(object):
+class ImageCrawler:
     """Recursively scan the given directory for images."""
     def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
         self.images = []
@@ -109,6 +109,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
 
     def __call__(self, *args, **kwargs):
         # https://stackoverflow.com/a/58909293/1941755
+        # pylint: disable=super-with-arguments
         super(HttpHandler, self).__init__(*args, **kwargs)
 
 
@@ -135,7 +136,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             elif self.path == "/version":
                 self.respond(200, __version__)
             else:
-                self.respond(400, "unknown route: {}".format(self.path))
+                self.respond(400, f"unknown route: {self.path}")
         except (ConnectionResetError, BrokenPipeError):
             # ignore errors from typical browser clients
             pass
@@ -179,7 +180,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
                     return
                 self.serve_file(output)
             else:
-                self.respond(400, "unknown route: {}".format(self.path))
+                self.respond(400, f"unknown route: {self.path}")
         except ConnectionResetError:
             # ignore errors from typical browser clients
             pass
@@ -229,8 +230,8 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             if i % cols == cols - 1:
                 table += "</tr>\n\n"
         table += """</table>"""
-        prev_page_href = "/page/{}".format(max(1, page_number - 1))
-        next_page_href = "/page/{}".format(min(page_number + 1, total_pages))
+        prev_page_href = f"/page/{max(1, page_number - 1)}"
+        next_page_href = f"/page/{min(page_number + 1, total_pages)}"
 
         javascript = f"""
             window.addEventListener("keydown", function (event) {{
@@ -261,7 +262,6 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
   event.preventDefault();
 }}, true);"""
         title = f"Page {page_number}/{total_pages}"
-                # TODO " of {self.directory}"
 
         javascript += """
 function fillInFilenames() {
@@ -316,32 +316,33 @@ function deselectAll() {
         self.wfile.write(doc.encode())
 
     def serve_file(self, filename):
+        """Serve a given file from the filesystem."""
         with open(filename, "rb") as fh:
             self.send_response(200)
-            ext = ".{}".format(filename.split(".")[-1].lower())
+            ext = "." + (filename.split(".")[-1].lower())
             content_type = mimetypes.types_map.get(ext)
             if content_type:
                 self.send_header("Content-type", content_type)
             else:
                 logging.warning("no content-type found for %s", filename)
             self.send_header("Cache-Control", "private")
+            self.send_header("Content-Disposition", f"inline; filename=\"images.pdf\"")
             self.end_headers()
             shutil.copyfileobj(fh, self.wfile)
 
     def log_request(self, *args):
-        """Reduce verbose logging."""
+        """Override to reduce verbose logging."""
+        # pylint: disable=unnecessary-pass
         pass
 
-class ImageOverview(object):
+class ImageOverview:
     """ImageOverview provides a web server to display all images in a directory."""
 
     def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
         self.crawler = ImageCrawler(directory, image_regexp, skip_image_regexp, reverse)
 
         def on_change(change_type, filename, event, crawler=self.crawler):
-            print("DDEBUG imageoverview.py uxpm: value of change_type: {}".format(change_type))
-            print("DDEBUG imageoverview.py qohz: value of filename: {}".format(filename))
-            print("DDEBUG imageoverview.py e7sx: value of event: {}".format(event))
+            logging.info("fs event: %s file %s: %s", change_type, filename, event)
             to_add = None
             if change_type == "created":
                 to_add = filename
@@ -380,7 +381,6 @@ class ImageOverview(object):
                                                    image_size=image_size))
         logging.info("starting http server on %s", server_address)
 
-        # TODO maybe stop
         self.http_thread = threading.Thread(target=httpd.serve_forever, args=())
         self.http_thread.start()
 
@@ -398,7 +398,7 @@ def main():
     def parse_dimensions_spec(spec):
         m = re.match("([0-9]+)x([0-9]+)", spec)
         if not m:
-            raise ValueError("invalid dimension spec: {}".format(spec))
+            raise ValueError(f"invalid dimension spec: {spec}")
         dimensions = (int(m.group(1)), int(m.group(2)))
         return dimensions
 
