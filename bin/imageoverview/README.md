@@ -16,4 +16,4 @@ To install:
 
 See images in a 10x15 grid for wider monitors:
 
-`$ imageoverview -d ~/Pictures -D 10x15 grid`
+`$ imageoverview -d ~/Pictures -D 10x15`
