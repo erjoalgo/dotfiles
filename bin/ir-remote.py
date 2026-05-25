@@ -258,7 +258,7 @@ def main():
         return
     if args.buttons:
         for button in args.buttons:
-            url = f"http://localhost:2727/{button}"
+            url = f"http://localhost:{DEFAULT_PORT}/{button}"
             resp = requests.get(url)
             if resp.status_code != 200:
                 logging.warning("failed to request button as a client: %s", resp)
