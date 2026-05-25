@@ -193,6 +193,10 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(contents)
                 return
+
+            # display_filename = "images.pdf"
+            # self.send_header("Content-Disposition", f'inline; filename="{display_filename}"')
+
             self.serve_file(output)
 
     def do_POST(self):
@@ -342,7 +346,6 @@ function deselectAll() {
             else:
                 logging.warning("no content-type found for %s", filename)
             self.send_header("Cache-Control", "private")
-            self.send_header("Content-Disposition", f"inline; filename=\"images.pdf\"")
             self.end_headers()
             shutil.copyfileobj(fh, self.wfile)
 
