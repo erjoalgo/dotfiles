@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "getchwrap"
+name = "timefixer"
 version = "2023.12.27.1"
 dependencies = [
   "watchdog",
@@ -15,24 +15,24 @@ authors = [
 maintainers = [
   {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
 ]
-description = "A subprocess wrapper to ergonomically eliminate redundant typing"
+description = "A service to fix files with timestamps in the future."
 readme = "README.md"
 license = {file = "LICENSE"}
-keywords = ["getchar", "git", "ergonimic"]
+keywords = ["timefixer", "timestamp", "modified", "future"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python"
 ]
 
 [project.urls]
-Homepage = "https://github.com/erjoalgo/getchwrap"
-Documentation = "https://github.com/erjoalgo/getchwrap"
-Repository = "https://github.com/erjoalgo/getchwrap"
-"Bug Tracker" = "https://github.com/erjoalgo/getchwrap/issues"
+Homepage = "https://github.com/erjoalgo/dotfiles/tree/master/bin/timefixer"
+Documentation = "https://github.com/erjoalgo/dotfiles/tree/master/bin/timefixer/README.md"
+Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/timefixer"
+"Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
 
 [project.scripts]
-getchwrap = "getchwrap.getchwrap:main"
+timefixer = "timefixer.timefixer:main"
 
-[project.entry-points."githost.githost"]
-getchwrap = "getchwrap.getchwrap:main"
+[project.entry-points."timefixer.timefixer"]
+timefixer = "timefixer.timefixer:main"
 
