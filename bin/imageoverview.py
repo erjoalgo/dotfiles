@@ -158,7 +158,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
     @staticmethod
     def generate_pdf(files, output, quality=15):
         """Generate a PDF from the given files."""
-        cmd = ["convert"] + files + [f"-quality {quality}", output]
+        cmd = ["convert", "-quality", str(quality)] + files + [output]
         logging.warning("generating pdf: %s", cmd)
         subprocess.check_output(cmd, stderr=subprocess.PIPE)
 
