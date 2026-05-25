@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "irremote"
+version = "2026.05.25.1"
+dependencies = [
+  "watchdog",
+]
+requires-python = ">=3.7"
+authors = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+maintainers = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+description = """This service exposes an API to contorl a broadlink IR remote device reachable over the network.
+It makes it possible to programmatically press an IR remote button,
+but also listen for and learn new buttons, and save button-press contents under memorable names.
+""
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["ir", "broadlink", "RM4C", "infrared", "http", "api", "tv", "brightness"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Homepage = "https://github.com/erjoalgo/dotfiles/tree/master/bin/irremote"
+Documentation = "https://github.com/erjoalgo/dotfiles/tree/master/bin/irremote/README.md"
+Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/irremote"
+"Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
+
+[project.scripts]
+irremote = "irremote.irremote:main"
+
+[project.entry-points."irremote.irremote"]
+irremote = "irremote.irremote:main"
+
