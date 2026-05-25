@@ -230,11 +230,18 @@ class ButtonsCacher:
         t.start()
 
     while True:
-        try:
-            cache_buttons_locally(**kwargs)
-        except Exception:
-            logging.error("failed to cache buttons: ", exc_info=True)
-        time.sleep(delay)
+
+def start_server(device, port, delay,
+                 directory, local_directory):
+    """Start the http server at the given port"""
+    server_address = ('', port)
+    httpd = http.server.HTTPServer(
+        server_address,
+        IRService(device=device, delay=delay,
+                  directory=directory,
+                  local_directory=local_directory))
+    logging.info("serving on %s", server_address)
+    httpd.serve_forever()
 
 def main():
     """Main function."""
@@ -311,43 +318,21 @@ def main():
                       "VOLDOWN", "ENTER", "BACK", "EXIT", "MUTE", "HOME", "PICTURE"]
         for suffix in TV_BUTTONS:
             name = f"{tv_name}_{suffix}"
-            skip = False
-            while True:
-                resp = input(f"learn {name} (y/n)? [y]")
-                if resp == "n":
-                    skip = True
-                    break
-                if resp in ("y", ""):
-                    skip = False
-                    break
-                print("unrecognized response")
-            if skip:
+            resp = read_valid_response(
+                f"learn {name} (y/n)? [y]", "yn", allow_empty=True)
+            if resp == "n":
                 continue
-            device.auth()
-            device.enter_learning()
-            input(f"emit IR code for {name}, then press Return to continue...")
-            packet = device.check_data()
-            print(packet)
-            persist_button(name, packet, args.directory)
+            learn_one_button(device, name, args.directory)
     elif args.interact:
         # pylint: disable=forgotten-debug-statement
         pdb.set_trace()
     else:
-        server_address = ('', args.port)
-        httpd = http.server.HTTPServer(
-            server_address,
-            IRService(device=device, delay=args.seconds,
-                      directory=args.directory,
-                      local_directory=args.cache_directory))
-        logging.info("serving on %s", server_address)
-        t = threading.Thread(
-            target=cache_buttons_locally_loop,
-            kwargs=({
-                "remote_directory": args.directory,
-                "local_directory": args.cache_directory
-            }))
-        t.start()
-        httpd.serve_forever()
+        if args.directory and args.cache_directory:
+            cacher = ButtonsCacher(remote_directory=args.directory,
+                                   local_directory=args.cache_directory)
+            cacher.start()
+        start_server(device=device, port=args.port, delay=args.seconds,
+                     directory=args.directory, local_directory=args.cache_directory)
 
 if __name__ == "__main__":
     main()
