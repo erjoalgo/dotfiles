@@ -10,43 +10,43 @@ PAUSE=false
 
 while getopts "p:s:d:xcaDnh" OPT; do
     case ${OPT} in
-    s)
-        SEED_FILE=${OPTARG}
-        ;;
-    # optional
-    d)
-        DELAY_SECS=${OPTARG}
-        ;;
-    x)
-        MODE=xdotool
-        ;;
-    c)
-        MODE=curl
-        ;;
-    a)
-        MODE=automation
-        ;;
-    p)
-        PORT=${OPTARG}
-        ;;
-    D)
-        # debug
-        # mode=curl
-        MODE=xdotool
-        DELAY_SECS=.5
-        SPECULOS_NO_DISPLAY_HEADLESS=true
-        PAUSE=true
-        ;;
-    n)
-        SPECULOS_NO_DISPLAY_HEADLESS=true
-        ;;
-    h)
-        less "$0"
-        exit 0
-        ;;
-    *)
-        echo "unrecognized flag: ${OPT}" && exit ${LINENO}
-        ;;
+        s)
+            SEED_FILE=${OPTARG}
+            ;;
+        # optional
+        d)
+            DELAY_SECS=${OPTARG}
+            ;;
+        x)
+            MODE=xdotool
+            ;;
+        c)
+            MODE=curl
+            ;;
+        a)
+            MODE=automation
+            ;;
+        p)
+            PORT=${OPTARG}
+            ;;
+        D)
+            # debug
+            # mode=curl
+            MODE=xdotool
+            DELAY_SECS=.5
+            SPECULOS_NO_DISPLAY_HEADLESS=true
+            PAUSE=true
+            ;;
+        n)
+            SPECULOS_NO_DISPLAY_HEADLESS=true
+            ;;
+        h)
+            less "$0"
+            exit 0
+            ;;
+        *)
+            echo "unrecognized flag: ${OPT}" && exit ${LINENO}
+            ;;
     esac
 done
 shift $((OPTIND -1))
@@ -210,12 +210,12 @@ function section {
 # https://unix.stackexchange.com/questions/92447/
 
 chr() {
-  [ "$1" -lt 256 ] || return 1
-  printf "\\$(printf '%03o' "$1")"
+    [ "$1" -lt 256 ] || return 1
+    printf "\\$(printf '%03o' "$1")"
 }
 
 ord() {
-  LC_CTYPE=C printf '%d' "'$1"
+    LC_CTYPE=C printf '%d' "'$1"
 }
 
 function move-to-char {
