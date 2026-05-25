@@ -37,6 +37,7 @@ except ImportError as ex:
 
 
 class FsObserver():
+    """Listen for new images created under the given directory."""
     def __init__(self, directory, on_change):
         self.directory = directory
         self.observer = watchdog.observers.Observer()
@@ -45,6 +46,7 @@ class FsObserver():
     @staticmethod
     def __handler__(on_change):
         class Handler(watchdog.events.FileSystemEventHandler):
+            """A handler for filesystem events."""
             def __init__(self, on_change):
                 self.on_change = on_change
 
@@ -63,12 +65,14 @@ class FsObserver():
         return Handler(on_change)
 
     def start(self):
+        """Start the filesystem observer."""
         event_handler = self.__handler__(self.on_change)
         self.observer.schedule(event_handler, self.directory, recursive=True)
         self.observer.start()
 
 
 class ImageCrawler(object):
+    """Recursively scan the given directory for images."""
     def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
         self.images = []
         self.directory = directory
@@ -77,6 +81,7 @@ class ImageCrawler(object):
         self.reverse = reverse
 
     def maybe_add_image(self, filename, verbose = False):
+        """Maybe add filename as an image."""
         if re.search(self.image_regexp, filename) and not (
                 self.skip_image_regexp and
                 re.search(self.skip_image_regexp, filename)):
@@ -85,6 +90,7 @@ class ImageCrawler(object):
             logging.info("skipping filename %s")
 
     def start(self):
+        """Start crawling the directory for images."""
         for (root, dirs, files) in os.walk(self.directory):
             del dirs
             for base_filename in sorted(files, reverse=self.reverse):
@@ -180,6 +186,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
 
     @staticmethod
     def media_tag_html(href, width, height):
+        """Generate the HTML document tag for the given resource."""
         if re.match("(?i).*(mpe?g|mp4)", href):
             return f"""
 <video controls width="{width}" height="{height}">
@@ -197,6 +204,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             """
 
     def serve_page(self, page_number):
+        """Serve a page full of images."""
         rows, cols = self.dimensions
         images_per_page = rows * cols
         page_images = self.images[
@@ -353,16 +361,18 @@ class ImageOverview(object):
         self.http_thread = None
 
     def start_observer(self):
+        """Start the FS observer, if possible."""
         if self.observer:
             self.observer.start()
 
     def start_crawl(self):
-        # TODO maybe stop existing
+        """Start crawling images recursively under the directory."""
         self.crawl_thread = threading.Thread(target=self.crawler.start, args=())
         self.crawl_thread.start()
         return self.crawl_thread
 
     def start_http(self, port, dimensions, image_size, listen = ""):
+        """Start the http server."""
         server_address = (listen, port)
         httpd = http.server.HTTPServer(server_address,
                                        HttpHandler(images = self.crawler.images,
@@ -379,9 +389,12 @@ class ImageOverview(object):
         return url
 
 def x_www_browse(url):
+    """Browse to the given url using the system's browser."""
     subprocess.Popen(["x-www-browser", url])
 
 def main():
+    """Main function"""
+
     def parse_dimensions_spec(spec):
         m = re.match("([0-9]+)x([0-9]+)", spec)
         if not m:
