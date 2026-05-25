@@ -26,13 +26,13 @@ import urllib.parse
 try:
     import watchdog.events
     import watchdog.observers
-except Exception as ex:
+except ImportError as ex:
     logging.warning("failed to import watchdog: %s", ex)
     watchdog = None
 
 try:
     from .version import __version__
-except Exception as ex:
+except ImportError as ex:
     __version__ = "unknown"
 
 
