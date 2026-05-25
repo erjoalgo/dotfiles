@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "irremote"
-version = "2026.05.25.1"
+version = "2026.05.25.2"
 dependencies = [
   "watchdog",
 ]
