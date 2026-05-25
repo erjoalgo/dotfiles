@@ -48,6 +48,8 @@ BUTTONS = {
     "VIZIO_POWER": b'&\x00P\x00\x00\x01#\x94\x11\x14\x0f\x14\x0f9\x0e\x15\x0f\x15\r\x15\x0f\x14\x10\x13\x108\x0f7\x10\x15\x0f8\r9\x109\x0f8\x0f8\x0f\x14\x10\x13\x0f\x14\x0f:\x0e\x14\x0f\x13\x11\x14\x0f\x14\x0f7\x108\x108\x0f\x14\x0f7\x118\r;\x0e8\x10\x00\x05:\x00\x01"K\x10\x00\r\x05'
 }
 
+DEFAULT_PORT = 2727
+
 def press_button(device, name_spec, delay, directories):
     """Press the given button spec found in directories, using the given broadlink device object."""
     sequence = name_spec.split(",")
@@ -224,7 +226,7 @@ def main():
     parser.add_argument("-b", "--buttons", help="button name",
                         nargs="+")
     parser.add_argument("-p", "--port", help="port on which to listen",
-                        type=int)
+                        default=DEFAULT_PORT, type=int)
     parser.add_argument("-l", "--list", help="list all available buttons",
                         action="store_true")
     parser.add_argument("-L", "--learn", help="learn a new button",
@@ -273,22 +275,6 @@ def main():
 
     if args.buttons:
         press_button(device, ",".join(args.buttons), args.seconds, args.directory)
-    elif args.port:
-        server_address = ('', args.port)
-        httpd = http.server.HTTPServer(
-            server_address,
-            IRService(device=device, delay=args.seconds,
-                      directory=args.directory,
-                      local_directory=args.cache_directory))
-        logging.info("serving on %s", server_address)
-        t = threading.Thread(
-            target=cache_buttons_locally_loop,
-            kwargs=({
-                "remote_directory": args.directory,
-                "local_directory": args.cache_directory
-            }))
-        t.start()
-        httpd.serve_forever()
     elif args.learn:
         while True:
             device.auth()
@@ -328,8 +314,21 @@ def main():
         # pylint: disable=forgotten-debug-statement
         pdb.set_trace()
     else:
-        parser.print_help(sys.stderr)
-        raise Exception("no action specified")
+        server_address = ('', args.port)
+        httpd = http.server.HTTPServer(
+            server_address,
+            IRService(device=device, delay=args.seconds,
+                      directory=args.directory,
+                      local_directory=args.cache_directory))
+        logging.info("serving on %s", server_address)
+        t = threading.Thread(
+            target=cache_buttons_locally_loop,
+            kwargs=({
+                "remote_directory": args.directory,
+                "local_directory": args.cache_directory
+            }))
+        t.start()
+        httpd.serve_forever()
 
 if __name__ == "__main__":
     main()
