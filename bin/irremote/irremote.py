@@ -210,6 +210,7 @@ def cache_buttons_locally(remote_directory, local_directory):
     logging.info("rsync completed successfully")
 
 def cache_buttons_locally_loop(delay=60, **kwargs):
+    """Periodically attempt to cache remote buttons directory locally."""
     while True:
         try:
             cache_buttons_locally(**kwargs)
