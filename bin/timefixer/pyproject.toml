@@ -31,8 +31,8 @@ Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/timefixer"
 "Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
 
 [project.scripts]
-timefixer = "timefixer.timefixer:main"
+timefixer = "timefixer:main"
 
 [project.entry-points."timefixer.timefixer"]
-timefixer = "timefixer.timefixer:main"
+timefixer = "timefixer:timefixer"
 
