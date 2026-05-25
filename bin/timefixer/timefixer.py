@@ -136,9 +136,8 @@ WantedBy=default.target
                           ["sudo", "systemctl", "daemon-reload"],
                           ["sudo", "systemctl",  "restart", unit]]
     for cmd in start_commands:
-        print("DDEBUG timefixer.py cftu: value of cmd: {}".format(cmd))
         subprocess.run(cmd, check = True)
-    logging.info(f"succesfully installed {unit} with contents: \n{contents}")
+    logging.info("succesfully installed %s with contents: \n%s", unit, contents)
 
 def install_time_fixer_service(dirs, as_user = True):
     """Install the timefixer serrvice."""
