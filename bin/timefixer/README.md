@@ -3,5 +3,5 @@ This can happen occassionally when downloading files with incorrect timestamps b
 Fixing such cases makes it possible to reliably fetch the latest modified file from a list of directories, which helps my productivity.
 
 To install:
-$ pip install timefixer
-$ timefixer --install-systemd
+`$ pip install timefixer`
+`$ timefixer --install-systemd`
