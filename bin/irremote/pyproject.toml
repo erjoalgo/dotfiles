@@ -34,8 +34,8 @@ Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/irremote"
 "Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
 
 [project.scripts]
-irremote = "irremote.irremote:main"
+irremote = "irremote:main"
 
 [project.entry-points."irremote.irremote"]
-irremote = "irremote.irremote:main"
+irremote = "irremote:irremote"
 
