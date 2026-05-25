@@ -41,3 +41,5 @@ echo "TCL_MENU,TCL_DOWN,TCL_RIGHT,TCL_RIGHT,TCL_UP,TCL_ENTER,TCL_DOWN,TCL_RIGHT,
 Press the more complex TCL_BRIGHTNESS_UP button as it if were a regular button:
 
 `$ irremote -b TCL_BRIGHTNESS_UP`
+
+If the IP address argument is omitted in a non-client mode, the broadlink API may try to scan the network for the device, although this can be slower and less reliable.
