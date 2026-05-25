@@ -200,16 +200,35 @@ class IRService(http.server.BaseHTTPRequestHandler):
             self.wfile.write(contents)
             return
 
-def cache_buttons_locally(remote_directory, local_directory):
-    """Cache buttons from a source-of-truth remote into a local directory."""
-    cmd = ["rsync", "-r", "--delete", remote_directory,
-           local_directory]
-    logging.info("attempting rsync via command: %s", " ".join(cmd))
-    subprocess.run(cmd, check = True)
-    logging.info("rsync completed successfully")
+class ButtonsCacher:
+    """Repeatedly cache buttons locally from a possibly remote NFS source of truth."""
+    def __init__(self, remote_directory, local_directory):
+        self.remote_directory = remote_directory
+        self.local_directory = local_directory
 
-def cache_buttons_locally_loop(delay=60, **kwargs):
-    """Periodically attempt to cache remote buttons directory locally."""
+    def cache_buttons_locally(self):
+        """Cache buttons from a source-of-truth remote into a local directory."""
+        cmd = ["rsync", "-r", "--delete", self.remote_directory,
+               self.local_directory]
+        logging.info("attempting rsync via command: %s", " ".join(cmd))
+        subprocess.run(cmd, check = True)
+        logging.info("rsync completed successfully")
+
+    def cache_buttons_locally_loop(self, delay=60):
+        """Periodically attempt to cache remote buttons directory locally."""
+        while True:
+            try:
+                self.cache_buttons_locally()
+            except Exception:
+                logging.error("failed to cache buttons: ", exc_info=True)
+            time.sleep(delay)
+
+    def start(self):
+        """Start the buttons cache loop."""
+        t = threading.Thread(
+            target=self.cache_buttons_locally_loop)
+        t.start()
+
     while True:
         try:
             cache_buttons_locally(**kwargs)
