@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timefixer"
-version = "2023.12.27.1"
+version = "2026.05.25.1"
 dependencies = [
   "watchdog",
 ]
