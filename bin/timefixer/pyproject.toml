@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "getchwrap"
+version = "2023.12.27.1"
+dependencies = [
+  "watchdog",
+]
+requires-python = ">=3.7"
+authors = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+maintainers = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+description = "A subprocess wrapper to ergonomically eliminate redundant typing"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["getchar", "git", "ergonimic"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Homepage = "https://github.com/erjoalgo/getchwrap"
+Documentation = "https://github.com/erjoalgo/getchwrap"
+Repository = "https://github.com/erjoalgo/getchwrap"
+"Bug Tracker" = "https://github.com/erjoalgo/getchwrap/issues"
+
+[project.scripts]
+getchwrap = "getchwrap.getchwrap:main"
+
+[project.entry-points."githost.githost"]
+getchwrap = "getchwrap.getchwrap:main"
+
