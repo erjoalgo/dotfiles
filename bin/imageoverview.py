@@ -20,6 +20,7 @@ import socket
 import subprocess
 import threading
 import traceback
+import tempfile
 import urllib.parse
 
 try:
