@@ -204,14 +204,7 @@ def cache_buttons_locally(remote_directory, local_directory):
     cmd = ["rsync", "-r", "--delete", remote_directory,
            local_directory]
     logging.info("attempting rsync via command: %s", " ".join(cmd))
-    p = subprocess.Popen(cmd,
-                     stdout=subprocess.PIPE,
-                     stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-    print(stderr.decode())
-    print(stdout.decode())
-    if p.returncode:
-        raise Exception(f"rsync failed")
+    subprocess.run(cmd, check = True)
     logging.info("rsync completed successfully")
 
 def cache_buttons_locally_loop(delay=60, **kwargs):
