@@ -9,7 +9,7 @@
   "load file, trapping and recording errors"
   (handler-case
       (with-elapsed-time elapsed-time (load pathname)
-        (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time))
+                         (message "loaded ~A in ~Dms" (pathname-name pathname) elapsed-time))
     (error (err)
       (message "error loading: ~A~%: '~A'" pathname err)
       (cons pathname err))))
@@ -28,13 +28,13 @@
   "scroll up/down the browser which is on another, visible frame"
   (let* ((curr-win (current-window))
 	 (visible-browser-wins
-	   (remove-if-not
-	    (lambda (win)
-	      (and
-	       (not (eq win curr-win))
-	       (window-visible-p win)
-	       (is-browser-win win)))
-	    (screen-windows (current-screen)))))
+	  (remove-if-not
+	   (lambda (win)
+	     (and
+	      (not (eq win curr-win))
+	      (window-visible-p win)
+	      (is-browser-win win)))
+	   (screen-windows (current-screen)))))
 
     (when visible-browser-wins
       (send-fake-key (car visible-browser-wins) (kbd up-down-key)))))
@@ -73,19 +73,19 @@
 
 (defcommand move-window-toggle ()
     () "move window to next monitor (display)"
-  (move-window
-   (if (neighbour :right
-                  (tile-group-current-frame (current-group))
-		  (group-frames (current-group)))
-       :right
-       :left)))
+    (move-window
+     (if (neighbour :right
+                    (tile-group-current-frame (current-group))
+		    (group-frames (current-group)))
+         :right
+         :left)))
 
 (defcommand dict-lookup-command (word)
     ((:string "Word to lookup: "))
   "lookup a word in the dictionary (requires the dict package)"
   (let* (
 	 (definition
-	   (run-shell-command (format nil "dict ~a" word) t))
+	  (run-shell-command (format nil "dict ~a" word) t))
 	 (*suppress-echo-timeout* t); let me read the definition in peace
 	 )
     (when word
@@ -202,9 +202,9 @@
          (delay-secs .1))
     (loop for (dx dy) in '((-1 -1) (1 -1) (-1 1) (1 1) (0 0))
           do
-             (warp-pointer (current-screen)
-                           (+ x (* dx offset))
-                           (+ y (* dy offset)))
+          (warp-pointer (current-screen)
+                        (+ x (* dx offset))
+                        (+ y (* dy offset)))
           do (sleep delay-secs))))
 
 (defcommand ignore-lid-close-temporarily (hours)
@@ -303,9 +303,9 @@
 
 (defun redshift-current-temp ()
   (let ((output
-          (run-shell-command
-           "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
-           t)))
+         (run-shell-command
+          "redshift -p | grep -Po '(?<=Color temperature: )[0-9]+'"
+          t)))
     (parse-integer output)))
 
 (defun redshift-stop-service ()
@@ -334,8 +334,8 @@
 (defun ledger-read-password-id ()
   (let* ((url (mozrepl:chrome-get-url))
          (password-id
-           (read-one-line (current-screen) "enter ledger password id: "
-                          :initial-input (if url (password-id-from-url url) ""))))
+          (read-one-line (current-screen) "enter ledger password id: "
+                         :initial-input (if url (password-id-from-url url) ""))))
     password-id))
 
 (defcommand ledger-password-backup-restore
@@ -347,12 +347,12 @@
 (defun type-sh (&key password-id  no-retry)
   (let* ((password-id (or password-id (ledger-read-password-id)))
          (on-error-callback
-           (unless no-retry
-             (eval
-              `(lambda (retcode output)
-                 (declare (ignore retcode output))
-                 (kinit)
-                 (type-sh :password-id ,password-id :no-retry t))))))
+          (unless no-retry
+            (eval
+             `(lambda (retcode output)
+                (declare (ignore retcode output))
+                (kinit)
+                (type-sh :password-id ,password-id :no-retry t))))))
     (assert password-id)
     (run-command-async
      "type.sh"
@@ -397,16 +397,16 @@
     (message "^2kinit && aklog -d succeeded")))
 
 (defun adb-select-device () ()
-  (let* ((device-line
-           (selcand:select
-            :candidates (->> (run-shell-command "adb devices" t)
-                             (ppcre:split #\Newline)
-                             (cdr))
-            :prompt "select adb device: "
-            :display-candidates t
-            :on-empty-error "no adb devices found!"))
-         (device-id (car (ppcre:split #\Tab device-line))))
-    device-id))
+       (let* ((device-line
+               (selcand:select
+                :candidates (->> (run-shell-command "adb devices" t)
+                                 (ppcre:split #\Newline)
+                                 (cdr))
+                :prompt "select adb device: "
+                :display-candidates t
+                :on-empty-error "no adb devices found!"))
+              (device-id (car (ppcre:split #\Tab device-line))))
+         device-id))
 
 (defun openafs-this-cell ()
   (format nil "~A/" (trim-spaces (file-string #P"/etc/openafs/ThisCell"))))
@@ -421,9 +421,9 @@
 
 (defun n64-list-roms ()
   (let* ((dirnames
-           (list
-            (merge-pathnames #P"public/n64/roms/*.*" (openafs-this-cell-root))
-            #P"~/Downloads/n64/*.*"))
+          (list
+           (merge-pathnames #P"public/n64/roms/*.*" (openafs-this-cell-root))
+           #P"~/Downloads/n64/*.*"))
          (roms (loop for dirname in dirnames
                      nconc (directory dirname))))
     roms))
@@ -431,8 +431,8 @@
 (defun n64-select-rom ()
   (let* ((candidates (n64-list-roms))
          (last-rom-truepath
-           (when (probe-file last-rom-symlink)
-             (truename last-rom-symlink)))
+          (when (probe-file last-rom-symlink)
+            (truename last-rom-symlink)))
          initial-candidate
          selection)
     (when last-rom-truepath
@@ -473,10 +473,10 @@
 
 (defun pgrep (pattern)
   (let ((lines
-          (->
-           (format nil "pgrep ~A" pattern)
-           (run-shell-command t)
-           trim-spaces)))
+         (->
+          (format nil "pgrep ~A" pattern)
+          (run-shell-command t)
+          trim-spaces)))
     (->> (ppcre:split #\Newline lines)
          (mapcar #'parse-integer))))
 
