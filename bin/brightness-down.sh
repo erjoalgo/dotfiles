@@ -7,5 +7,5 @@ pgrep picom || invert-colors-toggle.sh &
 
 emacsclient-wrapper.sh -e '(redshift-load-dark-theme)' &
 
-ir-remote.py -bTCL_BRIGHTNESS_DOWN,LG_BRIGHTNESS_DOWN &
+irremote -bTCL_BRIGHTNESS_DOWN,LG_BRIGHTNESS_DOWN &
 

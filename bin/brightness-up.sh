@@ -8,4 +8,4 @@ pkill picom || true
 
 emacsclient-wrapper.sh -e '(redshift-unload-dark-theme)' &
 
-ir-remote.py -bTCL_BRIGHTNESS_UP,LG_BRIGHTNESS_UP
+irremote -bTCL_BRIGHTNESS_UP,LG_BRIGHTNESS_UP

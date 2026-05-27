@@ -458,7 +458,7 @@
 (defcommand press-ir-button (button-name) ((:string))
   (message "pressing button: ~A" button-name)
   (run-command-async
-   "ir-remote.py"
+   "irremote"
    (list "-b" button-name)))
 
 
