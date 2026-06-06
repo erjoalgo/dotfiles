@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+SELF_PATH=$(realpath "${BASH_SOURCE[0]}")
+
 cd "$(realpath $(dirname "${BASH_SOURCE[0]}"))"
 
 CONF=/etc/sysctl.d/99-sysrq.conf
@@ -50,3 +52,5 @@ sudo cp tvpower.ko /lib/modules/$(uname -r)/kernel/drivers/
 sudo tee -a /etc/modules-load.d/tvpower.conf <<< tvpower
 
 sudo depmod -a
+
+sudo ln -sf $(realpath "${SELF_PATH}") /etc/kernel/postinst.d/
