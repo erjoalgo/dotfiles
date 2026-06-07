@@ -79,7 +79,8 @@
         (last-time (gensym "expr-time-")))
     `(progn
        (let ((now (get-universal-time)))
-         (if (and (symbol-value ',sym)
+         (if (and (boundp ',sym)
+                  (symbol-value ',sym)
                   (<= (- now (symbol-value ',last-time)) ,max-secs))
              (symbol-value ',sym)
              (progn (format t "refreshing cached value...")
