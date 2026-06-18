@@ -1,0 +1,13 @@
+#!/bin/bash -x
+
+set -euo pipefail
+
+install-xdg-open-handler.sh -c emacsclient-wrapper.sh -m text/plain
+
+# test:
+# xdg-mime query default text/plain
+# sh -x $(which xdg-open) "mailto:erjoalgo@gmail.com"
+
+# Local Variables:
+# mode: sh-mode
+# End:
