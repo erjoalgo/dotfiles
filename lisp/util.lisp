@@ -354,6 +354,15 @@
   (loop for (mutex . thread) in (blocking-threads)
         collect (sb-thread:terminate-thread thread)))
 
+(defun kill-lparallel-threads ()
+  (loop for thread in (sb-thread:list-all-threads)
+        as name = (sb-thread:thread-name thread)
+        when (equal name "lparallel")
+          do (progn
+               (format t "DDEBUG util.lisp gikj: value of name: ~A~%" name)
+               (sb-thread:destroy-thread thread))
+        collect name))
+
 (defun find-window-by-regexp (regexp)
   (loop for win in (list-windows (current-screen))
         as title = (window-title win)
