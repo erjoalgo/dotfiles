@@ -25,6 +25,8 @@ APP_NAME=$(grep -Po '^[^ ]+' <<< "${COMMAND_LINE}")
 
 MIMEAPPS=${HOME}/.local/share/applications/mimeapps.list
 
+BLOCK_ID=${BLOCK_ID:-ad1ac7e0-b4c3-4661-a73a-88f6b4fd6f92-xdg-open-for-${MIME_TYPE}}
+
 mkdir -p $(dirname "${MIMEAPPS}")
 insert-text-block "# ${BLOCK_ID}" "${MIMEAPPS}" <<EOF
 [Added Associations]
