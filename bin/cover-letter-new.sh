@@ -12,7 +12,8 @@ cp -r "${TMPL}" "${DEST}"
 TEX="${DEST}/cover-letter.tex"
 
 DATESTR=$(date +"%dth of %B, %Y")
-RECIPIENT="${COMPANY_NAME} recruitment team"
+COMPANY_NAME_SPACES=$(sed 's/-/ /g' <<< "${COMPANY_NAME}")
+RECIPIENT="${COMPANY_NAME_SPACES^} team"
 
 sed -i \
     -e "s/^\\\\recipient.*/\\\\recipient{${RECIPIENT}}{}/g" \
