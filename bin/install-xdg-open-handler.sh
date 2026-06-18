@@ -4,19 +4,19 @@ set -euo pipefail
 
 while getopts "c:m:b:h" OPT; do
     case ${OPT} in
-    c)
-        COMMAND_LINE=${OPTARG}
-        ;;
-    m)
-        MIME_TYPE=${OPTARG}
-        ;;
-    b)
-        BLOCK_ID=${OPTARG}
-        ;;
-    h)
-        less $0
-        exit 0
-        ;;
+        c)
+            COMMAND_LINE=${OPTARG}
+            ;;
+        m)
+            MIME_TYPE=${OPTARG}
+            ;;
+        b)
+            BLOCK_ID=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
