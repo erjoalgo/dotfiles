@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdffill"
+version = "2026.06.19.0"
+dependencies = [
+  "pypdf",
+  "fillpdf",
+  "PyMuPDF",
+]
+requires-python = ">=3.7"
+authors = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+maintainers = [
+  {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
+]
+description = """Command line utility to manipulate PDF fields. It can list, rename, fill-in or delete PDF fields."""
+
+readme = "README.md"
+license = "GPL-3.0-or-later"
+keywords = ["pdf", "fields", "fill"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Homepage = "https://github.com/erjoalgo/dotfiles/tree/master/bin/pdffill"
+Documentation = "https://github.com/erjoalgo/dotfiles/tree/master/bin/pdffill/README.md"
+Repository = "https://github.com/erjoalgo/dotfiles/tree/master/bin/pdffill"
+"Bug Tracker" = "https://github.com/erjoalgo/dotfiles/issues"
+
+[project.scripts]
+pdffill = "pdffill:main"
+
+[project.entry-points."pdffill.pdffill"]
+pdffill = "pdffill:pdffill"
