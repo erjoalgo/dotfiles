@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-install-xdg-open-handler.sh -c emacsclient-wrapper.sh -m text/plain
+install-xdg-open-handler.sh  \
+    -c /home/ealfonso/.stumpwmrc.d/bin/emacsclient-wrapper.sh \
+    -m text/plain
 
 # test:
 # xdg-mime query default text/plain
