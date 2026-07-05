@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pdffill"
-version = "2026.06.19.0"
+version = "2026.07.04.0"
 dependencies = [
   "pypdf",
   "fillpdf",
