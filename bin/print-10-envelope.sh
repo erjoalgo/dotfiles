@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-while getopts "ha:s:r:o:71c:x" OPT; do
+while getopts "ha:s:r:o:716c:x" OPT; do
     case ${OPT} in
     s)
         SENDER_FILENAME=${OPTARG}
@@ -19,6 +19,9 @@ while getopts "ha:s:r:o:71c:x" OPT; do
     7)
             ENVELOPE_TYPE="5x7"
         ;;
+        6)
+            ENVELOPE_TYPE="6x9"
+            ;;
     c)
         INK_COLOR=${OPTARG}
         ;;
@@ -33,6 +36,8 @@ while getopts "ha:s:r:o:71c:x" OPT; do
 done
 shift $((OPTIND -1))
 
+RECIPIENT_VERTICAL_OFFSET_INCHES=${RECIPIENT_VERTICAL_OFFSET_INCHES:-.5in}
+
 case "${ENVELOPE_TYPE}" in
 
     10)
@@ -43,6 +48,11 @@ case "${ENVELOPE_TYPE}" in
     5x7)
         RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-2}
         SIZE=5in,7in
+        ;;
+    6x9)
+        RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-4}
+        RECIPIENT_VERTICAL_OFFSET_INCHES=2in
+        SIZE=6in,9in
         ;;
     *)
         echo "unknown envelope type" && exit ${LINENO}
@@ -84,7 +94,7 @@ cat <<EOF > ${TEX}
 \LARGE
 ${SENDER_LINES}
 
-\vspace{.5in}\LARGE
+\vspace{${RECIPIENT_VERTICAL_OFFSET_INCHES}}\LARGE
 \setlength\parindent{${RECIPIENT_OFFSET_INCHES}in}
 
 ${RECIPIENT_LINES}
