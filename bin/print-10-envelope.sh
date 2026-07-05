@@ -17,7 +17,7 @@ while getopts "ha:s:r:o:71c:x" OPT; do
         ENVELOPE_TYPE="10"
         ;;
     7)
-        ENVELOPE_TYPE="7"
+            ENVELOPE_TYPE="5x7"
         ;;
     c)
         INK_COLOR=${OPTARG}
@@ -40,7 +40,7 @@ case "${ENVELOPE_TYPE}" in
         SIZE=4.12in,9.50in
         ;;
 
-    7)
+    5x7)
         RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-2}
         SIZE=5in,7in
         ;;
