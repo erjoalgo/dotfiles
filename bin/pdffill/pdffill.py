@@ -8,10 +8,10 @@ import logging
 
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import NameObject, create_string_object
+import pymupdf
 
 from fillpdf import fillpdfs
 
-import fitz
 
 def list_fields(input_pdf):
     """List the fields in input_pdf."""
@@ -90,7 +90,7 @@ def list_to_map(arr):
 
 def delete_fields(input_pdf, output_pdf, fields_to_delete):
     """Delete the given fields and write to output_pdf."""
-    doc = fitz.open(input_pdf)
+    doc = pymupdf.open(input_pdf)
     for page in doc:
         # Get all interactive form widgets on the page
         for widget in page.widgets():
@@ -106,7 +106,7 @@ def delete_fields(input_pdf, output_pdf, fields_to_delete):
 
     # Save the updated PDF
     doc.save(output_pdf, incremental=True,
-             encryption=fitz.PDF_ENCRYPT_KEEP)
+             encryption=pymupdf.PDF_ENCRYPT_KEEP)
     doc.close()
 
 def main():
