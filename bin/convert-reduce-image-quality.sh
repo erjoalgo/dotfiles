@@ -23,6 +23,8 @@ shift $((OPTIND -1))
 
 for INPUT in $*; do
     OUTPUT=$(sed 's/[.]/.low-quality./' <<< "${INPUT}")
-    convert "${INPUT}" -quality ${QUALITY} "${OUTPUT}"
+    if ! convert "${INPUT}" -quality ${QUALITY} "${OUTPUT}"; then
+        echo "warn: failed to convert ${INPUT}"
+    fi
     echo "wrote to ${OUTPUT} using quality ${QUALITY}"
 done
