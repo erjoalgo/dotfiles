@@ -4,34 +4,34 @@ set -euo pipefail
 
 while getopts "ha:s:r:o:716c:x" OPT; do
     case ${OPT} in
-    s)
-        SENDER_FILENAME=${OPTARG}
-        ;;
-    r)
-        RECIPIENT_FILENAME=${OPTARG}
-        ;;
-    o)
-        RECIPIENT_OFFSET_INCHES=${OPTARG}
-        ;;
-    1)
-        ENVELOPE_TYPE="10"
-        ;;
-    7)
+        s)
+            SENDER_FILENAME=${OPTARG}
+            ;;
+        r)
+            RECIPIENT_FILENAME=${OPTARG}
+            ;;
+        o)
+            RECIPIENT_OFFSET_INCHES=${OPTARG}
+            ;;
+        1)
+            ENVELOPE_TYPE="10"
+            ;;
+        7)
             ENVELOPE_TYPE="5x7"
-        ;;
+            ;;
         6)
             ENVELOPE_TYPE="6x9"
             ;;
-    c)
-        INK_COLOR=${OPTARG}
-        ;;
-    x)
-        X_WWW_BROWSER=true
-        ;;
-    h)
-        less $0
-        exit 0
-        ;;
+        c)
+            INK_COLOR=${OPTARG}
+            ;;
+        x)
+            X_WWW_BROWSER=true
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
