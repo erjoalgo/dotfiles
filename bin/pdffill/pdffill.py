@@ -5,6 +5,7 @@
 
 import argparse
 import logging
+import re
 
 from fillpdf import fillpdfs
 from pypdf import PdfReader, PdfWriter
@@ -75,11 +76,12 @@ def list_to_map(arr):
     """Convert a list of key=value strings into a dictionary."""
     d = {}
     for kv in arr:
-        if "=" not in kv:
+        m = re.match("(.*?)=(.*)", kv)
+        if not m:
             logging.info("warn: skipping mapping with no = sign: %s", kv)
             continue
 
-        k, v = kv.split("=")
+        k, v = m.group(1), m.group(2)
         if not v:
             logging.info("warn: skipping mapping with empty value: %s", kv)
             continue
