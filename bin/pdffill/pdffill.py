@@ -6,11 +6,10 @@
 import argparse
 import logging
 
+from fillpdf import fillpdfs
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import NameObject, create_string_object
 import pymupdf
-
-from fillpdf import fillpdfs
 
 
 def list_fields(input_pdf):
