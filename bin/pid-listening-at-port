@@ -25,7 +25,7 @@ function ps-tree	{
     done
 }
 
-LINE=$(sudo netstat -tlnp4 | tr -s ' ' | grep $PORT)
+LINE=$(sudo netstat -tlnp | tr -s ' ' | grep $PORT)
 
 if test -n "${LINE}"; then
     PIDS=$(grep -Po '[0-9]*(?=/)' <<< "${LINE}")
