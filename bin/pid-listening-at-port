@@ -4,13 +4,13 @@ set -euo pipefail
 
 while getopts "qh" OPT; do
     case ${OPT} in
-    q)
-        QUIET=true
-        ;;
-    h)
-        less $0
-        exit 0
-        ;;
+        q)
+            QUIET=true
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
@@ -32,9 +32,9 @@ if test -n "${LINE}"; then
     PID=$(echo ${PIDS} | tr ' ' '\n' | sort | uniq)
     echo $PID
     if test -z "${QUIET:-}"; then
-      echo -e "${LINE}\n" 1>&2
-      xargs -L1 ps -w30 -fp <<< "${PIDS}"  1>&2
-      ps-tree ${PID}
+        echo -e "${LINE}\n" 1>&2
+        xargs -L1 ps -w30 -fp <<< "${PIDS}"  1>&2
+        ps-tree ${PID}
     fi
 fi
 
