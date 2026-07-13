@@ -420,6 +420,12 @@ function android-pull-rm-media {
 function docker-compose-exec {
     docker compose exec $(docker-select-container) ${*}
 }
+alias dsl='docker service logs -f --tail 1000'
+alias dsps='docker service ps'
+alias dsls='docker service ls'
+alias dsdp='docker stack deploy -c docker-compose.yaml'
+
+
 alias dcl='docker compose logs -f --tail 1000'
 alias dcps='docker compose ps'
 alias dcu='docker compose up -d; docker compose logs -f'
