@@ -251,7 +251,7 @@ def main():
     logging.basicConfig(level=level)
 
     print(f"starting timefixer with log-level {logging.getLevelName(level)}...")
-    if args.install:
+    if args.install_systemd:
         install_time_fixer_service(args.dirs)
         return
 
