@@ -9,8 +9,10 @@ Observe a directory and new fix files with timestamps in the future.
 import argparse
 import logging
 import os
-import time
+import socket
 import subprocess
+import threading
+import time
 
 logger = logging
 
@@ -61,12 +63,83 @@ class FsObserver():
         self.observer.join()
 
 
+class UnixSocketServer:
+    """Mostly AI-generated unix socket server."""
+
+    def __init__(self, path: str):
+        """Initializes the server configuration and socket path."""
+        self.path = path
+        self._socket = None
+        self.last_modified = None
+
+    def update_last_modified(self, filename):
+        """Update the last modified filename."""
+        self.last_modified = filename
+
+    def start(self):
+        """Prepares the socket file, binds to the path, and starts the listen loop."""
+        # 1. Clean up any stale socket file left from previous crashes
+        self._cleanup()
+
+        # 2. Configure a Unix Stream socket
+        self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+        try:
+            # 3. Bind and begin listening
+            self._socket.bind(self.path)
+            self._socket.listen(1)
+            logging.info("Server started. Listening on %s...", self.path)
+
+            # 4. Handle connections sequentially
+            while True:
+                logging.info("Waiting for a connection...")
+                connection, _ = self._socket.accept()
+                self._handle_client(connection)
+        finally:
+            self.stop()
+
+    def _handle_client(self, connection: socket.socket):
+        """Manages communication with an individual connected client."""
+        with connection:
+            logging.info("Client connected!")
+            while True:
+                data = connection.recv(1024)
+                if not data:
+                    logging.info("Client disconnected.")
+                    break  # Client closed connection cleanly
+
+                logging.info("Received data: %s", data.decode('utf-8'))
+                body_bytes = (self.last_modified or "None").encode()
+                http_response = (
+                    "HTTP/1.1 200 OK\r\n"
+                    "Content-Type: application/json; charset=utf-8\r\n"
+                    f"Content-Length: {len(body_bytes)}\r\n"
+                    "Connection: close\r\n"
+                    "\r\n"
+                ).encode() + body_bytes
+
+                connection.sendall(http_response)  # Echo back data
+                logging.info("Sent back data: %s", http_response)
+
+    def stop(self):
+        """Safely closes the socket descriptor and removes the socket file."""
+        logging.info("Stopping server and cleaning up assets...")
+        if self._socket:
+            self._socket.close()
+        self._cleanup()
+
+    def _cleanup(self):
+        if os.path.exists(self.path):
+            os.remove(self.path)
+
+
 class TimestampFixer:
     """Fix created or modified files in the given directories with timestamps in the future."""
     def __init__(self, dirs):
         self.observers = [FsObserver(directory,
                                      self.onchange)
                           for directory in dirs]
+        self.update_fn = update_fn
 
     def start(self):
         """Start the timestamp fixer service."""
@@ -92,13 +165,15 @@ class TimestampFixer:
             filename, abs(secs_ago))
         os.utime(filename, None)
 
-    @staticmethod
-    def onchange(change_type, filename, event):
+    def onchange(self, change_type, filename, event):
         """onchange callback for fileobserver"""
         time.sleep(2)
-        TimestampFixer.maybe_fix_time(filename)
+        new_filename = filename
         if change_type == "moved":
-            TimestampFixer.maybe_fix_time(event.dest_path)
+            new_filename = event.dest_path
+            TimestampFixer.maybe_fix_time(new_filename)
+        if change_type != "modified":
+            self.update_fn(new_filename)
 
 def install_systemd(name, run_cmd, environment, as_user = True,
                     description = None):
@@ -160,6 +235,11 @@ def main():
                                      for dirname in default_dirs))
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("-i", "--install-systemd", help="install", action="store_true")
+    parser.add_argument("-p", "--socket-path",
+                        default=os.path.join(
+                            os.getenv("XDG_RUNTIME_DIR"),
+                            "timestampfixer.sock"))
+
     args = parser.parse_args()
 
     level = logging.INFO if args.quiet else logging.DEBUG
@@ -170,7 +250,13 @@ def main():
         install_time_fixer_service(args.dirs)
         return
 
-    fixer = TimestampFixer(args.dirs)
+    socket_server = UnixSocketServer(args.socket_path)
+    fixer = TimestampFixer(args.dirs, update_fn=socket_server.update_last_modified)
+
+    socket_server_thread = threading.Thread(target=socket_server.start,
+                                            daemon=True)
+    socket_server_thread.start()
+
     fixer.start()
 
 
