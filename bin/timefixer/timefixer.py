@@ -197,6 +197,8 @@ Description={description}
 [Service]
 ExecStart={" ".join(run_cmd)}
 Environment={environment_str}
+Restart=always
+RestartSec=60
 
 [Install]
 WantedBy=default.target
