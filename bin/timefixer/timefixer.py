@@ -170,8 +170,12 @@ class TimestampFixer:
         new_filename = filename
         if change_type == "moved":
             new_filename = event.dest_path
+        try:
             TimestampFixer.maybe_fix_time(new_filename)
-        if change_type != "modified":
+        except Exception as ex:
+            logging.error("failed to fix time on %s: %s", new_filename, ex)
+            new_filename = None
+        if new_filename and change_type != "modified":
             self.update_fn(new_filename)
 
 def install_systemd(name, run_cmd, environment, as_user = True,
