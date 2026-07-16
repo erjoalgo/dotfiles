@@ -424,6 +424,7 @@ alias dsl='docker service logs -f --tail 1000'
 alias dsps='docker service ps'
 alias dsls='docker service ls'
 alias dsdp='docker stack deploy -c docker-compose.yaml'
+alias dsrm='docker stack rm'
 
 
 alias dcl='docker compose logs -f --tail 1000'
