@@ -860,3 +860,20 @@ function nvm-persist {
 export PATH=$(dirname $(which node)):\$PATH
 EOF
 }
+
+watchf() {
+    # Usage: fwatch [-n interval] <function_name> [arguments]
+    local INTERVAL=2
+
+    # Parse custom -n flag for interval timing
+    if [[ "$1" == "-n" ]]; then
+        INTERVAL="$2"
+        shift 2
+    fi
+
+    while true; do
+        shopt -s expand_aliases
+        eval "$@"
+        sleep ${INTERVAL}
+    done
+}
