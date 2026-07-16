@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if test -n "${DEBUG_INIT:-}"; then
-     echo "loading $BASH_SOURCE (.my-bash-fns)"
+    echo "loading $BASH_SOURCE (.my-bash-fns)"
 fi
 
 function find-iregex {
@@ -17,7 +17,7 @@ function find-iname {
 }
 
 function abspath {
-     echo $(readlink -f "${1}")
+    echo $(readlink -f "${1}")
 }
 
 function lnabs {
@@ -109,8 +109,8 @@ function passgen-pin	{
 }
 
 function pass-show-xs	{
-  PASS_PATH=${1} && shift
-  pass show ${PASS_PATH} | xs
+    PASS_PATH=${1} && shift
+    pass show ${PASS_PATH} | xs
 }
 
 
@@ -139,8 +139,8 @@ function beep-on-success {
         sleep 1
     done
     for _ in $(seq 3); do
-      # beep || true
-      x-service-curl /beep
+        # beep || true
+        x-service-curl /beep
     done
     notify-send-stumpwm -m "SUCCESS: ${*}" -c green
 }
@@ -310,10 +310,10 @@ function git-review-pull-request	{
 
 
 function kill-process-listening-at-port	{
-  PORT=${1} && shift
-  PID=$(pid-listening-at-port "${PORT}") || return
-  test -n "${PID}" || return
-  kill ${PID}
+    PORT=${1} && shift
+    PID=$(pid-listening-at-port "${PORT}") || return
+    test -n "${PID}" || return
+    kill ${PID}
 }
 
 
@@ -426,21 +426,21 @@ function git-filter-branch-rewrite-path-sed    {
 }
 
 function path-append {
-  export PATH=${PATH}:${1}
+    export PATH=${PATH}:${1}
 }
 
 function path-prepend {
-  export PATH=${1}:${PATH}
+    export PATH=${1}:${PATH}
 }
 
 function path-ls {
-  tr ':' '\n' <<< "${PATH}" | less
+    tr ':' '\n' <<< "${PATH}" | less
 }
 
 function current-shell-window-visible-p {
-  #  TODO make this more robust
-  [[ -n "${WINDOWID}" &&  \
-    ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]]
+    #  TODO make this more robust
+    [[ -n "${WINDOWID}" &&  \
+           ! "$(emacsclient -e '(stumpwm-visible-window-ids)')" = *"${WINDOWID}"* ]]
 }
 
 _NOTIFY_LAST_COMMAND_THRESH_SECS=10
@@ -451,11 +451,11 @@ function stumpwm-maybe-notify-last-command {
     ELAPSED_TIME_SECS=${1} && shift
 
     if test ${RET} = 0; then
-      MSG="Process completed successfully"
-      COLOR="green"
+        MSG="Process completed successfully"
+        COLOR="green"
     else
-      MSG="Process erred"
-      COLOR="red"
+        MSG="Process erred"
+        COLOR="red"
     fi
     if test $ELAPSED_TIME_SECS -gt ${_NOTIFY_LAST_COMMAND_THRESH_SECS} ; then
         # enough time has elapsed, send a notification
@@ -465,7 +465,7 @@ function stumpwm-maybe-notify-last-command {
 }
 
 function _command-start-time-set-maybe {
-  _COMMAND_START_TIME=${_COMMAND_START_TIME:-${SECONDS}}
+    _COMMAND_START_TIME=${_COMMAND_START_TIME:-${SECONDS}}
 }
 
 function post-command-maybe-notify {
@@ -510,61 +510,61 @@ function git-revert-HEAD {
 }
 
 function pidof-ls-open-files  {
-  PROCNAME=${1} && shift
-  for PID in $(pidof ${PROCNAME}); do
-    ls -l /proc/${PID}/fd
-  done
+    PROCNAME=${1} && shift
+    for PID in $(pidof ${PROCNAME}); do
+        ls -l /proc/${PID}/fd
+    done
 }
 
 # for the strace-cmd wrapper script
 complete -F _command strace-cmd
 
 function tmux-attach  {
-  if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
-    tmux set-option -ga update-environment ' DESKTOP_GROUP_NUMBER'
-    tmux new-session -A -s "group-${DESKTOP_GROUP_NUMBER}"
-    return
-  fi
-  local COUNT=$(tmux list-session | wc -l)
-  if test 0 = ${COUNT}; then
-    echo "no tmux sessions"
-    return 1
-  elif test 1 = $(tmux list-session | wc -l); then
-     tmux attach -d
-  else
-     tmux list-sessions
-     read -p"select session: " SESSNO
-     tmux attach -dt $SESSNO
-  fi
+    if test -n "${DESKTOP_GROUP_NUMBER:-}"; then
+        tmux set-option -ga update-environment ' DESKTOP_GROUP_NUMBER'
+        tmux new-session -A -s "group-${DESKTOP_GROUP_NUMBER}"
+        return
+    fi
+    local COUNT=$(tmux list-session | wc -l)
+    if test 0 = ${COUNT}; then
+        echo "no tmux sessions"
+        return 1
+    elif test 1 = $(tmux list-session | wc -l); then
+        tmux attach -d
+    else
+        tmux list-sessions
+        read -p"select session: " SESSNO
+        tmux attach -dt $SESSNO
+    fi
 }
 
 function gitignore-dirlocals  {
-  pushd .
-  cdgittop
-  cat <<EOF >> .gitignore
+    pushd .
+    cdgittop
+    cat <<EOF >> .gitignore
 **/.dir-locals.el
 **/.gitignore
 EOF
-  git add -f .gitignore
-  git commit -m "ignore .dir-locals.el"
-  popd
+    git add -f .gitignore
+    git commit -m "ignore .dir-locals.el"
+    popd
 }
 
 function gitignore-README-md-html	{
-  gitignore-append-commit '**/README.md' '**/README.html'
+    gitignore-append-commit '**/README.md' '**/README.html'
 }
 
 function emacs-attach-loop  {
-  for PID in $(pidof emacs); do
-    kill -SIGUSR1 "${PID}"
-    echo "attaching to emacs with pid ${PID}... use 'C-x 5 0' to detach"
-    emacsclient -nw -c
-  done
+    for PID in $(pidof emacs); do
+        kill -SIGUSR1 "${PID}"
+        echo "attaching to emacs with pid ${PID}... use 'C-x 5 0' to detach"
+        emacsclient -nw -c
+    done
 }
 
 function ec-which {
-  PROGRAMS=${1} && shift
-  emacsclient-wrapper.sh -n $(which ${PROGRAMS})
+    PROGRAMS=${1} && shift
+    emacsclient-wrapper.sh -n $(which ${PROGRAMS})
 }
 complete -F _command ec-which
 
@@ -600,11 +600,11 @@ function sshfs-mount  {
 }
 
 function git-cherry-pick-interactive  {
-  RANGE=${1} && shift
-  TMP=$(mktemp -p /tmp git-cherry-pick-interactive-XXXX)
-  git log "${RANGE}" --oneline > "${TMP}" || return
-  ${VISUAL} "${TMP}" || return
-  git cherry-pick $(cut -f1 -d' ' "${TMP}")
+    RANGE=${1} && shift
+    TMP=$(mktemp -p /tmp git-cherry-pick-interactive-XXXX)
+    git log "${RANGE}" --oneline > "${TMP}" || return
+    ${VISUAL} "${TMP}" || return
+    git cherry-pick $(cut -f1 -d' ' "${TMP}")
 }
 __git_complete git-cherry-pick-interactive _git_cherry_pick
 
