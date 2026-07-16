@@ -861,7 +861,7 @@ export PATH=$(dirname $(which node)):\$PATH
 EOF
 }
 
-watchf() {
+fwatch() {
     # Usage: fwatch [-n interval] <function_name> [arguments]
     local INTERVAL=2
 
