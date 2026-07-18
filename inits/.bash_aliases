@@ -418,7 +418,7 @@ function android-pull-rm-media {
 }
 
 function docker-compose-exec {
-    docker compose exec $(docker-select-container) ${*}
+    HOSTNAME=${HOSTNAME} docker compose exec $(docker-select-container) ${*}
 }
 alias dsl='docker service logs -f --tail 1000'
 alias dsps='docker service ps'
@@ -427,20 +427,21 @@ alias dsdp='docker stack deploy -c docker-compose.yaml'
 alias dsrm='docker stack rm'
 
 
-alias dcl='docker compose logs -f --tail 1000'
-alias dcps='docker compose ps'
-alias dcu='docker compose up -d; docker compose logs -f'
+alias dcl='HOSTNAME=${HOSTNAME} docker compose logs -f --tail 1000'
+alias dcps='HOSTNAME=${HOSTNAME} docker compose ps'
+alias dcu='HOSTNAME=${HOSTNAME} docker compose up -d; docker compose logs -f'
 function dcub {
-    docker compose up --build -d ${*} && docker compose logs -f ${*}
+    HOSTNAME=${HOSTNAME} docker compose up --build -d ${*} &&  \
+        HOSTNAME=${HOSTNAME} docker compose logs -f ${*}
 }
 
-alias dcr='docker compose restart;'
-alias dc='docker compose'
-alias db='docker-util bash'
-alias dpush='docker-util push'
-alias dpull='docker-util pull'
-alias dps='docker ps'
-alias dc-exec='docker-compose-exec'
+alias dcr='HOSTNAME=${HOSTNAME} docker compose restart;'
+alias dc='HOSTNAME=${HOSTNAME} docker compose'
+alias db='HOSTNAME=${HOSTNAME} docker-util bash'
+alias dpush='HOSTNAME=${HOSTNAME} docker-util push'
+alias dpull='HOSTNAME=${HOSTNAME} docker-util pull'
+alias dps='HOSTNAME=${HOSTNAME} docker ps'
+alias dc-exec='HOSTNAME=${HOSTNAME} docker-compose-exec'
 
 alias lrsh='lein ring server-headless'
 
