@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-redshift -l28.562871:-81.210339 -ov -PO 25000
+redshift -l28.562871:-81.210339 -ov -PO 25000 || true
 
 pkill picom || true
 
