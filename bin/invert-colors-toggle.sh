@@ -38,6 +38,7 @@ else
         ARG+="class_g=\"${CLASS}\""
     done
     # 'class_g="Chromium" || class_g="Zathura" || class_g="matplotlib"'
-    picom --invert-color-include "${ARG}"
     emacsclient-wrapper.sh -e '(redshift-load-dark-theme)' &
+    picom --invert-color-include "${ARG}" &
+    disown
 fi
