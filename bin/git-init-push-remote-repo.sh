@@ -16,38 +16,38 @@ SKIP_GIT_SETUP=""
 SET_UPSTREAM_OPT="--set-upstream"
 while getopts "ht:p:r:n:d:kaU" OPT; do
     case ${OPT} in
-    t)
-        SSH_USERHOST=${OPTARG}
-        ;;
-    p)
-        SSH_OPTS+=" -p${OPTARG} "
-        PORT_OPT+=:${OPTARG}
-        ;;
-    n)
-        REPO=${OPTARG}
-        ;;
-    d)
-        SRV_PREFIX=${OPTARG}
-        ;;
-    r)
-        REMOTE_NAME=${OPTARG}
-        ;;
-    k)
-        SKIP_GIT_SETUP=true
-        ;;
-    a)
-        AFS=true
-        SET_UPSTREAM_OPT=""
-        REMOTE_NAME=afs
-        ;;
-    U)
-        SET_UPSTREAM_OPT=""
-        ;;
-    h)
-        less $0
-        usage
-        exit 0
-        ;;
+        t)
+            SSH_USERHOST=${OPTARG}
+            ;;
+        p)
+            SSH_OPTS+=" -p${OPTARG} "
+            PORT_OPT+=:${OPTARG}
+            ;;
+        n)
+            REPO=${OPTARG}
+            ;;
+        d)
+            SRV_PREFIX=${OPTARG}
+            ;;
+        r)
+            REMOTE_NAME=${OPTARG}
+            ;;
+        k)
+            SKIP_GIT_SETUP=true
+            ;;
+        a)
+            AFS=true
+            SET_UPSTREAM_OPT=""
+            REMOTE_NAME=afs
+            ;;
+        U)
+            SET_UPSTREAM_OPT=""
+            ;;
+        h)
+            less $0
+            usage
+            exit 0
+            ;;
     esac
 done
 
@@ -99,7 +99,7 @@ function git-remote-url {
 }
 
 if ! git-remote-url "${REMOTE_NAME}"; then
-   git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
+    git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
 elif test $(git-remote-url "${REMOTE_NAME}") != "${REMOTE_URL}"; then
     echo "remote ${REMOTE_NAME} exists and doesn't point to ${REMOTE_URL}"
     OLD=${REMOTE_NAME}
