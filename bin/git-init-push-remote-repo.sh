@@ -122,3 +122,5 @@ fi
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2> /dev/null) || true
 git push ${SET_UPSTREAM_OPT} ${REMOTE_NAME} ${BRANCH:-}
 
+git branch --unset-upstream
+git branch --set-upstream-to=${REMOTE_NAME}/${BRANCH}
