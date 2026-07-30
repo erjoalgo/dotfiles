@@ -438,6 +438,7 @@
 (define-key-bindings
     *special-chars-map*
     `(
+      ("H-DEL" "fnext")
       ("DEL" "insert-key-with-delay grave")
       ;;("3" "insert-key-with-delay grave 3")
       ("?" "insert-key-with-delay questiondown")
