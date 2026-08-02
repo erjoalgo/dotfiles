@@ -6,6 +6,9 @@ SOURCE_REPO=$(pwd)
 
 while getopts "s:d:h" OPT; do
     case ${OPT} in
+        s)
+            SOURCE_REPOR=${OPTARG}
+            ;;
     d)
         DEST_REPO=${OPTARG}
         ;;
