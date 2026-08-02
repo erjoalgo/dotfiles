@@ -120,7 +120,7 @@ alias gspa='__git-commit-interactive-wrapper git stash -p'
 __git_complete gcp _git_commit
 __git_complete gcpa _git_commit
 __git_complete gcpan _git_commit
-alias gpff='git pull --ff-only'
+alias gpff='git pull --ff-only --recurse-submodules'
 __git_complete gpff _git_pull
 alias gmff='git merge --ff-only'
 __git_complete gmff _git_merge
