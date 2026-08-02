@@ -9,13 +9,13 @@ while getopts "s:d:h" OPT; do
         s)
             SOURCE_REPOR=${OPTARG}
             ;;
-    d)
-        DEST_REPO=${OPTARG}
-        ;;
-    h)
-        less $0
-        exit 0
-        ;;
+        d)
+            DEST_REPO=${OPTARG}
+            ;;
+        h)
+            less $0
+            exit 0
+            ;;
     esac
 done
 shift $((OPTIND -1))
