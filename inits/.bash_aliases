@@ -155,6 +155,7 @@ alias gsp='git stash pop'
 alias gsh='__git-commit-interactive-wrapper git stash'
 alias grvt='wte git-revert-HEAD'
 alias gcl='git clone'
+alias gsi='git submodule update --init --recursive'
 
 # never used
 # alias gm='git commit'
