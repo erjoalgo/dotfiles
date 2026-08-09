@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if ! EXE=$(which chromium-browser chrome google-chrome chromium | sort | head -1); then
-   command -v "${EXE}"
+    command -v "${EXE}"
 fi
 
 ENABLE_FEATURES="AsyncDns"
