@@ -17,11 +17,11 @@ fi
 ARGS=( \
        --high-dpi-support=1  \
            --force-device-scale-factor=2 \
+           --force-device-scale-factor=2 \
+           --high-dpi-support=1  \
            --disable-pings \
            --enable-gpu-rasterization \
            --enable-remote-extensions \
-           --force-device-scale-factor=2 \
-           --high-dpi-support=1 \
            --media-router=0 \
            --no-default-browser-check \
            --show-component-extension-options \
