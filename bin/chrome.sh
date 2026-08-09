@@ -17,8 +17,6 @@ fi
 ARGS=( \
        --high-dpi-support=1  \
            --force-device-scale-factor=2 \
-           --force-device-scale-factor=2 \
-           --high-dpi-support=1  \
            --disable-pings \
            --enable-gpu-rasterization \
            --enable-remote-extensions \
