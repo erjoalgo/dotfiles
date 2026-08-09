@@ -22,7 +22,6 @@ ARGS=( \
            --enable-remote-extensions \
            --force-device-scale-factor=2 \
            --high-dpi-support=1 \
-           --load-extension=/usr/share/chromium/extensions/acofndgbcimipbpeoplfjcapdbebbmca.json,/usr/share/chromium/extensions/chemannjcbmbebomonaldbcjkmobopno.json,/usr/share/chromium/extensions/dbepggeogbaibhgnhhndojpepiihcmeb.json,/usr/share/chromium/extensions/eibefbdcoojolecpoehkpmgfaeapngjk.json,/usr/share/chromium/extensions/fimgfedafeadlieiabdeeaodndnlbhid.json,/usr/share/chromium/extensions/lfpjkncokllnfokkgpkobnkbkmelfefj.json,/usr/share/chromium/extensions/nigigpmchbpkjjgncmpiggfnikllldlh.json,/usr/share/chromium/extensions/related.json \
            --media-router=0 \
            --no-default-browser-check \
            --show-component-extension-options \
