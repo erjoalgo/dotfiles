@@ -27,8 +27,8 @@ ARGS=( \
            --show-component-extension-options \
            --restart \
            --flag-switches-begin \
-           --enable-features=${ENABLE_FEATURES} \
+           --enable-features="${ENABLE_FEATURES}" \
            --flag-switches-end
 )
 
-${EXE} ${ARGS[@]} ${*}
+exec "${EXE}" "${ARGS[@]}" "${@}"
