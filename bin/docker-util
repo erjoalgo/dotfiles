@@ -144,6 +144,11 @@ function docker-logs {
     emacsclient-wrapper.sh -n "${TMPFILE}"
 }
 
+function docker-env {
+    CONTAINER=${1:-$(docker-select-container)} && shift
+    docker inspect --format='{{json .Config.Env}}' "${CONTAINER}" | jq
+}
+
 function main {
     if test $# = 0; then
         for SUBCOMMAND in $(declare -F | grep -Po '(?<=docker-).*'); do
