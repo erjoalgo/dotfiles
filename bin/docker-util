@@ -111,26 +111,22 @@ function docker-locate-docker-compose-yaml {
     popd > /dev/null
 }
 
-function docker-yaml-parse-db-creds {
-    YAML=${1} && shift
-    LINES=$(grep -P "^ +postgres:" -A10 "${YAML}") > /dev/null
-    PG_USER=$(grep -Po "(POSTGRES_USER|PG_USER)=.*" <<< "${LINES}" \
-                  | grep -Po "(?<==).*") > /dev/null
-    echo "${PG_USER}"
-}
 
 function docker-psql {
     SQLFILE=${1} && shift
-    if test -z "${CONTAINER_NAME:-}"; then
-        YAML=$(docker-locate-docker-compose-yaml)
-        test -e "${YAML}"
-        NAME=$(docker-yaml-parse-db-creds "${YAML}")
-        test -n "${NAME:-}"
-        CONTAINER_NAME="${NAME}-postgres"
-    fi
-    PG_DB="${PG_DB:-${NAME}}"
-    PG_USER="${PG_USER:-${NAME}}"
+    YAML=$(docker-locate-docker-compose-yaml)
+    LINES=$(grep -P "^ +(postgres|pg):" \
+                 -A10 "${YAML}") > /dev/null
+    test -e "${YAML}"
 
+    if test -z "${CONTAINER_NAME:-}"; then
+        CONTAINER_NAME=$(grep -Po '(?<=container_name: ).*' <<< "${LINES}")
+    fi
+
+    PG_USER=$(grep -Po "(POSTGRES_USER|PG_USER)=.*" <<< "${LINES}" \
+                  | grep -Po "(?<==).*") > /dev/null
+
+    PG_DB="${PG_DB:-${PG_USER}}"
     INTERACTION="-i"
     if test -e "${SQLFILE}"; then
         docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
