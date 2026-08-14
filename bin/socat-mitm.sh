@@ -4,7 +4,8 @@ set -euo pipefail
 
 VERBOSE_OPT=-v
 PROTOCOL=TCP
-while getopts "huq" OPT; do
+BIND_OPT=""
+while getopts "h0uq" OPT; do
     case ${OPT} in
         q)
             # quiet
@@ -12,6 +13,9 @@ while getopts "huq" OPT; do
             ;;
         u)
             PROTOCOL=UDP
+            ;;
+        0)
+            BIND_OPT=",bind=0.0.0.0"
             ;;
         h)
             less $0
@@ -21,7 +25,7 @@ while getopts "huq" OPT; do
 done
 shift $((OPTIND -1))
 
-LISTEN_PORT=${1} && shift
+LISTEN_PORT=${1}${BIND_OPT} && shift
 REMOTE_ADDRESS=${1} && shift
 
 sudo socat ${VERBOSE_OPT} \
