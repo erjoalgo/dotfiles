@@ -151,6 +151,11 @@ function docker-env {
     docker inspect --format='{{json .Config.Env}}' "${CONTAINER}" | jq
 }
 
+function docker-rmf {
+    CONTAINER=${1:-$(docker-select-container)} && shift || true
+    docker container rm -f "${CONTAINER}"
+}
+
 function main {
     if test $# = 0; then
         for SUBCOMMAND in $(declare -F | grep -Po '(?<=docker-).*'); do
