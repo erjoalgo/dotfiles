@@ -113,7 +113,7 @@ function docker-locate-docker-compose-yaml {
 
 
 function docker-psql {
-    SQLFILE=${1} && shift
+    SQLFILE=${1:-} && shift || true
     YAML=$(docker-locate-docker-compose-yaml)
     LINES=$(grep -P "^ +(postgres|pg):" \
                  -A10 "${YAML}") > /dev/null
