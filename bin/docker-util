@@ -132,6 +132,7 @@ function docker-psql {
     if test -e "${SQLFILE}"; then
         docker-bash psql "-U${PG_USER}" "${PG_DB}" < "${SQLFILE}"
     else
+        echo "reading sql from stdin..."
         docker-bash psql "-U${PG_USER}" "${PG_DB}"
     fi
 }
