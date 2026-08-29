@@ -884,3 +884,15 @@ fwatch() {
         sleep ${INTERVAL}
     done
 }
+
+function git-submodule-init {
+    URL=${1} && shift
+
+    git submodule add -b master "$URL"
+
+    git submodule update --init --recursive
+
+    git config submodule.recurse true
+
+    git config push.recurseSubmodules check
+}
