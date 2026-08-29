@@ -147,7 +147,7 @@ function docker-logs {
 }
 
 function docker-env {
-    CONTAINER=${1:-$(docker-select-container)} && shift
+    CONTAINER=${1:-$(docker-select-container)} && shift || true
     docker inspect --format='{{json .Config.Env}}' "${CONTAINER}" | jq
 }
 
