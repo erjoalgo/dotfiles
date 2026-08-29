@@ -123,6 +123,7 @@ function docker-psql {
         CONTAINER_NAME=$(grep -Po '(?<=container_name: ).*' <<< "${LINES}")
     fi
 
+    echo "using container ${CONTAINER_NAME}"
     PG_USER=$(grep -Po "(POSTGRES_USER|PG_USER)=.*" <<< "${LINES}" \
                   | grep -Po "(?<==).*") > /dev/null
 
