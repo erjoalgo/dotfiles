@@ -32,3 +32,5 @@ sudo mount -oloop "${DEVICE}" "${TMP}"
 mkdir -p "${OUTPUT_PATH}"
 
 rsync -arv "${TMP}" "${OUTPUT_PATH}"
+
+eject
