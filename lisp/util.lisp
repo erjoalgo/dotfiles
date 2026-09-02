@@ -270,7 +270,7 @@
      (defvar ,thread-var nil)
      (when (and ,thread-var
                 (sb-thread:thread-alive-p ,thread-var))
-       (sb-thread:terminate-thread ,thread-var))
+       (sb-thread:destroy-thread ,thread-var))
      (setf ,thread-var
            (sb-thread:make-thread (lambda () ,@body)
                                   :name (symbol-name ',thread-var)))))
