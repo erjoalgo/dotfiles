@@ -528,6 +528,7 @@ alias boot-log-last='journalctl -b -1'
 
 function git-config-global-submodules-recurse {
     git config --global submodule.recurse true
+    git config --global alias.rclone "clone --recurse-submodules"
 }
 # Local Variables:
 # mode: sh
