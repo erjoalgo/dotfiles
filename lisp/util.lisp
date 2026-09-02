@@ -270,7 +270,7 @@
      (defvar ,thread-var nil)
      (when (and ,thread-var
                 (sb-thread:thread-alive-p ,thread-var))
-       (sb-thread:destroy-thread ,thread-var))
+       (sb-thread:terminate-thread ,thread-var))
      (setf ,thread-var
            (sb-thread:make-thread (lambda () ,@body)
                                   :name (symbol-name ',thread-var)))))
@@ -360,7 +360,7 @@
         when (equal name "lparallel")
           do (progn
                (format t "DDEBUG util.lisp gikj: value of name: ~A~%" name)
-               (sb-thread:destroy-thread thread))
+               (sb-thread:terminate-thread thread))
         collect name))
 
 (defun find-window-by-regexp (regexp)
