@@ -204,6 +204,7 @@ function source-personal-bash-files {
                    ~/.profile-env \
                    ~/.bash_aliases \
                    ~/.my-bashrc \
+                   ~/.bashrc \
                ; do
         echo sourcing $SRC
         . $SRC
