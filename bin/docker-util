@@ -71,8 +71,13 @@ function docker-push {
     LOCAL_PATH=${1} && shift
     REMOTE_PATH=${1:-${LOCAL_PATH}} && shift || true
     CONTAINER=$(docker-select-container)
-    WORKDIR=$(docker-working-dir "${CONTAINER}")
-    docker cp "${LOCAL_PATH}" "${CONTAINER}:${WORKDIR}/${REMOTE_PATH}"
+    if [[ "$REMOTE_PATH" == /* ]]; then
+        WORKDIR=""
+    else
+        WORKDIR=$(docker-working-dir "${CONTAINER}")
+        WORKDIR+="/"
+    fi
+    docker cp "${LOCAL_PATH}" "${CONTAINER}:${WORKDIR}${REMOTE_PATH}"
 }
 
 function docker-pull {
