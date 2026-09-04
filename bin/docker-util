@@ -10,7 +10,7 @@ function __docker-container-lines {
 
 function docker-select-container {
     if test -n "${CONTAINER_NAME:-}"; then
-        docker ps -q --filter name="${CONTAINER_NAME}$"
+        docker ps -q --filter name="${CONTAINER_NAME}"
         return
     fi
     echo "select docker container: " 1>&2
