@@ -162,6 +162,15 @@ function docker-rmf {
     docker container rm -f "${CONTAINER}"
 }
 
+function docker-ls {
+    docker container ls
+}
+
+function docker-exec {
+    CONTAINER=$(docker-select-container)
+    docker exec --user root "${CONTAINER}" ${*}
+}
+
 function main {
     if test $# = 0; then
         for SUBCOMMAND in $(declare -F | grep -Po '(?<=docker-).*'); do
