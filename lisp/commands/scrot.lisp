@@ -72,6 +72,7 @@
          output
          err
          done-p)
+
     (unless box
       (case selection
         (:interactive
@@ -80,19 +81,17 @@
              (setf box (grab-box))))
         (:fullscreen nil)
         (:window (push "-u" args))))
-    (setf output
-          (with-output-to-string (out-fh)
-            (setf err
-                  (with-output-to-string (err-fh)
+
                     (setf proc (SB-EXT:RUN-PROGRAM program
                                                    args
                                                    :search t
-                                                   :output out-fh
-                                                   :error err-fh
+                                   :output :stream
+                                   :error :stream
                                                    :wait nil))
+
                     (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-                          as status = (sb-ext:process-exit-code proc)
-                          as done-p = status
+          as status = (slot-value proc 'SB-IMPL::%STATUS)
+          as done-p = (not (eq :RUNNING status)) ;; TODO
                           as elapsed-secs = (- (get-universal-time) start-time-secs)
                           as timeout-p = (> elapsed-secs timeout-secs)
                           do (format t "DDEBUG scrot.lisp zlik: value of status: ~A~%" status)
@@ -101,7 +100,18 @@
                           while (not (or done-p timeout-p)) do
                           (sleep 1)
                           finally
-                          (sb-ext:process-wait proc))))))
+             (progn
+               (when timeout-p
+                 (sb-ext:process-kill proc sb-unix:sigkill))
+               (sb-ext:process-wait proc)))
+
+    (setf output
+          (uiop:slurp-stream-string
+           (sb-ext:process-output proc))
+          err
+          (uiop:slurp-stream-string
+           (sb-ext:process-error proc)))
+
     (format t "DDEBUG scrot.lisp wtcm: value of output: ~A~%" output)
     (format t "DDEBUG scrot.lisp p0gu: value of error: ~A~%" err)
     (cond
