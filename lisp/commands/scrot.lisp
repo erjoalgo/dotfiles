@@ -91,15 +91,17 @@
                                                    :error err-fh
                                                    :wait nil))
                     (loop with start-time-secs = (GET-UNIVERSAL-TIME)
-                          as status = (slot-value proc 'SB-IMPL::%STATUS)
-                          as done-p = (not (eq :RUNNING status)) ;; TODO
+                          as status = (sb-ext:process-exit-code proc)
+                          as done-p = status
                           as elapsed-secs = (- (get-universal-time) start-time-secs)
                           as timeout-p = (> elapsed-secs timeout-secs)
                           do (format t "DDEBUG scrot.lisp zlik: value of status: ~A~%" status)
                           do (format t "DDEBUG scrot.lisp xjox: value of elapsed-secs: ~A~%" elapsed-secs)
                           do (format t "DDEBUG scrot.lisp gnww: value of timeout-secs: ~A~%" timeout-secs)
                           while (not (or done-p timeout-p)) do
-                            (sleep 1))))))
+                          (sleep 1)
+                          finally
+                          (sb-ext:process-wait proc))))))
     (format t "DDEBUG scrot.lisp wtcm: value of output: ~A~%" output)
     (format t "DDEBUG scrot.lisp p0gu: value of error: ~A~%" err)
     (cond
