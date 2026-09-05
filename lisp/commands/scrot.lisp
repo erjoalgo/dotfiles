@@ -65,9 +65,9 @@
                         out-png)))
          (program "scrot")
          (args
-          (append
-           (list out-png "-z")
-           (when overwrite '("-o"))))
+           (append
+            (list out-png "-z")
+            (when overwrite '("-o"))))
          proc
          output
          err
@@ -82,24 +82,24 @@
         (:fullscreen nil)
         (:window (push "-u" args))))
 
-                    (setf proc (SB-EXT:RUN-PROGRAM program
-                                                   args
-                                                   :search t
+    (setf proc (SB-EXT:RUN-PROGRAM program
+                                   args
+                                   :search t
                                    :output :stream
                                    :error :stream
-                                                   :wait nil))
+                                   :wait nil))
 
-                    (loop with start-time-secs = (GET-UNIVERSAL-TIME)
+    (loop with start-time-secs = (GET-UNIVERSAL-TIME)
           as status = (slot-value proc 'SB-IMPL::%STATUS)
           as done-p = (not (eq :RUNNING status)) ;; TODO
-                          as elapsed-secs = (- (get-universal-time) start-time-secs)
-                          as timeout-p = (> elapsed-secs timeout-secs)
-                          do (format t "DDEBUG scrot.lisp zlik: value of status: ~A~%" status)
-                          do (format t "DDEBUG scrot.lisp xjox: value of elapsed-secs: ~A~%" elapsed-secs)
-                          do (format t "DDEBUG scrot.lisp gnww: value of timeout-secs: ~A~%" timeout-secs)
-                          while (not (or done-p timeout-p)) do
-                          (sleep 1)
-                          finally
+          as elapsed-secs = (- (get-universal-time) start-time-secs)
+          as timeout-p = (> elapsed-secs timeout-secs)
+          do (format t "DDEBUG scrot.lisp zlik: value of status: ~A~%" status)
+          do (format t "DDEBUG scrot.lisp xjox: value of elapsed-secs: ~A~%" elapsed-secs)
+          do (format t "DDEBUG scrot.lisp gnww: value of timeout-secs: ~A~%" timeout-secs)
+          while (not (or done-p timeout-p)) do
+            (sleep 1)
+          finally
              (progn
                (when timeout-p
                  (sb-ext:process-kill proc sb-unix:sigkill))
@@ -159,11 +159,11 @@
 perform ocr on it, place ocr'd text into clipboard"
   (let* ((ocr-name "last-ocr")
          (ocr-png-filename
-          (take-scrot ocr-name
-                      :selection :interactive
-                      :verbose nil
-                      :show nil
-                      :overwrite t))
+           (take-scrot ocr-name
+                       :selection :interactive
+                       :verbose nil
+                       :show nil
+                       :overwrite t))
          (ocr-text (image-fn-to-text ocr-png-filename)))
     (set-x-selection ocr-text '(:interactive :primary :secondary :clipboard))
     (message "copied ocr of length ~D to clipboard..."
@@ -222,24 +222,24 @@ perform ocr on it, place ocr'd text into clipboard"
   (let* ((name (or name
                    (time-format *scrot-date-format*)))
          (recording-pathname
-          (merge-pathnames (make-pathname
-                            :name name
-                            :type "gif")
-                           *scrots-top*))
+           (merge-pathnames (make-pathname
+                             :name name
+                             :type "gif")
+                            *scrots-top*))
          (duration-args
-          (if duration (list "-d" duration)
-              (list "-e"
-                    (format nil "nc -l ~A ~D"
-                            "-p" ;; not always the same
-                            *byzanz-recording-control-port*))))
+           (if duration (list "-d" duration)
+               (list "-e"
+                     (format nil "nc -l ~A ~D"
+                             "-p" ;; not always the same
+                             *byzanz-recording-control-port*))))
          (box-args
-          (when box
-            (destructuring-bind ((x . y) _ (w . h)) box
-              (list
-               (format nil "--x=~D" x)
-               (format nil "--y=~D" y)
-               (format nil "--width=~D" w)
-               (format nil "--height=~D" h))))))
+           (when box
+             (destructuring-bind ((x . y) _ (w . h)) box
+               (list
+                (format nil "--x=~D" x)
+                (format nil "--y=~D" y)
+                (format nil "--width=~D" w)
+                (format nil "--height=~D" h))))))
     (set-x-selection (namestring recording-pathname) :clipboard)
     (message "starting byzanz recording in 1s...")
     (sleep 1)
