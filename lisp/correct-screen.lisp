@@ -279,21 +279,21 @@
          (current-mode (xrandr-display-current-mode display))
          (similar-modes (when current-mode
                           (loop for mode in all-modes
-                              with ratio = (xrandr-mode-ratio current-mode)
-                              when (equal ratio (xrandr-mode-ratio mode))
+                                with ratio = (xrandr-mode-ratio current-mode)
+                                when (equal ratio (xrandr-mode-ratio mode))
                                   collect mode)))
          (mode (selcand:select
                 :candidates (or all-modes similar-modes)
-                               :prompt "select mode: "
-                               :stringify-fn
-                               (lambda (mode)
-                                 (with-slots (width height active) mode
-                                   (format nil "~A~Dx~D (~,2F)"
-                                           (if active "*" "")
-                                           width height
-                                           (/ width height))))
-                               :display-candidates t
-                               :columns 3))
+                :prompt "select mode: "
+                :stringify-fn
+                (lambda (mode)
+                  (with-slots (width height active) mode
+                    (format nil "~A~Dx~D (~,2F)"
+                            (if active "*" "")
+                            width height
+                            (/ width height))))
+                :display-candidates t
+                :columns 3))
          (mode-string (with-slots (width height active) mode
                         (format nil "~Dx~D"
                                 width height))))
