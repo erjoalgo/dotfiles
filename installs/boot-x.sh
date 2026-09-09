@@ -47,7 +47,7 @@ sudo $(which update-config-file-key-value) \
   -f /etc/systemd/logind.conf  \
   -k HandlePowerKey -v ignore
 
-./konsole.sh
+./konsole.sh || true
 
 function clone-git-repo {
     URL=${1} && shift
