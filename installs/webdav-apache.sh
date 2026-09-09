@@ -65,4 +65,7 @@ DAV On
 
 EOF
 
+sudo mkdir -p /var/www/webdav/urls/
+echo world | sudo tee /var/www/webdav/urls/hello
+
 sudo service apache2 restart
