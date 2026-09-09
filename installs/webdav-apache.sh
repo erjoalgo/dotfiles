@@ -10,6 +10,7 @@ DOCUMENT_ROOT=${DOCUMENT_ROOT:-/var/www/html}
 # https://www.digitalocean.com/community/tutorials/
 # how-to-configure-webdav-access-with-apache-on-ubuntu-14-04
 
+sudo apt-get update
 sudo apt-get install -y apache2
 
 sudo mkdir -p "${WEBDAV_ROOT}"
