@@ -69,4 +69,10 @@ EOF
 sudo mkdir -p /var/www/webdav/urls/
 echo world | sudo tee /var/www/webdav/urls/hello
 
+
+sudo touch "${WEBDAV_LOCK}"
+for FILE in "${WEBDAV_ROOT}" "${WEBDAV_LOCK}"; do
+    sudo chown -R www-data:www-data "${FILE}"
+done
+
 sudo service apache2 restart
