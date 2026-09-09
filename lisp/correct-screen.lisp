@@ -272,7 +272,10 @@
                                   (xrandr-connected-displays)
                                   :prompt "select display: "
                                   :stringify-fn #'XRANDR-DISPLAY-ID))
-         (all-modes (XRANDR-DISPLAY-MODES display))
+         (all-modes
+           (remove-if-not
+            (lambda (x) x)
+            (XRANDR-DISPLAY-MODES display)))
          (current-mode (xrandr-display-current-mode display))
          (similar-modes (loop for mode in all-modes
                               with ratio = (xrandr-mode-ratio current-mode)
