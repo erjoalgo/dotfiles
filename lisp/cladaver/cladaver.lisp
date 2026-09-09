@@ -59,6 +59,7 @@
     (push (format nil "-X~A" method) args)
     (push (format nil "-u~A:~A" username password) args)
     (push url args)
+    (push "--fail-with-body" args)
     (when data
       (setf args (append args `("-d" ,data))))
     (loop for (k . v) in headers
