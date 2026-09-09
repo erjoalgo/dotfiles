@@ -55,6 +55,7 @@ DocumentRoot ${WEBDAV_ROOT}
 # modules, e.g.
 #LogLevel info ssl:warn
 
+ServerName localhost
 ErrorLog \${APACHE_LOG_DIR}/error.log
 CustomLog \${APACHE_LOG_DIR}/access.log combined
 
