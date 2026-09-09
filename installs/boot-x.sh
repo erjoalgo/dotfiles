@@ -6,7 +6,7 @@ cd $( dirname "${BASH_SOURCE[0]}" )
 
 sudo apt-get install -y dirmngr || true
 
-./install-stumpwm.sh
+./stumpwm.sh
 
 ./migrate-xinitrc.sh
 
