@@ -76,8 +76,8 @@
                            :error fh-err))))))
     (let ((exit-code (slot-value proc 'SB-IMPL::%EXIT-CODE)))
       (if (zerop exit-code) output
-          (error (format nil "non-zero exit status ~A for curl ~A: ~A"
-                         exit-code args error))))))
+          (error (format nil "non-zero exit status ~A for curl ~A: ~A~%~A"
+                         exit-code args error output))))))
 
 
 (defun cat (info path)
