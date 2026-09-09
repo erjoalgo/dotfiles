@@ -5,6 +5,7 @@ set -euo pipefail
 WEBDAV_PORT=${WEBDAV_PORT:-81}
 WEBDAV_ROOT=${WEBDAV_ROOT:-/var/www/webdav}
 WEBDAV_LOCK=${WEBDAV_LOCK:-/var/www/DavLock}
+DOCUMENT_ROOT=${DOCUMENT_ROOT:-/var/www/html}
 
 # https://www.digitalocean.com/community/tutorials/
 # how-to-configure-webdav-access-with-apache-on-ubuntu-14-04
@@ -12,7 +13,7 @@ WEBDAV_LOCK=${WEBDAV_LOCK:-/var/www/DavLock}
 sudo apt-get install -y apache2
 
 sudo mkdir -p "${WEBDAV_ROOT}"
-sudo chown -R www-data:www-data "$(dirname ${WEBDAV_LOCK})"
+sudo chown -R www-data:www-data "${DOCUMENT_ROOT}"
 
 sudo a2enmod dav
 sudo a2enmod dav_fs
