@@ -315,7 +315,7 @@
              :candidates ,list-form
              :prompt prompt
              :stringify-fn (function ,key-fn)
-             :autoselect-if-single t
+             :autoselect-if-single nil
              :no-hints ,no-hints)))
         (,value-fn selection))
       (throw 'error "Abort"))))
