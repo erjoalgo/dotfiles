@@ -1,0 +1,21 @@
+keycode 37 = Control_L
+keycode 107 = F13
+keycode 108 = Hyper_L
+keycode 64 = Alt_L
+! keycode 134 = Super_L
+keycode 105 = Super_L
+
+clear lock
+clear control
+clear mod1
+clear mod3
+clear mod4
+
+add control = Control_L
+add mod1 = Alt_L
+add mod3 = Hyper_L
+add mod4 = Super_L
+
+! Local Variables:
+! comment-start: "!"
+! End:
