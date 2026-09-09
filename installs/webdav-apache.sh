@@ -27,7 +27,7 @@ fi
 sudo rm /etc/apache2/ports.conf
 
 sudo insert-text-block  \
-    "# 4d8f7b7f-c77a-4a81-b11e-bb4a9e84b7d8-apache-nginx-ports-conflict" \
+    '# 4d8f7b7f-c77a-4a81-b11e-bb4a9e84b7d8-apache-nginx-ports-conflict' \
     /etc/apache2/ports.conf <<EOF
 # If you just change the port or add more ports here, you will likely also
 # have to change the VirtualHost statement in
