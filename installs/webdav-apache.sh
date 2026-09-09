@@ -24,14 +24,11 @@ if test -e ${DEFAULT_CONF}; then
     sudo unlink ${DEFAULT_CONF}
 fi
 
-PORTS_CONF=/etc/apache2/ports.conf
-if test -e "${PORTS_CONF}"; then
-    sudo mv "${PORTS_CONF}" "${PORTS_CONF}.bak"
-fi
+sudo rm /etc/apache2/ports.conf
 
 sudo insert-text-block  \
     "# 4d8f7b7f-c77a-4a81-b11e-bb4a9e84b7d8-apache-nginx-ports-conflict" \
-    "${PORTS_CONF}" <<EOF
+    /etc/apache2/ports.conf <<EOF
 # If you just change the port or add more ports here, you will likely also
 # have to change the VirtualHost statement in
 # /etc/apache2/sites-enabled/000-default.conf
