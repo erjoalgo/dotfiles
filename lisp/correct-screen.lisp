@@ -70,8 +70,8 @@
              :inverted-p (member "inverted" features :test #'equal)
              :mode (loop for mode in modes thereis
                                            (and (xrandr-mode-active mode) mode)))))
-    do (assert display)
-    collect display))
+    when display
+      collect display))
 
 (defun xdisplays-persist-preference
     (xrandr-pref
