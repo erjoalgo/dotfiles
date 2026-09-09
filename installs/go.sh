@@ -1,79 +1,89 @@
 #!/bin/bash -x
-
+#
+# install_go.sh - Install the latest stable version of Go on Debian (amd64/arm64)
+#
 set -euo pipefail
 
-GOROOT=/usr/local/go
-GO_URL=https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
-CLEAN_UP_DEBIAN_GO=false
+INSTALL_DIR="/usr/local"
+GO_DIR="${INSTALL_DIR}/go"
+PROFILE_SNIPPET="/etc/profile.d/go.sh"
 
-if ! command -v go || test ${UPGRADE_GO:-} = true; then
-    mkdir -p ~/src && cd ~/src
-    if test -f $(basename ${GO_URL}); then
-        rm $(basename ${GO_URL})
+# --- Detect architecture ---
+ARCH_RAW="$(uname -m)"
+case "${ARCH_RAW}" in
+    x86_64)
+        GOARCH="amd64"
+        ;;
+    aarch64|arm64)
+        GOARCH="arm64"
+        ;;
+    armv6l|armv7l)
+        GOARCH="armv6l"
+        ;;
+    i386|i686)
+        GOARCH="386"
+        ;;
+    *)
+        echo "Unsupported architecture: ${ARCH_RAW}" >&2
+        exit 1
+        ;;
+esac
+
+# --- Ensure prerequisites ---
+sudo apt-get update
+sudo apt-get install -y curl ca-certificates tar
+
+# --- Determine latest stable version from Go's own version endpoint ---
+echo "Checking for the latest stable Go release..."
+LATEST_VERSION="$(curl -fsSL https://go.dev/VERSION?m=text | head -n1)"
+
+if [[ -z "${LATEST_VERSION}" ]]; then
+    echo "Could not determine the latest Go version." >&2
+    exit 1
+fi
+
+if command -v go && go version | grep "${LATEST_VERSION}"; then
+    echo "go is already at the latest version"
+    exit 0
+fi
+
+TARBALL="${LATEST_VERSION}.linux-${GOARCH}.tar.gz"
+DOWNLOAD_URL="https://go.dev/dl/${TARBALL}"
+TMP_DIR="/tmp/go-tarball"
+DEST="${TMP_DIR}/${TARBALL}"
+
+echo "Latest version: ${LATEST_VERSION} (${GOARCH})"
+
+if ! test -e "${DEST}"; then
+    echo "Downloading ${DOWNLOAD_URL} ..."
+    trap 'sudo rm -rf "${TMP_DIR}"' EXIT
+
+    mkdir $(dirname "${DEST}")
+    curl -fsSL -o "${DEST}" "${DOWNLOAD_URL}"
+
+    # --- Remove any previous Go installation and extract the new one ---
+    if [[ -d "${GO_DIR}" ]]; then
+        echo "Removing existing Go installation at ${GO_DIR} ..."
+        sudo rm -rf "${GO_DIR}"
     fi
-    wget "${GO_URL}"
-    FNAME=$(basename ${GO_URL})
-    DNAME=$(basename ${FNAME} .tar.gz)
+fi
 
-    if test ${UPGRADE_GO:-} = true && command -v go && test -d ${GOROOT}; then
-        VERSION=$(go version | cut -f3 -d' ')
-        export GOROOT_BOOTSTRAP=${GOROOT}-${VERSION}
-        sudo mv ${GOROOT} ${GOROOT_BOOTSTRAP}
-    else
-        # need go to bootstrap go
-        sudo apt-get install -y golang-go
-        # GOROOT_BOOTSTRAP=$(dirname $(which go))
-        CLEAN_UP_DEBIAN_GO=true
-    fi
+echo "Extracting to ${INSTALL_DIR} ..."
+sudo tar -C "${INSTALL_DIR}" -xzf "${DEST}"
 
-    test -d ${GOROOT} || sudo tar -C $(dirname ${GOROOT}) -xzf ${FNAME}
-
-    test -d ${GOROOT}
-
-    PROFILE_FILE=/etc/profile.d/go-env.sh
-    which insert-text-block
+for PROFILE in "${PROFILE_SNIPPET}" ${HOME}/.profile-env; do
     sudo insert-text-block \
-	 '# c0b15b6c-e5fc-495a-b1be-f02308cee38d-add-go-tools-to-path'  \
-	 ${PROFILE_FILE} <<EOF
-export PATH=\${PATH}:${GOROOT}/bin
+         '# e24ca404-206d-44ce-a4f7-5dc198d08e48-go-path'  \
+         "${PROFILE}" <<'EOF'
+export PATH=$PATH:/usr/local/go/bin
 EOF
-    source ${PROFILE_FILE}
-    if test -e ${GOROOT}/src/all.bash; then
-        pushd .
-        cd ${GOROOT}/src
-        if ! which go; then
-            # need go to bootstrap go
-            sudo apt-get install -y golang-go
-        fi
-        which go
-        sudo GOROOT_BOOTSTRAP=$(dirname $(dirname $(which go))) ./all.bash
-        popd
-    fi
-    go version
-fi
+done
 
-# add fallback-gopath if user's GOPATH not set
+sudo chmod 644 "${PROFILE_SNIPPET}"
 
-GOPATH=/usr/share/gopath
-sudo $(which insert-text-block) \
-     '# 387b6046-a715-11e7-b87e-2be468b96d0a-set-default-gopath'  \
-     /etc/bash.bashrc <<EOF
-export PATH=\$PATH:\$GOPATH/bin
-EOF
+echo "Go installed successfully."
+source "${PROFILE_SNIPPET}"
+go version
 
-GOPATH=${HOME}/src/go
-mkdir -p ${GOPATH}
-insert-text-block \
-    '# a7095f2e-b531-4f1e-9fd6-ea4e404f19f2-add-user-gopath'  \
-    ~/.profile-env <<EOF
-export GOPATH=$GOPATH
-export PATH=\$PATH:\$GOPATH/bin:${GOROOT}/bin
-EOF
-
-if test "${CLEAN_UP_DEBIAN_GO}" = true; then
-    sudo apt-get remove -y golang-go
-fi
-
-sudo $(which insert-text-block)  \
-     '# fba1e4c6-a726-11e7-b4e2-23bbc233d273-set-default-gopath'  \
-     /etc/environment <<< "GOPATH=$GOPATH"
+echo
+echo "Open a new shell, or run 'source /etc/profile.d/go.sh', to pick up the updated PATH."
