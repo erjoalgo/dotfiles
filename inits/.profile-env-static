@@ -2,7 +2,10 @@ export PATH="${PATH}:${HOME}/src/android-studio/bin/"
 export PATH="${PATH}:${HOME}/Android/Sdk/emulator/"
 export PATH="${PATH}:${HOME}/Android/Sdk/platform-tools/"
 
-source ${HOME}/mnts/backup/profile.sh
+PPROFILE=${HOME}/mnts/backup/profile.sh
+if test -e "${PPROFILE}"; then
+    source "${PPROFILE}"
+fi
 
 # Local Variables:
 # mode: sh
