@@ -7,6 +7,8 @@ if test -e "${PPROFILE}"; then
     source "${PPROFILE}"
 fi
 
+export QT_QPA_PLATFORMTHEME=qt6ct
+
 # Local Variables:
 # mode: sh
 # End:
