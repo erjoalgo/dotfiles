@@ -282,7 +282,8 @@
                               with ratio = (xrandr-mode-ratio current-mode)
                               when (equal ratio (xrandr-mode-ratio mode))
                                   collect mode)))
-         (mode (selcand:select :candidates (or similar-modes all-modes)
+         (mode (selcand:select
+                :candidates (or all-modes similar-modes)
                                :prompt "select mode: "
                                :stringify-fn
                                (lambda (mode)
