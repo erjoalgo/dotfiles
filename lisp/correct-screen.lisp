@@ -277,10 +277,11 @@
             (lambda (x) x)
             (XRANDR-DISPLAY-MODES display)))
          (current-mode (xrandr-display-current-mode display))
-         (similar-modes (loop for mode in all-modes
+         (similar-modes (when current-mode
+                          (loop for mode in all-modes
                               with ratio = (xrandr-mode-ratio current-mode)
                               when (equal ratio (xrandr-mode-ratio mode))
-                                collect mode))
+                                  collect mode)))
          (mode (selcand:select :candidates (or similar-modes all-modes)
                                :prompt "select mode: "
                                :stringify-fn
