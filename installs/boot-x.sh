@@ -19,7 +19,7 @@ if ! test "${EMACS_MAJOR_VERSION}" -le 28; then
 fi
 
 sudo apt-get update
-sudo apt-get install -y zathura konsole pass keynav at x2x
+sudo apt-get install -y zathura konsole pass keynav at x2x xmlstarlet
 sudo apt-get install -y qimgv scrot
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
