@@ -347,6 +347,7 @@ for LETTER_COMMAND in "down stop" \
                           "s status" \
                           "l logs"  \
                           "up start" \
+                          "ls list-units" \
                       ; do
     COMMAND=$(cut -f2  -d' '  <<< "${LETTER_COMMAND}")
     LETTER=$(cut -f1  -d' '  <<< "${LETTER_COMMAND}")
