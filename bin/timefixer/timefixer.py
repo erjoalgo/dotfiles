@@ -58,6 +58,17 @@ class FsObserver():
         self.observer.schedule(event_handler, self.directory, recursive=True)
         self.observer.start()
 
+        # Sanity check: warn loudly if watchdog fell back to polling, since
+        # that alone can look like "it takes a while to notice new files"
+        # (e.g. watched dir is on NFS/CIFS or inotify watches are exhausted).
+        observer_type = type(self.observer).__name__
+        if "Polling" in observer_type:
+            logger.warning(
+                "observer for %s is using %s (polling fallback) instead of "
+                "inotify -- file events will be delayed. This usually means "
+                "the directory is on a filesystem without inotify support, "
+                "or inotify watch limits were hit.",
+                self.directory, observer_type)
 
     def join(self):
         """Blockingly join the observer thread."""
