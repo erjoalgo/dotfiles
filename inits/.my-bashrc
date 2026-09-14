@@ -6,8 +6,8 @@ if test -n "${DEBUG_INIT:-}"; then
 fi
 
 #emacs editor
-export VISUAL='emacsclient'
-export EDITOR='emacsclient'
+export VISUAL='emacsclient-wrapper.sh'
+export EDITOR='emacsclient-wrapper.sh'
 
 #bash prompt
 
