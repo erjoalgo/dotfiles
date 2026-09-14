@@ -435,6 +435,8 @@ alias dsrm='docker stack rm'
 alias dcl='HOSTNAME=${HOSTNAME} docker compose logs -f --tail 1000'
 alias dcps='HOSTNAME=${HOSTNAME} docker compose ps'
 alias dcu='HOSTNAME=${HOSTNAME} docker compose up -d; docker compose logs -f'
+alias dcs='HOSTNAME=${HOSTNAME} docker compose stop'
+
 function dcub {
     HOSTNAME=${HOSTNAME} docker compose up --build -d ${*} &&  \
         HOSTNAME=${HOSTNAME} docker compose logs -f ${*}
@@ -443,6 +445,7 @@ function dcub {
 alias dcr='HOSTNAME=${HOSTNAME} docker compose restart;'
 alias dc='HOSTNAME=${HOSTNAME} docker compose'
 alias db='HOSTNAME=${HOSTNAME} docker-util bash'
+alias dsh='HOSTNAME=${HOSTNAME} docker-util sh'
 alias dpush='HOSTNAME=${HOSTNAME} docker-util push'
 alias dpull='HOSTNAME=${HOSTNAME} docker-util pull'
 alias dps='HOSTNAME=${HOSTNAME} docker ps'
