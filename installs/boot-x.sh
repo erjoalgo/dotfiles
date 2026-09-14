@@ -12,10 +12,10 @@ sudo apt-get install -y dirmngr || true
 
 EMACS_MAJOR_VERSION=$(emacs --version | head -1 | grep -Po '(?<=GNU Emacs )[^.]+') || true
 if ! test "${EMACS_MAJOR_VERSION}" -le 28; then
-  if ! ./emacs-install.sh; then
-    echo "warning: failed to build emacs from source"
-    which emacs || true
-  fi
+    if ! ./emacs-install.sh; then
+        echo "warning: failed to build emacs from source"
+        which emacs || true
+    fi
 fi
 
 sudo apt-get update
@@ -23,7 +23,7 @@ sudo apt-get install -y zathura konsole pass keynav at x2x xmlstarlet
 sudo apt-get install -y qimgv scrot
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wireless-tools wpasupplicant \
-  macchanger expect iw net-tools
+     macchanger expect iw net-tools
 sudo apt-get install -y libxcomposite-dev libzstd-dev
 
 ./install-xsecurelock.sh
@@ -37,15 +37,15 @@ fi
 
 # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=856351
 sudo insert-text-block '# 37561c4f-5b87-4252-9724-6eed90ee3943-fix-stretch-X-issue'  \
-                  /etc/X11/Xwrapper.config<<EOF
+     /etc/X11/Xwrapper.config<<EOF
 needs_root_rights=yes
 EOF
 
 which update-config-file-key-value
 
 sudo $(which update-config-file-key-value) \
-  -f /etc/systemd/logind.conf  \
-  -k HandlePowerKey -v ignore
+     -f /etc/systemd/logind.conf  \
+     -k HandlePowerKey -v ignore
 
 ./konsole.sh || true
 
@@ -63,9 +63,9 @@ function clone-git-repo {
 }
 
 for URL in \
-  https://github.com/usocket/usocket \
-  https://github.com/erjoalgo/{erjoalgo-webutil,cl-voipms,statusor} \
-  ; do
+    https://github.com/usocket/usocket \
+        https://github.com/erjoalgo/{erjoalgo-webutil,cl-voipms,statusor} \
+    ; do
     clone-git-repo "${URL}"
     quicklisp-register-local-project "${DIR}"
 done
@@ -75,12 +75,12 @@ find ~/.cache/common-lisp/ -path '*dotfiles/lisp/*.fasl' -exec rm {} +
 sbcl --eval "(ql:update-all-dists :prompt nil)" --quit
 
 for DIR in ~/git/{statusor,cl-voipms} ../lisp/{cladaver,} ; do
-  test -d ${DIR}
-  ASD=$(realpath $(echo "${DIR}/*asd"))
-  SYSTEM=$(basename ${ASD} .asd)
-  asdf-add-project-to-link-farm $(dirname "${ASD}")
-  sbcl --eval "(ql:quickload :${SYSTEM})" --quit
-  asdf-system-installed-p "${SYSTEM}"
+    test -d ${DIR}
+    ASD=$(realpath $(echo "${DIR}/*asd"))
+    SYSTEM=$(basename ${ASD} .asd)
+    asdf-add-project-to-link-farm $(dirname "${ASD}")
+    sbcl --eval "(ql:quickload :${SYSTEM})" --quit
+    asdf-system-installed-p "${SYSTEM}"
 done
 
 # set up xdg-open configs
@@ -107,7 +107,7 @@ sudo apt-get install -y redshift xcalib xbacklight xinput
 sudo apt-get install -y redshift
 
 if ! which google-chrome chromium chrome; then
-  sudo apt-get install -y chromium || sudo snap install chromium;
+    sudo apt-get install -y chromium || sudo snap install chromium;
 fi
 
 # enable sleep, suspend, hibernate to avoid draining laptop battery
@@ -127,10 +127,10 @@ cd ~/git/chromeurl/native
 source ~/.venv/bin/activate
 pip3 install -U .
 for _ in $(seq 2); do
-  if chromeurl --install-manifest all; then
-    break
-  fi
-  mkdir ~/.config/chromium
+    if chromeurl --install-manifest all; then
+        break
+    fi
+    mkdir ~/.config/chromium
 done
 popd
 
@@ -143,9 +143,12 @@ sudo apt-get install -y picom
 
 insert-text-block \
     '# 31bbffac-8c44-41d3-b589-7f68c730ad5a-picom-backend'  \
-                  ${HOME}/.config/picom.conf <<EOF
+    ${HOME}/.config/picom.conf <<EOF
 backend = "glx";
 EOF
 
+pip install timefixer
+
+timefixer -i
 
 echo success
