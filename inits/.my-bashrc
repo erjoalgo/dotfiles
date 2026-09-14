@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if test -n "${DEBUG_INIT:-}"; then
-     echo "loading $BASH_SOURCE (SEl6)"
-     set -x
+    echo "loading $BASH_SOURCE (SEl6)"
+    set -x
 fi
 
 #emacs editor
