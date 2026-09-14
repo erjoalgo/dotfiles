@@ -48,17 +48,22 @@ function docker-container-name-to-id {
 }
 
 function docker-bash {
+    SHELL_CMD=${SHELL_CMD:-bash}
     CONTAINER=$(docker-select-container)
     set -x # log the exec command
     CMD=(${@})
     if test ${#CMD[@]} -eq 0; then
-        CMD=(bash)
+        CMD=(${SHELL_CMD})
     fi
     INTERACTION_OPT=()
     if test -n "${INTERACTION:-}"; then
         INTERACTION_OPT+=("${INTERACTION}")
     fi
     docker exec ${INTERACTION[@]} --user root "${CONTAINER}" ${CMD[@]}
+}
+
+function docker-sh {
+    SHELL_CMD=sh docker-bash ${*}
 }
 
 function docker-working-dir {
