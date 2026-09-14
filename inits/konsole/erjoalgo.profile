@@ -1,6 +1,6 @@
 [Appearance]
-ColorScheme=SolarizedLight
-Font=monospace,35,-1,2,50,0,0,0,0,0
+ColorScheme=BlackOnWhite
+Font=monospace,35,-1,2,400,0,0,0,0,0,0,0,0,0,0,1
 
 [General]
 Name=erjoalgo
