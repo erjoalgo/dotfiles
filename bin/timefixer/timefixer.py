@@ -7,6 +7,7 @@ Observe a directory and new fix files with timestamps in the future.
 
 
 import argparse
+import concurrent.futures
 import logging
 import os
 import socket
@@ -145,9 +146,35 @@ class UnixSocketServer:
             os.remove(self.path)
 
 
+def wait_until_stable(filename, interval=0.2, stable_checks=2, timeout=5):
+    """Wait until a file's size stops changing, or until timeout.
+
+    Replaces a fixed sleep with an adaptive wait: small/finished files
+    return almost immediately, while large in-progress downloads get up
+    to `timeout` seconds to settle. Returns as soon as the file looks
+    stable, or once `filename` disappears (e.g. renamed mid-write).
+    """
+    last_size = -1
+    stable_count = 0
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            size = os.path.getsize(filename)
+        except OSError:
+            return
+        if size == last_size:
+            stable_count += 1
+            if stable_count >= stable_checks:
+                return
+        else:
+            stable_count = 0
+        last_size = size
+        time.sleep(interval)
+
+
 class TimestampFixer:
     """Fix created or modified files in the given directories with timestamps in the future."""
-    def __init__(self, dirs, update_fn=None):
+    def __init__(self, dirs, update_fn=None, max_workers=8):
         self.observers = []
         for directory in dirs:
             if not os.path.isdir(directory):
@@ -155,6 +182,12 @@ class TimestampFixer:
                 continue
             self.observers.append(FsObserver(directory, self.onchange))
         self.update_fn = update_fn
+        # Events are handed off to a thread pool so a slow/large file in one
+        # directory can't block dispatch of events for other files/dirs.
+        # watchdog's Observer serializes callbacks per watch, so without this
+        # a burst of files (e.g. a browser writing several download parts)
+        # queues up behind each other's wait time.
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_workers)
 
     def start(self):
         """Start the timestamp fixer service."""
@@ -181,11 +214,17 @@ class TimestampFixer:
         os.utime(filename, None)
 
     def onchange(self, change_type, filename, event):
-        """onchange callback for fileobserver"""
-        time.sleep(2)
+        """onchange callback for fileobserver: hands off to the thread pool
+        immediately so the watcher thread is never blocked."""
+        self.executor.submit(self._process_change, change_type, filename, event)
+
+    def _process_change(self, change_type, filename, event):
         new_filename = filename
         if change_type == "moved":
             new_filename = event.dest_path
+
+        wait_until_stable(new_filename)
+
         try:
             TimestampFixer.maybe_fix_time(new_filename)
         except Exception as ex:
