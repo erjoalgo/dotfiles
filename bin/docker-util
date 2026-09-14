@@ -185,7 +185,6 @@ function main {
             echo $(basename $0) ${SUBCOMMAND}
         done
     else
-        COMMAND=docker-${1} && eval shift
         INTERACTION="-it"
         while getopts "r:n:ih" OPT; do
             case ${OPT} in
@@ -205,6 +204,7 @@ function main {
             esac
         done
         eval shift $((OPTIND -1))
+        COMMAND=docker-${1} && eval shift
         ${COMMAND} ${*}
     fi
 }
