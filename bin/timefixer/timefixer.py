@@ -13,6 +13,7 @@ import socket
 import subprocess
 import threading
 import time
+import sys
 
 logger = logging
 
@@ -222,7 +223,7 @@ WantedBy=default.target
 def install_time_fixer_service(dirs, as_user = True):
     """Install the timefixer serrvice."""
     name = "timefixer"
-    run_cmd = ["python3", "-u", __file__, "-q", "-d"] + dirs
+    run_cmd = [sys.executable, "-u", os.path.realpath(__file__), "-q", "-d"] + dirs
     environment = {"PYTHONUNBUFFERED": "1"}
     if not as_user:
         subprocess.call(["sudo", "apt-get", "install", "-y", "python3-watchdog"])
