@@ -136,9 +136,13 @@ class UnixSocketServer:
 
 class TimestampFixer:
     """Fix created or modified files in the given directories with timestamps in the future."""
-    def __init__(self, dirs, update_fn = None):
-        self.observers = [FsObserver(directory, self.onchange)
-                          for directory in dirs]
+    def __init__(self, dirs, update_fn=None):
+        self.observers = []
+        for directory in dirs:
+            if not os.path.isdir(directory):
+                logging.warning("skipping non-existent directory: %s", directory)
+                continue
+            self.observers.append(FsObserver(directory, self.onchange))
         self.update_fn = update_fn
 
     def start(self):
