@@ -1,0 +1,58 @@
+/* Whole-line background for added/removed rows */
+td.rd-line-content[data-change="added"] {
+    background-color: #d1f7d1 !important;
+}
+
+td.rd-line-content[data-change="removed"] {
+    background-color: #fdd5d5 !important;
+}
+
+/* Word/char-level diff highlights within a line */
+.idiff.addition {
+    background-color: #7fe07f !important;
+    color: #003300 !important;
+}
+
+.idiff.deletion {
+    background-color: #f28080 !important;
+    color: #4d0000 !important;
+}
+
+/* Dark theme variants */
+.gl-dark td.rd-line-content[data-change="added"] {
+    background-color: #123312 !important;
+}
+.gl-dark td.rd-line-content[data-change="removed"] {
+    background-color: #3d1212 !important;
+}
+.gl-dark .idiff.addition {
+    background-color: #1f7a1f !important;
+    color: #d1f7d1 !important;
+}
+.gl-dark .idiff.deletion {
+    background-color: #a33232 !important;
+    color: #fdd5d5 !important;
+}
+
+
+/* Stronger green for the whole added-line row, including line-number gutters */
+tr:has(td.rd-line-content[data-change="added"]) td {
+    background-color: #8fe88f !important;
+}
+
+/* In case :has() isn't supported/reliable, also target directly */
+td.rd-line-content[data-change="added"] {
+    background-color: #8fe88f !important;
+}
+
+td.rd-line-num[data-change="added"],
+td[data-change="added"] {
+    background-color: #8fe88f !important;
+}
+
+/* Word-level highlights need to be more saturated than the row so they still stand out */
+.idiff.addition {
+    background-color: #33cc33 !important;
+    color: #ffffff !important;
+    font-weight: bold;
+}
