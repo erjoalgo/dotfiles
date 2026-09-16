@@ -132,12 +132,13 @@ function docker-locate-docker-compose-yaml {
 function docker-psql {
     SQLFILE=${1:-} && shift || true
     YAML=$(docker-locate-docker-compose-yaml)
-    LINES=$(grep -P "^ +(postgres|pg):" \
+    LINES=$(grep -P "^ +(postgres|pg|db):" \
                  -A10 "${YAML}") > /dev/null
     test -e "${YAML}"
 
     if test -z "${CONTAINER_NAME:-}"; then
-        CONTAINER_NAME=$(grep -Po '(?<=container_name: ).*' <<< "${LINES}")
+        CONTAINER_NAME=$(grep -Po '(?<=container_name: ).*' <<< "${LINES}") || \
+            CONTAINER_NAME=$(head -1 <<< "${LINES}" | grep -Po ' *(.*?)(?=:)' | tr -d ' ')
     fi
 
     echo "using container ${CONTAINER_NAME}"
