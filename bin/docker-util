@@ -115,8 +115,8 @@ function docker-locate-docker-compose-yaml {
     YAML=docker-compose.yaml
     pushd . > /dev/null
     while true; do
-        if test -e "${YAML}" > /dev/null; then
-            echo "$(pwd)/${YAML}"
+        if test -e docker-compose.y*ml > /dev/null; then
+            echo $(pwd)/docker-compose.y*ml
             break
         fi
         cd ..
