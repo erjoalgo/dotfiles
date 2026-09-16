@@ -120,6 +120,10 @@ function docker-locate-docker-compose-yaml {
             break
         fi
         cd ..
+        if test $(pwd) = /; then
+            echo "docker-compose.yml not found"
+            return ${LINENO}
+        fi
     done
     popd > /dev/null
 }
