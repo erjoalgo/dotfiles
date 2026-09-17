@@ -75,3 +75,5 @@ for FILE in "${WEBDAV_ROOT}" "${WEBDAV_LOCK}"; do
 done
 
 sudo service apache2 restart
+
+./util/install-web-app.sh -n webdav.erjoalgo.com -p ${WEBDAV_PORT}
