@@ -13,6 +13,8 @@ import subprocess
 import threading
 import time
 import traceback
+from urllib.parse import urlparse
+
 
 import requests
 
@@ -271,6 +273,29 @@ def start_server(device, port, delay,
     logging.info("serving on %s", server_address)
     httpd.serve_forever()
 
+def get_default_base_url():
+    """Look up the 'ir' entry in ~/.authinfo and build a base URL from it."""
+    path = os.path.expanduser("~/.authinfo")
+    try:
+        with open(path, encoding="utf-8") as f:
+            content = f.read()
+    except FileNotFoundError:
+        return None
+
+    for line in content.splitlines():
+        tokens = line.split()
+        if len(tokens) % 2 != 0:
+            continue  # malformed line, skip
+        entry = dict(zip(tokens[0::2], tokens[1::2]))
+        if entry.get("app") == "ir":
+            machine = entry.get("machine")
+            if not machine:
+                continue
+            scheme = entry.get("scheme", "http")
+            return f"{scheme}://{machine}"
+    return None
+
+
 def main():
     """Main function."""
     parser = argparse.ArgumentParser()
@@ -281,6 +306,10 @@ def main():
                         nargs="+")
     parser.add_argument("-p", "--port", help="port on which to listen",
                         default=DEFAULT_PORT, type=int)
+    parser.add_argument(
+        "--base-url",
+        help="base url of the ir server (e.g. http://localhost:8080)",
+        default=get_default_base_url() or f"http://localhost:{DEFAULT_PORT}")
     parser.add_argument("-l", "--list", help="list all available buttons",
                         action="store_true")
     parser.add_argument("-L", "--learn", help="learn a new button",
@@ -312,7 +341,7 @@ def main():
         return
     if args.buttons:
         for button in args.buttons:
-            url = f"http://localhost:{DEFAULT_PORT}/{button}"
+            url = f"{args.base_url}/{button}"
             resp = requests.get(url)
             if resp.status_code != 200:
                 logging.warning("failed to request button as a client: %s", resp)
