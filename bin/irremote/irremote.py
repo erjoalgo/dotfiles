@@ -288,11 +288,8 @@ def get_default_base_url():
             continue  # malformed line, skip
         entry = dict(zip(tokens[0::2], tokens[1::2]))
         if entry.get("app") == "ir":
-            machine = entry.get("machine")
-            if not machine:
-                continue
-            scheme = entry.get("scheme", "http")
-            return f"{scheme}://{machine}"
+            baseurl = entry.get("baseurl")
+            return baseurl
     return None
 
 
