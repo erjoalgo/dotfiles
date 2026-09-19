@@ -72,14 +72,32 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
     (format t "x-service: value of url: ~A~%" url)
     (stumpwm::x-www-browser url raise-browser-window-p) ""))
 
+(defun shell-set-selection (contents selection)
+  "Fallback: pipe CONTENTS into xsel for the given X selection (:clipboard or :primary)."
+  (let ((flag (ecase selection (:clipboard "-b") (:primary "-p"))))
+    (with-input-from-string (in contents)
+      (sb-ext:run-program "/usr/bin/xsel" (list flag "-i")
+                          :input in
+                          :output nil
+                          :error nil
+                          :wait t))))
+
 (define-regexp-route clipboard-handler ("/clipboard")
                      "get/set clipboard contents"
   (case (hunchentoot:request-method*)
     (:post
      (let ((contents (hunchentoot-post-data-or-err))
            (notify (equal (read-header :STUMPWM-NOTIFY) "true")))
-       (stumpwm:set-x-selection contents :clipboard)
-       (stumpwm:set-x-selection contents :primary)
+       (handler-case
+           (progn
+             (stumpwm:set-x-selection contents :clipboard)
+             (stumpwm:set-x-selection contents :primary))
+         (error (err)
+           (declare (ignore err))
+           (stumpwm::message-wrapped
+            "error setting clipboard contents. falling back to xsel")
+           (shell-set-selection contents :clipboard)
+           (shell-set-selection contents :primary)))
        (when notify
          (stumpwm::message-wrapped "copied: ~A" contents))
        ""))
