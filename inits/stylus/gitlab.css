@@ -1,58 +1,95 @@
-/* Whole-line background for added/removed rows */
-td.rd-line-content[data-change="added"] {
-    background-color: #d1f7d1 !important;
-}
-
-td.rd-line-content[data-change="removed"] {
-    background-color: #fdd5d5 !important;
-}
-
-/* Word/char-level diff highlights within a line */
-.idiff.addition {
-    background-color: #7fe07f !important;
-    color: #003300 !important;
-}
-
-.idiff.deletion {
-    background-color: #f28080 !important;
-    color: #4d0000 !important;
-}
-
-/* Dark theme variants */
-.gl-dark td.rd-line-content[data-change="added"] {
-    background-color: #123312 !important;
-}
-.gl-dark td.rd-line-content[data-change="removed"] {
-    background-color: #3d1212 !important;
-}
-.gl-dark .idiff.addition {
-    background-color: #1f7a1f !important;
-    color: #d1f7d1 !important;
-}
-.gl-dark .idiff.deletion {
-    background-color: #a33232 !important;
-    color: #fdd5d5 !important;
-}
+/* =====================================================================
+   GitLab diff colors
+   Covers both markups:
+     - Rapid Diffs:  td.rd-line-content / td.rd-line-num with [data-change]
+     - Legacy diffs: tr.line_holder > td.line_content / td.diff-line-num
+                     with .new (added) or .old (removed)
+   ===================================================================== */
 
 
-/* Stronger green for the whole added-line row, including line-number gutters */
-tr:has(td.rd-line-content[data-change="added"]) td {
+/* ---------- Added lines: content ---------- */
+tr:has(td.rd-line-content[data-change="added"]) td,
+td.rd-line-content[data-change="added"],
+td[data-change="added"],
+td.line_content.new {
     background-color: #8fe88f !important;
 }
 
-/* In case :has() isn't supported/reliable, also target directly */
-td.rd-line-content[data-change="added"] {
-    background-color: #8fe88f !important;
-}
-
+/* ---------- Added lines: line-number gutters ---------- */
 td.rd-line-num[data-change="added"],
-td[data-change="added"] {
-    background-color: #8fe88f !important;
+td.diff-line-num.new {
+    background-color: #7ad87a !important;
 }
 
-/* Word-level highlights need to be more saturated than the row so they still stand out */
+
+/* ---------- Removed lines: content ---------- */
+tr:has(td.rd-line-content[data-change="removed"]) td,
+td.rd-line-content[data-change="removed"],
+td[data-change="removed"],
+td.line_content.old {
+    background-color: #f5a3a3 !important;
+}
+
+/* ---------- Removed lines: line-number gutters ---------- */
+td.rd-line-num[data-change="removed"],
+td.diff-line-num.old {
+    background-color: #ef8f8f !important;
+}
+
+
+/* ---------- Word-level highlights (same classes in both markups) ---------- */
 .idiff.addition {
     background-color: #33cc33 !important;
     color: #ffffff !important;
     font-weight: bold;
+}
+
+.idiff.deletion {
+    background-color: #d93636 !important;
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+
+/* =====================================================================
+   Dark theme
+   ===================================================================== */
+
+/* Added: content */
+.gl-dark tr:has(td.rd-line-content[data-change="added"]) td,
+.gl-dark td.rd-line-content[data-change="added"],
+.gl-dark td[data-change="added"],
+.gl-dark td.line_content.new {
+    background-color: #1a4d1a !important;
+}
+
+/* Added: gutters */
+.gl-dark td.rd-line-num[data-change="added"],
+.gl-dark td.diff-line-num.new {
+    background-color: #143d14 !important;
+}
+
+/* Removed: content */
+.gl-dark tr:has(td.rd-line-content[data-change="removed"]) td,
+.gl-dark td.rd-line-content[data-change="removed"],
+.gl-dark td[data-change="removed"],
+.gl-dark td.line_content.old {
+    background-color: #5a1a1a !important;
+}
+
+/* Removed: gutters */
+.gl-dark td.rd-line-num[data-change="removed"],
+.gl-dark td.diff-line-num.old {
+    background-color: #4a1414 !important;
+}
+
+/* Word-level highlights */
+.gl-dark .idiff.addition {
+    background-color: #2a9a2a !important;
+    color: #ffffff !important;
+}
+
+.gl-dark .idiff.deletion {
+    background-color: #b83535 !important;
+    color: #ffffff !important;
 }
