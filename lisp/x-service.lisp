@@ -221,4 +221,41 @@ The capturing behavior is based on wrapping `ppcre:register-groups-bind'
              hunchentoot:+HTTP-NOT-FOUND+)
        err-msg))))
 
+(defparameter *allowed-commands*
+  '(
+    ;; ("lock-screen"   . ("loginctl" "lock-session"))
+    ;; ("suspend"       . ("systemctl" "suspend"))
+    ;; ("volume-up"     . ("pactl" "set-sink-volume" "@DEFAULT_SINK@" "+5%"))
+    ;; ("volume-down"   . ("pactl" "set-sink-volume" "@DEFAULT_SINK@" "-5%"))
+    ;; ("screenshot"    . ("scrot" "/tmp/screenshot.png"))
+    ("k1c-fancase-on"    . ("k1c-gcode.sh" "-b"))
+    ("k1c-fancase-off"    . ("k1c-gcode.sh" "-B"))
+    ("touch-test"    . ("touch" "/tmp/touch-test")))
+  "Alist mapping allowlisted command names to (program . args) lists.
+Only names in this list can ever be executed by /run-allowed.")
+
+(defun run-allowlisted-command (name)
+  "Look up NAME in *allowed-commands* and run it. Returns the process's
+combined stdout, or signals an error if NAME isn't on the allowlist."
+  (let ((entry (assoc name *allowed-commands* :test #'string=)))
+    (unless entry
+      (error "Command '~A' is not on the allowlist" name))
+    (destructuring-bind (program . args) (cdr entry)
+      (with-output-to-string (out)
+        (sb-ext:run-program program args
+                            :output out
+                            :error out
+                            :search t
+                            :wait t)))))
+
+(define-regexp-route run-allowed-handler ("/exec")
+                     "Run a command by name from the allowlist"
+  (let ((name (hunchentoot-post-data-or-err)))
+    (if (assoc name *allowed-commands* :test #'string=)
+        (run-allowlisted-command name)
+        (progn
+          (setf (hunchentoot:return-code*)
+                hunchentoot:+HTTP-FORBIDDEN+)
+          (format nil "Command '~A' is not allowlisted" name)))))
+
 ;; (x-service:start 1959)
