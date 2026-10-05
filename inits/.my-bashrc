@@ -18,6 +18,7 @@ HOSTNAME_HASH_HEX=$(hostname | md5sum | cut -f1 -d' ')
 COLORS_COUNT=8
 IDX=$(python3 -c "print (0x${HOSTNAME_HASH_HEX} % ${COLORS_COUNT})")
 PS1="\[$(tput setaf $IDX)\]█\[$(tput setaf 4)\][\h][\W][\$?]$ \[$(tput sgr0)\]"
+PS1='\[\e]133;A\e\\\]'"$PS1"
 export PS1=$PS1
 
 . ~/.bash_aliases #should already be sourced by original bashrc
