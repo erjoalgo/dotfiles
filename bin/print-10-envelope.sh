@@ -38,21 +38,27 @@ shift $((OPTIND -1))
 
 RECIPIENT_VERTICAL_OFFSET_INCHES=${RECIPIENT_VERTICAL_OFFSET_INCHES:-.5in}
 
+# PWG media name passed to lp (https://www.pwg.org/ = Printer Working Group)
+LP_MEDIA=""
+
 case "${ENVELOPE_TYPE}" in
 
     10)
         RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-5.5}
         SIZE=4.12in,9.50in
+        LP_MEDIA="na_number-10_4.125x9.5in"
         ;;
 
     5x7)
         RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-2}
         SIZE=5in,7in
+        LP_MEDIA="na_5x7_5x7in"
         ;;
     6x9)
         RECIPIENT_OFFSET_INCHES=${RECIPIENT_OFFSET_INCHES:-4}
         RECIPIENT_VERTICAL_OFFSET_INCHES=2in
         SIZE=6in,9in
+        LP_MEDIA="na_6x9_6x9in"
         ;;
     *)
         echo "unknown envelope type" && exit ${LINENO}
@@ -119,18 +125,40 @@ if test -n "${INK_COLOR:-}"; then
 fi
 
 echo "tempfile: ${PDF}"
-echo ""
-echo ""
-echo ""
-echo "INSTRUCTIONS"
-echo "print using settings 'Paper Size: #${ENVELOPE_TYPE} envelope' size and 'Orientation: Portrait'. "
-echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
 
-# TODO...
-# lpr ${ROTATED} -o media=COM10
+if test -z "${LP_MEDIA}"; then
+    echo ""
+    echo "INSTRUCTIONS"
+    echo "print using settings 'Paper Size: #${ENVELOPE_TYPE} envelope' size and 'Orientation: Portrait'. "
+    echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
+fi
 
+# Open the preview in the background so the prompt below can appear while it's open
 if test "${X_WWW_BROWSER:-}" = true; then
-    x-www-browser-local-file.sh "${OUTPUT}"
+    x-www-browser-local-file.sh "${OUTPUT}" &
 else
-    evince "${OUTPUT}"
+    evince "${OUTPUT}" &
+fi
+
+if test -n "${LP_MEDIA}"; then
+    echo ""
+    echo "feed #${ENVELOPE_TYPE} envelope into tray with the stamp on the top-left"
+    ANSWER=""
+    read -r -p "Print ${OUTPUT} on #${ENVELOPE_TYPE} envelope? [y/N] " ANSWER || true
+
+    if [[ "${ANSWER}" =~ ^[Yy]$ ]]; then
+        # Look up the default printer only after confirmation
+        PRINTER=$(lpstat -d 2>/dev/null | sed -n 's/^system default destination: //p' || true)
+        if test -z "${PRINTER}"; then
+            echo "no default printer set (check: lpstat -d)" >&2
+            exit 1
+        fi
+        echo "printing to ${PRINTER}..."
+        lp -d "${PRINTER}" \
+           -o media="${LP_MEDIA}" \
+           -o print-scaling=none \
+           "${OUTPUT}"
+    else
+        echo "print cancelled."
+    fi
 fi
