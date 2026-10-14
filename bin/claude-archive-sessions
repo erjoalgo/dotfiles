@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Interactively archive Claude Code sessions.
+
+Lists sessions for the current directory's project (or all projects with
+--all), prompts for space-separated numbers, and moves each session's .jsonl
+(plus its sibling subagent/tool-results dir) to ~/.claude/archived-sessions/.
+Nothing is deleted; move the files back to restore a session.
+"""
+import argparse
+import json
+import os
+import shutil
+import sys
+from datetime import datetime
+from pathlib import Path
+
+CLAUDE_DIR = Path(os.environ.get("CLAUDE_CONFIG_DIR", Path.home() / ".claude"))
+PROJECTS = CLAUDE_DIR / "projects"
+ARCHIVE = CLAUDE_DIR / "archived-sessions"
+
+
+def project_dir_name(cwd):
+    return "".join(c if c.isalnum() else "-" for c in str(cwd))
+
+
+def session_title(path):
+    custom = ai = first_prompt = None
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            # Cheap substring checks first; session files can be tens of MB.
+            if '"custom-title"' in line:
+                custom = json.loads(line).get("customTitle") or custom
+            elif '"ai-title"' in line:
+                ai = json.loads(line).get("aiTitle") or ai
+            elif first_prompt is None and '"type":"user"' in line:
+                rec = json.loads(line)
+                content = rec.get("message", {}).get("content")
+                if isinstance(content, str) and not rec.get("isMeta"):
+                    first_prompt = content
+    title = custom or ai or first_prompt or "(no prompt)"
+    return " ".join(title.split())
+
+
+def list_sessions(project_dirs):
+    sessions = []
+    for d in project_dirs:
+        for p in d.glob("*.jsonl"):
+            st = p.stat()
+            sessions.append({"path": p, "project": d.name, "mtime": st.st_mtime, "size": st.st_size})
+    sessions.sort(key=lambda s: s["mtime"], reverse=True)
+    for s in sessions:
+        s["title"] = session_title(s["path"])
+    return sessions
+
+
+def human_size(n):
+    for unit in ("B", "K", "M", "G"):
+        if n < 1024:
+            return f"{n:.0f}{unit}"
+        n /= 1024
+    return f"{n:.0f}T"
+
+
+def show(sessions, show_project):
+    width = shutil.get_terminal_size((120, 20)).columns
+    for i, s in enumerate(sessions, 1):
+        when = datetime.fromtimestamp(s["mtime"]).strftime("%Y-%m-%d %H:%M")
+        prefix = f"{i:3}  {when}  {human_size(s['size']):>5}  {s['path'].stem[:8]}  "
+        if show_project:
+            prefix += f"{s['project'][-30:]:30}  "
+        print((prefix + s["title"])[:width])
+
+
+def archive(session):
+    src = session["path"]
+    dest_dir = ARCHIVE / session["project"]
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for item in (src, src.with_suffix("")):
+        if item.exists():
+            target = dest_dir / item.name
+            if target.exists():
+                raise FileExistsError(target)
+            shutil.move(str(item), str(target))
+
+
+def parse_selection(text, count):
+    picks = []
+    for tok in text.split():
+        if "-" in tok:
+            lo, hi = tok.split("-", 1)
+            nums = range(int(lo), int(hi) + 1)
+        else:
+            nums = [int(tok)]
+        for n in nums:
+            if not 1 <= n <= count:
+                raise ValueError(f"{n} is out of range 1-{count}")
+            if n not in picks:
+                picks.append(n)
+    return picks
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--all", action="store_true", help="list sessions from every project")
+    ap.add_argument("--project", default=os.getcwd(), help="project path (default: cwd)")
+    args = ap.parse_args()
+
+    if args.all:
+        project_dirs = sorted(p for p in PROJECTS.iterdir() if p.is_dir())
+    else:
+        d = PROJECTS / project_dir_name(Path(args.project).resolve())
+        if not d.is_dir():
+            sys.exit(f"no sessions found at {d}")
+        project_dirs = [d]
+
+    while True:
+        sessions = list_sessions(project_dirs)
+        if not sessions:
+            print("No sessions left.")
+            return
+        show(sessions, args.all)
+        try:
+            text = input("\nArchive which? (numbers/ranges, e.g. '3 5 7-9'; blank or q to quit): ").strip()
+        except EOFError:
+            print()
+            return
+        if text in ("", "q", "quit"):
+            return
+        try:
+            picks = parse_selection(text, len(sessions))
+        except ValueError as e:
+            print(f"Invalid selection: {e}\n")
+            continue
+        for n in picks:
+            s = sessions[n - 1]
+            try:
+                archive(s)
+                print(f"archived {n}: {s['title'][:60]}")
+            except OSError as e:
+                print(f"failed {n}: {e}")
+        print()
+
+
+if __name__ == "__main__":
+    main()
