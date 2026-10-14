@@ -45,6 +45,8 @@ def list_sessions(project_dirs):
     sessions = []
     for d in project_dirs:
         for p in d.glob("*.jsonl"):
+            if p.name.startswith("."):
+                continue  # e.g. an emacs lock file (.#<id>.jsonl), a dangling symlink
             st = p.stat()
             sessions.append({"path": p, "project": d.name, "mtime": st.st_mtime, "size": st.st_size})
     sessions.sort(key=lambda s: s["mtime"], reverse=True)
