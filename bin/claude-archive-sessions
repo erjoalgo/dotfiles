@@ -4,7 +4,7 @@
 Lists sessions for the current directory's project (or all projects with
 --all), prompts for space-separated numbers, and moves each session's .jsonl
 (plus its sibling subagent/tool-results dir) to ~/.claude/archived-sessions/.
-Nothing is deleted; move the files back to restore a session.
+Nothing is deleted; --unarchive lists archived sessions and moves them back.
 """
 import argparse
 import json
@@ -71,9 +71,9 @@ def show(sessions, show_project):
         print((prefix + s["title"])[:width])
 
 
-def archive(session):
+def move(session, dest_root):
     src = session["path"]
-    dest_dir = ARCHIVE / session["project"]
+    dest_dir = dest_root / session["project"]
     dest_dir.mkdir(parents=True, exist_ok=True)
     for item in (src, src.with_suffix("")):
         if item.exists():
@@ -103,12 +103,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--all", action="store_true", help="list sessions from every project")
     ap.add_argument("--project", default=os.getcwd(), help="project path (default: cwd)")
+    ap.add_argument("--unarchive", action="store_true", help="list archived sessions and restore them")
     args = ap.parse_args()
 
+    src_root, dest_root, verb = (ARCHIVE, PROJECTS, "unarchive") if args.unarchive else (PROJECTS, ARCHIVE, "archive")
     if args.all:
-        project_dirs = sorted(p for p in PROJECTS.iterdir() if p.is_dir())
+        project_dirs = sorted(p for p in src_root.iterdir() if p.is_dir()) if src_root.is_dir() else []
     else:
-        d = PROJECTS / project_dir_name(Path(args.project).resolve())
+        d = src_root / project_dir_name(Path(args.project).resolve())
         if not d.is_dir():
             sys.exit(f"no sessions found at {d}")
         project_dirs = [d]
@@ -120,7 +122,7 @@ def main():
             return
         show(sessions, args.all)
         try:
-            text = input("\nArchive which? (numbers/ranges, e.g. '3 5 7-9'; blank or q to quit): ").strip()
+            text = input(f"\n{verb.capitalize()} which? (numbers/ranges, e.g. '3 5 7-9'; blank or q to quit): ").strip()
         except EOFError:
             print()
             return
@@ -134,8 +136,8 @@ def main():
         for n in picks:
             s = sessions[n - 1]
             try:
-                archive(s)
-                print(f"archived {n}: {s['title'][:60]}")
+                move(s, dest_root)
+                print(f"{verb}d {n}: {s['title'][:60]}")
             except OSError as e:
                 print(f"failed {n}: {e}")
         print()
