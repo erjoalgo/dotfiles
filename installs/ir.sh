@@ -4,12 +4,15 @@ set -euo pipefail
 
 cd "$(realpath $(dirname "${BASH_SOURCE[0]}"))"
 
+# fail here: a failed substitution inside the heredoc would not trip set -e
+IRREMOTE=$(which irremote)
+
 install-systemd-service.sh ir <<EOF
 [Unit]
 Description=Run the IR/RF http service
 
 [Service]
-ExecStart=$(which irremote)  --port 2727
+ExecStart=${IRREMOTE}  --port 2727
 Restart=always
 RestartSec=5
 Environment=PATH=$PATH:$(realpath $(pwd)/../bin)
