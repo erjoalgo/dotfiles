@@ -30,3 +30,5 @@
 	recurseSubmodules = on-demand
 [submodule]
 	recurse = true
+[credential "https://gitlab.com"]
+	helper = !/usr/bin/glab auth git-credential
