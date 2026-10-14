@@ -103,7 +103,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--all", action="store_true", help="list sessions from every project")
     ap.add_argument("--project", default=os.getcwd(), help="project path (default: cwd)")
-    ap.add_argument("--unarchive", action="store_true", help="list archived sessions and restore them")
+    ap.add_argument("-u", "--unarchive", action="store_true", help="list archived sessions and restore them")
     args = ap.parse_args()
 
     src_root, dest_root, verb = (ARCHIVE, PROJECTS, "unarchive") if args.unarchive else (PROJECTS, ARCHIVE, "archive")
