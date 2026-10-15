@@ -12,7 +12,7 @@ install-systemd-service.sh ir <<EOF
 Description=Run the IR/RF http service
 
 [Service]
-ExecStart=${IRREMOTE}  --port 2727
+ExecStart=${IRREMOTE}  --port 2727 -d $(realpath ~/.config/ir-buttons/)
 Restart=always
 RestartSec=5
 Environment=PATH=$PATH:$(realpath $(pwd)/../bin)
