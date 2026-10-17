@@ -1,0 +1,55 @@
+Sep 04 19:53:02 phantom stumpwm[52694]: DDEBUG scrot.lisp zlik: value of status: RUNNING
+Sep 04 19:53:02 phantom stumpwm[52694]: DDEBUG scrot.lisp xjox: value of elapsed-secs: 0
+Sep 04 19:53:02 phantom stumpwm[52694]: DDEBUG scrot.lisp gnww: value of timeout-secs: 20
+Sep 04 19:53:03 phantom stumpwm[52694]: DDEBUG scrot.lisp zlik: value of status: EXITED
+Sep 04 19:53:03 phantom stumpwm[52694]: DDEBUG scrot.lisp xjox: value of elapsed-secs: 1
+Sep 04 19:53:03 phantom stumpwm[52694]: DDEBUG scrot.lisp gnww: value of timeout-secs: 20
+Sep 04 19:53:03 phantom stumpwm[52694]: DDEBUG scrot.lisp wtcm: value of output:
+Sep 04 19:53:03 phantom stumpwm[52694]: DDEBUG scrot.lisp p0gu: value of error:
+Sep 04 19:53:03 phantom stumpwm[52694]: CORRUPTION WARNING in SBCL pid 52832 tid 52832:
+Sep 04 19:53:03 phantom stumpwm[52694]: Memory fault at 0x49 (pc=0x52cfd395 [code 0x52cfd1a0+0x1F5 ID 0x3ac2], fp=0x7fdf01486530, sp=0x7fdf01486510) tid 52832
+Sep 04 19:53:03 phantom stumpwm[52694]: The integrity of this image is possibly compromised.
+Sep 04 19:53:03 phantom stumpwm[52694]: Continuing with fingers crossed.
+Sep 04 19:53:03 phantom stumpwm[52694]: Caught 'Unhandled memory fault at #x49.' at the top level. Please report this.
+Sep 04 19:53:03 phantom stumpwm[52694]: Backtrace for: #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}>
+Sep 04 19:53:03 phantom stumpwm[52694]: 0: (SB-IMPL::%WRITE-STRING "scrot: Key was pressed, aborting shot
+Sep 04 19:53:03 phantom stumpwm[52694]: scrot: no image grabbed
+Sep 04 19:53:03 phantom stumpwm[52694]: " #<SB-KERNEL:INSTANCE {7FDF01486AA3}> 0 NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 1: ((LAMBDA NIL :IN SB-IMPL::COPY-DESCRIPTOR-TO-STREAM))
+Sep 04 19:53:03 phantom stumpwm[52694]: 2: ((LAMBDA (SB-IMPL::FD) :IN SB-IMPL::COPY-DESCRIPTOR-TO-STREAM) #<unused argument>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 3: (SB-IMPL::INVOKE-HANDLER #<SB-IMPL::HANDLER INPUT on descriptor 17: #<FUNCTION (LAMBDA (SB-IMPL::FD) :IN SB-IMPL::COPY-DESCRIPTOR-TO-STREAM) {1008DB164B}>>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 4: (SB-IMPL::SUB-SUB-SERVE-EVENT NIL NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 5: (SB-IMPL::SUB-SERVE-EVENT NIL NIL NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 6: (SB-SYS:WAIT-UNTIL-FD-USABLE 4 :INPUT NIL T)
+Sep 04 19:53:03 phantom stumpwm[52694]: 7: (XLIB::BUFFER-INPUT-WAIT-DEFAULT #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 8: (XLIB::BUFFER-INPUT-WAIT #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 9: (XLIB::READ-INPUT #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> NIL NIL #<FUNCTION (LAMBDA (XLIB::PENDING-COMMAND) :IN XLIB::READ-REPLY) {52A0D92B}> #S(XLIB::PENDING-COMMAND :SEQUENCE 33513 :REPLY-BUFFER NIL :PROCESS #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}> :NEXT NIL))
+Sep 04 19:53:03 phantom stumpwm[52694]: 10: (XLIB::READ-REPLY #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> #S(XLIB::PENDING-COMMAND :SEQUENCE 33513 :REPLY-BUFFER NIL :PROCESS #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}> :NEXT NIL))
+Sep 04 19:53:03 phantom stumpwm[52694]: 11: ((FLET SB-THREAD::WITH-RECURSIVE-LOCK-THUNK :IN XLIB::GET-WINDOW-ATTRIBUTES-BUFFER))
+Sep 04 19:53:03 phantom stumpwm[52694]: 12: ((FLET "WITHOUT-INTERRUPTS-BODY-11" :IN SB-THREAD::CALL-WITH-RECURSIVE-LOCK))
+Sep 04 19:53:03 phantom stumpwm[52694]: 13: (SB-THREAD::CALL-WITH-RECURSIVE-LOCK #<FUNCTION (FLET SB-THREAD::WITH-RECURSIVE-LOCK-THUNK :IN XLIB::GET-WINDOW-ATTRIBUTES-BUFFER) {7FDF01486DFB}> #<SB-THREAD:MUTEX "CLX Buffer Lock" owner: #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}>> T NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 14: (XLIB::GET-WINDOW-ATTRIBUTES-BUFFER #<XLIB:WINDOW :0 600003>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 15: (XLIB:WINDOW-MAP-STATE #<XLIB:WINDOW :0 600003>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 16: (STUMPWM::MESSAGE-WINDOW-REAL-GRAVITY #<SCREEN #<XLIB:SCREEN :0.0 5760x2160x24 TRUE-COLOR>>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 17: (STUMPWM::SETUP-MESSAGE-WINDOW #<SCREEN #<XLIB:SCREEN :0.0 5760x2160x24 TRUE-COLOR>> 1625 40)
+Sep 04 19:53:03 phantom stumpwm[52694]: 18: (STUMPWM::ECHO-STRING-LIST #<SCREEN #<XLIB:SCREEN :0.0 5760x2160x24 TRUE-COLOR>> ("^B^1*Error In Command '^bscrot-cmd-anon^B': ^nscrot command non-zero exit: 1"))
+Sep 04 19:53:03 phantom stumpwm[52694]: 19: (STUMPWM::MESSAGE-NO-TIMEOUT "~a" "^B^1*Error In Command '^bscrot-cmd-anon^B': ^nscrot command non-zero exit: 1
+Sep 04 19:53:03 phantom stumpwm[52694]: ")
+Sep 04 19:53:03 phantom stumpwm[52694]: 20: ((LAMBDA (&REST #:G0 &KEY :CODE :STATE &ALLOW-OTHER-KEYS) :IN "/home/ealfonso/quicklisp/dists/quicklisp/software/stumpwm-20250622-git/events.lisp") :CODE 30 :STATE 32)
+Sep 04 19:53:03 phantom stumpwm[52694]: 21: (STUMPWM::HANDLE-EVENT :DISPLAY #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> :EVENT-KEY :KEY-PRESS :EVENT-CODE 2 :SEND-EVENT-P NIL :CODE 30 :SEQUENCE 33496 :TIME 526962478 :ROOT #<XLIB:WINDOW :0 3EA> :WINDOW #<XLIB:WINDOW :0 C001BC> :EVENT-WINDOW #<XLIB:WINDOW :0 C001BC> :CHILD NIL :ROOT-X 1446 :ROOT-Y 285 :X 165 :Y 284 :STATE 32 :SAME-SCREEN-P T)
+Sep 04 19:53:03 phantom stumpwm[52694]: 22: ((FLET SB-THREAD::WITH-RECURSIVE-LOCK-THUNK :IN XLIB:PROCESS-EVENT))
+Sep 04 19:53:03 phantom stumpwm[52694]: 23: ((FLET "WITHOUT-INTERRUPTS-BODY-11" :IN SB-THREAD::CALL-WITH-RECURSIVE-LOCK))
+Sep 04 19:53:03 phantom stumpwm[52694]: 24: (SB-THREAD::CALL-WITH-RECURSIVE-LOCK #<FUNCTION (FLET SB-THREAD::WITH-RECURSIVE-LOCK-THUNK :IN XLIB:PROCESS-EVENT) {7FDF014876EB}> #<SB-THREAD:MUTEX "CLX Event Lock" owner: #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}>> T 0)
+Sep 04 19:53:03 phantom stumpwm[52694]: 25: (XLIB:PROCESS-EVENT #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)> :HANDLER #<FUNCTION STUMPWM::HANDLE-EVENT> :TIMEOUT 0 :PEEK-P NIL :DISCARD-P NIL :FORCE-OUTPUT-P T)
+Sep 04 19:53:03 phantom stumpwm[52694]: 26: ((FLET "WITHOUT-INTERRUPTS-BODY-11" :IN SB-THREAD::CALL-WITH-RECURSIVE-LOCK))
+Sep 04 19:53:03 phantom stumpwm[52694]: 27: (SB-THREAD::CALL-WITH-RECURSIVE-LOCK #<FUNCTION (FLET SB-THREAD::WITH-RECURSIVE-LOCK-THUNK :IN STUMPWM::DISPATCH-ALL) {7FDF014879AB}> #<SB-THREAD:MUTEX "CLX Event Lock" owner: #<SB-THREAD:THREAD "main thread" RUNNING {10024282C3}>> T NIL)
+Sep 04 19:53:03 phantom stumpwm[52694]: 28: ((FLET STUMPWM::DISPATCH-ALL :IN "/home/ealfonso/quicklisp/dists/quicklisp/software/stumpwm-20250622-git/stumpwm.lisp") #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)>)
+Sep 04 19:53:03 phantom stumpwm[52694]: 29: ((:METHOD IO-LOOP (STUMPWM::SBCL-IO-LOOP)) #<STUMPWM::SBCL-IO-LOOP {10063DB693}>) [fast-method]
+Sep 04 19:53:03 phantom stumpwm[52694]: 30: (STUMPWM::STUMPWM-INTERNAL-LOOP)
+Sep 04 19:53:03 phantom stumpwm[52694]: 31: (STUMPWM::STUMPWM-INTERNAL ":0")
+Sep 04 19:53:03 phantom stumpwm[52694]: 32: (STUMPWM ":0")
+Sep 04 19:53:03 phantom stumpwm[52694]: 33: ((LAMBDA NIL :IN "/home/ealfonso/src/stumpwm/make-image.lisp"))
+Sep 04 19:53:03 phantom stumpwm[52694]: 34: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+Sep 04 19:53:03 phantom stumpwm[52694]: 35: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+Sep 04 19:53:03 phantom stumpwm[52694]: 36: (SB-IMPL::START-LISP)
+Sep 04 19:53:49 phantom stumpwm[52694]: [2026-09-04 19:53:49 [ERROR]] Attempt to use closed display #<XLIB:DISPLAY :0 (The X.Org Foundation R12101016)>
