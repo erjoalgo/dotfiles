@@ -24,7 +24,7 @@ while getopts "ht:p:r:n:d:kaU" OPT; do
             PORT_OPT+=:${OPTARG}
             ;;
         n)
-            REPO=${OPTARG}
+            REPO_NAME=${OPTARG}
             ;;
         d)
             SRV_PREFIX=${OPTARG}
