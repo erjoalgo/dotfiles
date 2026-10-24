@@ -268,6 +268,8 @@ if test -n "${APT_GET}"; then
     if ! sudo ${APT_GET} install -y auditd; then
 	sudo ${APT_GET} purge -y auditd
     fi
+
+    ./unattended-upgrades.sh
 fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
