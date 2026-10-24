@@ -44,8 +44,8 @@ while getopts "ht:p:r:n:d:kaU" OPT; do
             SET_UPSTREAM_OPT=""
             ;;
         h)
-            less $0
             usage
+            less $0
             exit 0
             ;;
     esac
