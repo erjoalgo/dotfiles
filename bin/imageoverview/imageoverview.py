@@ -239,11 +239,11 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
     @staticmethod
     def media_tag_html(href, width, height):
         """Generate the HTML document tag for the given resource."""
-        if re.match("(?i).*(mpe?g|mp4)", href):
+        content_type, _encoding = mimetypes.guess_type(href)
+        if content_type and content_type.startswith("video/"):
             return f"""
 <video controls width="{width}" height="{height}">
-    <!-- Include the MPG as a fallback (compatibility may vary) -->
-    <source src="{href}" type="video/mpeg">
+    <source src="{href}" type="{content_type}">
 
     <!-- Fallback text for browsers that don't support the video tag -->
     Your browser does not support the video tag.
