@@ -87,14 +87,14 @@ class ImageCrawler:
         self.skip_image_regexp = skip_image_regexp
         self.reverse = reverse
 
-    def maybe_add_image(self, filename, verbose = False):
+    def maybe_add_image(self, filename):
         """Maybe add filename as an image."""
         if re.search(self.image_regexp, filename) and not (
                 self.skip_image_regexp and
                 re.search(self.skip_image_regexp, filename)):
             self.images.append(filename)
-        elif verbose:
-            logging.info("skipping filename %s", filename)
+        else:
+            logging.debug("skipping filename %s", filename)
 
     def start(self):
         """Start crawling the directory for images."""
