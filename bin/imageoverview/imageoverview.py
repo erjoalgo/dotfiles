@@ -424,7 +424,8 @@ class ImageOverview:
                                     images=self.crawler.images,
                                     dimensions=dimensions,
                                     image_size=image_size)
-        httpd = http.server.HTTPServer(server_address, handler)
+        # Threaded, so a large video download doesn't block the page.
+        httpd = http.server.ThreadingHTTPServer(server_address, handler)
         logging.info("starting http server on %s", server_address)
 
         self.http_thread = threading.Thread(target=httpd.serve_forever, args=())
