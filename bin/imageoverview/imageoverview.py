@@ -146,7 +146,12 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
                 self.serve_page(1)
             elif self.path.startswith(self.FILE_PREFIX):
                 filename = urllib.parse.unquote(self.path[len(self.FILE_PREFIX):])
-                self.serve_file(filename)
+                # Only serve the images found under the directory, not any
+                # file on the machine.
+                if filename not in self.images:
+                    self.respond(404, f"not found: {filename}")
+                else:
+                    self.serve_file(filename)
             elif self.path == "/version":
                 self.respond(200, __version__)
             elif self.path == "/favicon.ico":
@@ -181,6 +186,10 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(400)
             self.end_headers()
             self.wfile.write("no files selected")
+            return
+        unlisted_files = [f for f in files if f not in self.images]
+        if unlisted_files:
+            self.respond(400, f"not images under the directory: {unlisted_files}")
             return
         with tempfile.NamedTemporaryFile(delete=True, suffix = ".pdf") as tmp:
             output = tmp.name
