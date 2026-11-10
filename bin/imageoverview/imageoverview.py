@@ -87,7 +87,7 @@ class ImageCrawler:
                 re.search(self.skip_image_regexp, filename)):
             self.images.append(filename)
         elif verbose:
-            logging.info("skipping filename %s")
+            logging.info("skipping filename %s", filename)
 
     def start(self):
         """Start crawling the directory for images."""
