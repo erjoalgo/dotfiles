@@ -471,7 +471,8 @@ def main():
                         help="image grid dimensions, in ROWSxCOLS format, e.g. 10x10",
                         default=(4, 10),
                         type=parse_dimensions_spec)
-    parser.add_argument("-s", "--image_size", help="html image size", default=40)
+    parser.add_argument("-s", "--image_size", help="html image size",
+                        default=40, type=int)
     parser.add_argument("-x", "--image_regexp",
                         help="regexp used to filter image files",
                         default="(?i)[.](jpe?g|png|mp4|mpe?g)$")
