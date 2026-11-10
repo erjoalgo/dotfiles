@@ -117,8 +117,8 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         """Sends an http response."""
         self.send_response(status)
         self.send_header("Content-type", "text/plain")
-        self.wfile.write(body.encode())
         self.end_headers()
+        self.wfile.write(body.encode())
 
     FILE_PREFIX = "/file"
 
