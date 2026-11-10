@@ -1,0 +1,290 @@
+#!/usr/bin/env python3
+"""List, print and archive Claude Code sessions.
+
+Sessions are scoped to the current directory's project (or --project, or every
+project with --all). --archived operates on ~/.claude/archived-sessions/
+instead of ~/.claude/projects/.
+
+  claude-sessions [ls]                 numbered list, newest first
+  claude-sessions cat SESSION...       print a transcript
+  claude-sessions archive [SESSION...] move sessions to the archive
+                                       (interactive picker if none given)
+  claude-sessions unarchive [SESSION...]
+
+SESSION is a list number (as shown by ls, ranges like 3-5 allowed), a session
+id prefix, or a path to a .jsonl file. Archiving moves the .jsonl plus its
+sibling subagent/tool-results dir; nothing is ever deleted.
+"""
+import argparse
+import json
+import os
+import shutil
+import sys
+from datetime import datetime
+from pathlib import Path
+
+CLAUDE_DIR = Path(os.environ.get("CLAUDE_CONFIG_DIR", Path.home() / ".claude"))
+PROJECTS = CLAUDE_DIR / "projects"
+ARCHIVE = CLAUDE_DIR / "archived-sessions"
+
+
+# ---------------------------------------------------------------- discovery
+
+def project_dir_name(cwd):
+    return "".join(c if c.isalnum() else "-" for c in str(cwd))
+
+
+def session_title(path):
+    custom = ai = first_prompt = None
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            # Cheap substring checks first; session files can be tens of MB.
+            if '"custom-title"' in line:
+                custom = json.loads(line).get("customTitle") or custom
+            elif '"ai-title"' in line:
+                ai = json.loads(line).get("aiTitle") or ai
+            elif first_prompt is None and '"type":"user"' in line:
+                rec = json.loads(line)
+                content = rec.get("message", {}).get("content")
+                if isinstance(content, str) and not rec.get("isMeta"):
+                    first_prompt = content
+    title = custom or ai or first_prompt or "(no prompt)"
+    return " ".join(title.split())
+
+
+def project_dirs(root, args):
+    if args.all:
+        return sorted(p for p in root.iterdir() if p.is_dir()) if root.is_dir() else []
+    d = root / project_dir_name(Path(args.project).resolve())
+    if not d.is_dir():
+        sys.exit(f"no sessions found at {d}")
+    return [d]
+
+
+def list_sessions(dirs):
+    sessions = []
+    for d in dirs:
+        for p in d.glob("*.jsonl"):
+            if p.name.startswith("."):
+                continue  # e.g. an emacs lock file (.#<id>.jsonl), a dangling symlink
+            st = p.stat()
+            sessions.append({"path": p, "project": d.name, "mtime": st.st_mtime, "size": st.st_size})
+    sessions.sort(key=lambda s: s["mtime"], reverse=True)
+    for s in sessions:
+        s["title"] = session_title(s["path"])
+    return sessions
+
+
+def human_size(n):
+    for unit in ("B", "K", "M", "G"):
+        if n < 1024:
+            return f"{n:.0f}{unit}"
+        n /= 1024
+    return f"{n:.0f}T"
+
+
+def show(sessions, show_project):
+    width = shutil.get_terminal_size((120, 20)).columns if sys.stdout.isatty() else 10**6
+    for i, s in enumerate(sessions, 1):
+        when = datetime.fromtimestamp(s["mtime"]).strftime("%Y-%m-%d %H:%M")
+        prefix = f"{i:3}  {when}  {human_size(s['size']):>5}  {s['path'].stem[:8]}  "
+        if show_project:
+            prefix += f"{s['project'][-30:]:30}  "
+        print((prefix + s["title"])[:width])
+
+
+def resolve(tokens, sessions):
+    """Map list numbers, ranges, id prefixes or .jsonl paths to sessions."""
+    picks = []
+    for tok in tokens:
+        if tok.endswith(".jsonl") and Path(tok).is_file():
+            p = Path(tok).resolve()
+            found = [s for s in sessions if s["path"].resolve() == p] or [
+                {"path": p, "project": p.parent.name, "title": session_title(p)}]
+        else:
+            nums = []
+            lo, _, hi = tok.partition("-")
+            if lo.isdigit() and (hi.isdigit() or not hi):
+                nums = range(int(lo), int(hi or lo) + 1)
+            if nums and all(1 <= n <= len(sessions) for n in nums):
+                found = [sessions[n - 1] for n in nums]
+            else:  # not a valid list number/range: try it as a session id prefix
+                found = [s for s in sessions if s["path"].stem.startswith(tok)]
+                if len(found) != 1:
+                    raise ValueError(f"'{tok}' is not in range 1-{len(sessions)} and matches"
+                                     f" {len(found)} session ids")
+        for s in found:
+            if s not in picks:
+                picks.append(s)
+    return picks
+
+
+# ---------------------------------------------------------------- cat
+
+def color(code, text, on):
+    return f"\033[{code}m{text}\033[0m" if on else text
+
+
+def fmt_ts(ts):
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    except (AttributeError, ValueError):
+        return ts or ""
+
+
+def clip(text, limit):
+    text = text.rstrip()
+    if limit and len(text) > limit:
+        return text[:limit] + f" … [{len(text) - limit} more chars]"
+    return text
+
+
+def tool_result_text(content):
+    if isinstance(content, list):
+        return "\n".join(b.get("text", f"[{b.get('type')}]") for b in content if isinstance(b, dict))
+    return str(content or "")
+
+
+def cat(session, args):
+    on = sys.stdout.isatty() and not args.no_color
+    print(color("1", f"# {session['title']}", on))
+    print(color("2", f"# {session['path']}", on))
+    speaker = None
+    with open(session["path"], encoding="utf-8", errors="replace") as f:
+        for line in f:
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            kind = rec.get("type")
+            if kind not in ("user", "assistant") or rec.get("isMeta"):
+                continue
+            if rec.get("isSidechain") and not args.sidechains:
+                continue
+            content = rec.get("message", {}).get("content")
+            blocks = [{"type": "text", "text": content}] if isinstance(content, str) else content or []
+            out = []
+            for b in blocks:
+                t = b.get("type")
+                if t == "text" and b.get("text", "").strip():
+                    out.append(b["text"].rstrip())
+                elif t == "thinking" and args.thinking and b.get("thinking", "").strip():
+                    out.append(color("2", clip(b["thinking"], 0), on))
+                elif t == "tool_use" and args.tools:
+                    inp = b.get("input", {})
+                    summary = inp.get("command") or inp.get("file_path") or json.dumps(inp, ensure_ascii=False)
+                    out.append(color("36", f"⏺ {b.get('name')}: {clip(summary, args.max_tool_chars)}", on))
+                elif t == "tool_result" and args.tools:
+                    res = clip(tool_result_text(b.get("content")), args.max_tool_chars)
+                    out.append(color("2", "  ⎿ " + res.replace("\n", "\n    "), on))
+            if not out:
+                continue
+            is_user_prompt = kind == "user" and any(b.get("type") == "text" for b in blocks)
+            if (is_user_prompt or kind == "assistant") and speaker != kind:
+                speaker = kind
+                label, code = ("USER", "94") if kind == "user" else ("CLAUDE", "92")
+                print("\n" + color(code, f"[{fmt_ts(rec.get('timestamp'))}] {label}:", on))
+            print("\n".join(out))
+
+
+# ---------------------------------------------------------------- archive
+
+def move(session, dest_root):
+    src = session["path"]
+    dest_dir = dest_root / session["project"]
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for item in (src, src.with_suffix("")):
+        if item.exists():
+            target = dest_dir / item.name
+            if target.exists():
+                raise FileExistsError(target)
+            shutil.move(str(item), str(target))
+
+
+def move_all(picks, dest_root, verb):
+    for s in picks:
+        try:
+            move(s, dest_root)
+            print(f"{verb}d {s['path'].stem[:8]}: {s['title'][:60]}")
+        except OSError as e:
+            print(f"failed {s['path'].stem[:8]}: {e}", file=sys.stderr)
+
+
+def archive(args, unarchive):
+    src_root, dest_root, verb = (ARCHIVE, PROJECTS, "unarchive") if unarchive else (PROJECTS, ARCHIVE, "archive")
+    dirs = project_dirs(src_root, args)
+    if args.sessions:
+        try:
+            picks = resolve(args.sessions, list_sessions(dirs))
+        except ValueError as e:
+            sys.exit(f"invalid selection: {e}")
+        move_all(picks, dest_root, verb)
+        return
+    while True:
+        sessions = list_sessions(dirs)
+        if not sessions:
+            print("No sessions left.")
+            return
+        show(sessions, args.all)
+        try:
+            text = input(f"\n{verb.capitalize()} which? (numbers/ranges/ids, e.g. '3 5 7-9'; blank or q to quit): ").strip()
+        except EOFError:
+            print()
+            return
+        if text in ("", "q", "quit"):
+            return
+        try:
+            picks = resolve(text.split(), sessions)
+        except ValueError as e:
+            print(f"Invalid selection: {e}\n")
+            continue
+        move_all(picks, dest_root, verb)
+        print()
+
+
+# ---------------------------------------------------------------- main
+
+def main():
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("-a", "--all", action="store_true", help="sessions from every project")
+    common.add_argument("-p", "--project", default=os.getcwd(), help="project path (default: cwd)")
+    common.add_argument("--archived", action="store_true", help="operate on archived sessions")
+
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 parents=[common])
+    sub = ap.add_subparsers(dest="cmd")
+    sub.add_parser("ls", parents=[common], help="list sessions")
+    c = sub.add_parser("cat", parents=[common], help="print session transcripts")
+    c.add_argument("sessions", nargs="+", metavar="SESSION")
+    c.add_argument("-t", "--tools", action="store_true", help="include tool calls and results")
+    c.add_argument("--thinking", action="store_true", help="include thinking blocks")
+    c.add_argument("--sidechains", action="store_true", help="include sidechain messages")
+    c.add_argument("--max-tool-chars", type=int, default=500, help="truncate tool I/O (0 = no limit)")
+    c.add_argument("--no-color", action="store_true")
+    for name in ("archive", "unarchive"):
+        a = sub.add_parser(name, parents=[common], help=f"{name} sessions (interactive if none given)")
+        a.add_argument("sessions", nargs="*", metavar="SESSION")
+    args = ap.parse_args()
+
+    try:
+        if args.cmd in ("archive", "unarchive"):
+            archive(args, unarchive=args.cmd == "unarchive")
+        else:
+            sessions = list_sessions(project_dirs(ARCHIVE if args.archived else PROJECTS, args))
+            if args.cmd == "cat":
+                try:
+                    picks = resolve(args.sessions, sessions)
+                except ValueError as e:
+                    sys.exit(f"invalid selection: {e}")
+                for i, s in enumerate(picks):
+                    if i:
+                        print()
+                    cat(s, args)
+            else:
+                show(sessions, args.all)
+    except BrokenPipeError:
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())  # e.g. piped into head
+
+
+if __name__ == "__main__":
+    main()
