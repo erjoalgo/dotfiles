@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 import argparse
 import base64
+import functools
 import html
 import http.server
 import importlib.metadata
@@ -106,15 +107,13 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
     Display all images recursively contained in a directory on a web browser.
     """
 
-    def __init__(self, images, dimensions, image_size):
+    def __init__(self, *args, images, dimensions, image_size, **kwargs):
         self.images = images
         self.dimensions = dimensions
         self.image_size = image_size
-
-    def __call__(self, *args, **kwargs):
-        # https://stackoverflow.com/a/58909293/1941755
-        # pylint: disable=super-with-arguments
-        super(HttpHandler, self).__init__(*args, **kwargs)
+        # The base class handles the request inside __init__, so set the
+        # attributes above first.
+        super().__init__(*args, **kwargs)
 
 
     def respond(self, status, body):
@@ -420,10 +419,12 @@ class ImageOverview:
     def start_http(self, port, dimensions, image_size, listen = ""):
         """Start the http server."""
         server_address = (listen, port)
-        httpd = http.server.HTTPServer(server_address,
-                                       HttpHandler(images = self.crawler.images,
-                                                   dimensions=dimensions,
-                                                   image_size=image_size))
+        # A new handler per request, sharing the crawler's image list.
+        handler = functools.partial(HttpHandler,
+                                    images=self.crawler.images,
+                                    dimensions=dimensions,
+                                    image_size=image_size)
+        httpd = http.server.HTTPServer(server_address, handler)
         logging.info("starting http server on %s", server_address)
 
         self.http_thread = threading.Thread(target=httpd.serve_forever, args=())
