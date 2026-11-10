@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import argparse
 import base64
 import http.server
+import importlib.metadata
 import logging
 import math
 import mimetypes
@@ -31,8 +32,9 @@ except ImportError as ex:
     watchdog = None
 
 try:
-    from .version import __version__
-except ImportError as ex:
+    __version__ = importlib.metadata.version("imageoverview")
+except importlib.metadata.PackageNotFoundError:
+    # running from the source tree, not installed
     __version__ = "unknown"
 
 
