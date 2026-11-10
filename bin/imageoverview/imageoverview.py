@@ -22,10 +22,12 @@ import re
 import shutil
 import socket
 import subprocess
+import sys
 import threading
 import traceback
 import tempfile
 import urllib.parse
+import webbrowser
 
 try:
     import watchdog.events
@@ -437,7 +439,13 @@ class ImageOverview:
 
 def x_www_browse(url):
     """Browse to the given url using the system's browser."""
-    subprocess.Popen(["x-www-browser", url])
+    # Without a display (e.g. over ssh), webbrowser would fall back to a
+    # terminal browser like w3m and take over the terminal.
+    no_display = (sys.platform.startswith("linux")
+                  and not os.environ.get("DISPLAY")
+                  and not os.environ.get("WAYLAND_DISPLAY"))
+    if no_display or not webbrowser.open(url):
+        logging.warning("could not open a browser; visit %s", url)
 
 def main():
     """Main function"""
