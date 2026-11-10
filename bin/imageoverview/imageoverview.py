@@ -443,8 +443,7 @@ def main():
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     args = parser.parse_args()
 
-    logging.getLogger(__name__).setLevel(logging.DEBUG if args.verbose
-                                         else logging.INFO)
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
 
     io = ImageOverview(directory=args.directory,
                        image_regexp=args.image_regexp,
