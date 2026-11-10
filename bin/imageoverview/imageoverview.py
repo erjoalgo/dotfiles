@@ -364,7 +364,13 @@ function deselectAll() {
 
     def serve_file(self, filename):
         """Serve a given file from the filesystem."""
-        with open(filename, "rb") as fh:
+        try:
+            fh = open(filename, "rb")
+        except FileNotFoundError:
+            # deleted or moved since the crawl
+            self.respond(404, f"not found: {filename}")
+            return
+        with fh:
             self.send_response(200)
             ext = "." + (filename.split(".")[-1].lower())
             content_type = mimetypes.types_map.get(ext)
