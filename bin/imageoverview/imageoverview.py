@@ -260,7 +260,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         page_images = self.images[
             (page_number-1)*images_per_page:
             (page_number)*images_per_page]
-        total_pages = math.ceil(len(self.images)/images_per_page)
+        total_pages = max(1, math.ceil(len(self.images)/images_per_page))
         table = """<table>"""
         for (i, filename) in enumerate(page_images):
             if i%cols == 0:
