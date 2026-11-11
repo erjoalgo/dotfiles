@@ -60,15 +60,15 @@ class FsObserver():
 
             def on_created(self, event):
                 print(f'File created: {event.src_path}')
-                self.on_change("created", event.src_path, event)
+                self.on_change("created", event.src_path)
 
             def on_modified(self, event):
                 print(f'File modified: {event.src_path}')
-                self.on_change("modified", event.src_path, event)
+                self.on_change("modified", event.src_path)
 
             def on_moved(self, event):
                 print(f'File moved: {event.src_path} => {event.dest_path}')
-                self.on_change("moved", event.dest_path, event)
+                self.on_change("moved", event.dest_path)
 
         return Handler(on_change)
 
@@ -394,17 +394,11 @@ class ImageOverview:
     def __init__(self, directory, image_regexp, skip_image_regexp, reverse):
         self.crawler = ImageCrawler(directory, image_regexp, skip_image_regexp, reverse)
 
-        def on_change(change_type, filename, event, crawler=self.crawler):
-            logging.info("fs event: %s file %s: %s", change_type, filename, event)
-            to_add = None
-            if change_type == "created":
-                to_add = filename
-            elif change_type == "moved":
-                to_add = event.dest_path
-            else:
-                return
-            if os.path.isfile(to_add):
-                crawler.maybe_add_image(to_add)
+        def on_change(change_type, filename, crawler=self.crawler):
+            # for "moved", filename is the destination
+            logging.info("fs event: %s file %s", change_type, filename)
+            if change_type in ("created", "moved") and os.path.isfile(filename):
+                crawler.maybe_add_image(filename)
 
         if HAVE_WATCHDOG:
             self.observer = FsObserver(directory, on_change)
