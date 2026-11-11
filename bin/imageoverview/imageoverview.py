@@ -32,9 +32,10 @@ import webbrowser
 try:
     import watchdog.events
     import watchdog.observers
+    HAVE_WATCHDOG = True
 except ImportError as ex:
     logging.warning("failed to import watchdog: %s", ex)
-    watchdog = None
+    HAVE_WATCHDOG = False
 
 try:
     __version__ = importlib.metadata.version("imageoverview")
@@ -405,7 +406,7 @@ class ImageOverview:
             if os.path.isfile(to_add):
                 crawler.maybe_add_image(to_add)
 
-        if watchdog:
+        if HAVE_WATCHDOG:
             self.observer = FsObserver(directory, on_change)
         else:
             self.observer = None
