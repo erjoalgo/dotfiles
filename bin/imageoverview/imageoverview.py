@@ -215,6 +215,11 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         if unlisted_files:
             self.respond(400, f"not images under the directory: {unlisted_files}")
             return
+        # deleted or moved since the crawl
+        missing_files = [f for f in files if not os.path.isfile(f)]
+        if missing_files:
+            self.respond(404, f"files no longer exist: {missing_files}")
+            return
         with tempfile.NamedTemporaryFile(delete=True, suffix = ".pdf") as tmp:
             output = tmp.name
             try:
