@@ -20,7 +20,6 @@ import mimetypes
 import os
 import re
 import shutil
-import socket
 import subprocess
 import sys
 import threading
@@ -429,7 +428,7 @@ class ImageOverview:
         return self.crawl_thread
 
     def start_http(self, port: int, dimensions: Tuple[int, int], image_size: int,
-                   listen: str = "") -> str:
+                   listen: str = "127.0.0.1") -> str:
         """Start the http server."""
         server_address = (listen, port)
         # A new handler per request, sharing the crawler's image list.
@@ -444,9 +443,7 @@ class ImageOverview:
         self.http_thread = threading.Thread(target=httpd.serve_forever, args=())
         self.http_thread.start()
 
-        hostname = socket.gethostname()
-        url = f"http://{hostname}.local:{port}"
-        return url
+        return f"http://localhost:{port}"
 
 def x_www_browse(url: str) -> None:
     """Browse to the given url using the system's browser."""
