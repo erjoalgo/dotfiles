@@ -182,7 +182,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         if ctype == 'application/x-www-form-urlencoded':
             length = int(self.headers["Content-Length"])
             data = self.rfile.read(length)
-            postvars = urllib.parse.parse_qs(data, keep_blank_values=1)
+            postvars = urllib.parse.parse_qs(data, keep_blank_values=True)
         else:
             postvars = {}
         files_values = postvars.get(b"files", [])
