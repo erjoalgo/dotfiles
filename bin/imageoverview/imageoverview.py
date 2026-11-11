@@ -264,7 +264,8 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         for (i, filename) in enumerate(page_images):
             if i%cols == 0:
                 table += "<tr>"
-            filename_href = f"{self.FILE_PREFIX}{filename}"
+            # quote() also escapes the characters that would break the HTML.
+            filename_href = f"{self.FILE_PREFIX}{urllib.parse.quote(filename)}"
             media_tag = self.media_tag_html(filename_href, self.image_size, self.image_size)
             table += (
                 f"""<td>
