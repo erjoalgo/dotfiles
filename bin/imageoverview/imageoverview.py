@@ -183,7 +183,14 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             postvars = urllib.parse.parse_qs(data, keep_blank_values=1)
         else:
             postvars = {}
-        files_value = postvars[b"files"][0].decode()
+        files_values = postvars.get(b"files", [])
+        if not files_values:
+            self.respond(400, "missing the files field")
+            return
+        files_value = files_values[0].decode()
+        if not files_value:
+            self.respond(400, "no files selected")
+            return
         try:
             files = json.loads(files_value)
         except json.JSONDecodeError:
@@ -193,9 +200,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             self.respond(400, "files must be a JSON list of filenames")
             return
         if not files:
-            self.send_response(400)
-            self.end_headers()
-            self.wfile.write("no files selected")
+            self.respond(400, "no files selected")
             return
         unlisted_files = [f for f in files if f not in self.images]
         if unlisted_files:
