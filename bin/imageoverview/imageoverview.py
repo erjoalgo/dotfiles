@@ -59,16 +59,16 @@ class FsObserver():
                 self.on_change = on_change
 
             def on_created(self, event):
-                print(f'File created: {event.src_path}')
-                self.on_change("created", event.src_path)
+                print(f'File created: {event.src_path!r}')
+                self.on_change("created", os.fsdecode(event.src_path))
 
             def on_modified(self, event):
-                print(f'File modified: {event.src_path}')
-                self.on_change("modified", event.src_path)
+                print(f'File modified: {event.src_path!r}')
+                self.on_change("modified", os.fsdecode(event.src_path))
 
             def on_moved(self, event):
-                print(f'File moved: {event.src_path} => {event.dest_path}')
-                self.on_change("moved", event.dest_path)
+                print(f'File moved: {event.src_path!r} => {event.dest_path!r}')
+                self.on_change("moved", os.fsdecode(event.dest_path))
 
         return Handler(on_change)
 
