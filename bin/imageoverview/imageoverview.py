@@ -9,8 +9,10 @@ from __future__ import absolute_import
 
 import argparse
 import base64
+import html
 import http.server
 import importlib.metadata
+import json
 import logging
 import math
 import mimetypes
@@ -181,7 +183,15 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             postvars = urllib.parse.parse_qs(data, keep_blank_values=1)
         else:
             postvars = {}
-        files = postvars[b"files"][0].decode().split(",")
+        files_value = postvars[b"files"][0].decode()
+        try:
+            files = json.loads(files_value)
+        except json.JSONDecodeError:
+            self.respond(400, "files must be a JSON list of filenames")
+            return
+        if not (isinstance(files, list) and all(isinstance(f, str) for f in files)):
+            self.respond(400, "files must be a JSON list of filenames")
+            return
         if not files:
             self.send_response(400)
             self.end_headers()
@@ -250,14 +260,13 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
             if i%cols == 0:
                 table += "<tr>"
             filename_href = f"{self.FILE_PREFIX}{filename}"
-            checkbox_id = base64.b64encode(filename.encode()).decode()
             media_tag = self.media_tag_html(filename_href, self.image_size, self.image_size)
             table += (
                 f"""<td>
                 <a href="{filename_href}">
                 {media_tag}
                 </a>
-                <input type="checkbox" id="{checkbox_id}">
+                <input type="checkbox" data-filename="{html.escape(filename)}">
                 </td>\n"""
             )
             if i % cols == cols - 1:
@@ -299,10 +308,10 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         javascript += """
 function fillInFilenames() {
         const boxes = [...document.querySelectorAll("input[type='checkbox']:checked")];
-        const filenames = boxes.map(x => atob(x.id));
+        const filenames = boxes.map(x => x.dataset.filename);
         console.log(filenames);
         const filesInput = document.getElementById("generate-pdf-filenames");
-        filesInput.value = filenames.join(",");
+        filesInput.value = JSON.stringify(filenames);
         return true;
 }
 
