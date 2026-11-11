@@ -489,6 +489,7 @@ def main():
     io.start_crawl()
     url = io.start_http(args.port, args.dimensions, args.image_size)
     x_www_browse(url)
+    assert io.http_thread is not None
     io.http_thread.join()
 
 if __name__ == "__main__":
