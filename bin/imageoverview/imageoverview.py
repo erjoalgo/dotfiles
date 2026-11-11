@@ -135,7 +135,7 @@ class HttpHandler(http.server.BaseHTTPRequestHandler):
         # Send HTTP headers
         self.send_response(200)
         self.send_header("Content-Type", "image/x-icon")
-        self.send_header("Content-Length", len(favicon_bytes))
+        self.send_header("Content-Length", str(len(favicon_bytes)))
         self.end_headers()
         # Serve the binary data
         self.wfile.write(favicon_bytes)
