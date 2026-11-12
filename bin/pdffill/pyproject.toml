@@ -8,7 +8,7 @@ version = "2026.07.04.0"
 dependencies = [
   "pypdf",
   "fillpdf",
-  "PyMuPDF",
+  "PyMuPDF>=1.24.3",
 ]
 requires-python = ">=3.8"
 authors = [
