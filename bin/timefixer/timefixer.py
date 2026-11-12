@@ -93,6 +93,7 @@ class UnixSocketServer:
         """Prepares the socket file, binds to the path, and starts the listen loop."""
         # 1. Clean up any stale socket file left from previous crashes
         self._cleanup()
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
 
         # 2. Configure a Unix Stream socket
         self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -284,6 +285,13 @@ def install_time_fixer_service(dirs, as_user = True):
     install_systemd(name=name, run_cmd=run_cmd, environment=environment,
                     as_user = as_user)
 
+def default_socket_path():
+    """The socket path: in XDG_RUNTIME_DIR, or else in ~/.cache."""
+    # XDG_RUNTIME_DIR isn't set e.g. over ssh without a login session, from
+    # cron, or on macOS.
+    runtime_dir = os.getenv("XDG_RUNTIME_DIR") or os.path.expanduser("~/.cache")
+    return os.path.join(runtime_dir, "timestampfixer.sock")
+
 def main():
     """Main function."""
     parser = argparse.ArgumentParser()
@@ -296,9 +304,7 @@ def main():
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("-i", "--install-systemd", help="install", action="store_true")
     parser.add_argument("-p", "--socket-path",
-                        default=os.path.join(
-                            os.getenv("XDG_RUNTIME_DIR"),
-                            "timestampfixer.sock"))
+                        default=default_socket_path())
 
     args = parser.parse_args()
 
