@@ -6,6 +6,10 @@ possible to browse through a large number of images quickly.
 User can go to the next or previous pages by using the arrow keys.
 
 Users can also select a subset of images to download as a PDF file.
+This needs ImageMagick's `convert` command (`$ sudo apt install imagemagick`).
+On Debian and Ubuntu, ImageMagick's default security policy blocks writing PDFs;
+to allow it, remove or comment out the `pattern="PDF"` line in
+`/etc/ImageMagick-6/policy.xml`.
 
 The script detects newly created images using a filesystem observer,
 and adds them to the pipeline for viewing.
