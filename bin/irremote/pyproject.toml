@@ -15,10 +15,7 @@ authors = [
 maintainers = [
   {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
 ]
-description = """This service exposes an API to control a broadlink IR remote device reachable over the network.
-It makes it possible to programmatically press an IR remote button,
-but also listen for and learn new buttons, and save button-press contents under memorable names.
-"""
+description = "This service exposes an API to control a broadlink IR remote device reachable over the network."
 readme = "README.md"
 license = "GPL-3.0-or-later"
 keywords = ["ir", "broadlink", "RM4C", "infrared", "http", "api", "tv", "brightness"]
