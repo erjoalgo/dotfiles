@@ -5,6 +5,7 @@
 
 import argparse
 import logging
+import os
 import re
 
 from fillpdf import fillpdfs
@@ -105,8 +106,10 @@ def delete_fields(input_pdf, output_pdf, fields_to_delete):
                 # 3. Completely clear the internal object definitions
                 doc.update_object(xref, "<<>>")
 
-    # Save the updated PDF
-    doc.save(output_pdf, incremental=True,
+    # Save the updated PDF. An incremental save can only append to the file
+    # the PDF was opened from; writing elsewhere needs a full save.
+    incremental = os.path.abspath(output_pdf) == os.path.abspath(input_pdf)
+    doc.save(output_pdf, incremental=incremental,
              encryption=pymupdf.PDF_ENCRYPT_KEEP)
     doc.close()
 
