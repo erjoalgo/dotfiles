@@ -55,7 +55,7 @@ def fill_pdf_pypdf(input_pdf, output_pdf, data_dict):
     for i, page in enumerate(writer.pages):
         # non_checkboxes = {k: v for k, v in data_dict.items() if "checkbox" not  in k}
         non_checkboxes = data_dict
-        logging.debug(f"on page %s{i+1}")
+        logging.debug("on page %s", i + 1)
         writer.update_page_form_field_values(
             page, non_checkboxes,
             auto_regenerate=False)
