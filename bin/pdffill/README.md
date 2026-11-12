@@ -1,5 +1,6 @@
 This is a command line utility to manipulate a PDF's fields. 
 
+```
 $ pip install pdffill
 
 # List field names
@@ -16,5 +17,6 @@ $ pdffill input.pdf -o slim.pdf -d balance-to-close -d purchase-price-other-item
 
 # Fill in all fields with their own names, helpful for seeing where fields are on the page.
 $ pdffill input.pdf -o debug.pdf -F
+```
 
 This utility doesn't handle checkboxes well, and it is recommended to use plain text fields instead.
