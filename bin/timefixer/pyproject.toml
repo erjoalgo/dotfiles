@@ -17,7 +17,7 @@ maintainers = [
 ]
 description = "A service to fix files with timestamps in the future."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "GPL-3.0-or-later"
 keywords = ["timefixer", "timestamp", "modified", "future"]
 classifiers = [
   "Development Status :: 4 - Beta",
