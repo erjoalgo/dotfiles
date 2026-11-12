@@ -21,7 +21,13 @@ license = "GPL-3.0-or-later"
 keywords = ["imageoverview", "images", "browse", "recursive"]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Programming Language :: Python"
+  "Environment :: Console",
+  "Environment :: Web Environment",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX",
+  "Topic :: Multimedia :: Graphics :: Viewers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
 ]
 
 [project.urls]
