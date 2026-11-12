@@ -300,14 +300,16 @@ def main():
     parser.add_argument("-d", "--dirs",
                         help="directory to observe",
                         nargs="+",
-                        default=list(os.path.realpath(os.path.expanduser(dirname))
-                                     for dirname in default_dirs))
+                        default=default_dirs)
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
     parser.add_argument("-i", "--install-systemd", help="install", action="store_true")
     parser.add_argument("-p", "--socket-path",
                         default=default_socket_path())
 
     args = parser.parse_args()
+    # Absolute paths, so an installed service doesn't depend on the directory
+    # it was installed from.
+    args.dirs = [os.path.realpath(os.path.expanduser(d)) for d in args.dirs]
 
     level = logging.INFO if args.quiet else logging.DEBUG
     logging.basicConfig(level=level)
