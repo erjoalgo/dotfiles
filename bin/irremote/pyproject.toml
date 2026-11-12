@@ -15,7 +15,7 @@ authors = [
 maintainers = [
   {name = "Ernesto Alfonso", email = "erjoalgo@gmail.com"},
 ]
-description = """This service exposes an API to contorl a broadlink IR remote device reachable over the network.
+description = """This service exposes an API to control a broadlink IR remote device reachable over the network.
 It makes it possible to programmatically press an IR remote button,
 but also listen for and learn new buttons, and save button-press contents under memorable names.
 """
