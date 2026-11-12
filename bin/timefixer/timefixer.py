@@ -2,7 +2,7 @@
 
 
 """
-Observe a directory and new fix files with timestamps in the future.
+Observe directories and fix new files with timestamps in the future.
 """
 
 
@@ -274,10 +274,10 @@ WantedBy=default.target
                           ["sudo", "systemctl",  "restart", unit]]
     for cmd in start_commands:
         subprocess.run(cmd, check = True)
-    logging.info("succesfully installed %s with contents: \n%s", unit, contents)
+    logging.info("successfully installed %s with contents: \n%s", unit, contents)
 
 def install_time_fixer_service(dirs, as_user = True):
-    """Install the timefixer serrvice."""
+    """Install the timefixer service."""
     name = "timefixer"
     run_cmd = [sys.executable, "-u", os.path.realpath(__file__), "-q", "-d"] + dirs
     environment = {"PYTHONUNBUFFERED": "1"}
