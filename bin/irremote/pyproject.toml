@@ -22,7 +22,12 @@ license = "GPL-3.0-or-later"
 keywords = ["ir", "broadlink", "RM4C", "infrared", "http", "api", "tv", "brightness"]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Programming Language :: Python"
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX",
+  "Topic :: Home Automation",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
 ]
 
 [project.urls]
