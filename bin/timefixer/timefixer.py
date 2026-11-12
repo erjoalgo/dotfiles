@@ -296,9 +296,9 @@ def default_socket_path():
 def main():
     """Main function."""
     parser = argparse.ArgumentParser()
-    default_dirs = ["~/Downloads", "~/pictures/auto-scrots", "~/git/3d/", "~/uploads/"]
+    default_dirs = ["~/Downloads"]
     parser.add_argument("-d", "--dirs",
-                        help="directory to observe",
+                        help="directories to observe (default: ~/Downloads)",
                         nargs="+",
                         default=default_dirs)
     parser.add_argument("-q", "--quiet", help="quiet", action="store_true")
