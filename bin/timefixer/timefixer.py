@@ -259,6 +259,7 @@ RestartSec=60
 [Install]
 WantedBy=default.target
 """
+    os.makedirs(os.path.dirname(config), exist_ok=True)
     with open(config, "w") as fh:
         fh.write(contents)
 
