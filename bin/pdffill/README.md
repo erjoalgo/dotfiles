@@ -9,7 +9,7 @@ $ pdffill input.pdf -l
 $ pdffill.py input.pdf -r text_3uwum=seller text_4vpsr=buyer text_5ovhg=address
 
 # Fill in some fields, write to a separate output file
-$ pdffill.py input.pdf -o filled.pdf -f "seller=Wollam Bonnie C Estate" "buyer=John Doe" address=20235 Majestic Street, Orlando, Fl, 32833
+$ pdffill.py input.pdf -o filled.pdf -f "seller=Jane Roe" "buyer=John Doe" "address=123 Main Street, Springfield, ST, 00000"
 
 # Delete some fields, write to a separate output file
 $ pdffill.py input.pdf -o slim.pdf -d balance-to-close -d purchase-price-other-item -d purchase-price-other-item-value
