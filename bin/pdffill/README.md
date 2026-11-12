@@ -13,7 +13,7 @@ $ pdffill input.pdf -r text_3uwum=seller text_4vpsr=buyer text_5ovhg=address
 $ pdffill input.pdf -o filled.pdf -f "seller=Jane Roe" "buyer=John Doe" "address=123 Main Street, Springfield, ST, 00000"
 
 # Delete some fields, write to a separate output file
-$ pdffill input.pdf -o slim.pdf -d balance-to-close -d purchase-price-other-item -d purchase-price-other-item-value
+$ pdffill input.pdf -o slim.pdf -d balance-to-close purchase-price-other-item purchase-price-other-item-value
 
 # Fill in all fields with their own names, helpful for seeing where fields are on the page.
 $ pdffill input.pdf -o debug.pdf -F
