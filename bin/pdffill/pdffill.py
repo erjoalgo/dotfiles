@@ -142,7 +142,9 @@ example: old_name1=new_name1 old_name2=new_name_2""",
 
     if args.list:
         print_fields(args.input)
+        return
 
+    # Every other operation modifies the PDF.
     if not args.output:
         logging.warning("warn: making modifications in-place")
         args.output = args.input
