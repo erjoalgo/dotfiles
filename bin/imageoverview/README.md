@@ -2,6 +2,8 @@ This script makes it easy to scan a given directory for images or videos.
 
 Found images are displayed in a browser like Chrome or Firefox in a NxM grid, making it
 possible to browse through a large number of images quickly.
+The page is served at `http://localhost:6969` (change the port with `-p`), and only
+to this machine.
 
 User can go to the next or previous pages by using the arrow keys.
 
