@@ -115,20 +115,22 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="input PDF")
     parser.add_argument("-o", "--output", help="output file")
-    parser.add_argument("-l", "--list", action="store_true",
+    # One operation per run.
+    operation = parser.add_mutually_exclusive_group(required=True)
+    operation.add_argument("-l", "--list", action="store_true",
                         help="""list the PDF fields""")
-    parser.add_argument("-r", "--rename",
+    operation.add_argument("-r", "--rename",
                         help="""rename the given fields.
 example: old_name1=new_name1 old_name2=new_name_2""",
                         nargs="+")
-    parser.add_argument("-f", "--fill",
+    operation.add_argument("-f", "--fill",
                         help="""fill in the given fields.
 example: old_name1=new_name1 old_name2=new_name_2""",
                         nargs="+")
-    parser.add_argument("-F", "--fill_all",
+    operation.add_argument("-F", "--fill_all",
                         help="""fill in all text fields with their own field names.""",
                         action="store_true")
-    parser.add_argument("-d", "--delete", nargs="+",
+    operation.add_argument("-d", "--delete", nargs="+",
                         help="""delete the given fields""")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="""verbose logging""")
