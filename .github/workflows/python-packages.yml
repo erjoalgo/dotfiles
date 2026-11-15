@@ -1,0 +1,34 @@
+name: Python packages
+
+on:
+  push:
+    paths:
+      - "bin/imageoverview/**"
+      - "bin/irremote/**"
+      - ".github/workflows/python-packages.yml"
+  pull_request:
+    paths:
+      - "bin/imageoverview/**"
+      - "bin/irremote/**"
+      - ".github/workflows/python-packages.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [imageoverview, irremote]
+        python-version: ["3.11", "3.14"]
+    defaults:
+      run:
+        working-directory: bin/${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - if: matrix.package == 'imageoverview'
+        run: pip install mypy && mypy --strict imageoverview.py
