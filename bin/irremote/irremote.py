@@ -261,10 +261,10 @@ def learn_one_button(device, name, directory):
             continue
         assert False
 
-def start_server(device, port, delay,
+def start_server(device, host, port, delay,
                  directory, local_directory):
-    """Start the http server at the given port"""
-    server_address = ('', port)
+    """Start the http server at the given host and port"""
+    server_address = (host, port)
     httpd = http.server.HTTPServer(
         server_address,
         IRService(device=device, delay=delay,
@@ -303,6 +303,13 @@ def main():
                         nargs="+")
     parser.add_argument("-p", "--port", help="port on which to listen",
                         default=DEFAULT_PORT, type=int)
+    # the server has no authentication, so only accept local connections
+    # unless asked to listen on another address
+    parser.add_argument("--host",
+                        help="address on which to listen; 0.0.0.0 allows "
+                        "other machines, without authentication "
+                        "(default: %(default)s)",
+                        default="127.0.0.1")
     parser.add_argument(
         "--base-url",
         help="base url of the ir server (e.g. http://localhost:8080)",
@@ -379,7 +386,8 @@ def main():
             cacher = ButtonsCacher(remote_directory=args.directory,
                                    local_directory=args.cache_directory)
             cacher.start()
-        start_server(device=device, port=args.port, delay=args.seconds,
+        start_server(device=device, host=args.host, port=args.port,
+                     delay=args.seconds,
                      directory=args.directory, local_directory=args.cache_directory)
 
 if __name__ == "__main__":

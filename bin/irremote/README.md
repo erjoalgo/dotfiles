@@ -25,6 +25,12 @@ Run the HTTP API service on the default port 2727 after connecting to the same b
 `$ irremote --ip 10.0.0.12`
 `$ irremote --ip 10.0.0.12 -p2727`
 
+The service has no authentication, so by default it only accepts connections
+from the same machine. To press buttons from other machines on your network,
+listen on all interfaces:
+
+`$ irremote --ip 10.0.0.12 --host 0.0.0.0`
+
 Run as a client, pressing the button named `LG_VOLUP`:
 
 `$ irremote -b LG_VOLUP`
