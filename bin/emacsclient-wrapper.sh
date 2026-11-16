@@ -67,7 +67,7 @@ for EMACS_SOCKET_NAME in  \
 done
 
 if test "${SUCCESS_COUNT}" -eq 0; then
-    "${REAL_EMACSCLIENT}" "${@}"
+    "${REAL_EMACSCLIENT}" "${EXTRA_ARGS[@]}" "$@"
 fi
 
 exit $RET
