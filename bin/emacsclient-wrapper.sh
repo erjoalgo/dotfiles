@@ -66,7 +66,7 @@ for EMACS_SOCKET_NAME in  \
     fi
 done
 
-if test "${SUCCESS_COUNT+}" = 0; then
+if test "${SUCCESS_COUNT}" -eq 0; then
     "${REAL_EMACSCLIENT}" "${@}"
 fi
 
