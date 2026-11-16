@@ -29,6 +29,11 @@ if ! pgrep -x emacs >/dev/null; then
     disown
 fi
 
+LISTENING=$(ss -xlH 2>/dev/null || true)
+is_listening() {
+    grep -qF " $1 " <<< "${LISTENING}"
+}
+
 SUCCESS_COUNT=0
 FAIL_COUNT=0
 RET=0
@@ -43,6 +48,10 @@ for EMACS_SOCKET_NAME in  \
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
             ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
         echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match" >&2
+        continue;
+    fi
+    if ! is_listening "${EMACS_SOCKET_NAME}"; then
+        echo "skipping ${EMACS_SOCKET_NAME}: stale socket" >&2
         continue;
     fi
     echo "using ${EMACS_SOCKET_NAME}" >&2
