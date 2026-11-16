@@ -27,11 +27,6 @@ if ! pgrep -x emacs >/dev/null; then
     disown
 fi
 
-SERVER_DIRECTORY=$(emacs -q --batch  \
-                         --eval "(require 'server)"  \
-                         --eval "(print server-socket-dir)" \
-                         2>/dev/null  \
-                       | tail -1 | tr -d '"')
 SUCCESS_COUNT=0
 FAIL_COUNT=0
 RET=0
