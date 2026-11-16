@@ -37,15 +37,15 @@ for EMACS_SOCKET_NAME in  \
     $(echo /tmp/emacs*/*)  \
         $(echo /run/user/*/emacs/*); do
     if ! test -e "${EMACS_SOCKET_NAME}"; then
-        echo "skipping ${EMACS_SOCKET_NAME}: missing socket file"
+        echo "skipping ${EMACS_SOCKET_NAME}: missing socket file" >&2
         continue;
     fi
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
             ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
-        echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match"
+        echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match" >&2
         continue;
     fi
-    echo "using ${EMACS_SOCKET_NAME}"
+    echo "using ${EMACS_SOCKET_NAME}" >&2
     TRAMP_PREFIX=""
     SUCC=false
     PREFIXES=("" "/sudo:root@$(hostname):")
@@ -73,7 +73,7 @@ for EMACS_SOCKET_NAME in  \
     done
 
     if ! ${SUCC}; then
-        echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
+        echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}" >&2
         FAIL_COUNT=$((FAIL_COUNT + 1))
     else
         SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
