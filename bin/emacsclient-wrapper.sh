@@ -22,7 +22,7 @@ shift $((OPTIND -1))
 
 REAL_EMACSCLIENT=/usr/bin/emacsclient.emacs
 
-if ! pgrep emacs; then
+if ! pgrep -x emacs >/dev/null; then
     emacs &
     disown
 fi
