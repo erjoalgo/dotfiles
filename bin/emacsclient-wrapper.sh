@@ -60,9 +60,9 @@ for EMACS_SOCKET_NAME in  \
 
     if ! ${SUCC}; then
         echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}"
-        FAIL_COUNT+=1
+        FAIL_COUNT=$((FAIL_COUNT + 1))
     else
-        SUCCESS_COUNT+=1
+        SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
     fi
 done
 
