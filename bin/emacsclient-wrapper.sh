@@ -3,6 +3,7 @@
 set -euo pipefail
 
 EXTRA_ARGS=()
+EVAL=false
 
 while getopts "hne:" OPT; do
     case ${OPT} in
@@ -10,6 +11,7 @@ while getopts "hne:" OPT; do
         EXTRA_ARGS+=(-n)
         ;;
     e)
+        EVAL=true
         EXTRA_ARGS+=(--eval "${OPTARG}")
         ;;
     h)
@@ -46,7 +48,11 @@ for EMACS_SOCKET_NAME in  \
     echo "using ${EMACS_SOCKET_NAME}"
     TRAMP_PREFIX=""
     SUCC=false
-    for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
+    PREFIXES=("" "/sudo:root@$(hostname):")
+    if ${EVAL}; then
+        PREFIXES=("")
+    fi
+    for TRAMP_PREFIX in "${PREFIXES[@]}"; do
         ARGS=()
         for ARG in "$@"; do
             if [[ ${ARG} == [-+]* ]]; then
