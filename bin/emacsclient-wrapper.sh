@@ -36,7 +36,8 @@ is_listening() {
 
 SUCCESS_COUNT=0
 FAIL_COUNT=0
-RET=0
+TRIED_COUNT=0
+RET=1
 
 for EMACS_SOCKET_NAME in  \
     $(echo /tmp/emacs*/*)  \
@@ -55,6 +56,7 @@ for EMACS_SOCKET_NAME in  \
         continue;
     fi
     echo "using ${EMACS_SOCKET_NAME}" >&2
+    TRIED_COUNT=$((TRIED_COUNT + 1))
     TRAMP_PREFIX=""
     SUCC=false
     PREFIXES=("" "/sudo:root@$(hostname):")
@@ -89,8 +91,11 @@ for EMACS_SOCKET_NAME in  \
     fi
 done
 
-if test "${SUCCESS_COUNT}" -eq 0; then
+if test "${TRIED_COUNT}" -eq 0; then
     exec "${REAL_EMACSCLIENT}" "${EXTRA_ARGS[@]}" "$@"
 fi
 
+if test "${SUCCESS_COUNT}" -eq 0; then
+    exit "${RET}"
+fi
 exit 0
