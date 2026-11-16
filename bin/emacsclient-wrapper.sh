@@ -13,7 +13,7 @@ while getopts "hne:" OPT; do
         EXTRA_ARGS+=(--eval "${OPTARG}")
         ;;
     h)
-        less $0
+        less "$0"
         exit 0
         ;;
     esac
@@ -58,7 +58,7 @@ for EMACS_SOCKET_NAME in  \
     for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
         if ! ${SUDO_OPT[@]} env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
              "${REAL_EMACSCLIENT}" \
-             ${EXTRA_ARGS[@]} \
+             "${EXTRA_ARGS[@]}" \
              "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
             RET=$?
         else
