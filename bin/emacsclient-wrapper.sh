@@ -47,10 +47,14 @@ for EMACS_SOCKET_NAME in  \
     TRAMP_PREFIX=""
     SUCC=false
     for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
+        ARGS=()
+        for ARG in "$@"; do
+            ARGS+=("${TRAMP_PREFIX}${ARG}")
+        done
         if env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
              "${REAL_EMACSCLIENT}" \
              "${EXTRA_ARGS[@]}" \
-             "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
+             "--socket-name=${EMACS_SOCKET_NAME}" "${ARGS[@]}"; then
             SUCC=true
             break
         else
