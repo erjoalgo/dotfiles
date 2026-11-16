@@ -49,7 +49,11 @@ for EMACS_SOCKET_NAME in  \
     for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
         ARGS=()
         for ARG in "$@"; do
-            ARGS+=("${TRAMP_PREFIX}${ARG}")
+            if [[ ${ARG} == [-+]* ]]; then
+                ARGS+=("${ARG}")
+            else
+                ARGS+=("${TRAMP_PREFIX}${ARG}")
+            fi
         done
         if env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
              "${REAL_EMACSCLIENT}" \
