@@ -44,14 +44,10 @@ for EMACS_SOCKET_NAME in  \
         continue;
     fi
     echo "using ${EMACS_SOCKET_NAME}"
-    SERVER_USER_ID=$(grep -Po "(?<=/emacs)[0-9]+(?=/)|(?<=user/)([0-9]+)(?=/emacs)" <<< "${EMACS_SOCKET_NAME}")
-    SERVER_USER=$(id -un "${SERVER_USER_ID}")
     TRAMP_PREFIX=""
     SUCC=false
-    # SUDO_OPT=(sudo -u "${SERVER_USER}")
-    SUDO_OPT=()
     for TRAMP_PREFIX in "" "/sudo:root@$(hostname):"; do
-        if ! ${SUDO_OPT[@]} env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
+        if ! env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
              "${REAL_EMACSCLIENT}" \
              "${EXTRA_ARGS[@]}" \
              "--socket-name=${EMACS_SOCKET_NAME}" "${TRAMP_PREFIX}${@}"; then
