@@ -24,6 +24,9 @@ while getopts "hne:" OPT; do
         less "$0"
         exit 0
         ;;
+    *)
+        exit 2
+        ;;
     esac
 done
 shift $((OPTIND -1))
