@@ -48,13 +48,8 @@ FAIL_COUNT=0
 TRIED_COUNT=0
 RET=1
 
-for EMACS_SOCKET_NAME in  \
-    $(echo /tmp/emacs*/*)  \
-        $(echo /run/user/*/emacs/*); do
-    if ! test -e "${EMACS_SOCKET_NAME}"; then
-        echo "skipping ${EMACS_SOCKET_NAME}: missing socket file" >&2
-        continue;
-    fi
+shopt -s nullglob
+for EMACS_SOCKET_NAME in /tmp/emacs*/* /run/user/*/emacs/*; do
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
             ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}.* ]]; then
         echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match" >&2
