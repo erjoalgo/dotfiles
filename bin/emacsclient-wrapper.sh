@@ -44,7 +44,6 @@ is_listening() {
 }
 
 SUCCESS_COUNT=0
-FAIL_COUNT=0
 TRIED_COUNT=0
 RET=1
 
@@ -88,7 +87,6 @@ for EMACS_SOCKET_NAME in /tmp/emacs*/* /run/user/*/emacs/*; do
 
     if ! ${SUCC}; then
         echo "warn: failed to talk to emacs server at ${EMACS_SOCKET_NAME}" >&2
-        FAIL_COUNT=$((FAIL_COUNT + 1))
     else
         SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
     fi
