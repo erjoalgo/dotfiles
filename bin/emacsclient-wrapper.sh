@@ -76,8 +76,7 @@ for EMACS_SOCKET_NAME in /tmp/emacs*/* /run/user/*/emacs/*; do
                 ARGS+=("${TRAMP_PREFIX}${ARG}")
             fi
         done
-        if env EMACS_SOCKET_NAME=${EMACS_SOCKET_NAME}  \
-             "${REAL_EMACSCLIENT}" \
+        if "${REAL_EMACSCLIENT}" \
              "${EXTRA_ARGS[@]}" \
              "--socket-name=${EMACS_SOCKET_NAME}" "${ARGS[@]}"; then
             SUCC=true
