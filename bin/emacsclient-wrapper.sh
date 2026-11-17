@@ -93,6 +93,7 @@ for EMACS_SOCKET_NAME in /tmp/emacs*/* /run/user/*/emacs/*; do
 done
 
 if test "${TRIED_COUNT}" -eq 0; then
+    echo "no live emacs server socket found; trying the default socket" >&2
     exec "${REAL_EMACSCLIENT}" "${EXTRA_ARGS[@]}" "$@"
 fi
 
