@@ -1,4 +1,10 @@
 #!/bin/bash
+# Send files or (with -e) lisp expressions to every running Emacs server of this desktop group.
+#
+#   emacsclient-wrapper.sh [-n] FILE...           open files (retried via /sudo:: if that fails)
+#   emacsclient-wrapper.sh [-n] -e '(expr)' ...   evaluate expressions; prints each result
+#
+# Exits 0 if at least one server accepted the request, else with emacsclient's exit code.
 
 set -euo pipefail
 
