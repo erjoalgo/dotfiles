@@ -16,7 +16,7 @@ while getopts "l:ah" OPT; do
             ALL_INTERFACES_OPT=0.0.0.0:
             ;;
         l)
-            LOCAL_FORWARD_PORT_FLAGS+=${OPTARG}
+            LOCAL_FORWARD_PORT_FLAGS+=" ${OPTARG}"
             ;;
         h)
             less $0
