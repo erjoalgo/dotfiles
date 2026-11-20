@@ -16,6 +16,10 @@ python -m build --outdir "${DIST}"
 
 twine check "${DIST}"/*
 
+for DIST_FILE in "${DIST}"/*.whl "${DIST}"/*.tar.gz; do
+    gpg --detach-sign -a "${DIST_FILE}"
+done
+
 CMD=(twine upload --verbose "${DIST}"/*)
 
 read -p "${CMD} :"
