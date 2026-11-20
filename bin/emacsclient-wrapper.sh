@@ -50,7 +50,7 @@ RET=1
 shopt -s nullglob
 for EMACS_SOCKET_NAME in /tmp/emacs*/* /run/user/*/emacs/*; do
     if test -n "${DESKTOP_GROUP_NUMBER:-}" &&  \
-            ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}\. ]]; then
+            ! [[ $(basename "${EMACS_SOCKET_NAME}") =~ ^${DESKTOP_GROUP_NUMBER}[.] ]]; then
         echo "skipping ${EMACS_SOCKET_NAME}: desktop group number does not match" >&2
         continue;
     fi
