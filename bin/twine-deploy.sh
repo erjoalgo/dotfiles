@@ -14,8 +14,6 @@ python -m build
 
 twine check dist/*
 
-gpg --detach-sign -a dist/*
-
 CMD=(twine upload --verbose dist/*)
 
 read -p "${CMD} :"
