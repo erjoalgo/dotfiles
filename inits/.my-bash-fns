@@ -261,6 +261,14 @@ function git-review-pull-request	{
     fi
     HASHES=$(git log --reverse "${FROM_BRANCH}".."${TO_BRANCH}"   \
 		 --pretty=format:"%h")
+    if test -z "${HASHES}"; then
+	echo "no commits in ${FROM_BRANCH}..${TO_BRANCH}"
+	REVERSE_COUNT=$(git rev-list --count "${TO_BRANCH}".."${FROM_BRANCH}" 2>/dev/null || true)
+	if test "${REVERSE_COUNT:-0}" -gt 0; then
+	    echo "${TO_BRANCH}..${FROM_BRANCH} has ${REVERSE_COUNT}; the range is FROM..TO"
+	fi
+	return 1
+    fi
     COUNTER=1
     TOTAL=$(wc -l <<< "${HASHES}" | tr -d ' ')
     FAILED=""
