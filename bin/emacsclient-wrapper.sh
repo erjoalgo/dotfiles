@@ -38,7 +38,7 @@ if ! pgrep -x emacs >/dev/null; then
     disown
 fi
 
-LISTENING=$(ss -xlH 2>/dev/null || true)
+LISTENING=$(ss -xlH '( src /tmp/emacs*/* or src /run/user/*/emacs/* )' 2>/dev/null || true)
 is_listening() {
     grep -qF " $1 " <<< "${LISTENING}"
 }
