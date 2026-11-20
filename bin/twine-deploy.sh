@@ -10,13 +10,17 @@ command -v twine
 
 pip install build
 
-python -m build
+DIST=$(mktemp -d)
 
-twine check dist/*
+python -m build --outdir "${DIST}"
 
-gpg --detach-sign -a dist/*
+twine check "${DIST}"/*
 
-CMD=(twine upload --verbose dist/*)
+for DIST_FILE in "${DIST}"/*.whl "${DIST}"/*.tar.gz; do
+    gpg --detach-sign -a "${DIST_FILE}"
+done
+
+CMD=(twine upload --verbose "${DIST}"/*)
 
 read -p "${CMD} :"
 ${CMD[@]}
