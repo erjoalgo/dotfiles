@@ -240,34 +240,34 @@ function git-review-pull-request	{
     ORIG_HEAD=$(git rev-parse --abbrev-ref HEAD)
 
     if grep '[.]\{2\}' > /dev/null <<< "${1}"; then
-	SPLIT=$(sed 's/[.]\{2\}/\t/g' <<< "${1}")
-	FROM_BRANCH=$(cut -f1 <<< "${SPLIT}")
-	TO_BRANCH=$(cut -f2 <<< "${SPLIT}")
-	shift
+        SPLIT=$(sed 's/[.]\{2\}/\t/g' <<< "${1}")
+        FROM_BRANCH=$(cut -f1 <<< "${SPLIT}")
+        TO_BRANCH=$(cut -f2 <<< "${SPLIT}")
+        shift
     else
-	FROM_BRANCH=${1:-origin/master} && shift
-	TO_BRANCH=${1:-${ORIG_HEAD}} && shift
+        FROM_BRANCH=${1:-origin/master} && shift
+        TO_BRANCH=${1:-${ORIG_HEAD}} && shift
     fi
 
     if test -z "${CMD}"; then
-	# NOLESS only makes sense with a command
-	NOLESS=''
+        # NOLESS only makes sense with a command
+        NOLESS=''
     fi
 
     if test -z "${FROM_BRANCH}" || test -z "${TO_BRANCH}"; then
-	echo "usage: git-review-pull-request from-branch to-branch"
-	# exit 1
-	return
+        echo "usage: git-review-pull-request from-branch to-branch"
+        # exit 1
+        return
     fi
     HASHES=$(git log --reverse "${FROM_BRANCH}".."${TO_BRANCH}"   \
-		 --pretty=format:"%h")
+                 --pretty=format:"%h")
     if test -z "${HASHES}"; then
-	echo "no commits in ${FROM_BRANCH}..${TO_BRANCH}"
-	REVERSE_COUNT=$(git rev-list --count "${TO_BRANCH}".."${FROM_BRANCH}" 2>/dev/null || true)
-	if test "${REVERSE_COUNT:-0}" -gt 0; then
-	    echo "${TO_BRANCH}..${FROM_BRANCH} has ${REVERSE_COUNT}; the range is FROM..TO"
-	fi
-	return 1
+        echo "no commits in ${FROM_BRANCH}..${TO_BRANCH}"
+        REVERSE_COUNT=$(git rev-list --count "${TO_BRANCH}".."${FROM_BRANCH}" 2>/dev/null || true)
+        if test "${REVERSE_COUNT:-0}" -gt 0; then
+            echo "${TO_BRANCH}..${FROM_BRANCH} has ${REVERSE_COUNT}; the range is FROM..TO"
+        fi
+        return 1
     fi
     COUNTER=1
     TOTAL=$(wc -l <<< "${HASHES}" | tr -d ' ')
@@ -275,43 +275,43 @@ function git-review-pull-request	{
 
     for HASH in $(tr '\n' ' ' <<< ${HASHES}); do
 
-	if test -n "${CMD}"; then
-	    git checkout ${HASH}
-	    ${CMD} &> /dev/null &
-	    COMPILE_CMD_PID=$!
-	fi
+        if test -n "${CMD}"; then
+            git checkout ${HASH}
+            ${CMD} &> /dev/null &
+            COMPILE_CMD_PID=$!
+        fi
 
-	if test -z "${NOLESS}"; then
-	    { echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
-	      git show ${HASH} -p --stat --color;\
-	      }  | less -R;
-	fi
+        if test -z "${NOLESS}"; then
+            { echo -e "------ON COMMIT ${COUNTER}/${TOTAL} (hash: ${HASH})------\n";\
+              git show ${HASH} -p --stat --color;\
+              }  | less -R;
+        fi
 
-	COUNTER=$((COUNTER + 1))
+        COUNTER=$((COUNTER + 1))
 
-	if test -n "${CMD}"; then
-	    wait ${COMPILE_CMD_PID}
-	    if test $? -ne 0; then
-		FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
-		FAILED="${FAILED}\n${FAIL}"
-		${CMD}
-		echo ${FAIL}
-		echo -p"failure (${CMD}): "
-		notify-send "FAILURE (${CMD}): "
-		bash
-		read -p"cont (q: quit)? : " CONT
-		if test "${CONT}" = q; then
-		    git checkout ${ORIG_HEAD}
-		    return
-		fi
-	    fi
-	fi
+        if test -n "${CMD}"; then
+            wait ${COMPILE_CMD_PID}
+            if test $? -ne 0; then
+                FAIL="${HASH}: $(git log -1 --pretty=format:%s ${HASH})"
+                FAILED="${FAILED}\n${FAIL}"
+                ${CMD}
+                echo ${FAIL}
+                echo -p"failure (${CMD}): "
+                notify-send "FAILURE (${CMD}): "
+                bash
+                read -p"cont (q: quit)? : " CONT
+                if test "${CONT}" = q; then
+                    git checkout ${ORIG_HEAD}
+                    return
+                fi
+            fi
+        fi
     done
     git checkout ${ORIG_HEAD}
     if test -n "${FAILED}"; then
-	echo -e "${FAILED}"
+        echo -e "${FAILED}"
     elif test -n "${CMD}"; then
-	echo "BUILD SUCCESS on every commit!"
+        echo "BUILD SUCCESS on every commit!"
     fi
 }
 
