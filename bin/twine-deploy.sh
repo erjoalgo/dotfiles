@@ -10,11 +10,13 @@ command -v twine
 
 pip install build
 
-python -m build
+DIST=$(mktemp -d)
 
-twine check dist/*
+python -m build --outdir "${DIST}"
 
-CMD=(twine upload --verbose dist/*)
+twine check "${DIST}"/*
+
+CMD=(twine upload --verbose "${DIST}"/*)
 
 read -p "${CMD} :"
 ${CMD[@]}
