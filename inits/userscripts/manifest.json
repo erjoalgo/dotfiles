@@ -1,0 +1,12 @@
+{
+  "name": "userscripts",
+  "version": "1.0",
+  "manifest_version": 3,
+  "minimum_chrome_version": "120",
+  "description": "Registers the user scripts in this directory with chrome.userScripts.",
+  "background": {
+    "service_worker": "sw.js"
+  },
+  "permissions": ["userScripts"],
+  "host_permissions": []
+}
