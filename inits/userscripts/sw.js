@@ -1,6 +1,12 @@
 // Scripts to inject, as chrome.userScripts.RegisteredUserScript entries.
 // Add each script's hosts to host_permissions in manifest.json too.
-const SCRIPTS = [];
+const SCRIPTS = [
+  {
+    id: 'edx-close-popup',
+    matches: ['https://learning.edx.org/*'],
+    js: [{ file: 'edx-close-popup.js' }]
+  }
+];
 
 async function registerAll() {
   try {

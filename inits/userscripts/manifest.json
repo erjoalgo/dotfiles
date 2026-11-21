@@ -8,5 +8,5 @@
     "service_worker": "sw.js"
   },
   "permissions": ["userScripts"],
-  "host_permissions": []
+  "host_permissions": ["https://learning.edx.org/*"]
 }
