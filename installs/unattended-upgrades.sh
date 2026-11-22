@@ -15,6 +15,17 @@ APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 EOF
 
+# Remove superseded kernels after upgrading, so /boot doesn't fill up
+# with one more kernel per upgrade (Debian's default, made explicit).
+sudo tee /etc/apt/apt.conf.d/52unattended-upgrades-local >/dev/null <<'EOF'
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+EOF
+
+# Versioned kernel images marked manual (e.g. left over from a release
+# upgrade) are never removed; leave that to the linux-image-<flavor>
+# metapackage, which keeps the current kernel installed.
+apt-mark showmanual | grep -E '^linux-image-[0-9]' | xargs -r sudo apt-mark auto
+
 # 4. Make sure the timers are on
 sudo systemctl enable --now apt-daily.timer apt-daily-upgrade.timer
 
