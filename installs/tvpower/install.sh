@@ -18,7 +18,7 @@ fi
 
 # Build with DKMS, which rebuilds the module for each new kernel.
 NAME=tvpower
-VERSION=$(sed -n 's/^PACKAGE_VERSION="\(.*\)"$/\1/p' dkms.conf)
+VERSION=$(grep -Po '^PACKAGE_VERSION="\K[^"]+' dkms.conf)
 SRC=/usr/src/${NAME}-${VERSION}
 KVER=$(uname -r)
 
