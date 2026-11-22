@@ -1,18 +1,59 @@
-.code-diff .add-code,
-.code-diff td.add-code,
+:root {
+    /* ---- settings: edit only this block ---- */
+    --whole-line: 0;            /* 1 = tint the whole line, 0 = left side only */
+
+    --add-rgb: 46, 160, 67;
+    --add-alpha: 0.28;
+    --add-stripe: #2ea043;
+
+    --del-rgb: 200, 30, 30;
+    --del-alpha: 0.6;
+    --del-stripe: #b00020;
+
+    --add-marker-bg: #2ea043;
+    --add-marker-fg: #ffffff;
+    --del-marker-bg: #c81e1e;
+    --del-marker-fg: #ffffff;
+    /* ---------------------------------------- */
+}
+
+/* the row itself stays clear; only cells get color */
+.code-diff tr.add-code,
+.code-diff tr.del-code {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* 1. every cell in a changed row (gutter, marker, code) */
 .code-diff tr.add-code td {
-    background: rgba(46, 160, 67, 0.28) !important;
+    background: rgba(var(--add-rgb), var(--add-alpha)) !important;
     background-image: none !important;
-    box-shadow: inset 4px 0 0 #2ea043 !important;
 }
-.code-diff .del-code,
-.code-diff td.del-code,
 .code-diff tr.del-code td {
-    background: rgba(200, 30, 30, 0.6) !important;
+    background: rgba(var(--del-rgb), var(--del-alpha)) !important;
     background-image: none !important;
-    box-shadow: inset 6px 0 0 #b00020 !important;
 }
 
-.lines-type-marker.del-code { color: #a40e26 !important; font-weight: bold; }
+/* 2. the code cell (last cell): tint scaled by --whole-line, plus a stripe */
+.code-diff tr.add-code td:last-child {
+    background: rgba(var(--add-rgb), calc(var(--add-alpha) * var(--whole-line))) !important;
+    box-shadow: inset 4px 0 0 var(--add-stripe) !important;
+}
+.code-diff tr.del-code td:last-child {
+    background: rgba(var(--del-rgb), calc(var(--del-alpha) * var(--whole-line))) !important;
+    box-shadow: inset 6px 0 0 var(--del-stripe) !important;
+}
 
-.lines-type-marker.add-code { color: #56d364 !important; font-weight: bold; }
+/* 3. the +/- cell: solid color so it stands out */
+.code-diff tr.add-code td.lines-type-marker,
+.code-diff tr.add-code td:nth-child(3) {
+    background: var(--add-marker-bg) !important;
+    color: var(--add-marker-fg) !important;
+    font-weight: bold;
+}
+.code-diff tr.del-code td.lines-type-marker,
+.code-diff tr.del-code td:nth-child(3) {
+    background: var(--del-marker-bg) !important;
+    color: var(--del-marker-fg) !important;
+    font-weight: bold;
+}
