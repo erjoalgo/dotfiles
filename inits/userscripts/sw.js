@@ -5,6 +5,11 @@ const SCRIPTS = [
     id: 'edx-close-popup',
     matches: ['https://learning.edx.org/*'],
     js: [{ file: 'edx-close-popup.js' }]
+  },
+  {
+    id: 'realestateu',
+    matches: ['https://*.realestateu.com/*'],
+    js: [{ file: 'html2pdf.bundle.min.js' }, { file: 'realestateu.js' }]
   }
 ];
 

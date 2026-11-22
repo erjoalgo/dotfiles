@@ -8,5 +8,8 @@
     "service_worker": "sw.js"
   },
   "permissions": ["userScripts"],
-  "host_permissions": ["https://learning.edx.org/*"]
+  "host_permissions": [
+    "https://learning.edx.org/*",
+    "https://*.realestateu.com/*"
+  ]
 }

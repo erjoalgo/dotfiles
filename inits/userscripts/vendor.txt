@@ -1,0 +1,1 @@
+https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js 85e6ee9ce246e3ae4424313f7e46a5ed860a28d757811de8dc9c43f306049d65
