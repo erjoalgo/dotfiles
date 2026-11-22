@@ -46,6 +46,21 @@ done
 
 echo "running: ${RUNNING}, newest: ${NEWEST}"
 echo "to purge: ${PURGE[*]:-nothing}"
+
+# Versioned images marked manual (e.g. left over from a release upgrade)
+# are never autoremoved; only the linux-image-<flavor> metapackage, which
+# pulls in new kernels, needs to be manual.
+MANUAL=()
+for PACKAGE in $(apt-mark showmanual | grep -E '^linux-image-[0-9]' || true); do
+    if [[ " ${PURGE[*]:-} " != *" ${PACKAGE} "* ]]; then
+        MANUAL+=("${PACKAGE}")
+    fi
+done
+if test ${#MANUAL[@]} -gt 0; then
+    echo "marked manual, so autoremove never removes them: ${MANUAL[*]}"
+    echo "recommended: sudo apt-mark auto ${MANUAL[*]}"
+fi
+
 df -h /boot
 if ${DRY_RUN}; then
     exit 0
