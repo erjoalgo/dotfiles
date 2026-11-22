@@ -101,6 +101,10 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 (add-hook STUMPWM::*focus-window-hook* 'focus-window-bindings-hook)
 
 (defun destroy-window-hook (destroyed)
+  ;; Rebind for the window that keeps focus, so closing a popup or devtools
+  ;; window doesn't drop the focused browser's bindings. If the destroyed
+  ;; window was the focused one, there's nothing to bind for: pass nil to
+  ;; pop its bindings, and the next focused window's hook pushes its own.
   (let ((current (current-window)))
     (update-window-bindings (unless (eq current destroyed) current))))
 
