@@ -14,7 +14,7 @@ if test "${CURRENT_PERIOD}" != Daytime; then
     true
 fi
 
-USERSCRIPTS=$(realpath "$(dirname "$(realpath "$0")")/../inits/userscripts")
+USERSCRIPTS=$(dirname "$0")/../inits/userscripts
 chrome-extension-fetch-vendor.sh "${USERSCRIPTS}" || true
 
 ARGS=( \
