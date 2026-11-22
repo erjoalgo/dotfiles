@@ -75,17 +75,6 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
                       (when (current-window) (window-class (current-window)))
                       class-dest)
               msgs)
-        (when (or (and (null class-dest)
-                       (current-window)
-                       (or
-                        (member (string-downcase
-                                 (window-class (current-window)))
-                                *browser-classes*
-                                :test #'equal :key #'string-downcase)))
-                  (member "changing bindings from Chromium to NIL..." msgs
-                          :test 'equal))
-          (message "changing from browser to nil?")
-          (return-from update-window-bindings))
         (when curr-bindings
           (push (format nil "popping old bindings") msgs)
           (pop-top-map)
@@ -112,8 +101,8 @@ it contains lisp code which sets the *per-window-bindings-rules* value")
 (add-hook STUMPWM::*focus-window-hook* 'focus-window-bindings-hook)
 
 (defun destroy-window-hook (destroyed)
-  (declare (ignore destroyed))
-  (update-window-bindings nil))
+  (let ((current (current-window)))
+    (update-window-bindings (unless (eq current destroyed) current))))
 
 (add-hook STUMPWM:*destroy-window-hook* 'destroy-window-hook)
 
