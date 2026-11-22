@@ -19,21 +19,26 @@ const SCRIPTS = [
 ];
 
 async function registerAll() {
-  try {
-    await chrome.userScripts.unregister();
-  } catch (err) {
+  if (!chrome.userScripts) {
     console.error(
-      'registering user scripts failed; is "Allow User Scripts" enabled ' +
-        "in this extension's details page?",
-      err
+      'User scripts are off. Turn on "Allow User Scripts" in this ' +
+        "extension's details page, then reload the extension."
     );
     return;
   }
+  await chrome.userScripts.unregister();
   for (const script of SCRIPTS) {
     try {
       await chrome.userScripts.register([script]);
     } catch (err) {
-      console.error(`registering user script ${script.id} failed`, err);
+      let hint = '';
+      if (err.message.startsWith('Could not load')) {
+        hint =
+          ' If it is listed in vendor.txt, run ' +
+          'bin/chrome-extension-fetch-vendor.sh on this directory ' +
+          '(chrome.sh does on launch), then reload the extension.';
+      }
+      console.error(`User script "${script.id}" not registered: ${err.message.replace(/\.$/, '')}.${hint}`);
     }
   }
 }
