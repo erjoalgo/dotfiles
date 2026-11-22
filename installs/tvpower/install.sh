@@ -37,10 +37,9 @@ fi
 sudo rm -f /lib/modules/*/kernel/drivers/${NAME}.ko \
      /etc/kernel/postinst.d/install.sh
 
-# Re-add the source so changes to it get rebuilt.
-if test -n "$(dkms status -m "${NAME}" -v "${VERSION}")"; then
-    sudo dkms remove "${NAME}/${VERSION}" --all
-fi
+# Re-add the source so changes to it get rebuilt. Removal fails when it
+# isn't registered yet; a real failure still stops at dkms add below.
+sudo dkms remove "${NAME}/${VERSION}" --all || true
 sudo rm -rf "${SRC}"
 sudo mkdir -p "${SRC}"
 sudo cp dkms.conf Makefile tvpower.c "${SRC}"
