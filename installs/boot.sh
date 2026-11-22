@@ -270,6 +270,7 @@ if test -n "${APT_GET}"; then
     fi
 
     ./unattended-upgrades.sh
+    ./boot-space-check.sh
 fi
 
 insert-text-block '# 91352955-c448-4c16-a4d4-54470089c900-notify-lagging-repos-user-crontab' \
