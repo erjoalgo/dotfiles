@@ -29,7 +29,7 @@ if ! test -f "${KEY}"; then
 fi
 
 python3 -I - "${SRC}" "${KEY}" "${OUT}" <<'EOF'
-import hashlib, io, json, os, struct, subprocess, sys, zipfile
+import hashlib, io, json, os, struct, subprocess, sys, urllib.request, zipfile
 
 src, key, out = sys.argv[1:]
 
@@ -66,8 +66,19 @@ with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
             arc = os.path.relpath(path, src)
             if arc == "manifest.json":
                 z.writestr(arc, json.dumps(manifest, indent=2))
-            elif not f.startswith("."):
+            elif arc != "vendor.txt" and not f.startswith("."):
                 z.write(path, arc)
+    # vendor.txt: "URL SHA256" lines for third-party files to fetch into the
+    # extension's top level instead of checking them in.
+    vendor = os.path.join(src, "vendor.txt")
+    for line in open(vendor) if os.path.exists(vendor) else []:
+        if not line.strip() or line.startswith("#"):
+            continue
+        url, sha256 = line.split()
+        data = urllib.request.urlopen(url).read()
+        if hashlib.sha256(data).hexdigest() != sha256:
+            sys.exit(f"sha256 mismatch for {url}")
+        z.writestr(os.path.basename(url), data)
 archive = buf.getvalue()
 
 signed_data = field(1, crx_id)
