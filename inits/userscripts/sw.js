@@ -21,13 +21,20 @@ const SCRIPTS = [
 async function registerAll() {
   try {
     await chrome.userScripts.unregister();
-    await chrome.userScripts.register(SCRIPTS);
   } catch (err) {
     console.error(
       'registering user scripts failed; is "Allow User Scripts" enabled ' +
         "in this extension's details page?",
       err
     );
+    return;
+  }
+  for (const script of SCRIPTS) {
+    try {
+      await chrome.userScripts.register([script]);
+    } catch (err) {
+      console.error(`registering user script ${script.id} failed`, err);
+    }
   }
 }
 
