@@ -26,8 +26,8 @@ done
 cd "$(dirname "$(realpath "$0")")"
 
 # Installed images, including half-configured ones (not config-files-only).
-VERSIONS=$(dpkg-query -W -f='${Package} ${db:Status-Abbrev}\n' 'linux-image-[0-9]*' |
-               awk '$2 !~ /^.[nc]/ && $1 !~ /-dbg$/ {sub(/^linux-image-/, "", $1); print $1}' |
+VERSIONS=$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 'linux-image-[0-9]*' |
+               grep -Po '^.[^nc]. linux-image-\K\S+(?<!-dbg)$' |
                sort -V)
 RUNNING=$(uname -r)
 NEWEST=$(tail -1 <<< "${VERSIONS}")
