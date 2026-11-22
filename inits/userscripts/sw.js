@@ -10,6 +10,11 @@ const SCRIPTS = [
     id: 'realestateu',
     matches: ['https://*.realestateu.com/*'],
     js: [{ file: 'html2pdf.bundle.min.js' }, { file: 'realestateu.js' }]
+  },
+  {
+    id: 'forgejo-expand',
+    matches: ['http://localhost:3123/*'],
+    js: [{ file: 'forgejo-expand.js' }]
   }
 ];
 
