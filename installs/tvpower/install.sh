@@ -69,4 +69,4 @@ EOF
 
 sudo tee -a /proc/sysrq-trigger <<< 'x'
 
-sudo tee -a /etc/modules-load.d/tvpower.conf <<< tvpower
+sudo tee /etc/modules-load.d/tvpower.conf <<< tvpower
