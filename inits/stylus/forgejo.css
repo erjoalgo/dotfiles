@@ -1,0 +1,18 @@
+.code-diff .add-code,
+.code-diff td.add-code,
+.code-diff tr.add-code td {
+    background: rgba(46, 160, 67, 0.28) !important;
+    background-image: none !important;
+    box-shadow: inset 4px 0 0 #2ea043 !important;
+}
+.code-diff .del-code,
+.code-diff td.del-code,
+.code-diff tr.del-code td {
+    background: rgba(200, 30, 30, 0.6) !important;
+    background-image: none !important;
+    box-shadow: inset 6px 0 0 #b00020 !important;
+}
+
+.lines-type-marker.del-code { color: #a40e26 !important; font-weight: bold; }
+
+.lines-type-marker.add-code { color: #56d364 !important; font-weight: bold; }
