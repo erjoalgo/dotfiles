@@ -63,3 +63,21 @@ fi
 sudo dpkg --configure -a
 ls -la /boot/initrd.img-*
 df -h /boot
+
+# Safe to reboot only once the newest kernel is fully installed: nothing
+# left half-configured, its initramfs written, and GRUB told about it.
+PENDING=()
+if test -n "$(dpkg --audit)"; then
+    PENDING+=("dpkg --audit lists unconfigured packages")
+fi
+if ! test -e "/boot/initrd.img-${NEWEST}"; then
+    PENDING+=("/boot/initrd.img-${NEWEST} is missing")
+fi
+if ! sudo grep -qF "vmlinuz-${NEWEST}" /boot/grub/grub.cfg; then
+    PENDING+=("/boot/grub/grub.cfg has no entry for ${NEWEST}")
+fi
+if test ${#PENDING[@]} -gt 0; then
+    printf 'not safe to reboot: %s\n' "${PENDING[@]}" >&2
+    exit 1
+fi
+echo "safe to reboot into ${NEWEST}"
