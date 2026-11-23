@@ -74,7 +74,7 @@ if test ${#PURGE[@]} -gt 0; then
     sudo dpkg --purge "${PURGE[@]}"
 fi
 
-./initramfs-modules-dep.sh
+./initramfs-modules.sh
 sudo dpkg --configure -a
 ls -la /boot/initrd.img-*
 df -h /boot
