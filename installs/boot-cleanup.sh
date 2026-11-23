@@ -3,9 +3,10 @@
 set -euo pipefail
 
 # Recover from a full /boot: purge every versioned kernel except the
-# running and the newest one (with their headers), switch to small
-# MODULES=dep initramfs images, and finish the upgrade that ran out of
-# space. Asks before purging; -n only prints the plan.
+# running and the newest one (with their headers), ask whether to
+# switch to small MODULES=dep initramfs images, and finish the
+# upgrade that ran out of space. Asks before purging; -n only prints
+# the plan.
 
 DRY_RUN=false
 while getopts "nh" OPT; do
