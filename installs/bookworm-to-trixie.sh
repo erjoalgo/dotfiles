@@ -42,9 +42,31 @@ sudo apt-get autoremove -y
 # trixie release, or with a new signing key, would otherwise fail
 # apt-get update and stop the upgrade.
 DISABLED_SUFFIX=.disabled-for-trixie-upgrade
-for LIST in $(grep -L -P '://([a-z0-9.-]+\.)?debian\.org/' /etc/apt/sources.list.d/*.list || true); do
-    sudo mv "${LIST}" "${LIST}${DISABLED_SUFFIX}"
-done
+
+# third-party-repos disable: set aside sources.list.d lists with no debian.org URL
+# third-party-repos restore: switch the set-aside lists to trixie and put them back
+third-party-repos() {
+    case "$1" in
+        disable)
+            for LIST in $(grep -L -P '://([a-z0-9.-]+\.)?debian\.org/' /etc/apt/sources.list.d/*.list || true); do
+                sudo mv "${LIST}" "${LIST}${DISABLED_SUFFIX}"
+            done
+            ;;
+        restore)
+            for LIST in /etc/apt/sources.list.d/*.list"${DISABLED_SUFFIX}"; do
+                test -e "${LIST}" || continue
+                sudo sed -i 's/bookworm/trixie/g' "${LIST}"
+                sudo mv "${LIST}" "${LIST%"${DISABLED_SUFFIX}"}"
+            done
+            ;;
+        *)
+            echo "usage: third-party-repos disable|restore" >&2
+            return 1
+            ;;
+    esac
+}
+
+third-party-repos disable
 
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bookworm/trixie/g' {} \;
 
@@ -52,11 +74,7 @@ sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get full-upgrade -y
 
-for LIST in /etc/apt/sources.list.d/*.list"${DISABLED_SUFFIX}"; do
-    test -e "${LIST}" || continue
-    sudo sed -i 's/bookworm/trixie/g' "${LIST}"
-    sudo mv "${LIST}" "${LIST%"${DISABLED_SUFFIX}"}"
-done
+third-party-repos restore
 
 if ! sudo apt-get update; then
     echo "WARNING: some third-party repos failed to update (see above);" \
