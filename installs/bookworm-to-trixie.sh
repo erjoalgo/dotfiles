@@ -38,14 +38,13 @@ sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get autoremove -y
 
-# packages.microsoft.com has the release number in the path and signs
-# debian/13 with a newer key, both shipped by its debian 13 config package
-if dpkg -s packages-microsoft-prod >/dev/null 2>&1; then
-    MS_DEB=$(mktemp --suffix=.deb)
-    curl -fsSL -o "${MS_DEB}" https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb
-    sudo dpkg -i --force-confnew "${MS_DEB}"
-    rm "${MS_DEB}"
-fi
+# Upgrade against Debian's repos only: a third-party repo without a
+# trixie release, or with a new signing key, would otherwise fail
+# apt-get update and stop the upgrade.
+DISABLED_SUFFIX=.disabled-for-trixie-upgrade
+for LIST in $(grep -L -P '://([a-z0-9.-]+\.)?debian\.org/' /etc/apt/sources.list.d/*.list || true); do
+    sudo mv "${LIST}" "${LIST}${DISABLED_SUFFIX}"
+done
 
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bookworm/trixie/g' {} \;
 
@@ -53,9 +52,19 @@ sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get full-upgrade -y
 
-sudo find /etc/apt/ -name '*.bak'  -exec rm {} +
+for LIST in /etc/apt/sources.list.d/*.list"${DISABLED_SUFFIX}"; do
+    test -e "${LIST}" || continue
+    sudo sed -i 's/bookworm/trixie/g' "${LIST}"
+    sudo mv "${LIST}" "${LIST%"${DISABLED_SUFFIX}"}"
+done
 
-sudo apt-get update
+if ! sudo apt-get update; then
+    echo "WARNING: some third-party repos failed to update (see above);" \
+         "fix their trixie path or signing key, e.g. microsoft:" \
+         "https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb" >&2
+fi
+
+sudo find /etc/apt/ -name '*.bak'  -exec rm {} +
 
 sudo apt-get install -y linux-image-amd64
 
