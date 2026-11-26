@@ -38,9 +38,16 @@ sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get autoremove -y
 
+# packages.microsoft.com has the release number in the path and signs
+# debian/13 with a newer key, both shipped by its debian 13 config package
+if dpkg -s packages-microsoft-prod >/dev/null 2>&1; then
+    MS_DEB=$(mktemp --suffix=.deb)
+    curl -fsSL -o "${MS_DEB}" https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb
+    sudo dpkg -i --force-confnew "${MS_DEB}"
+    rm "${MS_DEB}"
+fi
+
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bookworm/trixie/g' {} \;
-# packages.microsoft.com also has the release number in the path
-sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's|/debian/12/|/debian/13/|g' {} \;
 
 sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
