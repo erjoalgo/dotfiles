@@ -34,10 +34,6 @@ sudo apt list '?config-files'
 sudo apt autoremove -y
 sudo apt clean
 
-sudo apt-get update
-sudo apt-get upgrade --without-new-pkgs -y
-sudo apt-get autoremove -y
-
 # Upgrade against Debian's repos only: a third-party repo without a
 # trixie release, or with a new signing key, would otherwise fail
 # apt-get update and stop the upgrade.
@@ -67,6 +63,10 @@ third-party-repos() {
 }
 
 third-party-repos disable
+
+sudo apt-get update
+sudo apt-get upgrade --without-new-pkgs -y
+sudo apt-get autoremove -y
 
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bookworm/trixie/g' {} \;
 
