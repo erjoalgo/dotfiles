@@ -12,7 +12,6 @@ exec > >(tee -a ${LOG}) 2>&1
 dpkg --get-selections '*'
 
 sudo apt list '?obsolete'
-sudo apt purge '?obsolete'
 
 sudo apt list '?config-files'
 # sudo apt purge '?config-files'
