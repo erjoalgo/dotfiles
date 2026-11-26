@@ -25,6 +25,8 @@ sudo apt-get upgrade --without-new-pkgs -y
 sudo apt-get autoremove -y
 
 sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's/bookworm/trixie/g' {} \;
+# packages.microsoft.com also has the release number in the path
+sudo find /etc/apt/ -type f -name '*.list' -exec sed -i 's|/debian/12/|/debian/13/|g' {} \;
 
 sudo apt-get update
 sudo apt-get upgrade --without-new-pkgs -y
