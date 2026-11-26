@@ -18,6 +18,12 @@ for DIR in / /var/cache/apt/archives; do
     fi
 done
 
+NEWEST_KERNEL=$(ls /boot/vmlinuz-* | sed 's|^/boot/vmlinuz-||' | sort -V | tail -1)
+if test "$(uname -r)" != "${NEWEST_KERNEL}"; then
+    echo "running kernel $(uname -r) but ${NEWEST_KERNEL} is installed: reboot first" >&2
+    exit 1
+fi
+
 dpkg --get-selections '*'
 
 sudo apt list '?obsolete'
