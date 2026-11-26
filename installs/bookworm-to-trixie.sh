@@ -4,10 +4,15 @@ set -euo pipefail
 
 LOG=/var/log/bookworm-upgrade.log
 
-sudo touch ${LOG}
-sudo chmod a+w ${LOG}
-
-exec > >(tee -a ${LOG}) 2>&1
+# Re-run under script(1) to log everything while apt keeps a real
+# terminal: piping through tee broke debconf dialogs (arrow keys echoed
+# as ^[[D instead of moving the selection).
+if test -z "${TRIXIE_UPGRADE_LOGGED:-}"; then
+    sudo touch ${LOG}
+    sudo chmod a+w ${LOG}
+    export TRIXIE_UPGRADE_LOGGED=1
+    exec script -a -q -e -c "$(printf '%q ' "$(readlink -f "$0")" "$@")" ${LOG}
+fi
 
 MIN_FREE_GB=${MIN_FREE_GB:-5}
 for DIR in / /var/cache/apt/archives; do
