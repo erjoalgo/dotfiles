@@ -7,7 +7,7 @@ LOG=/var/log/bookworm-upgrade.log
 sudo touch ${LOG}
 sudo chmod a+w ${LOG}
 
-exec > >(tee ${LOG}) 2>&1
+exec > >(tee -a ${LOG}) 2>&1
 
 dpkg --get-selections '*'
 
