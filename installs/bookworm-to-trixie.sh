@@ -9,6 +9,15 @@ sudo chmod a+w ${LOG}
 
 exec > >(tee -a ${LOG}) 2>&1
 
+MIN_FREE_GB=${MIN_FREE_GB:-5}
+for DIR in / /var/cache/apt/archives; do
+    FREE_GB=$(df --output=avail -BG "${DIR}" | tail -1 | tr -dc 0-9)
+    if test "${FREE_GB}" -lt "${MIN_FREE_GB}"; then
+        echo "only ${FREE_GB}G free on ${DIR}, need ${MIN_FREE_GB}G (MIN_FREE_GB)" >&2
+        exit 1
+    fi
+done
+
 dpkg --get-selections '*'
 
 sudo apt list '?obsolete'
