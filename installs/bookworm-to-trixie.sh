@@ -38,4 +38,5 @@ sudo apt-get update
 sudo apt-get install -y linux-image-amd64
 
 sudo apt purge -y '~c'
-sudo apt purge -y '~o'
+echo "packages no longer in any repo; review, then 'sudo apt purge ~o' if none are wanted:"
+sudo apt list '~o'
