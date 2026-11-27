@@ -12,15 +12,19 @@ if ! test -f "${VENV}/pyvenv.cfg"; then
     exit 1
 fi
 
-# pip list --format=json on stdin -> one install spec per line:
-# "-e <location>" for editables, the package name otherwise
-install-specs() {
+# pip list --format=json on stdin -> one per line, the project location
+# of each editable (editables) or the name of each other package (packages)
+pip-list-select() {
     /usr/bin/python3 -c '
 import json, sys
+editables = sys.argv[1] == "editables"
 for package in json.load(sys.stdin):
     location = package.get("editable_project_location")
-    print(f"-e {location}" if location else package["name"])
-'
+    if editables and location:
+        print(location)
+    elif not editables and not location:
+        print(package["name"])
+' "$1"
 }
 
 # Ask the system pip what to reinstall: it reads the old site-packages'
@@ -31,17 +35,19 @@ PATHS=()
 for SITE in "${VENV}"/lib/python3*/site-packages; do
     PATHS+=(--path "${SITE}")
 done
-mapfile -t SPECS < <(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
-                         --exclude pip --exclude setuptools --exclude wheel --format=json |
-                         install-specs)
+LISTED=$(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
+              --exclude pip --exclude setuptools --exclude wheel --format=json)
+mapfile -t PACKAGES < <(pip-list-select packages <<< "${LISTED}")
+mapfile -t EDITABLES < <(pip-list-select editables <<< "${LISTED}")
 
-if test ${#SPECS[@]} -eq 0; then
+if test $(( ${#PACKAGES[@]} + ${#EDITABLES[@]} )) -eq 0; then
     echo "found nothing to reinstall in ${VENV}; left it as is"
     exit 0
 fi
 
 echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
-printf '    %s\n' "${SPECS[@]}"
+test ${#PACKAGES[@]} -eq 0 || printf '    %s\n' "${PACKAGES[@]}"
+test ${#EDITABLES[@]} -eq 0 || printf '    -e %s\n' "${EDITABLES[@]}"
 read -r -p "go ahead? [y/N] " ANSWER < /dev/tty
 if test "${ANSWER,,}" != y; then
     echo "nothing changed"
@@ -52,12 +58,11 @@ fi
 
 # one at a time, so a package that fails on the new python doesn't stop the rest
 FAILED=()
-for SPEC in "${SPECS[@]}"; do
-    if test "${SPEC:0:3}" = "-e "; then
-        "${VENV}/bin/pip" install -e "${SPEC:3}" || FAILED+=("${SPEC}")
-    else
-        "${VENV}/bin/pip" install "${SPEC}" || FAILED+=("${SPEC}")
-    fi
+for PACKAGE in "${PACKAGES[@]}"; do
+    "${VENV}/bin/pip" install "${PACKAGE}" || FAILED+=("${PACKAGE}")
+done
+for EDITABLE in "${EDITABLES[@]}"; do
+    "${VENV}/bin/pip" install -e "${EDITABLE}" || FAILED+=("-e ${EDITABLE}")
 done
 
 if test ${#FAILED[@]} -gt 0; then
