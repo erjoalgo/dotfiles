@@ -20,16 +20,11 @@ PATHS=()
 for SITE in "${VENV}"/lib/python3*/site-packages; do
     PATHS+=(--path "${SITE}")
 done
-LIST=(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required)
-mapfile -t EDITABLES < <("${LIST[@]}" --editable --format=json |
-                             grep -oP '"editable_project_location": "\K[^"]+')
-mapfile -t PACKAGES < <("${LIST[@]}" --exclude-editable --format=freeze \
-                            --exclude pip --exclude setuptools --exclude wheel |
-                            sed 's/==.*//')
-SPECS=("${PACKAGES[@]}")
-for EDITABLE in "${EDITABLES[@]}"; do
-    SPECS+=("-e ${EDITABLE}")
-done
+mapfile -t SPECS < <(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
+                         --exclude pip --exclude setuptools --exclude wheel --format=json |
+                         jq -r '.[] | if .editable_project_location
+                                      then "-e \(.editable_project_location)"
+                                      else .name end')
 
 echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
 if test ${#SPECS[@]} -gt 0; then
