@@ -2,6 +2,19 @@
 
 set -euo pipefail
 
+# Re-run this script under script(1), which records the whole session
+# to LOG. Debconf dialogs keep working because script gives the run a
+# real terminal, unlike a pipe through tee.
+#   -a  append to LOG, so a re-run after a failure keeps the first attempt
+#   -e  exit with the upgrade's exit code, not script's
+#   -c  run this command instead of an interactive shell
+LOG_DIR=${XDG_STATE_HOME:-${HOME}/.local/state}
+LOG=${LOG:-${LOG_DIR}/bookworm-to-trixie.log}
+if test -z "${IN_SCRIPT_LOG:-}"; then
+    mkdir -p "$(dirname "${LOG}")"
+    IN_SCRIPT_LOG=1 exec script -a -e -c "$0" "${LOG}"
+fi
+
 MIN_FREE_GB=${MIN_FREE_GB:-5}
 for DIR in / /var/cache/apt/archives; do
     FREE_GB=$(df --output=avail -BG "${DIR}" | tail -1 | tr -dc 0-9)
