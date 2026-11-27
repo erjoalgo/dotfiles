@@ -96,7 +96,7 @@ sudo apt-get install -y linux-image-amd64
 sudo apt purge -y '~c'
 echo "packages no longer in any repo; review, then 'sudo apt purge ~o' if none are wanted:"
 sudo apt list '~o'
-echo "venvs built on bookworm (python3.11) are broken on trixie's python3.13; rebuild each with bin/venv-rebuild.sh [VENV] (default ~/.venv)"
+echo "venvs built on bookworm (python3.11) are broken on trixie's python3.13; rebuild each with bin/venv-rebuild.py [VENV] (default ~/.venv)"
 
 NEWEST_KERNEL=$(ls /boot/vmlinuz-* | sed 's|^/boot/vmlinuz-||' | sort -V | tail -1)
 if test "$(uname -r)" != "${NEWEST_KERNEL}"; then
