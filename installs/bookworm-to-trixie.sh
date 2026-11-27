@@ -87,6 +87,7 @@ if ! sudo apt-get update; then
          "fix their trixie path or signing key, e.g. microsoft:" \
          "https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb" >&2
 fi
+sudo apt-get full-upgrade -y
 
 sudo find /etc/apt/ -name '*.bak'  -exec rm {} +
 
