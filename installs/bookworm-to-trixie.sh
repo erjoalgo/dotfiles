@@ -96,7 +96,16 @@ sudo apt-get install -y linux-image-amd64
 sudo apt purge -y '~c'
 echo "packages no longer in any repo; review, then 'sudo apt purge ~o' if none are wanted:"
 sudo apt list '~o'
-echo "venvs built on bookworm's python3.11 need it until rebuilt with 'python3 -m venv --clear'"
+
+# venvs built on bookworm keep their packages under python3.11, which
+# trixie's python3.13 doesn't read; rebuild ~/.venv (it asks first)
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+VENV_REBUILD=$(readlink -f "${SCRIPT_DIR}/../bin/venv-rebuild.py")
+if test -f "${HOME}/.venv/pyvenv.cfg"; then
+    "${VENV_REBUILD}" "${HOME}/.venv" ||
+        echo "WARNING: ~/.venv was not rebuilt; rerun ${VENV_REBUILD}" >&2
+fi
+echo "rebuild any other bookworm venv the same way: ${VENV_REBUILD} VENV"
 
 NEWEST_KERNEL=$(ls /boot/vmlinuz-* | sed 's|^/boot/vmlinuz-||' | sort -V | tail -1)
 if test "$(uname -r)" != "${NEWEST_KERNEL}"; then
