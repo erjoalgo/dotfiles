@@ -2,11 +2,10 @@
 
 import argparse
 import glob
+import http.client
 import logging
 import os
 import re
-import requests
-import requests_unixsocket
 import select
 import socket
 import subprocess
@@ -25,6 +24,17 @@ def socket_open_unix(unix_socket: str):
   result = sock.connect_ex(unix_socket)
   sock.close()
   return result == 0
+
+class UnixHTTPConnection(http.client.HTTPConnection):
+  """An HTTPConnection to a unix socket instead of a TCP host:port."""
+
+  def __init__(self, socket_path: str):
+    super().__init__("localhost")
+    self.socket_path = socket_path
+
+  def connect(self):
+    self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    self.sock.connect(self.socket_path)
 
 def peek_string(s: str, peek: int):
     if len(s) <= peek:
@@ -50,33 +60,34 @@ ParseResult(scheme='http', netloc='127.0.0.1:1234', path='/caca', params='', que
         if not socket_open_tcp(host, port):
             continue
         url = f"http://{parts.netloc}{path}"
-        session = requests.Session()
+        conn = http.client.HTTPConnection(host, port)
     elif parts.scheme in ("unix", "http+unix") or url.endswith(".sock"):
         socket_addr = url
         if not socket_open_unix(socket_addr):
             continue
-        host_encoded = socket_addr.replace("/", "%2F")
-        url = f"http+unix://{host_encoded}{path}"
-        session = requests_unixsocket.Session()
+        url = f"unix:{socket_addr}{path}"
+        conn = UnixHTTPConnection(socket_addr)
     method = "POST" if data else "GET"
     logging.debug(f"{method} {url}" +
                   (f" <<< {peek_string(data, 100)}" if data else ""))
 
-    req = requests.Request(method, url,
-                           headers=dict((k.encode(), v.encode())
-                                        for (k, v) in headers.items()),
-                           data=data)
+    body = data.encode() if isinstance(data, str) else data
     try:
-        prepared = req.prepare()
-        resp = session.send(prepared)
+        conn.request(method, path, body=body,
+                     headers=dict((k.encode(), v.encode())
+                                  for (k, v) in headers.items()))
+        resp = conn.getresponse()
+        text = resp.read().decode(errors="replace")
     except Exception as ex:
         logging.error("failed to send to %s: %s", url, ex)
         continue
-    return_code = resp.status_code
-    if resp.status_code != 200:
-        logging.error(resp.text)
+    finally:
+        conn.close()
+    return_code = resp.status
+    if resp.status != 200:
+        logging.error(text)
     else:
-        print(resp.text)
+        print(text)
     break
 
   if return_code is None:
