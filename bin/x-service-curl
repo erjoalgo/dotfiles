@@ -11,7 +11,7 @@ import select
 import socket
 import subprocess
 import sys
-import urllib
+import urllib.parse
 
 def socket_open_tcp(host, port: int):
   sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
