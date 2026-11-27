@@ -12,6 +12,17 @@ if ! test -f "${VENV}/pyvenv.cfg"; then
     exit 1
 fi
 
+# pip list --format=json on stdin -> one install spec per line:
+# "-e <location>" for editables, the package name otherwise
+install-specs() {
+    /usr/bin/python3 -c '
+import json, sys
+for package in json.load(sys.stdin):
+    location = package.get("editable_project_location")
+    print(f"-e {location}" if location else package["name"])
+'
+}
+
 # Ask the system pip what to reinstall: it reads the old site-packages'
 # metadata without importing anything, so it works on a venv whose python
 # is gone. --not-required keeps the top of the dependency tree; installing
@@ -22,9 +33,7 @@ for SITE in "${VENV}"/lib/python3*/site-packages; do
 done
 mapfile -t SPECS < <(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
                          --exclude pip --exclude setuptools --exclude wheel --format=json |
-                         jq -r '.[] | if .editable_project_location
-                                      then "-e \(.editable_project_location)"
-                                      else .name end')
+                         install-specs)
 
 echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
 if test ${#SPECS[@]} -gt 0; then
