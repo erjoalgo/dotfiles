@@ -1,9 +1,7 @@
 #!/bin/bash
-# Recreate a venv on the current python3 and reinstall the packages that
-# were installed into it explicitly (pip marks those with a REQUESTED file).
-# Works after its old python is gone: it only reads the old dist-info dirs.
-# Editable installs are reinstalled editable from the same path; the rest
-# at their latest version, since the old pins may not support the new python.
+# Recreate a venv on the current python3 and reinstall its top-level
+# packages: editables from the same path, the rest by name at their latest
+# version, since the old pins may not support the new python.
 
 set -euo pipefail
 
@@ -14,34 +12,31 @@ if ! test -f "${VENV}/pyvenv.cfg"; then
     exit 1
 fi
 
-# collect one install spec per explicitly installed package
-declare -A SPECS=()
-for DIST in "${VENV}"/lib/python3*/site-packages/*.dist-info; do
-    test -f "${DIST}/REQUESTED" || continue
-    NAME=$(grep -m1 -oP '^Name: \K\S+' "${DIST}/METADATA")
-    case "${NAME,,}" in
-        pip|setuptools|wheel) continue ;;
-    esac
-    SPEC=${NAME}
-    DIRECT_URL=${DIST}/direct_url.json
-    if test -f "${DIRECT_URL}"; then
-        URL=$(grep -oP '"url":\s*"\K[^"]+' "${DIRECT_URL}")
-        if grep -qP '"editable":\s*true' "${DIRECT_URL}"; then
-            SPEC="-e ${URL#file://}"
-        elif grep -qP '"vcs":\s*"git"' "${DIRECT_URL}"; then
-            SPEC="${NAME} @ git+${URL}"
-        else
-            SPEC="${NAME} @ ${URL}"
-        fi
-    fi
-    SPECS[${NAME,,}]=${SPEC}
+# Ask the system pip what to reinstall: it reads the old site-packages'
+# metadata without importing anything, so it works on a venv whose python
+# is gone. --not-required keeps the top of the dependency tree; installing
+# those pulls in the rest. Editables come back editable from their path.
+PATHS=()
+for SITE in "${VENV}"/lib/python3*/site-packages; do
+    PATHS+=(--path "${SITE}")
+done
+LIST=(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required)
+mapfile -t EDITABLES < <("${LIST[@]}" --editable --format=json |
+                             grep -oP '"editable_project_location": "\K[^"]+')
+mapfile -t PACKAGES < <("${LIST[@]}" --exclude-editable --format=freeze \
+                            --exclude pip --exclude setuptools --exclude wheel |
+                            sed 's/==.*//')
+SPECS=("${PACKAGES[@]}")
+for EDITABLE in "${EDITABLES[@]}"; do
+    SPECS+=("-e ${EDITABLE}")
 done
 
 echo "will recreate ${VENV} on $(python3 --version) and install:"
-test ${#SPECS[@]} -gt 0 || echo "    (none)"
-for KEY in $(printf '%s\n' "${!SPECS[@]}" | sort); do
-    echo "    ${SPECS[${KEY}]}"
-done
+if test ${#SPECS[@]} -gt 0; then
+    printf '    %s\n' "${SPECS[@]}"
+else
+    echo "    (none)"
+fi
 read -r -p "go ahead? [y/N] " ANSWER < /dev/tty
 if test "${ANSWER,,}" != y; then
     echo "nothing changed"
@@ -52,8 +47,7 @@ python3 -m venv --clear "${VENV}"
 
 # one at a time, so a package that fails on the new python doesn't stop the rest
 FAILED=()
-for KEY in $(printf '%s\n' "${!SPECS[@]}" | sort); do
-    SPEC=${SPECS[${KEY}]}
+for SPEC in "${SPECS[@]}"; do
     if test "${SPEC:0:3}" = "-e "; then
         "${VENV}/bin/pip" install -e "${SPEC:3}" || FAILED+=("${SPEC}")
     else
