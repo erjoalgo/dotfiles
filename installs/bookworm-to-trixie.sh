@@ -96,3 +96,8 @@ sudo apt-get install -y linux-image-amd64
 sudo apt purge -y '~c'
 echo "packages no longer in any repo; review, then 'sudo apt purge ~o' if none are wanted:"
 sudo apt list '~o'
+
+NEWEST_KERNEL=$(ls /boot/vmlinuz-* | sed 's|^/boot/vmlinuz-||' | sort -V | tail -1)
+if test "$(uname -r)" != "${NEWEST_KERNEL}"; then
+    echo "upgrade done; reboot into ${NEWEST_KERNEL} (running $(uname -r))"
+fi
