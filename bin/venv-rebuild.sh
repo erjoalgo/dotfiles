@@ -40,8 +40,12 @@ for SITE in "${VENV}"/lib/python3*/site-packages; do
 done
 LISTED=$(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
               --exclude pip --exclude setuptools --exclude wheel --format=json)
+# wait $! returns the process substitution's exit status, so set -e stops
+# the script if pip-list-select fails
 mapfile -t PACKAGES < <(pip-list-select packages <<< "${LISTED}")
+wait $!
 mapfile -t EDITABLES < <(pip-list-select editables <<< "${LISTED}")
+wait $!
 
 if test $(( ${#PACKAGES[@]} + ${#EDITABLES[@]} )) -eq 0; then
     echo "found nothing to reinstall in ${VENV}; left it as is"
