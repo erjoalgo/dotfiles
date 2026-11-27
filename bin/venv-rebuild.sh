@@ -1,5 +1,5 @@
 #!/bin/bash
-# Recreate a venv on the current python3 and reinstall its top-level
+# Recreate a venv on the system python3 and reinstall its top-level
 # packages: editables from the same path, the rest by name at their latest
 # version, since the old pins may not support the new python.
 
@@ -31,7 +31,7 @@ for EDITABLE in "${EDITABLES[@]}"; do
     SPECS+=("-e ${EDITABLE}")
 done
 
-echo "will recreate ${VENV} on $(python3 --version) and install:"
+echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
 if test ${#SPECS[@]} -gt 0; then
     printf '    %s\n' "${SPECS[@]}"
 else
@@ -43,7 +43,7 @@ if test "${ANSWER,,}" != y; then
     exit 1
 fi
 
-python3 -m venv --clear "${VENV}"
+/usr/bin/python3 -m venv --clear "${VENV}"
 
 # one at a time, so a package that fails on the new python doesn't stop the rest
 FAILED=()
