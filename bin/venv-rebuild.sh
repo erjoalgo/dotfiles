@@ -17,7 +17,10 @@ fi
 pip-list-select() {
     /usr/bin/python3 -c '
 import json, sys
-editables = sys.argv[1] == "editables"
+choice = sys.argv[1]
+if choice not in ("editables", "packages"):
+    sys.exit(f"pip-list-select: expected editables or packages, got {choice!r}")
+editables = choice == "editables"
 for package in json.load(sys.stdin):
     location = package.get("editable_project_location")
     if editables and location:
