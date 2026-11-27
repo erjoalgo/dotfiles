@@ -35,12 +35,13 @@ mapfile -t SPECS < <(/usr/bin/python3 -m pip list "${PATHS[@]}" --not-required \
                          --exclude pip --exclude setuptools --exclude wheel --format=json |
                          install-specs)
 
-echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
-if test ${#SPECS[@]} -gt 0; then
-    printf '    %s\n' "${SPECS[@]}"
-else
-    echo "    (none)"
+if test ${#SPECS[@]} -eq 0; then
+    echo "found nothing to reinstall in ${VENV}; left it as is"
+    exit 0
 fi
+
+echo "will recreate ${VENV} on $(/usr/bin/python3 --version) and install:"
+printf '    %s\n' "${SPECS[@]}"
 read -r -p "go ahead? [y/N] " ANSWER < /dev/tty
 if test "${ANSWER,,}" != y; then
     echo "nothing changed"
